@@ -10,7 +10,6 @@ import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   // const HomePage({Key? key}) : super(key: key);
-  late final LanguageDBProvider _langProvider;
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -53,19 +52,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   getInit() async {
-    LanguageDBProvider langProvider =
-        Provider.of<LanguageDBProvider>(context, listen: false);
+    // setup provider
+
     setState(() {
       isLoading = true;
     });
-    widget._langProvider = langProvider;
-    if (await langProvider.getWords("english")) {
-      setState(() {
-        isLoading = false;
-      });
-    } else {
-      log("gagal get db words");
-    }
+    // set loading provider lang end
   }
 
   @override

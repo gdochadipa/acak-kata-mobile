@@ -1,9 +1,12 @@
 import 'dart:async';
 
+import 'package:acakkata/models/user_model.dart';
+import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/providers/language_db_provider.dart';
 import 'package:acakkata/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({Key? key}) : super(key: key);
@@ -18,13 +21,32 @@ class _SplashPageState extends State<SplashPage> {
     // TODO: implement initState
     getInit();
     super.initState();
-    Timer(Duration(seconds: 3), () => Navigator.pushNamed(context, '/home'));
+    // Timer(Duration(seconds: 3), () => Navigator.pushNamed(context, '/home'));
   }
 
   getInit() async {
-    LanguageDBProvider langProvider =
-        Provider.of<LanguageDBProvider>(context, listen: false);
-    langProvider.init();
+    AuthProvider authProvider = Provider.of(context, listen: false);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    bool login = prefs.getBool('login') ?? false;
+    bool isInGame = prefs.getBool('is_in_game') ?? false;
+
+    if (login) {
+      UserModel _user = UserModel(
+          id: prefs.getString('id'),
+          name: prefs.getString('name'),
+          email: prefs.getString('email'),
+          username: prefs.getString('username'),
+          userCode: prefs.getString('userCode'),
+          token: prefs.getString('token'));
+      authProvider.user = _user;
+      Navigator.pushNamed(context, '/home');
+    } else {
+      Navigator.pushNamed(context, '/sign-in');
+    }
+    // LanguageDBProvider langProvider =
+    //     Provider.of<LanguageDBProvider>(context, listen: false);
+    // langProvider.init();
   }
 
   @override

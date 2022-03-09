@@ -23,6 +23,32 @@ class AuthProvider with ChangeNotifier {
       SharedPreferences pref = await SharedPreferences.getInstance();
       pref.setBool('login', true);
       pref.setString('id', '${user.id}');
+      pref.setString('name', user.name ?? '');
+      pref.setString('email', '${user.email}');
+      pref.setString('username', '${user.username}');
+      pref.setString('userCode', '${user.userCode}');
+      pref.setString('token', '${user.token}');
+
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool> login({required String email, required String password}) async {
+    try {
+      UserModel user =
+          await AuthService().login(email: email, password: password);
+      _user = user;
+      SharedPreferences pref = await SharedPreferences.getInstance();
+      pref.setBool('login', true);
+      pref.setString('id', '${user.id}');
+      pref.setString('name', user.name ?? '');
+      pref.setString('email', '${user.email}');
+      pref.setString('username', '${user.username}');
+      pref.setString('userCode', '${user.userCode}');
+      pref.setString('token', '${user.token}');
       return true;
     } catch (e) {
       print(e);

@@ -9,7 +9,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart' as path;
 import 'dart:io' as io;
 
-class LanguageDBProvider with ChangeNotifier {
+class LanguageDBProvider1 with ChangeNotifier {
   late Database _db;
   late int _numberCountDown;
   late int _totalQuestion;
