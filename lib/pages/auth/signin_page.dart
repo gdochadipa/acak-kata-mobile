@@ -1,5 +1,6 @@
 import 'package:acakkata/pages/auth/signup_page.dart';
 import 'package:acakkata/providers/auth_provider.dart';
+import 'package:acakkata/service/socket_service.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/custom_page_route.dart';
 import 'package:flutter/material.dart';
@@ -19,10 +20,17 @@ class _SignInPageState extends State<SignInPage> {
 
   bool isLoading = false;
 
+  SocketService socket = SocketService();
+
   @override
   void initState() {
     // TODO: implement initState
+    getInit();
     super.initState();
+  }
+
+  getInit() async {
+    await socket.fireSocket();
   }
 
   @override
@@ -34,7 +42,6 @@ class _SignInPageState extends State<SignInPage> {
   @override
   Widget build(BuildContext context) {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
-
     handleSignIn() async {
       setState(() {
         isLoading = true;
@@ -59,6 +66,10 @@ class _SignInPageState extends State<SignInPage> {
       setState(() {
         isLoading = false;
       });
+    }
+
+    checkSocket() async {
+      await socket.onTest();
     }
 
     Widget header() {
@@ -172,7 +183,7 @@ class _SignInPageState extends State<SignInPage> {
         width: double.infinity,
         margin: EdgeInsets.only(top: 30),
         child: TextButton(
-            onPressed: handleSignIn,
+            onPressed: checkSocket,
             style: TextButton.styleFrom(
                 backgroundColor: primaryColor,
                 shape: RoundedRectangleBorder(

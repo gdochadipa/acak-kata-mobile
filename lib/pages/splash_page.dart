@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:acakkata/models/user_model.dart';
 import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/providers/language_db_provider.dart';
+import 'package:acakkata/providers/language_provider.dart';
+import 'package:acakkata/service/socket_service.dart';
 import 'package:acakkata/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -26,29 +28,27 @@ class _SplashPageState extends State<SplashPage> {
 
   getInit() async {
     AuthProvider authProvider = Provider.of(context, listen: false);
+    LanguageProvider languageProvider = Provider.of(context, listen: false);
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     bool login = prefs.getBool('login') ?? false;
     bool isInGame = prefs.getBool('is_in_game') ?? false;
 
-    Navigator.pushNamed(context, '/sign-in');
-
-    // if (login) {
-    //   UserModel _user = UserModel(
-    //       id: prefs.getString('id'),
-    //       name: prefs.getString('name'),
-    //       email: prefs.getString('email'),
-    //       username: prefs.getString('username'),
-    //       userCode: prefs.getString('userCode'),
-    //       token: prefs.getString('token'));
-    //   authProvider.user = _user;
-    //   Navigator.pushNamed(context, '/home');
-    // } else {
-    //   Navigator.pushNamed(context, '/sign-in');
-    // }
-    // LanguageDBProvider langProvider =
-    //     Provider.of<LanguageDBProvider>(context, listen: false);
-    // langProvider.init();
+    if (login) {
+      UserModel _user = UserModel(
+          id: prefs.getString('id'),
+          name: prefs.getString('name'),
+          email: prefs.getString('email'),
+          username: prefs.getString('username'),
+          userCode: prefs.getString('userCode'),
+          token: prefs.getString('token'));
+      authProvider.user = _user;
+      await languageProvider.getLanguages();
+      Navigator.pushNamed(context, '/home');
+    } else {
+      await languageProvider.getLanguages();
+      Navigator.pushNamed(context, '/sign-in');
+    }
   }
 
   @override
