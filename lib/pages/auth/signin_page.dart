@@ -39,19 +39,23 @@ class _SignInPageState extends State<SignInPage> {
       setState(() {
         isLoading = true;
       });
-
-      if (await authProvider.login(
-          email: emailController.text, password: passwordController.text)) {
-        Navigator.pushNamed(context, '/home');
-      } else {
+      try {
+        if (await authProvider.login(
+            email: emailController.text, password: passwordController.text)) {
+          Navigator.pushNamed(context, '/home');
+        }
+      } catch (e) {
+        print(e);
+        String error = e.toString().replaceAll('Exception:', '');
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: const Text(
-            'Gagal Login !',
+          content: Text(
+            '${error}',
             textAlign: TextAlign.center,
           ),
           backgroundColor: alertColor,
         ));
       }
+
       setState(() {
         isLoading = false;
       });

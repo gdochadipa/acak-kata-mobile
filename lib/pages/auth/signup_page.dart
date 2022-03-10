@@ -31,15 +31,19 @@ class _SignUpPageState extends State<SignUpPage> {
         isLoading = true;
       });
 
-      if (await authProvider.register(
-          name: nameController.text,
-          email: emailController.text,
-          password: passwordController.text)) {
-        Navigator.pushNamed(context, '/home');
-      } else {
+      try {
+        if (await authProvider.register(
+            name: nameController.text,
+            email: emailController.text,
+            password: passwordController.text)) {
+          Navigator.pushNamed(context, '/home');
+        }
+      } catch (e) {
+        print(e);
+        String error = e.toString().replaceAll('Exception:', '');
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(
-            'Gagal Register !',
+            error,
             textAlign: TextAlign.center,
           ),
           backgroundColor: alertColor,

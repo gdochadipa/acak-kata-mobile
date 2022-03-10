@@ -31,7 +31,7 @@ class AuthProvider with ChangeNotifier {
 
       return true;
     } catch (e) {
-      print(e);
+      throw Exception(e);
       return false;
     }
   }
@@ -51,7 +51,8 @@ class AuthProvider with ChangeNotifier {
       pref.setString('token', '${user.token}');
       return true;
     } catch (e) {
-      print(e);
+      // print(e);
+      throw Exception(e);
       return false;
     }
   }

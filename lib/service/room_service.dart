@@ -6,15 +6,19 @@ import 'package:acakkata/models/word_language_model.dart';
 import 'package:http/http.dart' as http;
 
 class RoomService {
-  String baseUrl = 'http://10.0.2.2:3000/api/room';
+  String baseUrl = 'http://10.0.2.2:3000/api/v1/room';
 
-  Future<RoomMatchModel> createRoom(
-      int language_id, int time_watch, String token) async {
+  Future<RoomMatchModel> createRoom(int language_id, int time_watch,
+      int max_player, int total_question, String token) async {
     var url = Uri.parse('$baseUrl/create-room');
     print(url);
     var headers = {'Content-Type': 'application/json', 'Authorization': token};
-    var body =
-        jsonEncode({'language_id': language_id, 'time_watch': time_watch});
+    var body = jsonEncode({
+      'language_id': language_id,
+      'time_watch': time_watch,
+      'max_player': max_player,
+      'total_question': total_question
+    });
 
     var response = await http.post(url, headers: headers, body: body);
     print(response.body);
@@ -57,7 +61,7 @@ class RoomService {
     if (response.statusCode == 200) {
       return true;
     } else {
-      throw Exception('Gagal confimrasi Room');
+      throw Exception('Gagal confirmasi Room');
     }
   }
 

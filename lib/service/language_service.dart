@@ -4,7 +4,7 @@ import 'dart:developer';
 import 'package:http/http.dart' as http;
 
 class LanguageService {
-  String baseUrl = 'http://10.0.2.2:3000/api/language';
+  String baseUrl = 'http://10.0.2.2:3000/api/v1/language';
 
   Future<List<LanguageModel>> getLanguage() async {
     var url = Uri.parse('$baseUrl/language');

@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashPage extends StatefulWidget {
-  const SplashPage({Key? key}) : super(key: key);
+  // const SplashPage({Key? key}) : super(key: key);
 
   @override
   _SplashPageState createState() => _SplashPageState();
@@ -31,19 +31,21 @@ class _SplashPageState extends State<SplashPage> {
     bool login = prefs.getBool('login') ?? false;
     bool isInGame = prefs.getBool('is_in_game') ?? false;
 
-    if (login) {
-      UserModel _user = UserModel(
-          id: prefs.getString('id'),
-          name: prefs.getString('name'),
-          email: prefs.getString('email'),
-          username: prefs.getString('username'),
-          userCode: prefs.getString('userCode'),
-          token: prefs.getString('token'));
-      authProvider.user = _user;
-      Navigator.pushNamed(context, '/home');
-    } else {
-      Navigator.pushNamed(context, '/sign-in');
-    }
+    Navigator.pushNamed(context, '/sign-in');
+
+    // if (login) {
+    //   UserModel _user = UserModel(
+    //       id: prefs.getString('id'),
+    //       name: prefs.getString('name'),
+    //       email: prefs.getString('email'),
+    //       username: prefs.getString('username'),
+    //       userCode: prefs.getString('userCode'),
+    //       token: prefs.getString('token'));
+    //   authProvider.user = _user;
+    //   Navigator.pushNamed(context, '/home');
+    // } else {
+    //   Navigator.pushNamed(context, '/sign-in');
+    // }
     // LanguageDBProvider langProvider =
     //     Provider.of<LanguageDBProvider>(context, listen: false);
     // langProvider.init();

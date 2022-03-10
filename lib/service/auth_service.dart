@@ -4,7 +4,7 @@ import 'package:acakkata/models/user_model.dart';
 import 'package:http/http.dart' as http;
 
 class AuthService {
-  String baseUrl = 'http://10.0.2.2:3000/api/auth';
+  String baseUrl = 'http://10.0.2.2:3000/api/v1/auth';
 
   Future<UserModel> register(
       {required String name,
@@ -23,13 +23,18 @@ class AuthService {
     var response = await http.post(url, headers: headers, body: body);
     print(response.body);
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201 || response.statusCode == 200) {
       var data = jsonDecode(response.body);
       UserModel user = UserModel.fromJson(data['data']);
       user.token = 'Bearer ' + data['token'];
       return user;
     } else {
-      throw Exception('Gagal Register');
+      if (response.statusCode == 403) {
+        var data = jsonDecode(response.body);
+        throw Exception(data['message']);
+      } else {
+        throw Exception("Gagal Login");
+      }
     }
   }
 
@@ -50,13 +55,18 @@ class AuthService {
       body: body,
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201 || response.statusCode == 200) {
       var data = jsonDecode(response.body);
       UserModel user = UserModel.fromJson(data['data']);
       user.token = 'Bearer ' + data['token'];
       return user;
     } else {
-      throw Exception('Gagal SingIn');
+      if (response.statusCode == 403) {
+        var data = jsonDecode(response.body);
+        throw Exception(data['message']);
+      } else {
+        throw Exception("Gagal Login");
+      }
     }
   }
 }
