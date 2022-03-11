@@ -27,8 +27,10 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   getInit() async {
-    AuthProvider authProvider = Provider.of(context, listen: false);
-    LanguageProvider languageProvider = Provider.of(context, listen: false);
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
+    LanguageProvider languageProvider =
+        Provider.of<LanguageProvider>(context, listen: false);
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     bool login = prefs.getBool('login') ?? false;

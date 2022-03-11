@@ -4,6 +4,8 @@ import 'package:acakkata/pages/home_page/main.dart';
 import 'package:acakkata/pages/splash_page.dart';
 import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/providers/language_db_provider.dart';
+import 'package:acakkata/providers/language_provider.dart';
+import 'package:acakkata/providers/room_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -15,7 +17,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (context) => AuthProvider())],
+      providers: [
+        ChangeNotifierProvider(create: (context) => AuthProvider()),
+        ChangeNotifierProvider(
+          create: (context) => LanguageProvider(),
+        ),
+        ChangeNotifierProvider(create: (context) => RoomProvider())
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         initialRoute: '/',

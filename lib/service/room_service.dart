@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 class RoomService {
   String baseUrl = 'http://10.0.2.2:3000/api/v1/room';
 
-  Future<RoomMatchModel> createRoom(int language_id, int time_watch,
+  Future<RoomMatchModel> createRoom(String language_id, int time_watch,
       int max_player, int total_question, String token) async {
     var url = Uri.parse('$baseUrl/create-room');
     print(url);
@@ -28,12 +28,17 @@ class RoomService {
       RoomMatchModel roomMatch = RoomMatchModel.fromJson(data);
       return roomMatch;
     } else {
-      throw Exception('Gagal membuat room');
+      if (response.statusCode == 403) {
+        var data = jsonDecode(response.body);
+        throw Exception(data['message']);
+      } else {
+        throw Exception("Gagal Membuat Room");
+      }
     }
   }
 
   Future<RoomMatchModel> findRoomWithCode(
-      int language_id, String token, String room_code) async {
+      String language_id, String token, String room_code) async {
     var url = Uri.parse('$baseUrl/search-code-room');
     print(url);
     var headers = {'Content-Type': 'application/json', 'Authorization': token};
@@ -47,7 +52,12 @@ class RoomService {
       RoomMatchModel roomMatch = RoomMatchModel.fromJson(data);
       return roomMatch;
     } else {
-      throw Exception('Gagal menemukan room');
+      if (response.statusCode == 403) {
+        var data = jsonDecode(response.body);
+        throw Exception(data['message']);
+      } else {
+        throw Exception("Gagal Mencari Room");
+      }
     }
   }
 

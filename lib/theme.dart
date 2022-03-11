@@ -8,6 +8,7 @@ Color secondaryColor = Color(0xff5FDCF0);
 Color secondaryDisabled = Color(0xff97dde8);
 Color thirdColor = Color(0xff2B2937);
 Color alertColor = Color(0xffED6363);
+Color successColor = Color(0xff22bb33);
 Color grayColor1 = Color(0xffEFEFEF);
 Color grayColor2 = Color(0xffC4C4C4);
 Color grayColor3 = Color(0xff979797);

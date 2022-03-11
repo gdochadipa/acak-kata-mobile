@@ -33,10 +33,11 @@ class LanguageCard extends StatelessWidget {
                   color: whiteColor,
                   borderRadius: BorderRadius.circular(15),
                 ),
-                child: Image.asset(
-                  'assets/images/${language.language_icon}',
+                child: Image.network(
+                  language.language_icon ?? '',
                   width: 36,
                   height: 18,
+                  fit: BoxFit.cover,
                 ),
               ),
               const SizedBox(

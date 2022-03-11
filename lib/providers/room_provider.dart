@@ -8,29 +8,45 @@ class RoomProvider with ChangeNotifier {
   RoomMatchModel? _roomMatch;
   RoomMatchModel? get roomMatch => _roomMatch;
 
+  late int _numberCountDown;
+  late int _totalQuestion;
+  late int _maxPlayer;
+
   List<WordLanguageModel>? _listQuestion;
   List<WordLanguageModel>? get listQuestion => _listQuestion;
+
+  List<int>? _queueQuestion;
+  List<int>? get queueQuestion => _queueQuestion;
+
+  int get numberCountDown => _numberCountDown;
+  int get totalQuestion => _totalQuestion;
+  int get maxPlayer => _maxPlayer;
 
   set roomMatch(RoomMatchModel? roomMatch) {
     _roomMatch = roomMatch;
     notifyListeners();
   }
 
-  Future<bool> createRoom(int? language_id, int? max_player, int? time_watch,
+  Future<bool> createRoom(String? language_id, int? max_player, int? time_watch,
       int? total_question) async {
     try {
+      _maxPlayer = max_player!;
+      _numberCountDown = time_watch ?? 15;
+      _totalQuestion = total_question ?? 15;
       SharedPreferences pref = await SharedPreferences.getInstance();
       String? token = pref.getString('token');
       RoomMatchModel roomMatchModel = await RoomService().createRoom(
-          language_id!, time_watch!, max_player!, total_question!, token!);
+          language_id!, time_watch!, max_player, total_question!, token!);
       _roomMatch = roomMatchModel;
+
       return true;
     } catch (e) {
+      throw Exception(e);
       return false;
     }
   }
 
-  Future<bool> findRoomWithCode(int? language_id, String? room_code) async {
+  Future<bool> findRoomWithCode(String? language_id, String? room_code) async {
     try {
       SharedPreferences pref = await SharedPreferences.getInstance();
       String? token = pref.getString('token');
@@ -39,6 +55,7 @@ class RoomProvider with ChangeNotifier {
       _roomMatch = roomMatchModel;
       return true;
     } catch (e) {
+      throw Exception(e);
       return false;
     }
   }

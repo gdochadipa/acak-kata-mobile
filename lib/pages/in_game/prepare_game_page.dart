@@ -1,6 +1,7 @@
 import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/pages/in_game/game_play_page.dart';
 import 'package:acakkata/providers/language_db_provider.dart';
+import 'package:acakkata/providers/room_provider.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/custom_page_route.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,12 @@ class PrepareGamePage extends StatefulWidget {
 }
 
 class _PrepareGamePageState extends State<PrepareGamePage> {
+  TextEditingController room_code = TextEditingController(text: '');
+
+  late FocusNode roomCode = FocusNode();
+  late RoomProvider roomProvider =
+      Provider.of<RoomProvider>(context, listen: false);
+
   bool isLoading = false;
   List<bool> isSelectedQuestion = [true, false, false];
   List<bool> isSelectedTime = [true, false, false];
@@ -35,8 +42,15 @@ class _PrepareGamePageState extends State<PrepareGamePage> {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    roomCode.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    LanguageDBProvider provider = Provider.of<LanguageDBProvider>(context);
+    // LanguageDBProvider provider = Provider.of<LanguageDBProvider>(context);
 
     Widget header() {
       return AppBar(
@@ -64,11 +78,70 @@ class _PrepareGamePageState extends State<PrepareGamePage> {
       setState(() {
         isLoading = true;
       });
-      provider.setRuleGame(selectedTime, selectedQuestion);
-      Navigator.push(
-          context,
-          CustomPageRoute(
-              GamePlayPage(widget.language, selectedQuestion, selectedTime)));
+      // provider.setRuleGame(selectedTime, selectedQuestion);
+      try {
+        if (await roomProvider.createRoom(
+            widget.language.id, 2, selectedTime, selectedTime)) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(
+              "Berhasil membuat Room",
+              textAlign: TextAlign.center,
+            ),
+            backgroundColor: successColor,
+          ));
+          // Navigator.push(
+          //     context,
+          //     CustomPageRoute(
+          //         GamePlayPage(widget.language, selectedTime, selectedTime)));
+        }
+      } catch (e) {
+        print(e);
+        String error = e.toString().replaceAll('Exception:', '');
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+            error,
+            textAlign: TextAlign.center,
+          ),
+          backgroundColor: alertColor,
+        ));
+      }
+
+      setState(() {
+        isLoading = false;
+      });
+    }
+
+    handleSearchRoom() async {
+      setState(() {
+        isLoading = true;
+      });
+      // provider.setRuleGame(selectedTime, selectedQuestion);
+      try {
+        if (await roomProvider.findRoomWithCode(
+            widget.language.id, room_code.text)) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(
+              "Berhasil menemukan Room",
+              textAlign: TextAlign.center,
+            ),
+            backgroundColor: successColor,
+          ));
+          // Navigator.push(
+          //     context,
+          //     CustomPageRoute(
+          //         GamePlayPage(widget.language, selectedTime, selectedTime)));
+        }
+      } catch (e) {
+        print(e);
+        String error = e.toString().replaceAll('Exception:', '');
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+            error,
+            textAlign: TextAlign.center,
+          ),
+          backgroundColor: alertColor,
+        ));
+      }
 
       setState(() {
         isLoading = false;
@@ -178,7 +251,87 @@ class _PrepareGamePageState extends State<PrepareGamePage> {
       );
     }
 
-    Widget cardBody() {
+    Widget FindRoomForm() {
+      return Container(
+        margin: EdgeInsets.only(top: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Find Room',
+              style:
+                  primaryTextStyle.copyWith(fontSize: 16, fontWeight: medium),
+            ),
+            SizedBox(
+              height: 12,
+            ),
+            Container(
+              height: 50,
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              decoration: BoxDecoration(
+                  color: grayColor2, borderRadius: BorderRadius.circular(12)),
+              child: Center(
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 16,
+                    ),
+                    Expanded(
+                        child: TextFormField(
+                      focusNode: roomCode,
+                      controller: room_code,
+                      decoration: InputDecoration.collapsed(
+                          hintText: 'Enter Room Code',
+                          hintStyle: subtitleTextStyle),
+                    ))
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
+      );
+    }
+
+    Widget FindRoomButon() {
+      return Container(
+        height: 50,
+        width: double.infinity,
+        margin: EdgeInsets.only(top: 20),
+        child: TextButton(
+            onPressed: () {
+              // handleGetRoom();
+            },
+            style: TextButton.styleFrom(
+                backgroundColor: primaryColor,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12))),
+            child: Text(
+              'Find Room',
+              style: whiteTextStyle.copyWith(fontSize: 16, fontWeight: medium),
+            )),
+      );
+    }
+
+    Widget cardBodyFindRoom() {
+      return Container(
+        margin:
+            EdgeInsets.only(top: 50, left: defaultMargin, right: defaultMargin),
+        padding: EdgeInsets.all(15),
+        decoration: BoxDecoration(
+            color: backgroundColor3, borderRadius: BorderRadius.circular(15)),
+        child: Center(
+          child: Column(
+            children: [
+              FindRoomForm(),
+              FindRoomButon(),
+            ],
+          ),
+        ),
+      );
+    }
+
+    Widget cardBodyCreateRoom() {
       return Container(
         margin:
             EdgeInsets.only(top: 50, left: defaultMargin, right: defaultMargin),
@@ -201,7 +354,7 @@ class _PrepareGamePageState extends State<PrepareGamePage> {
       backgroundColor: backgroundColor1,
       body: Container(
         child: ListView(
-          children: [header(), cardBody()],
+          children: [header(), cardBodyCreateRoom(), cardBodyFindRoom()],
         ),
       ),
     );
