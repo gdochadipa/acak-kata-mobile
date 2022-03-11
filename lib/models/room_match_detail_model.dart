@@ -14,7 +14,7 @@ class RoomMatchDetailModel {
 
   RoomMatchDetailModel.fromJson(Map<String, dynamic> json) {
     id = json['_id'];
-    score = int.parse('${json['score']}');
+    score = int.parse('${json['score'] ?? 0}');
     status_player = json['status_player'];
     is_host = json['is_host'];
     is_ready = json['is_ready'];

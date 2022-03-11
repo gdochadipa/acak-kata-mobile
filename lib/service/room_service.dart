@@ -50,6 +50,32 @@ class RoomService {
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body)['data'];
       RoomMatchModel roomMatch = RoomMatchModel.fromJson(data);
+
+      return roomMatch;
+    } else {
+      if (response.statusCode == 403) {
+        var data = jsonDecode(response.body);
+        throw Exception(data['message']);
+      } else {
+        throw Exception("Gagal Mencari Room");
+      }
+    }
+  }
+
+  Future<RoomMatchModel> checkingRoomWithRoomCode(
+      String language_id, String token, String room_code) async {
+    var headers = {'Content-Type': 'application/json', 'Authorization': token};
+    var query_parameter = {'language_id': language_id, 'room_code': room_code};
+    final url = Uri.http('$baseUrl', '/find-room', query_parameter);
+    print(url);
+
+    var response = await http.get(url, headers: headers);
+    print(response.body);
+
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body)['data'];
+      RoomMatchModel roomMatch = RoomMatchModel.fromJson(data);
+
       return roomMatch;
     } else {
       if (response.statusCode == 403) {
@@ -96,7 +122,7 @@ class RoomService {
       'language_id': language_id,
       'question_num': question_num
     };
-    final url = Uri.http('$baseUrl', '/cancel-room', query_parameter);
+    final url = Uri.http('$baseUrl', '/package-question', query_parameter);
     var response = await http.get(url, headers: headers);
     print(response.body);
 

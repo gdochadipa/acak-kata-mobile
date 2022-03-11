@@ -30,13 +30,13 @@ class RoomProvider with ChangeNotifier {
   Future<bool> createRoom(String? language_id, int? max_player, int? time_watch,
       int? total_question) async {
     try {
-      _maxPlayer = max_player!;
+      _maxPlayer = max_player ?? 2;
       _numberCountDown = time_watch ?? 15;
       _totalQuestion = total_question ?? 15;
       SharedPreferences pref = await SharedPreferences.getInstance();
       String? token = pref.getString('token');
       RoomMatchModel roomMatchModel = await RoomService().createRoom(
-          language_id!, time_watch!, max_player, total_question!, token!);
+          language_id!, time_watch!, max_player!, total_question!, token!);
       _roomMatch = roomMatchModel;
 
       return true;
@@ -53,6 +53,20 @@ class RoomProvider with ChangeNotifier {
       RoomMatchModel roomMatchModel = await RoomService()
           .findRoomWithCode(language_id!, token!, room_code!);
       _roomMatch = roomMatchModel;
+      return true;
+    } catch (e) {
+      throw Exception(e);
+      return false;
+    }
+  }
+
+  Future<bool> checkingRoomWithCode(
+      String? language_id, String? room_code) async {
+    try {
+      SharedPreferences pref = await SharedPreferences.getInstance();
+      String? token = pref.getString('token');
+      RoomMatchModel roomMatchModel = await RoomService()
+          .findRoomWithCode(language_id!, token!, room_code!);
       return true;
     } catch (e) {
       throw Exception(e);

@@ -94,7 +94,7 @@ class _PrepareGamePageState extends State<PrepareGamePage> {
           //     CustomPageRoute(
           //         GamePlayPage(widget.language, selectedTime, selectedTime)));
         }
-      } catch (e) {
+      } catch (e, stacktrace) {
         print(e);
         String error = e.toString().replaceAll('Exception:', '');
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -117,7 +117,7 @@ class _PrepareGamePageState extends State<PrepareGamePage> {
       });
       // provider.setRuleGame(selectedTime, selectedQuestion);
       try {
-        if (await roomProvider.findRoomWithCode(
+        if (await roomProvider.checkingRoomWithCode(
             widget.language.id, room_code.text)) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(
@@ -131,7 +131,7 @@ class _PrepareGamePageState extends State<PrepareGamePage> {
           //     CustomPageRoute(
           //         GamePlayPage(widget.language, selectedTime, selectedTime)));
         }
-      } catch (e) {
+      } catch (e, stacktrace) {
         print(e);
         String error = e.toString().replaceAll('Exception:', '');
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -301,6 +301,7 @@ class _PrepareGamePageState extends State<PrepareGamePage> {
         child: TextButton(
             onPressed: () {
               // handleGetRoom();
+              handleSearchRoom();
             },
             style: TextButton.styleFrom(
                 backgroundColor: primaryColor,
