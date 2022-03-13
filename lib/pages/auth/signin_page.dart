@@ -51,8 +51,9 @@ class _SignInPageState extends State<SignInPage> {
             email: emailController.text, password: passwordController.text)) {
           Navigator.pushNamed(context, '/home');
         }
-      } catch (e) {
+      } catch (e, stack) {
         print(e);
+        print(stack);
         String error = e.toString().replaceAll('Exception:', '');
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(
@@ -183,7 +184,7 @@ class _SignInPageState extends State<SignInPage> {
         width: double.infinity,
         margin: EdgeInsets.only(top: 30),
         child: TextButton(
-            onPressed: checkSocket,
+            onPressed: handleSignIn,
             style: TextButton.styleFrom(
                 backgroundColor: primaryColor,
                 shape: RoundedRectangleBorder(

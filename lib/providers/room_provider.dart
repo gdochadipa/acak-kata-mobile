@@ -67,6 +67,7 @@ class RoomProvider with ChangeNotifier {
       String? token = pref.getString('token');
       RoomMatchModel roomMatchModel = await RoomService()
           .findRoomWithCode(language_id!, token!, room_code!);
+      _roomMatch = roomMatchModel;
       return true;
     } catch (e) {
       throw Exception(e);

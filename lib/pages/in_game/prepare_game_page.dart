@@ -1,5 +1,6 @@
 import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/pages/in_game/game_play_page.dart';
+import 'package:acakkata/pages/in_game/waiting_room_page.dart';
 import 'package:acakkata/providers/language_db_provider.dart';
 import 'package:acakkata/providers/room_provider.dart';
 import 'package:acakkata/theme.dart';
@@ -89,10 +90,8 @@ class _PrepareGamePageState extends State<PrepareGamePage> {
             ),
             backgroundColor: successColor,
           ));
-          // Navigator.push(
-          //     context,
-          //     CustomPageRoute(
-          //         GamePlayPage(widget.language, selectedTime, selectedTime)));
+          Navigator.push(
+              context, CustomPageRoute(WaitingRoomPage(widget.language)));
         }
       } catch (e, stacktrace) {
         print(e);

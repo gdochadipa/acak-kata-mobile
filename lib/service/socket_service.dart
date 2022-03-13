@@ -21,12 +21,24 @@ class SocketService {
     });
   }
 
-  Future<void> bindEventConnectRoom() async {
-    socket.on('connect-to-room', (last) {
-      final String? data = last!.data;
-      _inEventData.add(data);
+  bindEventConnectRoom() {
+    // socket.io.
+    socket.onConnect((data) {
+      print("on connected:connect-to-room ");
+      socket.on('connect-to-room', (last) {
+        print(last);
+        final String? data = last;
+        _inEventData.add(data);
+      });
     });
   }
+
+  // Future<void> bindEventSearchRoom() async {
+  //   socket.on('connect-to-room', (last) {
+  //     final String? data = last!.data;
+  //     _inEventData.add(data);
+  //   });
+  // }
 
 /**
  * question => json
@@ -86,6 +98,7 @@ class SocketService {
 
   Future<void> disconnect() async {
     socket.onDisconnect((data) => print("Disconnect"));
+    _eventData.close();
   }
 
   Future<void> onConnect() async {

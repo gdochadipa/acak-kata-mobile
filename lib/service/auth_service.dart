@@ -57,6 +57,7 @@ class AuthService {
 
     if (response.statusCode == 201 || response.statusCode == 200) {
       var data = jsonDecode(response.body);
+      print(data);
       UserModel user = UserModel.fromJson(data['data']);
       user.token = 'Bearer ' + data['token'];
       return user;
