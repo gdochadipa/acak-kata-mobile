@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/services.dart';
@@ -23,13 +24,12 @@ class CobaEchoSocket {
             .build());
   }
 
-  Future<void> fireSocket(String roomId) async {
+  Future<void> fireSocket() async {
     socket = IO.io(
         SOCKET_URL,
         IO.OptionBuilder()
-            .setTransports(['websocket']) // for Flutter or Dart VM
             .disableAutoConnect()
-            .setExtraHeaders({'foo': 'bar'})
+            .setTransports(['websocket']) // for Flutter or Dart VM
             .build());
 
     socket.connect();
@@ -39,14 +39,16 @@ class CobaEchoSocket {
       print(data);
       _eventData.sink.add(data);
     });
-    socket.onConnect((_) {
+    socket.onConnect((conn) {
       print("running socket");
 
-      // socket.on('connect-to-room', (data) {
-      //   print("running socket");
-      //   socket.emit('test', "{data:data213}");
-      //   print(data);
-      // });
+      socket.emit('test', "{data:data213}");
+      socket.on("eventName", (data) {
+        print("eventName");
+        socket.emit('test', "{data:data213_eventName}");
+        print(data);
+        _eventData.sink.add(data);
+      });
 
       socket.onError((data) {
         log('onError', error: data);

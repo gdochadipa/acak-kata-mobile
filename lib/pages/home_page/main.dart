@@ -19,7 +19,7 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     // TODO: implement initState
-    echoSocket.fireSocket("QF1MKSZ");
+    echoSocket.fireSocket();
     super.initState();
   }
 
