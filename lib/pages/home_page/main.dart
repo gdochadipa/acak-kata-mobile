@@ -1,6 +1,7 @@
 import 'package:acakkata/pages/home_page/account_page.dart';
 import 'package:acakkata/pages/home_page/home_page.dart';
 import 'package:acakkata/pages/home_page/setting_page.dart';
+import 'package:acakkata/service/coba_echo_socket.dart';
 import 'package:acakkata/theme.dart';
 import 'package:flutter/material.dart';
 
@@ -13,6 +14,14 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   int currentIndex = 1;
+  CobaEchoSocket echoSocket = CobaEchoSocket();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    echoSocket.fireSocket("QF1MKSZ");
+    super.initState();
+  }
 
   Widget customBottomNav() {
     return ClipRRect(

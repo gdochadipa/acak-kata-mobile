@@ -1,7 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.acakkata_sqlite_project">
+    <uses-permission android:name="android.permission.INTERNET" />
    <application
         android:label="acakkata"
+        android:usesCleartextTraffic="true"
         android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
