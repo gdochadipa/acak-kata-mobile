@@ -1,3 +1,4 @@
+import 'package:acakkata/models/room_match_detail_model.dart';
 import 'package:acakkata/models/room_match_model.dart';
 import 'package:acakkata/models/word_language_model.dart';
 import 'package:acakkata/service/room_service.dart';
@@ -110,6 +111,14 @@ class RoomProvider with ChangeNotifier {
       return true;
     } catch (e) {
       return false;
+    }
+  }
+
+  updateRoomDetail({RoomMatchDetailModel? roomMatchDetailModel}) {
+    if (_roomMatch!.max_player! > _roomMatch!.room_match_detail!.length) {
+      _roomMatch!.room_match_detail!.add(roomMatchDetailModel!);
+    } else {
+      print("Room sudah penuh");
     }
   }
 }

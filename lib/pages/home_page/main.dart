@@ -14,12 +14,12 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   int currentIndex = 1;
-  CobaEchoSocket echoSocket = CobaEchoSocket();
+  // CobaEchoSocket echoSocket = CobaEchoSocket();
 
   @override
   void initState() {
     // TODO: implement initState
-    echoSocket.fireSocket();
+    // echoSocket.fireSocket();
     super.initState();
   }
 

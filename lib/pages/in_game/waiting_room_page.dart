@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/models/room_match_detail_model.dart';
@@ -50,8 +51,13 @@ class _WaitingRoomPageState extends State<WaitingRoomPage> {
 
   connectSocket() async {
     await socketService.fireSocket();
-    socketService.bindEventConnectRoom();
-    await socketService.onTest();
+    socketService.emitJoinRoom('${widget._roomProvider.roomMatch!.room_code}');
+    await socketService.bindEventSearchRoom();
+    // await socketService.onTest();
+  }
+
+  joinRoom() {
+    socketService.emitJoinRoom('${widget._roomProvider.roomMatch!.room_code}');
   }
 
   disconnectSocket() async {
@@ -134,7 +140,8 @@ class _WaitingRoomPageState extends State<WaitingRoomPage> {
         margin: EdgeInsets.only(top: 30),
         child: TextButton(
             onPressed: () {
-              Navigator.pop(context);
+              // Navigator.pop(context);
+              joinRoom();
             },
             style: TextButton.styleFrom(
                 backgroundColor: alertColor,
@@ -185,22 +192,44 @@ class _WaitingRoomPageState extends State<WaitingRoomPage> {
       body: StreamBuilder(
         stream: socketService.eventStream,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
-          print("success :${snapshot.hasData}");
           if (snapshot.hasData) {
-            print(snapshot.data);
+            try {
+              var data = json.decode(snapshot.data.toString());
+              RoomMatchDetailModel matchDetail =
+                  RoomMatchDetailModel.fromJson(data['room_detail']);
+              widget._roomProvider
+                  .updateRoomDetail(roomMatchDetailModel: matchDetail);
+            } catch (e) {
+              print(e);
+            }
+            LoadingisReady = "New player join room";
+
+            return Container(
+              child: ListView(
+                children: [
+                  HeaderBar(
+                      widget.language,
+                      backgroundColor2,
+                      whiteTextStyle.copyWith(fontSize: 16, fontWeight: medium),
+                      whiteColor),
+                  cardBody(LoadingisReady!)
+                ],
+              ),
+            );
+          } else {
+            return Container(
+              child: ListView(
+                children: [
+                  HeaderBar(
+                      widget.language,
+                      backgroundColor2,
+                      whiteTextStyle.copyWith(fontSize: 16, fontWeight: medium),
+                      whiteColor),
+                  cardBody(LoadingisReady!)
+                ],
+              ),
+            );
           }
-          return Container(
-            child: ListView(
-              children: [
-                HeaderBar(
-                    widget.language,
-                    backgroundColor2,
-                    whiteTextStyle.copyWith(fontSize: 16, fontWeight: medium),
-                    whiteColor),
-                cardBody(LoadingisReady)
-              ],
-            ),
-          );
         },
       ),
     );

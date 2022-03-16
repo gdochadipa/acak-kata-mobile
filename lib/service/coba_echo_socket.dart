@@ -33,20 +33,28 @@ class CobaEchoSocket {
             .build());
 
     socket.connect();
-    socket.on("eventName", (data) {
-      print("eventName");
-      socket.emit('test', "{data:data213}");
-      print(data);
-      _eventData.sink.add(data);
+    socket.on('connect', (_) {
+      print('connected');
     });
-    socket.onConnect((conn) {
-      print("running socket");
 
-      socket.emit('test', "{data:data213}");
-      socket.on("eventName", (data) {
-        print("eventName");
+    socket.onConnect((conn) {
+      socket.emit(
+          'join-room',
+          json.encode({
+            'channel_code': 'QF1MKSZ',
+            'player_id': 'client-flutter',
+          }));
+
+      socket.emit(
+          'eventName',
+          json.encode({
+            'channel_code': 'QF1MKSZ',
+            'language_code': 'lang',
+            'player_id': '6229fa7b220c7918c7dacfce'
+          }));
+      socket.on("set-room-2", (data) {
+        print("test");
         socket.emit('test', "{data:data213_eventName}");
-        print(data);
         _eventData.sink.add(data);
       });
 

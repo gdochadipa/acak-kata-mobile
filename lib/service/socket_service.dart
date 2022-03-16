@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:acakkata/models/room_match_detail_model.dart';
 import 'package:flutter/services.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
@@ -21,24 +22,12 @@ class SocketService {
     });
   }
 
-  bindEventConnectRoom() {
-    // socket.io.
-    socket.onConnect((data) {
-      print("on connected:connect-to-room ");
-      socket.on('connect-to-room', (last) {
-        print(last);
-        final String? data = last;
-        _inEventData.add(data);
-      });
+  Future<void> bindEventSearchRoom() async {
+    socket.on('set-room', (last) {
+      final String? data = last.toString();
+      _inEventData.add(data);
     });
   }
-
-  // Future<void> bindEventSearchRoom() async {
-  //   socket.on('connect-to-room', (last) {
-  //     final String? data = last!.data;
-  //     _inEventData.add(data);
-  //   });
-  // }
 
 /**
  * question => json
@@ -61,15 +50,20 @@ class SocketService {
     });
   }
 
-  Future<void> emitSearchRoom(
-      String channelCode, String languageCode, String playerId) async {
+  Future<void> emitSearchRoom(String channelCode, String languageCode,
+      RoomMatchDetailModel roomMatchDet) async {
     socket.emit(
         'search-room',
         json.encode({
           'channel_code': channelCode,
           'language_code': languageCode,
-          'player_id': playerId
+          'room_detail': roomMatchDet
         }));
+  }
+
+  emitJoinRoom(String channelCode) {
+    socket.emit('join-room',
+        json.encode({'channel_code': channelCode, 'player_id': 'flutter'}));
   }
 
   Future<void> emitSendQuestion(String channelCode, String languageCode,
@@ -101,12 +95,6 @@ class SocketService {
     _eventData.close();
   }
 
-  Future<void> onConnect() async {
-    socket.onConnect((_) {
-      print("socket on connected: ${socket.connected}");
-    });
-  }
-
   Future<void> onTest() async {
     socket.emit('test', json.encode({'test': 'tes123'}));
   }
@@ -120,6 +108,12 @@ class SocketService {
               .build());
 
       socket.connect();
+
+      socket.on('connect', (data) {
+        print('connected');
+      });
+
+      socket.onDisconnect((_) => {print('disconnect')});
     } catch (e) {
       print(e);
     }
@@ -127,6 +121,5 @@ class SocketService {
 
   Future<void> fireSocket() async {
     await initSocket();
-    await onConnect();
   }
 }

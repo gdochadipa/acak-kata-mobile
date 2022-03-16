@@ -92,6 +92,7 @@ flutter:
     - assets/images/id_lang.png
     - assets/images/java_lang.png
     - assets/images/arrow.png
+    - assets/images/icon_logout.png
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
