@@ -55,12 +55,10 @@ class AccountPage extends StatelessWidget {
                     Navigator.pushNamedAndRemoveUntil(
                         context, '/sign-in', (route) => false);
                   },
-                  child: Text(
-                    'Logout',
-                    style: primaryTextStyle.copyWith(
-                      fontSize: 24,
-                      fontWeight: semiBold,
-                    ),
+                  child: Image.asset(
+                    'assets/images/icon_logout.png',
+                    width: 25,
+                    color: primaryColor,
                   ))
             ],
           ),

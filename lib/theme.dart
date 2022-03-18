@@ -23,6 +23,8 @@ Color secondaryTextColor = Color(0xff979797);
 Color thirdTextColor = Color(0xff2B2937);
 Color whiteColor = Color(0xffFFFFFF);
 Color primaryBeningColor = Color.fromRGBO(185, 131, 255, 0.5);
+Color kLineDarkColor = Color(0xffEAEAEA);
+Color kWhiteGreyColor = Color(0xffF1F1F5);
 
 Color firstLinierColor = Color(0xff5FDCF0);
 Color secondLinierColor = Color(0xff05BEF8);

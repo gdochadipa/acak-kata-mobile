@@ -1,10 +1,14 @@
 import 'package:acakkata/models/language_model.dart';
+import 'package:acakkata/models/room_match_model.dart';
+import 'package:acakkata/providers/room_provider.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/header.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class NewPlayerJoinRoomPage extends StatefulWidget {
   // const NewPlayerJoinRoomPage({ Key? key }) : super(key: key);
+  late final RoomProvider _roomProvider;
   late final LanguageModel language;
   NewPlayerJoinRoomPage(this.language);
   @override
@@ -12,6 +16,43 @@ class NewPlayerJoinRoomPage extends StatefulWidget {
 }
 
 class _NewPlayerJoinRoomPageState extends State<NewPlayerJoinRoomPage> {
+  late RoomMatchModel roomMatchModel;
+  @override
+  void initState() {
+    // TODO: implement initState
+    RoomProvider roomProvider =
+        Provider.of<RoomProvider>(context, listen: false);
+    widget._roomProvider = roomProvider;
+    roomMatchModel = widget._roomProvider.roomMatch!;
+    super.initState();
+  }
+
+  joinRoom() async {
+    try {
+      var roomCode = widget._roomProvider.roomMatch!.room_code;
+      if (await widget._roomProvider
+          .findRoomWithCode(widget.language.id, roomCode)) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+            "Berhasil menemukan Room",
+            textAlign: TextAlign.center,
+          ),
+          backgroundColor: successColor,
+        ));
+      }
+    } catch (e, stacktrace) {
+      print(e);
+      String error = e.toString().replaceAll('Exception:', '');
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          error,
+          textAlign: TextAlign.center,
+        ),
+        backgroundColor: alertColor,
+      ));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget PlayersAvatars() {
@@ -66,15 +107,15 @@ class _NewPlayerJoinRoomPageState extends State<NewPlayerJoinRoomPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                '#ROOMCODE',
+                '#${roomMatchModel.channel_code}',
                 style:
-                    primaryTextStyle.copyWith(fontSize: 18, fontWeight: medium),
+                    primaryTextStyle.copyWith(fontSize: 20, fontWeight: medium),
               ),
               SizedBox(
                 height: 12,
               ),
               Text(
-                'Language Text',
+                '${widget.language.language_name}',
                 style:
                     primaryTextStyle.copyWith(fontSize: 18, fontWeight: medium),
               ),
@@ -96,7 +137,9 @@ class _NewPlayerJoinRoomPageState extends State<NewPlayerJoinRoomPage> {
               backgroundColor: primaryColor,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12))),
-          onPressed: () {},
+          onPressed: () {
+            joinRoom();
+          },
         ),
       );
     }
