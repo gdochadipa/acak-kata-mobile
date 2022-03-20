@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:acakkata/models/user_model.dart';
 
 class RoomMatchDetailModel {
@@ -19,9 +21,17 @@ class RoomMatchDetailModel {
     is_host = json['is_host'];
     is_ready = json['is_ready'];
     status_player = json['status_player'];
-    player = json['player_id'].isEmpty
-        ? UninitializedUserModel()
-        : UserModel.fromJson(json['player_id']);
+    if (json['player_id'] is String) {
+      log('is String');
+      player_id = json['player_id'];
+      player = player = json['player'].isEmpty
+          ? UninitializedUserModel()
+          : UserModel.fromJson(json['player']);
+    } else {
+      player = json['player_id'].isEmpty
+          ? UninitializedUserModel()
+          : UserModel.fromJson(json['player_id']);
+    }
   }
 
   Map<String, dynamic> toJson() {

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/models/room_match_detail_model.dart';
 import 'package:acakkata/models/room_match_model.dart';
@@ -16,6 +18,7 @@ class RoomMatchPage extends StatefulWidget {
   // const RoomMatchPage({ Key? key }) : super(key: key);
 
   late final LanguageModel language;
+  late final RoomProvider _roomProvider;
 
   RoomMatchPage(this.language);
 
@@ -29,6 +32,10 @@ class _RoomMatchPageState extends State<RoomMatchPage> {
   @override
   void initState() {
     // TODO: implement initState
+    RoomProvider roomProvider =
+        Provider.of<RoomProvider>(context, listen: false);
+    widget._roomProvider = roomProvider;
+    connectSocket();
     super.initState();
   }
 
@@ -41,6 +48,8 @@ class _RoomMatchPageState extends State<RoomMatchPage> {
 
   connectSocket() async {
     await socketService.fireSocket();
+    socketService.emitJoinRoom(
+        '${widget._roomProvider.roomMatch!.room_code}', 'allhost');
     await socketService.bindEventSearchRoom();
     await socketService.bindReceiveStatusPlayer();
   }
@@ -157,13 +166,16 @@ class _RoomMatchPageState extends State<RoomMatchPage> {
           Container(
             child: Wrap(
               alignment: WrapAlignment.start,
-              children: [
-                PlayerProfile(listRoomMatchDetail![0], isReadyPlayer[0]),
-                PlayerProfile(listRoomMatchDetail[0], isReadyPlayer[0]),
-                PlayerProfile(listRoomMatchDetail[0], isReadyPlayer[0]),
-                PlayerProfileSkeleton()
-                // PlayerProfile(listRoomMatchDetail[1], isReadyPlayer[1])
-              ],
+              // children: [
+              //   PlayerProfile(listRoomMatchDetail![0], isReadyPlayer[0]),
+              //   PlayerProfile(listRoomMatchDetail[0], isReadyPlayer[0]),
+              //   PlayerProfile(listRoomMatchDetail[0], isReadyPlayer[0]),
+              //   PlayerProfileSkeleton()
+              //   // PlayerProfile(listRoomMatchDetail[1], isReadyPlayer[1])
+              // ],
+              children: roomProvider.listRoommatchDet!
+                  .map((e) => PlayerProfile(e, e.is_ready == 0 ? false : true))
+                  .toList(),
             ),
           )
         ]),
@@ -240,8 +252,18 @@ class _RoomMatchPageState extends State<RoomMatchPage> {
       body: StreamBuilder(
         stream: socketService.eventStream,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
+          logger.d(snapshot.data);
           if (snapshot.hasData) {
-            // logger.d(snapshot.data);
+            var data = json.decode(snapshot.data.toString());
+            if (data['target'] == 'update-player') {
+              RoomMatchDetailModel matchDetail =
+                  RoomMatchDetailModel.fromJson(data['room_detail']);
+              roomProvider.updateRoomDetail(roomMatchDetailModel: matchDetail);
+            }
+            if (data['target'] == 'update-status') {
+              roomProvider.updateStatusPlayer(
+                  data['room_detail_id'], data['status'] == 0 ? false : true);
+            }
           }
 
           return Container(

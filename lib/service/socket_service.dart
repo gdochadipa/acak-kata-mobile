@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:acakkata/models/room_match_detail_model.dart';
 import 'package:flutter/services.dart';
@@ -21,7 +22,7 @@ class SocketService {
 
   Future<void> bindEvent(String eventName) async {
     socket.on(eventName, (last) {
-      final String? data = last!.data;
+      final String? data = last.toString();
       _inEventData.add(data);
     });
   }
@@ -42,19 +43,19 @@ class SocketService {
  */
   Future<void> bindReceiveQuestion() async {
     socket.on('broadcast-question', (last) {
-      final String? data = last!.data;
+      final String? data = last.toString();
       _inEventData.add(data);
     });
   }
 
   Future<void> bindReceiveUserDisconnect() async {
     socket.on('user-disconnected', (last) {
-      final String? data = last!.data;
+      final String? data = last.toString();
       _inEventData.add(data);
     });
   }
 
-  Future<void> emitSearchRoom(String channelCode, String languageCode,
+  emitSearchRoom(String channelCode, String languageCode,
       RoomMatchDetailModel roomMatchDet) async {
     socket.emit(
         'search-room',
@@ -63,18 +64,21 @@ class SocketService {
           'language_code': languageCode,
           'room_detail': roomMatchDet
         }));
+    log("Berhasil go to room");
   }
 
   Future<void> bindReceiveStatusPlayer() async {
     socket.on('broadcast-status-player', (last) {
-      final String? data = last!.data;
+      final String? data = last.toString();
       _inEventData.add(data);
     });
   }
 
-  emitJoinRoom(String channelCode) {
-    socket.emit('join-room',
-        json.encode({'channel_code': channelCode, 'player_id': 'flutter'}));
+  emitJoinRoom(String channelCode, String player) {
+    socket.emit(
+        'join-room',
+        json.encode(
+            {'channel_code': channelCode, 'player_id': 'flutter ${player}'}));
   }
 
   emitStatusPlayer(RoomMatchDetailModel? roomMatchDet, bool is_ready) {
@@ -131,8 +135,6 @@ class SocketService {
       socket.on('connect', (data) {
         print('connected');
       });
-
-      socket.onDisconnect((_) => {print('disconnect')});
     } catch (e) {
       print(e);
     }

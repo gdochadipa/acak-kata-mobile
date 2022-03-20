@@ -1,11 +1,18 @@
+import 'dart:developer';
+
 import 'package:acakkata/models/language_model.dart';
+import 'package:acakkata/models/room_match_detail_model.dart';
 import 'package:acakkata/pages/in_game/game_play_page.dart';
+import 'package:acakkata/pages/in_game/room_match_page.dart';
 import 'package:acakkata/pages/in_game/waiting_room_page.dart';
+import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/providers/language_db_provider.dart';
 import 'package:acakkata/providers/room_provider.dart';
+import 'package:acakkata/service/socket_service.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/custom_page_route.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 class PrepareGamePage extends StatefulWidget {
@@ -19,10 +26,12 @@ class PrepareGamePage extends StatefulWidget {
 
 class _PrepareGamePageState extends State<PrepareGamePage> {
   TextEditingController room_code = TextEditingController(text: '');
-
+  SocketService socketService = SocketService();
   late FocusNode roomCode = FocusNode();
   late RoomProvider roomProvider =
       Provider.of<RoomProvider>(context, listen: false);
+  late AuthProvider authProvider =
+      Provider.of<AuthProvider>(context, listen: false);
 
   bool isLoading = false;
   List<bool> isSelectedQuestion = [true, false, false];
@@ -36,16 +45,26 @@ class _PrepareGamePageState extends State<PrepareGamePage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    connectSocket();
     setState(() {
       selectedQuestion = questionList[0];
       selectedTime = timeList[0];
     });
   }
 
+  connectSocket() async {
+    await socketService.fireSocket();
+  }
+
+  disconnectSocket() async {
+    await socketService.disconnect();
+  }
+
   @override
   void dispose() {
     // TODO: implement dispose
     roomCode.dispose();
+    disconnectSocket();
     super.dispose();
   }
 
@@ -125,13 +144,20 @@ class _PrepareGamePageState extends State<PrepareGamePage> {
             ),
             backgroundColor: successColor,
           ));
+          String? idUser = authProvider.user!.id;
+          socketService.emitJoinRoom('${room_code.text}', 'client');
+          RoomMatchDetailModel roomSend = roomProvider.listRoommatchDet!
+              .where((detail) => detail.player!.id!.contains('${idUser}'))
+              .first;
+          socketService.emitSearchRoom(
+              room_code.text, widget.language.id ?? '', roomSend);
+
           // Navigator.push(
-          //     context,
-          //     CustomPageRoute(
-          //         GamePlayPage(widget.language, selectedTime, selectedTime)));
+          //     context, CustomPageRoute(RoomMatchPage(widget.language)));
         }
       } catch (e, stacktrace) {
         print(e);
+        print(stacktrace.toString());
         String error = e.toString().replaceAll('Exception:', '');
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(

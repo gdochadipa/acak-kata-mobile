@@ -9,6 +9,9 @@ class RoomProvider with ChangeNotifier {
   RoomMatchModel? _roomMatch;
   RoomMatchModel? get roomMatch => _roomMatch;
 
+  List<RoomMatchDetailModel>? get listRoommatchDet =>
+      _roomMatch!.room_match_detail;
+
   late int _numberCountDown;
   late int _totalQuestion;
   late int _maxPlayer;
@@ -127,6 +130,20 @@ class RoomProvider with ChangeNotifier {
       }
     } else {
       print("Room sudah penuh");
+    }
+  }
+
+  updateStatusPlayer(String? roomDetailId, bool? status) {
+    if (status == true) {
+      List<RoomMatchDetailModel> detail = roomMatch!.room_match_detail!
+          .where((detail) => detail.id!.contains(roomDetailId ?? ''))
+          .toList();
+      if (detail.length == 1) {
+        roomMatch!.room_match_detail!
+            .where((detail) => detail.id!.contains(roomDetailId ?? ''))
+            .first
+            .is_ready = 1;
+      }
     }
   }
 }

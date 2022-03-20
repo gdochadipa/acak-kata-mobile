@@ -53,9 +53,10 @@ class _WaitingRoomPageState extends State<WaitingRoomPage> {
 
   connectSocket() async {
     await socketService.fireSocket();
-    socketService.emitJoinRoom('${widget._roomProvider.roomMatch!.room_code}');
+    socketService.emitJoinRoom(
+        '${widget._roomProvider.roomMatch!.room_code}', 'host');
     await socketService.bindEventSearchRoom();
-    await socketService.onTest();
+    // await socketService.onTest();
   }
 
   // joinRoom() {
@@ -205,7 +206,7 @@ class _WaitingRoomPageState extends State<WaitingRoomPage> {
                   RoomMatchDetailModel.fromJson(data['room_detail']);
               widget._roomProvider
                   .updateRoomDetail(roomMatchDetailModel: matchDetail);
-              socketService.disconnect();
+              // socketService.disconnect();
               WidgetsBinding.instance!.addPostFrameCallback((_) {
                 Navigator.push(
                     context,
