@@ -20,7 +20,15 @@ class HomePage extends StatelessWidget {
         margin: EdgeInsets.only(top: 30, left: 15, right: 15),
         padding: EdgeInsets.only(left: 15, right: 8, top: 15, bottom: 15),
         decoration: BoxDecoration(
-            color: backgroundColor6, borderRadius: BorderRadius.circular(15)),
+            color: backgroundColor6,
+            borderRadius: BorderRadius.circular(15),
+            boxShadow: [
+              BoxShadow(
+                  color: backgroundColor5.withOpacity(0.5),
+                  spreadRadius: 2,
+                  blurRadius: 7,
+                  offset: Offset(0, 3))
+            ]),
         child: Center(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,

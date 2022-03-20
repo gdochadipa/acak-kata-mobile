@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/models/room_match_detail_model.dart';
@@ -54,7 +55,7 @@ class _WaitingRoomPageState extends State<WaitingRoomPage> {
     await socketService.fireSocket();
     socketService.emitJoinRoom('${widget._roomProvider.roomMatch!.room_code}');
     await socketService.bindEventSearchRoom();
-    // await socketService.onTest();
+    await socketService.onTest();
   }
 
   // joinRoom() {
@@ -141,8 +142,12 @@ class _WaitingRoomPageState extends State<WaitingRoomPage> {
         margin: EdgeInsets.only(top: 30),
         child: TextButton(
             onPressed: () {
-              Navigator.pop(context);
+              // Navigator.pop(context);
               // joinRoom();
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => RoomMatchPage(widget.language)));
             },
             style: TextButton.styleFrom(
                 backgroundColor: alertColor,
@@ -200,6 +205,7 @@ class _WaitingRoomPageState extends State<WaitingRoomPage> {
                   RoomMatchDetailModel.fromJson(data['room_detail']);
               widget._roomProvider
                   .updateRoomDetail(roomMatchDetailModel: matchDetail);
+              socketService.disconnect();
               WidgetsBinding.instance!.addPostFrameCallback((_) {
                 Navigator.push(
                     context,

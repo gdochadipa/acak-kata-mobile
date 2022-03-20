@@ -20,24 +20,24 @@ class PlayerProfileSkeleton extends StatelessWidget {
                   ShapeDecoration(color: kLineDarkColor, shape: CircleBorder()),
             ),
             SizedBox(
-              height: 12,
+              height: 15,
             ),
             Shimmer.fromColors(
               child: Container(
                 width: double.infinity,
-                height: 22,
+                height: 35,
                 color: kLineDarkColor,
               ),
               baseColor: kLineDarkColor,
               highlightColor: kWhiteGreyColor,
             ),
             SizedBox(
-              height: 12,
+              height: 15,
             ),
             Shimmer.fromColors(
               child: Container(
                 width: double.infinity,
-                height: 10,
+                height: 25,
                 color: kLineDarkColor,
               ),
               baseColor: kLineDarkColor,

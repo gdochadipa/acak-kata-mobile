@@ -116,7 +116,15 @@ class RoomProvider with ChangeNotifier {
 
   updateRoomDetail({RoomMatchDetailModel? roomMatchDetailModel}) {
     if (_roomMatch!.max_player! > _roomMatch!.room_match_detail!.length) {
-      _roomMatch!.room_match_detail!.add(roomMatchDetailModel!);
+      List<RoomMatchDetailModel> detail = roomMatch!.room_match_detail!
+          .where(
+              (detail) => detail.id!.contains(roomMatchDetailModel!.id ?? ''))
+          .toList();
+      if (detail.length == 0) {
+        _roomMatch!.room_match_detail!.add(roomMatchDetailModel!);
+      } else {
+        print("Player sudah bergabung sebelumnya");
+      }
     } else {
       print("Room sudah penuh");
     }

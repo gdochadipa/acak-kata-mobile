@@ -1,3 +1,4 @@
+import 'package:acakkata/models/room_match_detail_model.dart';
 import 'package:acakkata/models/room_match_model.dart';
 import 'package:acakkata/theme.dart';
 import 'package:flutter/material.dart';
@@ -9,11 +10,10 @@ class PlayerProfile extends StatelessWidget {
   //   required this.isReadyPlayer,
   // }) : super(key: key);
 
-  PlayerProfile(this.roomMatch, this.isReadyPlayer, this.item);
+  PlayerProfile(this.matchDetail, this.isReady);
 
-  final RoomMatchModel? roomMatch;
-  final List<bool> isReadyPlayer;
-  final int item;
+  final RoomMatchDetailModel? matchDetail;
+  final bool isReady;
 
   @override
   Widget build(BuildContext context) {
@@ -41,19 +41,19 @@ class PlayerProfile extends StatelessWidget {
               height: 12,
             ),
             Text(
-              '${roomMatch!.room_match_detail![item].player!.name}',
+              '${matchDetail!.player!.name}',
               style:
                   primaryTextStyle.copyWith(fontSize: 18, fontWeight: medium),
             ),
             Text(
-              '#${roomMatch!.room_match_detail![item].player!.userCode}',
+              '#${matchDetail!.player!.userCode}',
               style: thirdTextStyle.copyWith(fontSize: 14, fontWeight: regular),
             ),
             SizedBox(
               height: 12,
             ),
             Text(
-              isReadyPlayer[item] ? 'Ready' : 'Not Ready',
+              isReady ? 'Ready' : 'Not Ready',
               style:
                   thirdTextStyle.copyWith(fontSize: 16, fontWeight: semiBold),
             ),

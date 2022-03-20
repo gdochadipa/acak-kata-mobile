@@ -15,6 +15,10 @@ class SocketService {
   Sink get _inEventData => _eventData.sink;
   Stream get eventStream => _eventData.stream;
 
+  stopStream() {
+    _eventData.close();
+  }
+
   Future<void> bindEvent(String eventName) async {
     socket.on(eventName, (last) {
       final String? data = last!.data;
@@ -61,9 +65,21 @@ class SocketService {
         }));
   }
 
+  Future<void> bindReceiveStatusPlayer() async {
+    socket.on('broadcast-status-player', (last) {
+      final String? data = last!.data;
+      _inEventData.add(data);
+    });
+  }
+
   emitJoinRoom(String channelCode) {
     socket.emit('join-room',
         json.encode({'channel_code': channelCode, 'player_id': 'flutter'}));
+  }
+
+  emitStatusPlayer(RoomMatchDetailModel? roomMatchDet, bool is_ready) {
+    socket.emit('status-player',
+        json.encode({'room_detail_id': roomMatchDet!.id, 'status': is_ready}));
   }
 
   Future<void> emitSendQuestion(String channelCode, String languageCode,
@@ -91,12 +107,15 @@ class SocketService {
   }
 
   Future<void> disconnect() async {
+    socket.disconnect();
     socket.onDisconnect((data) => print("Disconnect"));
     _eventData.close();
   }
 
   Future<void> onTest() async {
-    socket.emit('test', json.encode({'test': 'tes123'}));
+    socket.on('eventName', (data) {
+      print(data.toString());
+    });
   }
 
   Future<void> initSocket() async {

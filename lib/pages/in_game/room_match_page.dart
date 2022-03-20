@@ -1,11 +1,15 @@
 import 'package:acakkata/models/language_model.dart';
+import 'package:acakkata/models/room_match_detail_model.dart';
 import 'package:acakkata/models/room_match_model.dart';
 import 'package:acakkata/models/user_model.dart';
 import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/providers/room_provider.dart';
 import 'package:acakkata/service/socket_service.dart';
 import 'package:acakkata/theme.dart';
+import 'package:acakkata/widgets/player_profile.dart';
+import 'package:acakkata/widgets/skeleton/player_profile_skeleton.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 class RoomMatchPage extends StatefulWidget {
@@ -13,7 +17,7 @@ class RoomMatchPage extends StatefulWidget {
 
   late final LanguageModel language;
 
-  RoomMatchPage(LanguageModel language);
+  RoomMatchPage(this.language);
 
   @override
   State<RoomMatchPage> createState() => _RoomMatchPageState();
@@ -37,6 +41,8 @@ class _RoomMatchPageState extends State<RoomMatchPage> {
 
   connectSocket() async {
     await socketService.fireSocket();
+    await socketService.bindEventSearchRoom();
+    await socketService.bindReceiveStatusPlayer();
   }
 
   disconnectSocket() async {
@@ -49,12 +55,21 @@ class _RoomMatchPageState extends State<RoomMatchPage> {
     UserModel? user = authProvider.user;
     RoomProvider roomProvider = Provider.of<RoomProvider>(context);
     RoomMatchModel? roomMatch = roomProvider.roomMatch!;
+    List<bool> isReadyPlayer = [false, false];
+    bool afterConfirm = false;
+    Logger logger = Logger(
+      printer: PrettyPrinter(methodCount: 0),
+    );
 
-    handleConfirmInGame() {}
+    handleConfirmInGame() {
+      roomMatch.room_match_detail!
+          .where((detail) => detail.id!.contains(""))
+          .toList();
+    }
 
     Widget textRoomId() {
       return Container(
-        margin: EdgeInsets.only(top: 70),
+        margin: EdgeInsets.only(top: 10),
         child: Center(
           child: Text(
             "#${roomMatch.room_code}",
@@ -66,34 +81,45 @@ class _RoomMatchPageState extends State<RoomMatchPage> {
 
     Widget header() {
       return Container(
-          margin: EdgeInsets.only(top: 30, left: 15, right: 15),
-          padding: EdgeInsets.only(left: 15, right: 8, top: 15, bottom: 15),
+          margin: EdgeInsets.only(top: 15, left: 15, right: 15),
+          padding: EdgeInsets.only(left: 8, right: 8, top: 15, bottom: 15),
           decoration: BoxDecoration(
-              color: backgroundColor6, borderRadius: BorderRadius.circular(15)),
+              color: backgroundColor2,
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: [
+                BoxShadow(
+                    color: backgroundColor2.withOpacity(0.5),
+                    spreadRadius: 5,
+                    blurRadius: 7,
+                    offset: Offset(0, 3))
+              ]),
           child: Row(
             children: [
               SizedBox(
-                height: 50,
-                width: 50,
+                height: 90,
+                width: 90,
                 child: Stack(
                   children: [
                     Center(
                       child: Container(
-                        height: 40,
-                        width: 40,
+                        height: 80,
+                        width: 80,
                         padding: EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                          color: whiteColor,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
                         child: CircularProgressIndicator(
-                          strokeWidth: 15,
-                          value: 0.5,
+                          strokeWidth: 5,
+                          value: 0.75,
+                          backgroundColor: backgroundColor5,
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(backgroundColor1),
                         ),
                       ),
                     ),
                     Center(
-                      child: Text("Testting"),
+                      child: Text(
+                        "3/4",
+                        style: whiteTextStyle.copyWith(
+                            fontSize: 16, fontWeight: semiBold),
+                      ),
                     )
                   ],
                 ),
@@ -102,17 +128,17 @@ class _RoomMatchPageState extends State<RoomMatchPage> {
                 width: 10,
               ),
               Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Room Match',
-                    style:
-                        headerText3.copyWith(fontSize: 16, fontWeight: medium),
+                    '#${roomMatch.room_code}',
+                    style: whiteTextStyle.copyWith(
+                        fontSize: 18, fontWeight: semiBold),
                   ),
                   Text(
                     '${widget.language.language_name}',
-                    style: thirdTextStyle.copyWith(
-                        fontSize: 11, fontWeight: medium, color: grayColor3),
+                    style: whiteTextStyle.copyWith(
+                        fontSize: 14, fontWeight: medium),
                   ),
                 ],
               )
@@ -120,12 +146,125 @@ class _RoomMatchPageState extends State<RoomMatchPage> {
           ));
     }
 
+    Widget body(List<RoomMatchDetailModel>? listRoomMatchDetail) {
+      return Container(
+        margin: EdgeInsets.only(top: 10, left: 5, right: 5),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+          // textRoomId(),
+          SizedBox(
+            height: 10,
+          ),
+          Container(
+            child: Wrap(
+              alignment: WrapAlignment.start,
+              children: [
+                PlayerProfile(listRoomMatchDetail![0], isReadyPlayer[0]),
+                PlayerProfile(listRoomMatchDetail[0], isReadyPlayer[0]),
+                PlayerProfile(listRoomMatchDetail[0], isReadyPlayer[0]),
+                PlayerProfileSkeleton()
+                // PlayerProfile(listRoomMatchDetail[1], isReadyPlayer[1])
+              ],
+            ),
+          )
+        ]),
+      );
+    }
+
+    Widget ConfirmReadyMatch() {
+      return Container(
+        height: 45,
+        width: (MediaQuery.of(context).size.width - 82) / 2,
+        margin: EdgeInsets.all(15),
+        decoration: BoxDecoration(
+            color: backgroundColor1,
+            gradient: LinearGradient(
+                begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
+                colors: [backgroundColor1, backgroundColor2]),
+            borderRadius: BorderRadius.circular(15)),
+        child: TextButton(
+            onPressed: afterConfirm
+                ? null
+                : () {
+                    // handleConfirmInGame(roomMatch.id);
+                  },
+            style: TextButton.styleFrom(
+                backgroundColor:
+                    afterConfirm ? secondaryDisabled : secondaryColor,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12))),
+            child: Text(
+              'Ready',
+              style: whiteTextStyle.copyWith(fontSize: 16, fontWeight: medium),
+            )),
+      );
+    }
+
+    Widget cancelButton() {
+      return Container(
+        height: 45,
+        width: (MediaQuery.of(context).size.width - 82) / 2,
+        margin: EdgeInsets.all(15),
+        decoration: BoxDecoration(
+            color: backgroundColor1,
+            gradient: LinearGradient(
+                begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
+                colors: [backgroundColor1, backgroundColor2]),
+            borderRadius: BorderRadius.circular(15)),
+        child: TextButton(
+            onPressed: afterConfirm
+                ? null
+                : () {
+                    // handleConfirmInGame(roomMatch.id);
+                  },
+            style: TextButton.styleFrom(
+                backgroundColor: alertColor,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12))),
+            child: Text(
+              'Cancel',
+              style: whiteTextStyle.copyWith(fontSize: 16, fontWeight: medium),
+            )),
+      );
+    }
+
     return Scaffold(
-      backgroundColor: backgroundColor1,
+      backgroundColor: Colors.white,
+      bottomNavigationBar: Container(
+        margin: EdgeInsets.all(8),
+        child: Row(
+          children: [ConfirmReadyMatch(), cancelButton()],
+        ),
+      ),
       body: StreamBuilder(
         stream: socketService.eventStream,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
-          return Container();
+          if (snapshot.hasData) {
+            // logger.d(snapshot.data);
+          }
+
+          return Container(
+            padding: EdgeInsets.only(top: 28, left: 13, right: 13),
+            decoration: BoxDecoration(
+              color: backgroundColor1,
+              // gradient: LinearGradient(
+              //     begin: Alignment.topRight,
+              //     end: Alignment.bottomLeft,
+              //     colors: [backgroundColor1, backgroundColor2]),
+            ),
+            child: ListView(
+              shrinkWrap: true,
+              children: [
+                Column(
+                  children: [
+                    header(),
+                    body(roomMatch.room_match_detail),
+                  ],
+                ),
+              ],
+            ),
+          );
         },
       ),
     );
