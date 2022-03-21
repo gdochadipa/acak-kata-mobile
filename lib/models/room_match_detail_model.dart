@@ -21,22 +21,15 @@ class RoomMatchDetailModel {
     is_host = json['is_host'];
     is_ready = json['is_ready'];
     status_player = json['status_player'];
-    if (json['player_id'] is String) {
-      log('is String');
-      player_id = json['player_id'];
-      player = player = json['player'].isEmpty
-          ? UninitializedUserModel()
-          : UserModel.fromJson(json['player']);
-    } else {
-      player = json['player_id'].isEmpty
-          ? UninitializedUserModel()
-          : UserModel.fromJson(json['player_id']);
-    }
+    player_id = json['player_id'];
+    player = json['player'].isEmpty
+        ? UninitializedUserModel()
+        : UserModel.fromJson(json['player']);
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
+      '_id': id,
       'score': score,
       'player_id': player?.id,
       'player': player!.toJson(),

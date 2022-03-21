@@ -17,7 +17,7 @@ class UserModel {
       this.token});
 
   UserModel.fromJson(Map<String, dynamic> json) {
-    id = json['_id'];
+    id = json['id'];
     name = json['name'];
     email = json['email'];
     username = json['username'];
@@ -28,7 +28,7 @@ class UserModel {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
+      '_id': id,
       'name': name,
       'email': email,
       'username': username,

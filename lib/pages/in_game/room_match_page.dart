@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/models/room_match_detail_model.dart';
@@ -13,6 +14,7 @@ import 'package:acakkata/widgets/skeleton/player_profile_skeleton.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RoomMatchPage extends StatefulWidget {
   // const RoomMatchPage({ Key? key }) : super(key: key);
@@ -28,7 +30,8 @@ class RoomMatchPage extends StatefulWidget {
 
 class _RoomMatchPageState extends State<RoomMatchPage> {
   SocketService socketService = SocketService();
-
+  late AuthProvider authProvider =
+      Provider.of<AuthProvider>(context, listen: false);
   @override
   void initState() {
     // TODO: implement initState
@@ -60,7 +63,6 @@ class _RoomMatchPageState extends State<RoomMatchPage> {
 
   @override
   Widget build(BuildContext context) {
-    AuthProvider authProvider = Provider.of<AuthProvider>(context);
     UserModel? user = authProvider.user;
     RoomProvider roomProvider = Provider.of<RoomProvider>(context);
     RoomMatchModel? roomMatch = roomProvider.roomMatch!;
@@ -70,10 +72,23 @@ class _RoomMatchPageState extends State<RoomMatchPage> {
       printer: PrettyPrinter(methodCount: 0),
     );
 
-    handleConfirmInGame() {
-      roomMatch.room_match_detail!
-          .where((detail) => detail.id!.contains(""))
-          .toList();
+    handleConfirmInGame() async {
+      try {
+        String? idUser = authProvider.user!.id;
+        RoomMatchDetailModel sendUpdate = roomProvider
+            .roomMatch!.room_match_detail!
+            .where((detail) => detail.player_id!.contains('${idUser}'))
+            .first;
+        print(sendUpdate.toJson());
+        socketService.emitStatusPlayer(
+            '${roomProvider.roomMatch!.room_code}', sendUpdate, true);
+        setState(() {
+          afterConfirm = true;
+        });
+        roomProvider.updateStatusPlayer(sendUpdate.id, true);
+      } catch (e) {
+        logger.e(e);
+      }
     }
 
     Widget textRoomId() {
@@ -198,7 +213,7 @@ class _RoomMatchPageState extends State<RoomMatchPage> {
             onPressed: afterConfirm
                 ? null
                 : () {
-                    // handleConfirmInGame(roomMatch.id);
+                    handleConfirmInGame();
                   },
             style: TextButton.styleFrom(
                 backgroundColor:
@@ -258,7 +273,8 @@ class _RoomMatchPageState extends State<RoomMatchPage> {
             if (data['target'] == 'update-player') {
               RoomMatchDetailModel matchDetail =
                   RoomMatchDetailModel.fromJson(data['room_detail']);
-              roomProvider.updateRoomDetail(roomMatchDetailModel: matchDetail);
+              logger.d(data['room_detail']);
+              roomProvider.updateRoomDetail(matchDetail);
             }
             if (data['target'] == 'update-status') {
               roomProvider.updateStatusPlayer(

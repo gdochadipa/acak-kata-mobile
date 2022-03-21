@@ -62,9 +62,8 @@ class SocketService {
         json.encode({
           'channel_code': channelCode,
           'language_code': languageCode,
-          'room_detail': roomMatchDet
+          'room_detail': roomMatchDet.toJson()
         }));
-    log("Berhasil go to room");
   }
 
   Future<void> bindReceiveStatusPlayer() async {
@@ -81,9 +80,16 @@ class SocketService {
             {'channel_code': channelCode, 'player_id': 'flutter ${player}'}));
   }
 
-  emitStatusPlayer(RoomMatchDetailModel? roomMatchDet, bool is_ready) {
-    socket.emit('status-player',
-        json.encode({'room_detail_id': roomMatchDet!.id, 'status': is_ready}));
+  emitStatusPlayer(
+      String channel_code, RoomMatchDetailModel? roomMatchDet, bool is_ready) {
+    log('on status player ${roomMatchDet!.id} ${is_ready}');
+    socket.emit(
+        'status-player',
+        json.encode({
+          'channel_code': channel_code,
+          'room_detail_id': roomMatchDet.id,
+          'status': is_ready
+        }));
   }
 
   Future<void> emitSendQuestion(String channelCode, String languageCode,
@@ -113,6 +119,10 @@ class SocketService {
   Future<void> disconnect() async {
     socket.disconnect();
     socket.onDisconnect((data) => print("Disconnect"));
+    _eventData.close();
+  }
+
+  disconnectCloseStream() {
     _eventData.close();
   }
 

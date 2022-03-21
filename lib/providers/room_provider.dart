@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:acakkata/models/room_match_detail_model.dart';
 import 'package:acakkata/models/room_match_model.dart';
 import 'package:acakkata/models/word_language_model.dart';
@@ -117,7 +119,7 @@ class RoomProvider with ChangeNotifier {
     }
   }
 
-  updateRoomDetail({RoomMatchDetailModel? roomMatchDetailModel}) {
+  bool updateRoomDetail(RoomMatchDetailModel? roomMatchDetailModel) {
     if (_roomMatch!.max_player! > _roomMatch!.room_match_detail!.length) {
       List<RoomMatchDetailModel> detail = roomMatch!.room_match_detail!
           .where(
@@ -125,11 +127,14 @@ class RoomProvider with ChangeNotifier {
           .toList();
       if (detail.length == 0) {
         _roomMatch!.room_match_detail!.add(roomMatchDetailModel!);
+        return true;
       } else {
         print("Player sudah bergabung sebelumnya");
+        return false;
       }
     } else {
       print("Room sudah penuh");
+      return false;
     }
   }
 

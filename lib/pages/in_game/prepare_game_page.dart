@@ -152,8 +152,8 @@ class _PrepareGamePageState extends State<PrepareGamePage> {
           socketService.emitSearchRoom(
               room_code.text, widget.language.id ?? '', roomSend);
 
-          // Navigator.push(
-          //     context, CustomPageRoute(RoomMatchPage(widget.language)));
+          Navigator.push(
+              context, CustomPageRoute(RoomMatchPage(widget.language)));
         }
       } catch (e, stacktrace) {
         print(e);

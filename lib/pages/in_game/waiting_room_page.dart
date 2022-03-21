@@ -202,21 +202,26 @@ class _WaitingRoomPageState extends State<WaitingRoomPage> {
           if (snapshot.hasData) {
             try {
               var data = json.decode(snapshot.data.toString());
+
               RoomMatchDetailModel matchDetail =
                   RoomMatchDetailModel.fromJson(data['room_detail']);
-              widget._roomProvider
-                  .updateRoomDetail(roomMatchDetailModel: matchDetail);
-              // socketService.disconnect();
-              WidgetsBinding.instance!.addPostFrameCallback((_) {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => RoomMatchPage(widget.language)));
-              });
+              log('${data['room_detail']}');
+              log('${matchDetail.id}');
+              bool res = widget._roomProvider.updateRoomDetail(matchDetail);
+              if (res) {
+                LoadingisReady = "New player join room";
+                // socketService.disconnect();
+                socketService.disconnectCloseStream();
+                WidgetsBinding.instance!.addPostFrameCallback((_) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => RoomMatchPage(widget.language)));
+                });
+              }
             } catch (e) {
               print(e);
             }
-            LoadingisReady = "New player join room";
 
             return Container(
               child: ListView(
