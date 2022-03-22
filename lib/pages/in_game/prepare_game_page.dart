@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:math';
 
 import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/models/room_match_detail_model.dart';
@@ -100,8 +101,12 @@ class _PrepareGamePageState extends State<PrepareGamePage> {
       });
       // provider.setRuleGame(selectedTime, selectedQuestion);
       try {
+        print('${selectedQuestion}');
         if (await roomProvider.createRoom(
-            widget.language.id, 2, selectedTime, selectedTime)) {
+            language_id: widget.language.id,
+            max_player: 2,
+            time_watch: selectedTime,
+            total_question: selectedQuestion)) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(
               "Berhasil membuat Room",
@@ -145,9 +150,10 @@ class _PrepareGamePageState extends State<PrepareGamePage> {
             backgroundColor: successColor,
           ));
           String? idUser = authProvider.user!.id;
+          print('${idUser}');
           socketService.emitJoinRoom('${room_code.text}', 'client');
           RoomMatchDetailModel roomSend = roomProvider.listRoommatchDet!
-              .where((detail) => detail.player!.id!.contains('${idUser}'))
+              .where((detail) => detail.player_id!.contains('${idUser}'))
               .first;
           socketService.emitSearchRoom(
               room_code.text, widget.language.id ?? '', roomSend);
@@ -303,6 +309,7 @@ class _PrepareGamePageState extends State<PrepareGamePage> {
                     ),
                     Expanded(
                         child: TextFormField(
+                      textCapitalization: TextCapitalization.sentences,
                       focusNode: roomCode,
                       controller: room_code,
                       decoration: InputDecoration.collapsed(

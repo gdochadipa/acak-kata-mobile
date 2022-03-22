@@ -79,7 +79,6 @@ class _RoomMatchPageState extends State<RoomMatchPage> {
             .roomMatch!.room_match_detail!
             .where((detail) => detail.player_id!.contains('${idUser}'))
             .first;
-        print(sendUpdate.toJson());
         socketService.emitStatusPlayer(
             '${roomProvider.roomMatch!.room_code}', sendUpdate, true);
         setState(() {
@@ -181,13 +180,6 @@ class _RoomMatchPageState extends State<RoomMatchPage> {
           Container(
             child: Wrap(
               alignment: WrapAlignment.start,
-              // children: [
-              //   PlayerProfile(listRoomMatchDetail![0], isReadyPlayer[0]),
-              //   PlayerProfile(listRoomMatchDetail[0], isReadyPlayer[0]),
-              //   PlayerProfile(listRoomMatchDetail[0], isReadyPlayer[0]),
-              //   PlayerProfileSkeleton()
-              //   // PlayerProfile(listRoomMatchDetail[1], isReadyPlayer[1])
-              // ],
               children: roomProvider.listRoommatchDet!
                   .map((e) => PlayerProfile(e, e.is_ready == 0 ? false : true))
                   .toList(),
@@ -269,16 +261,29 @@ class _RoomMatchPageState extends State<RoomMatchPage> {
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           logger.d(snapshot.data);
           if (snapshot.hasData) {
-            var data = json.decode(snapshot.data.toString());
-            if (data['target'] == 'update-player') {
-              RoomMatchDetailModel matchDetail =
-                  RoomMatchDetailModel.fromJson(data['room_detail']);
-              logger.d(data['room_detail']);
-              roomProvider.updateRoomDetail(matchDetail);
-            }
-            if (data['target'] == 'update-status') {
-              roomProvider.updateStatusPlayer(
-                  data['room_detail_id'], data['status'] == 0 ? false : true);
+            try {
+              var data = json.decode(snapshot.data.toString());
+              if (data['target'] == 'update-player') {
+                RoomMatchDetailModel matchDetail =
+                    RoomMatchDetailModel.fromJson(data['room_detail']);
+                roomProvider.updateRoomDetail(matchDetail);
+              }
+              if (data['target'] == 'update-status') {
+                roomProvider.updateStatusPlayer(
+                    data['room_detail_id'], data['status'] == 0 ? false : true);
+                if (roomProvider.checkAllAreReady()) {
+                  //is loading  true
+                  print("Going to game play");
+                  // WidgetsBinding.instance!.addPostFrameCallback((_) {
+                  //   Navigator.push(
+                  //       context,
+                  //       MaterialPageRoute(
+                  //           builder: (_) => RoomMatchPage(widget.language)));
+                  // });
+                }
+              }
+            } catch (e) {
+              print(e);
             }
           }
 

@@ -5,6 +5,7 @@ import 'package:acakkata/models/word_language_model.dart';
 import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/pages/result_game/result_game_page.dart';
 import 'package:acakkata/providers/language_db_provider.dart';
+import 'package:acakkata/providers/room_provider.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/custom_page_route.dart';
 import 'package:flutter/material.dart';
@@ -13,11 +14,13 @@ import 'package:provider/provider.dart';
 
 class GamePlayPage extends StatefulWidget {
   // const GamePlayPage({Key? key}) : super(key: key);
-  late final LanguageDBProvider _langProvider;
+  late final RoomProvider _roomProvider;
   late final LanguageModel? languageModel;
   late final int? selectedQuestion;
   late final int? selectedTime;
-  GamePlayPage(this.languageModel, this.selectedQuestion, this.selectedTime);
+  late final int? isHost;
+  GamePlayPage(this.languageModel, this.selectedQuestion, this.selectedTime,
+      this.isHost);
 
   @override
   _GamePlayPageState createState() => _GamePlayPageState();
@@ -25,6 +28,8 @@ class GamePlayPage extends StatefulWidget {
 
 class _GamePlayPageState extends State<GamePlayPage> {
   TextEditingController answerController = TextEditingController(text: '');
+  late RoomProvider roomProvider =
+      Provider.of<RoomProvider>(context, listen: false);
   Logger logger = Logger(
     printer: PrettyPrinter(methodCount: 0),
   );
@@ -42,78 +47,86 @@ class _GamePlayPageState extends State<GamePlayPage> {
   Timer? _timerScore;
   Timer? _timerInGame;
 
-  getInit() async {
-    LanguageDBProvider langProvider =
-        Provider.of<LanguageDBProvider>(context, listen: false);
+  Future<bool> getInit() async {
+    // LanguageDBProvider langProvider =
+    // Provider.of<LanguageDBProvider>(context, listen: false);
     String language = widget.languageModel?.language_code ?? "indonesia";
 
     setState(() {
       _isLoading = true;
-      numberCountDown = langProvider.numberCountDown;
+      numberCountDown = roomProvider.numberCountDown;
       countDownAnswer = numberCountDown;
-      totalQuestion = langProvider.totalQuestion;
+      totalQuestion = roomProvider.totalQuestion;
     });
-    if (await langProvider.getWords(language)) {
-      dataWordList =
-          langProvider.dataWordList!.getRange(0, totalQuestion).toList();
-      setState(() {
-        _isLoading = false;
-      });
-    } else {
-      logger.e("gagal get db words");
+    widget._roomProvider = roomProvider;
+    try {
+      if (await roomProvider.getPackageQuestion(
+          widget.languageModel?.id, roomProvider.roomMatch!.room_code)) {
+        dataWordList = roomProvider.listQuestion;
+        setState(() {
+          _isLoading = false;
+        });
+      }
+      return true;
+    } catch (e) {
+      logger.e(e);
+      logger.d('gagal load permainan');
     }
-    widget._langProvider = langProvider;
+
+    return false;
   }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getInit();
-    WidgetsBinding.instance!.addPostFrameCallback((_) => showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              Timer _timer;
-              _timer = Timer(Duration(seconds: 5), () {
-                Navigator.of(context).pop();
-              });
+    if (getInit() == true) {
+      WidgetsBinding.instance!.addPostFrameCallback((_) => showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                Timer _timer;
+                _timer = Timer(Duration(seconds: 5), () {
+                  Navigator.of(context).pop();
+                });
 
-              const duration = Duration(seconds: 1);
-              Timer.periodic(duration, (Timer timer) {
-                if (_start == 0) {
-                  timer.cancel();
-                  setState(() {
-                    _start = 5;
-                  });
-                } else {
-                  setState(() {
-                    _start--;
-                  });
-                }
-              });
-              return Container(
-                width: MediaQuery.of(context).size.width - (2 * defaultMargin),
-                child: AlertDialog(
-                  backgroundColor: backgroundColor3,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30)),
-                  content: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Text(
-                          'Ready ?',
-                          style: secondaryTextStyle.copyWith(
-                              fontSize: 36, fontWeight: medium),
-                        )
-                      ],
+                const duration = Duration(seconds: 1);
+                Timer.periodic(duration, (Timer timer) {
+                  if (_start == 0) {
+                    timer.cancel();
+                    setState(() {
+                      _start = 5;
+                    });
+                  } else {
+                    setState(() {
+                      _start--;
+                    });
+                  }
+                });
+                return Container(
+                  width:
+                      MediaQuery.of(context).size.width - (2 * defaultMargin),
+                  child: AlertDialog(
+                    backgroundColor: backgroundColor3,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30)),
+                    content: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Text(
+                            'Ready ?',
+                            style: secondaryTextStyle.copyWith(
+                                fontSize: 36, fontWeight: medium),
+                          )
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              );
-            }).then((value) {
-          getTimeScore();
-          timeInGame();
-        }));
+                );
+              }).then((value) {
+            getTimeScore();
+            timeInGame();
+          }));
+    }
   }
 
   void setStateIfMounted(f) {

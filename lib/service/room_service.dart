@@ -115,12 +115,13 @@ class RoomService {
     }
   }
 
-  Future<List<WordLanguageModel>> getPackageQuestion(
-      String token, String language_id, int question_num) async {
+  Future<List<WordLanguageModel>> getPackageQuestion(String token,
+      String language_id, int question_num, String channel_code) async {
     var headers = {'Content-Type': 'application/json', 'Authorization': token};
     var query_parameter = {
       'language_id': language_id,
-      'question_num': question_num
+      'question_num': question_num,
+      'channel_code': channel_code
     };
     final url = Uri.http('$baseUrl', '/package-question', query_parameter);
     var response = await http.get(url, headers: headers);

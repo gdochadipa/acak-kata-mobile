@@ -33,8 +33,11 @@ class RoomProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> createRoom(String? language_id, int? max_player, int? time_watch,
-      int? total_question) async {
+  Future<bool> createRoom(
+      {String? language_id,
+      int? max_player,
+      int? time_watch,
+      int? total_question}) async {
     try {
       _maxPlayer = max_player ?? 2;
       _numberCountDown = time_watch ?? 15;
@@ -106,12 +109,13 @@ class RoomProvider with ChangeNotifier {
   }
 
   Future<bool> getPackageQuestion(
-      String? language_id, int? question_num) async {
+      String? language_id, String? channel_code) async {
     try {
       SharedPreferences pref = await SharedPreferences.getInstance();
       String? token = pref.getString('token');
       List<WordLanguageModel> listQuestion = await RoomService()
-          .getPackageQuestion(token!, language_id!, question_num!);
+          .getPackageQuestion(
+              token!, language_id!, roomMatch!.totalQuestion!, channel_code!);
       _listQuestion = listQuestion;
       return true;
     } catch (e) {
@@ -150,5 +154,18 @@ class RoomProvider with ChangeNotifier {
             .is_ready = 1;
       }
     }
+  }
+
+  bool checkAllAreReady() {
+    if (_roomMatch!.max_player! == _roomMatch!.room_match_detail!.length) {
+      List<RoomMatchDetailModel> detail = roomMatch!.room_match_detail!
+          .where((detail) => detail.is_ready == 0)
+          .toList();
+      if (detail.length == 0) {
+        return true;
+      }
+      return false;
+    }
+    return false;
   }
 }
