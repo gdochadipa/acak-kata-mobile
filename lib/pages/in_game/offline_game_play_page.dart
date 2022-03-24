@@ -7,7 +7,6 @@ import 'package:acakkata/pages/result_game/result_game_page.dart';
 import 'package:acakkata/providers/language_db_provider.dart';
 import 'package:acakkata/providers/room_provider.dart';
 import 'package:acakkata/theme.dart';
-import 'package:acakkata/widgets/answer_buttons.dart';
 import 'package:acakkata/widgets/answer_input_buttons.dart';
 import 'package:acakkata/widgets/custom_page_route.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +32,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
   Logger logger = Logger(
     printer: PrettyPrinter(methodCount: 0),
   );
+  String textAnswer = '';
   List<WordLanguageModel>? dataWordList;
   bool _isButtonDisabled = false;
   int totalQuestion = 10;
@@ -431,41 +431,24 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
       );
     }
 
-    Widget rowAlphabetButton(List<String> strings) {
+    Widget AnswerButtons(List<String>? suffle_question) {
       return Container(
         margin: EdgeInsets.only(top: 20, left: 5, right: 5),
         child: Align(
           alignment: Alignment.center,
           child: Wrap(
-            children: strings.map((e) => InputAnswerButton(e, (e) {})).toList(),
+            alignment: WrapAlignment.center,
+            children: suffle_question!
+                .map((e) => InputAnswerButton(e, (String letter, bool isUnSet) {
+                      textAnswer = textAnswer + letter;
+                      answerController.text = textAnswer;
+                      // onCheckingAnswer(answer);
+                    }))
+                .toList(),
           ),
         ),
       );
     }
-
-    // Widget btnAnswer() {
-    //   return Container(
-    //     height: 45,
-    //     width: double.infinity,
-    //     margin: EdgeInsets.only(top: 15),
-    //     child: TextButton(
-    //       onPressed: _isButtonDisabled
-    //           ? null
-    //           : () {
-    //               answerQuestion();
-    //             },
-    //       style: TextButton.styleFrom(
-    //           backgroundColor:
-    //               _isButtonDisabled ? secondaryDisabled : secondaryColor,
-    //           shape: RoundedRectangleBorder(
-    //               borderRadius: BorderRadius.circular(12))),
-    //       child: Text(
-    //         'Answer',
-    //         style: whiteTextStyle.copyWith(fontSize: 16, fontWeight: bold),
-    //       ),
-    //     ),
-    //   );
-    // }
 
     Widget cardBodyUp(String? question, String? hint_question,
         List<String>? suffle_question) {
@@ -480,15 +463,9 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
             textHeader(),
             TextTime(10),
             SizedBox(height: 20),
-            rowAlphabet(suffle_question!),
-            textHint(createStringHint(hint_question)),
+            answerInput(),
             SizedBox(height: 20),
-            // rowAlphabetButton(suffle_question)
-            AnswerButtons(suffle_question, (String answer) {
-              print('====================');
-              print('On Checking Answer : ${answer}');
-              print('====================');
-            })
+            AnswerButtons(suffle_question)
           ],
         ),
       );
@@ -512,7 +489,6 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
     //   );
     // }
 
-    List<String>? str = ["T", "U", "W"];
     return WillPopScope(
         onWillPop: () async => false,
         child: Scaffold(

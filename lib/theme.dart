@@ -18,6 +18,7 @@ Color backgroundColor3 = Color(0xffEFEFEF);
 Color backgroundColor4 = Color(0xffF1E9FA);
 Color backgroundColor5 = Color(0xffD5B8FA);
 Color backgroundColor6 = Color(0xffF1E9FA);
+Color backgroundColor7 = Color(0xffA7A7A7);
 Color primaryTextColor = Color(0xffB983FF);
 Color secondaryTextColor = Color(0xff979797);
 Color thirdTextColor = Color(0xff2B2937);
