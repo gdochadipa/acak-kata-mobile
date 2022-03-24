@@ -33,6 +33,10 @@ class _SplashPageState extends State<SplashPage> {
         Provider.of<LanguageProvider>(context, listen: false);
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
+    LanguageDBProvider langProvider =
+        Provider.of<LanguageDBProvider>(context, listen: false);
+    langProvider.init();
+
     bool login = prefs.getBool('login') ?? false;
     bool isInGame = prefs.getBool('is_in_game') ?? false;
 

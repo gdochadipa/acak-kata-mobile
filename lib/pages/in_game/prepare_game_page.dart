@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/models/room_match_detail_model.dart';
 import 'package:acakkata/pages/in_game/game_play_page.dart';
+import 'package:acakkata/pages/in_game/offline_game_play_page.dart';
 import 'package:acakkata/pages/in_game/room_match_page.dart';
 import 'package:acakkata/pages/in_game/waiting_room_page.dart';
 import 'package:acakkata/providers/auth_provider.dart';
@@ -346,6 +347,29 @@ class _PrepareGamePageState extends State<PrepareGamePage> {
       );
     }
 
+    Widget CreateGameOffline() {
+      return Container(
+        height: 50,
+        width: double.infinity,
+        margin: EdgeInsets.only(top: 20),
+        child: TextButton(
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  CustomPageRoute(
+                      OfflineGamePlayPage(widget.language, 10, 15, 1)));
+            },
+            style: TextButton.styleFrom(
+                backgroundColor: primaryColor,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12))),
+            child: Text(
+              'Create Offline',
+              style: whiteTextStyle.copyWith(fontSize: 16, fontWeight: medium),
+            )),
+      );
+    }
+
     Widget cardBodyFindRoom() {
       return Container(
         margin:
@@ -355,10 +379,7 @@ class _PrepareGamePageState extends State<PrepareGamePage> {
             color: backgroundColor3, borderRadius: BorderRadius.circular(15)),
         child: Center(
           child: Column(
-            children: [
-              FindRoomForm(),
-              FindRoomButon(),
-            ],
+            children: [FindRoomForm(), FindRoomButon(), CreateGameOffline()],
           ),
         ),
       );
