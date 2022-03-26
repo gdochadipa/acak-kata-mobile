@@ -8,8 +8,13 @@ class InputAnswerButton extends StatefulWidget {
   // }) : super(key: key);
 
   late String letter;
+  late bool isBtnSelected;
   late CheckingLetterCallback onSelectButtonLetter;
-  InputAnswerButton(this.letter, this.onSelectButtonLetter);
+  // InputAnswerButton(this.letter, this.onSelectButtonLetter);
+  InputAnswerButton(
+      {required String this.letter,
+      required bool this.isBtnSelected,
+      required CheckingLetterCallback this.onSelectButtonLetter});
 
   @override
   State<InputAnswerButton> createState() => _InputAnswerButtonState();
@@ -17,7 +22,6 @@ class InputAnswerButton extends StatefulWidget {
 
 class _InputAnswerButtonState extends State<InputAnswerButton>
     with SingleTickerProviderStateMixin {
-  bool isBtnSelected = false;
   late double _scale;
   late AnimationController _animationController;
 
@@ -58,26 +62,27 @@ class _InputAnswerButtonState extends State<InputAnswerButton>
         height: 45,
         margin: EdgeInsets.all(2),
         child: TextButton(
-          onPressed: isBtnSelected == false
+          onPressed: widget.isBtnSelected == false
               ? () {
                   setState(() {
-                    isBtnSelected = isBtnSelected ? false : true;
-                    widget.onSelectButtonLetter(widget.letter, isBtnSelected);
+                    // widget.isBtnSelected = widget.isBtnSelected ? false : true;
+                    widget.onSelectButtonLetter(
+                        widget.letter, widget.isBtnSelected);
                   });
                 }
               : () {},
           style: TextButton.styleFrom(
               side: BorderSide(
                   width: 1,
-                  color: isBtnSelected ? backgroundColor1 : blackColor),
+                  color: widget.isBtnSelected ? backgroundColor1 : blackColor),
               backgroundColor:
-                  isBtnSelected ? backgroundColor7 : backgroundColor1,
+                  widget.isBtnSelected ? backgroundColor7 : backgroundColor1,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               )),
           child: Text(
             "${widget.letter}",
-            style: isBtnSelected
+            style: widget.isBtnSelected
                 ? whiteTextStyle.copyWith(fontSize: 20, fontWeight: bold)
                 : blackTextStyle.copyWith(fontSize: 20, fontWeight: bold),
           ),

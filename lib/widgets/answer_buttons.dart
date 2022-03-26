@@ -16,12 +16,12 @@ class AnswerButtons extends StatelessWidget {
         alignment: Alignment.center,
         child: Wrap(
           alignment: WrapAlignment.center,
-          children: suffle_question
-              .map((e) => InputAnswerButton(e, (String letter, bool isUnSet) {
-                    answer = answer + letter;
-                    onCheckingAnswer(answer);
-                  }))
-              .toList(),
+          // children: suffle_question
+          //     .map((e) => InputAnswerButton(e, (String letter, bool isUnSet) {
+          //           answer = answer + letter;
+          //           onCheckingAnswer(answer);
+          //         }))
+          //     .toList(),
         ),
       ),
     );

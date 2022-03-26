@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 import 'dart:developer';
 
 import 'package:acakkata/models/word_language_model.dart';
@@ -9,6 +10,7 @@ import 'package:acakkata/providers/room_provider.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/answer_input_buttons.dart';
 import 'package:acakkata/widgets/custom_page_route.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
@@ -46,6 +48,8 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
   int _start = 5;
   Timer? _timerScore;
   Timer? _timerInGame;
+  Map<int, bool>? isSelected = {};
+  String suffQuestion = "JANGKRIK";
 
   Future<bool> getInit() async {
     LanguageDBProvider langProvider =
@@ -85,7 +89,12 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
     // TODO: implement initState
     super.initState();
     getInit();
-
+    List<String> listSuffQues = suffQuestion.split('');
+    for (var i = 0; i < listSuffQues.length; i++) {
+      setState(() {
+        isSelected!.addEntries([MapEntry(i, false)]);
+      });
+    }
     // getTimeScore();
     // timeInGame();
     // WidgetsBinding.instance!.addPostFrameCallback((_) => showDialog(
@@ -397,55 +406,129 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
       );
     }
 
-    Widget alphabetQuestion(String alphabet) {
+    Widget btnResetAnswer() {
       return Container(
-        margin: EdgeInsets.all(2),
-        child: Container(
-          width: 30,
-          height: 30,
-          margin: EdgeInsets.all(2),
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  colors: [firstLinierColor, secondLinierColor],
-                  begin: const FractionalOffset(0.0, 0.0),
-                  end: const FractionalOffset(1.0, 0.0),
-                  stops: [0.0, 1.0],
-                  tileMode: TileMode.clamp),
-              borderRadius: BorderRadius.circular(3)),
-          child: Center(
-            child: Text(
-              "${alphabet}",
-              style: whiteTextStyle.copyWith(fontSize: 20, fontWeight: bold),
-            ),
-          ),
-        ),
-      );
-    }
-
-    Widget rowAlphabet(List<String> strings) {
-      return Container(
-        margin: EdgeInsets.only(top: 20, left: 5, right: 5),
-        child: Wrap(
-          children: strings.map((e) => alphabetQuestion(e)).toList(),
-        ),
-      );
-    }
-
-    Widget AnswerButtons(List<String>? suffle_question) {
-      return Container(
-        margin: EdgeInsets.only(top: 20, left: 5, right: 5),
-        child: Align(
-          alignment: Alignment.center,
+        height: 45,
+        width: double.infinity,
+        margin: EdgeInsets.all(5),
+        child: TextButton(
+          onPressed: () {
+            //reset jawaban ke null
+            if (textAnswer != '' && textAnswer.length > 0) {
+              textAnswer = '';
+              answerController.text = textAnswer;
+            }
+          },
+          style: TextButton.styleFrom(
+              side: BorderSide(width: 1, color: blackColor),
+              backgroundColor: backgroundColor1,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12))),
           child: Wrap(
-            alignment: WrapAlignment.center,
-            children: suffle_question!
-                .map((e) => InputAnswerButton(e, (String letter, bool isUnSet) {
-                      textAnswer = textAnswer + letter;
-                      answerController.text = textAnswer;
-                      // onCheckingAnswer(answer);
-                    }))
-                .toList(),
+            children: [
+              Icon(
+                CupertinoIcons.refresh_thick,
+                semanticLabel: 'Add',
+                color: blackColor,
+              ),
+              SizedBox(
+                width: 1,
+              ),
+              Text(
+                'Reset Answer',
+                style: blackTextStyle.copyWith(fontSize: 13, fontWeight: bold),
+              )
+            ],
           ),
+        ),
+      );
+    }
+
+    Widget btnDeleteLetterAnswer() {
+      return Container(
+        height: 45,
+        width: double.infinity,
+        margin: EdgeInsets.all(5),
+        child: TextButton(
+          onPressed: () {
+            //hapus kata per kata
+            if (textAnswer != '' && textAnswer.length > 0) {
+              textAnswer = textAnswer.substring(0, textAnswer.length - 1);
+              answerController.text = textAnswer;
+            }
+          },
+          style: TextButton.styleFrom(
+              side: BorderSide(width: 1, color: blackColor),
+              backgroundColor: backgroundColor1,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12))),
+          child: Wrap(
+            children: [
+              Icon(
+                CupertinoIcons.delete_left,
+                semanticLabel: 'Add',
+                color: blackColor,
+              ),
+              SizedBox(
+                width: 5,
+              ),
+              Text(
+                'Hapus',
+                style: blackTextStyle.copyWith(fontSize: 14, fontWeight: bold),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    Widget anotherActionAnswer() {
+      return Container(
+        margin: EdgeInsets.only(top: 15),
+        child: Row(
+          children: [
+            Flexible(child: btnResetAnswer()),
+            Flexible(child: btnDeleteLetterAnswer())
+          ],
+        ),
+      );
+    }
+
+    Widget AnswerButtons(List<String>? suffle_question, String? question) {
+      return Container(
+        margin: EdgeInsets.only(top: 20, left: 5, right: 5),
+        alignment: Alignment.center,
+        child: ListView(
+          shrinkWrap: true,
+          children: [
+            Wrap(
+              alignment: WrapAlignment.center,
+              children: suffle_question!
+                  .map((e) => InputAnswerButton(
+                      letter: e,
+                      isBtnSelected:
+                          isSelected![suffle_question.indexOf(e)] ?? false,
+                      onSelectButtonLetter: (String letter, bool isUnSet) {
+                        textAnswer = textAnswer + letter;
+                        answerController.text = textAnswer;
+                        setState(() {
+                          isSelected![suffle_question.indexOf(e)] = true;
+                        });
+                        if (textAnswer.length == suffle_question.length) {
+                          print("Check jawaban Gan !!!");
+                          if (answerController.text ==
+                              question!.toUpperCase()) {
+                            print("Jawabannya Bener Banget");
+                          } else {
+                            print("Jawabannya Salah");
+                          }
+                        }
+                        // onCheckingAnswer(answer);
+                      }))
+                  .toList(),
+            ),
+            anotherActionAnswer()
+          ],
         ),
       );
     }
@@ -465,29 +548,11 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
             SizedBox(height: 20),
             answerInput(),
             SizedBox(height: 20),
-            AnswerButtons(suffle_question)
+            AnswerButtons(suffle_question, question)
           ],
         ),
       );
     }
-
-    // Widget cardBodyDown() {
-    //   return Container(
-    //     margin:
-    //         EdgeInsets.only(top: 30, left: defaultMargin, right: defaultMargin),
-    //     padding: EdgeInsets.all(15),
-    //     decoration: BoxDecoration(
-    //         color: backgroundColor1, borderRadius: BorderRadius.circular(15)),
-    //     child: Center(
-    //       child: Column(
-    //         children: [
-    //           // answerInput(),
-    //           // btnAnswer(),
-    //         ],
-    //       ),
-    //     ),
-    //   );
-    // }
 
     return WillPopScope(
         onWillPop: () async => false,
@@ -498,13 +563,8 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
                 ? null
                 : ListView(
                     children: [
-                      // cardBodyUp(
-                      //     "Tunggu Count Down",
-                      //     dataWordList![currentArrayQuestion].word,
-                      //     dataWordList![currentArrayQuestion].word_suffle),
                       cardBodyUp("Tunggu Count Down", "JANGKRIK",
                           "JANGKRIK".split('')),
-                      // cardBodyDown()
                     ],
                   ),
           ),
