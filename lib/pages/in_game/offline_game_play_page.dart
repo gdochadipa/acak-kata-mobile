@@ -91,6 +91,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
     getInit();
     List<String> listSuffQues = suffQuestion.split('');
     for (var i = 0; i < listSuffQues.length; i++) {
+      print("${listSuffQues[i]} =  ${i}");
       setState(() {
         isSelected!.addEntries([MapEntry(i, false)]);
       });
@@ -305,6 +306,15 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
     });
   }
 
+  resetAnswer() {
+    List<String> listSuffQues = suffQuestion.split('');
+    for (var i = 0; i < listSuffQues.length; i++) {
+      setState(() {
+        isSelected!.addEntries([MapEntry(i, false)]);
+      });
+    }
+  }
+
   String createStringHint(String? word_hint) {
     String stringHint = '';
     for (int i = 0; i < word_hint!.length; i++) {
@@ -414,6 +424,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
         child: TextButton(
           onPressed: () {
             //reset jawaban ke null
+            resetAnswer();
             if (textAnswer != '' && textAnswer.length > 0) {
               textAnswer = '';
               answerController.text = textAnswer;
@@ -455,6 +466,10 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
             if (textAnswer != '' && textAnswer.length > 0) {
               textAnswer = textAnswer.substring(0, textAnswer.length - 1);
               answerController.text = textAnswer;
+              setState(() {
+                isSelected!.addEntries(
+                    [MapEntry(answerController.text.length, false)]);
+              });
             }
           },
           style: TextButton.styleFrom(
@@ -495,6 +510,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
     }
 
     Widget AnswerButtons(List<String>? suffle_question, String? question) {
+      List fixedList = Iterable.generate(suffle_question!.length).toList();
       return Container(
         margin: EdgeInsets.only(top: 20, left: 5, right: 5),
         alignment: Alignment.center,
@@ -503,20 +519,21 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
           children: [
             Wrap(
               alignment: WrapAlignment.center,
-              children: suffle_question!
+              children: fixedList
                   .map((e) => InputAnswerButton(
-                      letter: e,
-                      isBtnSelected:
-                          isSelected![suffle_question.indexOf(e)] ?? false,
+                      letter: suffle_question[e],
+                      isBtnSelected: isSelected![e] ?? false,
                       onSelectButtonLetter: (String letter, bool isUnSet) {
-                        textAnswer = textAnswer + letter;
-                        answerController.text = textAnswer;
                         setState(() {
-                          isSelected![suffle_question.indexOf(e)] = true;
+                          textAnswer = textAnswer + letter;
+                          answerController.text = textAnswer;
+                          isSelected![e] = true;
                         });
                         if (textAnswer.length == suffle_question.length) {
                           print("Check jawaban Gan !!!");
-                          if (answerController.text ==
+                          // print(
+                          //     "${answerController.text.toUpperCase()} == ${question!.toUpperCase()} => ${answerController.text.toUpperCase() == question.toUpperCase()}");
+                          if (answerController.text.toUpperCase() ==
                               question!.toUpperCase()) {
                             print("Jawabannya Bener Banget");
                           } else {
@@ -563,8 +580,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
                 ? null
                 : ListView(
                     children: [
-                      cardBodyUp("Tunggu Count Down", "JANGKRIK",
-                          "JANGKRIK".split('')),
+                      cardBodyUp("JANGKRIK", "JANGKRIK", "JANGKRIK".split('')),
                     ],
                   ),
           ),
