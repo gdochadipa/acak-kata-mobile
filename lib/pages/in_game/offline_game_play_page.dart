@@ -61,7 +61,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
   Future<bool> getInit() async {
     LanguageDBProvider langProvider =
         Provider.of<LanguageDBProvider>(context, listen: false);
-    langProvider.setRuleGame(15, 10);
+    langProvider.setRuleGame(widget.selectedTime, widget.selectedQuestion);
     // langProvider.init();
     String language = widget.languageModel?.language_code ?? "indonesia";
 
@@ -182,6 +182,31 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
         'nowQuestion': dataWordList![currentArrayQuestion].word_suffle,
         'nowAnswer': dataWordList![currentArrayQuestion].word
       });
+      Flushbar(
+        message: "Jawaban",
+        margin: EdgeInsets.all(8),
+        borderRadius: BorderRadius.circular(8),
+        flushbarStyle: FlushbarStyle.FLOATING,
+        flushbarPosition: FlushbarPosition.TOP,
+        reverseAnimationCurve: Curves.decelerate,
+        forwardAnimationCurve: Curves.elasticOut,
+        isDismissible: false,
+        duration: Duration(seconds: 2),
+        backgroundColor: backgroundColor1,
+        titleColor: alertColor,
+        titleText: Text(
+            "Jawaban : ${dataWordList![currentArrayQuestion].word!.toUpperCase()}"),
+        icon: Icon(
+          Icons.error,
+          color: Colors.yellow[600],
+        ),
+        boxShadows: [
+          BoxShadow(
+              color: Colors.yellow[600] ?? alertColor,
+              offset: Offset(0.0, 2.0),
+              blurRadius: 3.0)
+        ],
+      ).show(context);
       getTimeScore();
       if (currentArrayQuestion == (totalQuestion - 1)) {
         timer.cancel();
@@ -272,49 +297,101 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
     );
   }
 
-  answerQuestion() {
+  answerQuestion(
+      String letter, int e, List<String>? suffle_question, String? question) {
     setState(() {
-      log('answerQuestion: ${answerController.text == dataWordList![currentArrayQuestion].word!.toLowerCase()}');
-      if (answerController.text ==
-          dataWordList![currentArrayQuestion].word!.toLowerCase()) {
-        var score = countDownAnswer * 10;
-        scoreCount += score;
-
-        _timerScore!.cancel();
-        _timerInGame!.cancel();
-        if (currentArrayQuestion == (totalQuestion - 1)) {
-          Navigator.push(
-              context,
-              CustomPageRoute(
-                  ResultGamePage(widget.languageModel, scoreCount)));
-        } else {
-          currentArrayQuestion++;
-          currentQuestion++;
-
-          countDownAnswer = numberCountDown;
-          getTimeScore();
-          timeInGame();
-        }
-
-        logger.v({"score": score});
-        SnackBar(
-          backgroundColor: secondaryColor,
-          content: Text(
-            "Jawaban anda benar ! poin anda : ${score}",
-            textAlign: TextAlign.center,
-          ),
-        );
-      } else {
-        SnackBar(
-          backgroundColor: alertColor,
-          content: Text(
-            "Jawaban anda belum tepat !",
-            textAlign: TextAlign.center,
-          ),
-        );
-      }
-      answerController.clear();
+      textAnswer = textAnswer + letter;
+      answerController.text = textAnswer;
+      isSelected![e] = true;
+      sequenceAnswer!.add(e);
     });
+    if (textAnswer.length == suffle_question!.length) {
+      logger.d(
+          "${answerController.text.toUpperCase()} == ${question!.toUpperCase()} => ${answerController.text.toUpperCase() == question.toUpperCase()}");
+      if (answerController.text.toUpperCase() == question.toUpperCase()) {
+        setState(() {
+          var score = countDownAnswer * 10;
+          scoreCount += score;
+
+          _timerScore!.cancel();
+          _timerInGame!.cancel();
+
+          if (currentArrayQuestion == (totalQuestion - 1)) {
+            Navigator.push(
+                context,
+                CustomPageRoute(
+                    ResultGamePage(widget.languageModel, scoreCount)));
+          } else {
+            currentArrayQuestion++;
+            currentQuestion++;
+
+            countDownAnswer = numberCountDown;
+            getTimeScore();
+            timeInGame();
+          }
+        });
+
+        Flushbar(
+          message: "Jawaban",
+          margin: EdgeInsets.all(8),
+          borderRadius: BorderRadius.circular(8),
+          flushbarStyle: FlushbarStyle.FLOATING,
+          flushbarPosition: FlushbarPosition.TOP,
+          reverseAnimationCurve: Curves.decelerate,
+          forwardAnimationCurve: Curves.elasticOut,
+          isDismissible: false,
+          titleText: Text("Jawaban Benar"),
+          duration: Duration(seconds: 2),
+          backgroundColor: backgroundColor1,
+          titleColor: successColor,
+          icon: Icon(
+            Icons.check_circle_outline_outlined,
+            color: successColor,
+          ),
+          boxShadows: [
+            BoxShadow(
+                color: Colors.green[600] ?? successColor,
+                offset: Offset(0.0, 2.0),
+                blurRadius: 3.0)
+          ],
+        ).show(context);
+        resetAnswer();
+        if (textAnswer != '' && textAnswer.length > 0) {
+          textAnswer = '';
+          answerController.text = textAnswer;
+        }
+      } else {
+        Flushbar(
+          message: "Jawaban",
+          margin: EdgeInsets.all(8),
+          borderRadius: BorderRadius.circular(8),
+          flushbarStyle: FlushbarStyle.FLOATING,
+          flushbarPosition: FlushbarPosition.TOP,
+          reverseAnimationCurve: Curves.decelerate,
+          forwardAnimationCurve: Curves.elasticOut,
+          isDismissible: false,
+          duration: Duration(seconds: 2),
+          backgroundColor: backgroundColor1,
+          titleColor: alertColor,
+          titleText: Text("Jawaban Salah"),
+          icon: Icon(
+            Icons.close_rounded,
+            color: alertColor,
+          ),
+          boxShadows: [
+            BoxShadow(
+                color: Colors.red[800] ?? alertColor,
+                offset: Offset(0.0, 2.0),
+                blurRadius: 3.0)
+          ],
+        ).show(context);
+        resetAnswer();
+        if (textAnswer != '' && textAnswer.length > 0) {
+          textAnswer = '';
+          answerController.text = textAnswer;
+        }
+      }
+    }
   }
 
   resetAnswer() {
@@ -512,7 +589,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
                 width: 5,
               ),
               Text(
-                'Hapus',
+                'Delete',
                 style: blackTextStyle.copyWith(fontSize: 14, fontWeight: bold),
               ),
             ],
@@ -548,70 +625,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
                       letter: suffle_question[e],
                       isBtnSelected: isSelected![e] ?? false,
                       onSelectButtonLetter: (String letter, bool isUnSet) {
-                        setState(() {
-                          textAnswer = textAnswer + letter;
-                          answerController.text = textAnswer;
-                          isSelected![e] = true;
-                          sequenceAnswer!.add(e);
-                        });
-                        if (textAnswer.length == suffle_question.length) {
-                          print("Check jawaban Gan !!!");
-                          logger.d(
-                              "${answerController.text.toUpperCase()} == ${question!.toUpperCase()} => ${answerController.text.toUpperCase() == question.toUpperCase()}");
-                          if (answerController.text.toUpperCase() ==
-                              question.toUpperCase()) {
-                            print("Jawabannya Bener Banget");
-                            Flushbar(
-                              message: "Jawaban Benar",
-                              margin: EdgeInsets.all(8),
-                              borderRadius: BorderRadius.circular(8),
-                              flushbarStyle: FlushbarStyle.FLOATING,
-                              flushbarPosition: FlushbarPosition.TOP,
-                              reverseAnimationCurve: Curves.decelerate,
-                              forwardAnimationCurve: Curves.elasticOut,
-                              isDismissible: false,
-                              duration: Duration(seconds: 2),
-                              backgroundColor: backgroundColor1,
-                              titleColor: successColor,
-                              icon: Icon(
-                                Icons.check_circle_outline_outlined,
-                                color: successColor,
-                              ),
-                              boxShadows: [
-                                BoxShadow(
-                                    color: Colors.green[600] ?? successColor,
-                                    offset: Offset(0.0, 2.0),
-                                    blurRadius: 3.0)
-                              ],
-                            ).show(context);
-                          } else {
-                            print("Jawabannya Salah");
-                            Flushbar(
-                              message: "Jawaban Salah",
-                              margin: EdgeInsets.all(8),
-                              borderRadius: BorderRadius.circular(8),
-                              flushbarStyle: FlushbarStyle.FLOATING,
-                              flushbarPosition: FlushbarPosition.TOP,
-                              reverseAnimationCurve: Curves.decelerate,
-                              forwardAnimationCurve: Curves.elasticOut,
-                              isDismissible: false,
-                              duration: Duration(seconds: 2),
-                              backgroundColor: backgroundColor1,
-                              titleColor: alertColor,
-                              titleText: Text("Jawaban Salah"),
-                              icon: Icon(
-                                Icons.close_rounded,
-                                color: alertColor,
-                              ),
-                              boxShadows: [
-                                BoxShadow(
-                                    color: Colors.red[800] ?? alertColor,
-                                    offset: Offset(0.0, 2.0),
-                                    blurRadius: 3.0)
-                              ],
-                            ).show(context);
-                          }
-                        }
+                        answerQuestion(letter, e, suffle_question, question);
                         // onCheckingAnswer(answer);
                       }))
                   .toList(),
