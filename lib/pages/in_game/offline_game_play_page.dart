@@ -23,9 +23,14 @@ class OfflineGamePlayPage extends StatefulWidget {
   late final LanguageModel? languageModel;
   late final int? selectedQuestion;
   late final int? selectedTime;
+  late final int? levelWords;
   late final int? isHost;
-  OfflineGamePlayPage(this.languageModel, this.selectedQuestion,
-      this.selectedTime, this.isHost);
+  OfflineGamePlayPage(
+      {this.languageModel,
+      this.selectedQuestion,
+      this.selectedTime,
+      this.isHost,
+      this.levelWords});
 
   @override
   _OfflineGamePlayPageState createState() => _OfflineGamePlayPageState();
@@ -69,7 +74,8 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
 
     widget._langProvider = langProvider;
     try {
-      if (await langProvider.getWords("indonesia")) {
+      if (await langProvider.getWords(
+          widget.languageModel!.language_code, widget.levelWords)) {
         dataWordList =
             langProvider.dataWordList!.getRange(0, totalQuestion).toList();
         setState(() {

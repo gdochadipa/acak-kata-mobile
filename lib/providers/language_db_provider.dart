@@ -57,7 +57,7 @@ class LanguageDBProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> getWords(String language_code) async {
+  Future<bool> getWords(String? language_code, int? length_word) async {
     try {
       if (_db == null) {
         throw "bd is not initiated, initiate using [init(db)] function";
@@ -69,6 +69,8 @@ class LanguageDBProvider with ChangeNotifier {
           words = await txn.query("tb_word_eng",
               columns: ["id", "word", "meaning", "length_word"],
               orderBy: "word",
+              where: "length_word = ?",
+              whereArgs: [length_word],
               limit: 4000);
         });
       } else if (language_code == "indonesia") {
@@ -76,6 +78,8 @@ class LanguageDBProvider with ChangeNotifier {
           words = await txn.query("tb_word_indo",
               columns: ["id", "word", "meaning", "length_word"],
               orderBy: "word",
+              where: "length_word = ?",
+              whereArgs: [length_word],
               limit: 4000);
         });
       } else if (language_code == "bali") {
@@ -83,6 +87,8 @@ class LanguageDBProvider with ChangeNotifier {
           words = await txn.query("tb_word_bali",
               columns: ["id", "word", "meaning", "length_word"],
               orderBy: "word",
+              where: "length_word = ?",
+              whereArgs: [length_word],
               limit: 4000);
         });
       } else if (language_code == "java") {
@@ -90,6 +96,8 @@ class LanguageDBProvider with ChangeNotifier {
           words = await txn.query("tb_word_jawa",
               columns: ["id", "word", "meaning", "length_word"],
               orderBy: "word",
+              where: "length_word = ?",
+              whereArgs: [length_word],
               limit: 4000);
         });
       }

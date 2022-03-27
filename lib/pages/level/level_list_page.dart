@@ -12,8 +12,10 @@ class LevelListPage extends StatefulWidget {
   // const LevelListPage({Key? key}) : super(key: key);
 
   late LanguageModel languageModel;
+  late bool isOnline;
 
-  LevelListPage({required this.languageModel});
+  LevelListPage({Key? key, required this.languageModel, required this.isOnline})
+      : super(key: key);
 
   @override
   State<LevelListPage> createState() => _LevelListPageState();
@@ -30,10 +32,14 @@ class _LevelListPageState extends State<LevelListPage> {
 
   getInit() async {
     try {
-      isLoading = true;
+      setState(() {
+        isLoading = true;
+      });
       if (await languageDBProvider!.getLevel()) {
         levelList = languageDBProvider!.levelList;
-        isLoading = false;
+        setState(() {
+          isLoading = false;
+        });
       }
     } catch (e) {
       logger.e(e);
@@ -43,16 +49,44 @@ class _LevelListPageState extends State<LevelListPage> {
   @override
   void initState() {
     // TODO: implement initState
-    getInit();
     super.initState();
+    getInit();
   }
 
   @override
   Widget build(BuildContext context) {
-    Widget itemLevels(LevelModel? levelModel, LanguageModel? language) {
-      return ItemLevelCard(
-        levelModel: levelModel,
-        languageModel: language,
+    Widget header() {
+      return AppBar(
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: primaryColor,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        backgroundColor: backgroundColor1,
+        elevation: 0,
+        centerTitle: true,
+        title: Column(
+          children: [
+            SizedBox(
+              height: 5,
+            ),
+            Text(
+              "List Level",
+              style: headerText2.copyWith(
+                  fontWeight: regular, fontSize: 16, color: subtitleColor),
+            ),
+            Text(
+              '${widget.languageModel.language_name}',
+              style:
+                  primaryTextStyle.copyWith(fontSize: 12, fontWeight: medium),
+            )
+          ],
+        ),
+        actions: [],
       );
     }
 
@@ -63,10 +97,10 @@ class _LevelListPageState extends State<LevelListPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "List Level",
-              style: headerText2.copyWith(fontWeight: regular, fontSize: 28),
-            ),
+            // Text(
+            //   "List Level",
+            //   style: headerText2.copyWith(fontWeight: regular, fontSize: 28),
+            // ),
             SizedBox(
               height: 10,
             ),
@@ -95,7 +129,7 @@ class _LevelListPageState extends State<LevelListPage> {
           backgroundColor: backgroundColor1,
           body: Container(
             child: ListView(
-              children: [body()],
+              children: [header(), body()],
             ),
           ),
         ),

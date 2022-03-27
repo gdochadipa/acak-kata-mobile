@@ -4,6 +4,8 @@ import 'package:acakkata/pages/in_game/prepare_game_page.dart';
 import 'package:acakkata/pages/level/level_list_page.dart';
 import 'package:acakkata/pages/result_game/result_game_page.dart';
 import 'package:acakkata/theme.dart';
+import 'package:acakkata/widgets/popover.dart';
+import 'package:acakkata/widgets/widget_popover/list_item_pop_over.dart';
 import 'package:flutter/material.dart';
 
 import 'custom_page_route.dart';
@@ -15,14 +17,52 @@ class LanguageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    void handlePopUpPress() {
+      showModalBottomSheet(
+          backgroundColor: transparentColor,
+          context: context,
+          builder: (context) {
+            return Popover(
+                child: Column(
+              children: [
+                ListItemPopOver(
+                    title: Text("Single"),
+                    leading: Icon(Icons.person),
+                    onClick: () {
+                      Navigator.push(
+                          context,
+                          CustomPageRoute(LevelListPage(
+                            isOnline: false,
+                            languageModel: language,
+                          )));
+                    }),
+                // ListItemPopOver(
+                //     title: Text(
+                //       "Multiplayer",
+                //     ),
+                //     leading: Icon(Icons.group),
+                //     onClick: () {
+                //       Navigator.push(
+                //           context,
+                //           CustomPageRoute(LevelListPage(
+                //             isOnline: true,
+                //             languageModel: language,
+                //           )));
+                //     })
+              ],
+            ));
+          });
+    }
+
     return GestureDetector(
         onTap: () {
           // Navigator.push(context, CustomPageRoute(PrepareGamePage(language)));
-          Navigator.push(
-              context,
-              CustomPageRoute(LevelListPage(
-                languageModel: language,
-              )));
+          handlePopUpPress();
+          // Navigator.push(
+          //     context,
+          //     CustomPageRoute(LevelListPage(
+          //       languageModel: language,
+          //     )));
         },
         child: Container(
           margin: const EdgeInsets.only(bottom: 20),

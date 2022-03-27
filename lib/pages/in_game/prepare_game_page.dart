@@ -356,8 +356,12 @@ class _PrepareGamePageState extends State<PrepareGamePage> {
             onPressed: () {
               Navigator.push(
                   context,
-                  CustomPageRoute(
-                      OfflineGamePlayPage(widget.language, 10, 15, 1)));
+                  CustomPageRoute(OfflineGamePlayPage(
+                      languageModel: widget.language,
+                      selectedQuestion: 10,
+                      selectedTime: 15,
+                      isHost: 1,
+                      levelWords: 3)));
             },
             style: TextButton.styleFrom(
                 backgroundColor: primaryColor,

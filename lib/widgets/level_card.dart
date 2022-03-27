@@ -1,6 +1,8 @@
 import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/models/level_model.dart';
+import 'package:acakkata/pages/in_game/offline_game_play_page.dart';
 import 'package:acakkata/theme.dart';
+import 'package:acakkata/widgets/custom_page_route.dart';
 import 'package:flutter/material.dart';
 
 class ItemLevelCard extends StatelessWidget {
@@ -14,7 +16,16 @@ class ItemLevelCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        Navigator.push(
+            context,
+            CustomPageRoute(OfflineGamePlayPage(
+                languageModel: languageModel,
+                selectedQuestion: levelModel!.level_question_count,
+                selectedTime: levelModel!.level_time,
+                isHost: 0,
+                levelWords: levelModel!.level_words)));
+      },
       child: Container(
         margin: const EdgeInsets.only(bottom: 20),
         padding: const EdgeInsets.only(top: 13, bottom: 13, left: 10),
@@ -34,7 +45,6 @@ class ItemLevelCard extends StatelessWidget {
                 'assets/images/${languageModel!.language_icon}',
                 width: 36,
                 height: 18,
-                fit: BoxFit.cover,
               ),
             ),
             const SizedBox(
@@ -46,12 +56,12 @@ class ItemLevelCard extends StatelessWidget {
                 Text(
                   '${levelModel!.level_name}',
                   style:
-                      headerText3.copyWith(fontSize: 16, fontWeight: regular),
+                      headerText3.copyWith(fontSize: 18, fontWeight: regular),
                 ),
                 Text(
-                  '${languageModel!.language_collection}',
+                  'Soal(${levelModel!.level_question_count})  Huruf(${levelModel!.level_words})  Waktu(${levelModel!.level_time})',
                   style: thirdTextStyle.copyWith(
-                      fontSize: 12, color: grayColor3, fontWeight: light),
+                      fontSize: 14, color: grayColor3, fontWeight: light),
                 ),
               ],
             )

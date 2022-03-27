@@ -17,6 +17,7 @@ class LevelCardSkeleton extends StatelessWidget {
           Container(
             height: 61,
             width: 63.44,
+            margin: EdgeInsets.only(top: 10, left: 5, right: 5),
             padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: whiteColor,
@@ -24,7 +25,7 @@ class LevelCardSkeleton extends StatelessWidget {
             ),
             child: Shimmer.fromColors(
               child: Container(
-                width: 36,
+                width: 18,
                 height: 18,
                 color: kLineDarkColor,
               ),
@@ -40,17 +41,20 @@ class LevelCardSkeleton extends StatelessWidget {
             children: [
               Shimmer.fromColors(
                 child: Container(
-                  width: double.infinity,
-                  height: 35,
+                  width: 180,
+                  height: 5,
                   color: kLineDarkColor,
                 ),
                 baseColor: kLineDarkColor,
                 highlightColor: kWhiteGreyColor,
               ),
+              const SizedBox(
+                width: 16,
+              ),
               Shimmer.fromColors(
                 child: Container(
-                  width: double.infinity,
-                  height: 25,
+                  width: 180,
+                  height: 20,
                   color: kLineDarkColor,
                 ),
                 baseColor: kLineDarkColor,
