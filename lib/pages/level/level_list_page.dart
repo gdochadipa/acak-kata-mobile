@@ -3,6 +3,7 @@ import 'package:acakkata/models/level_model.dart';
 import 'package:acakkata/providers/language_db_provider.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/level_card.dart';
+import 'package:acakkata/widgets/skeleton/level_card_skeleton.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
@@ -22,13 +23,27 @@ class _LevelListPageState extends State<LevelListPage> {
   bool isLoading = false;
   late LanguageDBProvider? languageDBProvider =
       Provider.of<LanguageDBProvider>(context, listen: false);
+  late List<LevelModel>? levelList;
   Logger logger = Logger(
     printer: PrettyPrinter(methodCount: 0),
   );
 
+  getInit() async {
+    try {
+      isLoading = true;
+      if (await languageDBProvider!.getLevel()) {
+        levelList = languageDBProvider!.levelList;
+        isLoading = false;
+      }
+    } catch (e) {
+      logger.e(e);
+    }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
+    getInit();
     super.initState();
   }
 
@@ -57,7 +72,17 @@ class _LevelListPageState extends State<LevelListPage> {
             ),
             Container(
               child: Column(
-                children: [],
+                children: isLoading
+                    ? [
+                        LevelCardSkeleton(),
+                        LevelCardSkeleton(),
+                        LevelCardSkeleton(),
+                        LevelCardSkeleton()
+                      ]
+                    : levelList!
+                        .map((e) => ItemLevelCard(
+                            levelModel: e, languageModel: widget.languageModel))
+                        .toList(),
               ),
             )
           ],
@@ -69,11 +94,9 @@ class _LevelListPageState extends State<LevelListPage> {
         child: Scaffold(
           backgroundColor: backgroundColor1,
           body: Container(
-            child: isLoading
-                ? null
-                : ListView(
-                    children: [body()],
-                  ),
+            child: ListView(
+              children: [body()],
+            ),
           ),
         ),
         onWillPop: () async => false);

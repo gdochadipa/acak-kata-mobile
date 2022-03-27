@@ -4,6 +4,7 @@ import 'package:acakkata/providers/language_provider.dart';
 import 'package:acakkata/service/coba_echo_socket.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/language_card.dart';
+import 'package:draggable_home/draggable_home.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -137,6 +138,30 @@ class HomePage extends StatelessWidget {
       }
     }
 
+    Widget body() {
+      return Container(
+        child: ListView(
+          children: [
+            // header(),
+            cardBody()
+          ],
+        ),
+      );
+    }
+
+    Widget headerWidget() {
+      return Container(
+          child: Center(
+        child: Text(
+          "List Bahasa",
+          style: Theme.of(context)
+              .textTheme
+              .headline2!
+              .copyWith(color: thirdColor),
+        ),
+      ));
+    }
+
     return Container(
       child: ListView(
         children: [
@@ -145,5 +170,11 @@ class HomePage extends StatelessWidget {
         ],
       ),
     );
+
+    // return DraggableHome(
+    //     title: Text("List Bahasa"),
+    //     headerWidget: headerWidget(),
+    //     fullyStretchable: true,
+    //     body: [body()]);
   }
 }

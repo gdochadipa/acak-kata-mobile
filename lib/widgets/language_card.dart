@@ -1,6 +1,7 @@
 import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/pages/in_game/game_play_page.dart';
 import 'package:acakkata/pages/in_game/prepare_game_page.dart';
+import 'package:acakkata/pages/level/level_list_page.dart';
 import 'package:acakkata/pages/result_game/result_game_page.dart';
 import 'package:acakkata/theme.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,12 @@ class LanguageCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: () {
-          Navigator.push(context, CustomPageRoute(PrepareGamePage(language)));
+          // Navigator.push(context, CustomPageRoute(PrepareGamePage(language)));
+          Navigator.push(
+              context,
+              CustomPageRoute(LevelListPage(
+                languageModel: language,
+              )));
         },
         child: Container(
           margin: const EdgeInsets.only(bottom: 20),
