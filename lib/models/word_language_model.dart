@@ -7,9 +7,10 @@ class WordLanguageModel {
   String? word;
   List<String>? word_suffle;
   String? word_hint;
+  int? length_word;
 
   WordLanguageModel(
-      {int? id, String? word, String? word_hint, List<String>? word_suffle});
+      {this.id, this.word, this.word_hint, this.word_suffle, this.length_word});
 
   String toRawJson() => json.encode(toJson());
 
@@ -23,8 +24,13 @@ class WordLanguageModel {
     }
     word = json['word'];
     word_hint = json['meaning'] ?? "kosong";
+    length_word = json['length_word'];
   }
 
-  Map<String, dynamic> toJson() =>
-      {"id": id, "word": word, "word_hint": word_hint};
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "word": word,
+        "word_hint": word_hint,
+        "length_word": length_word
+      };
 }

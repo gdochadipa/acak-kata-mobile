@@ -1,4 +1,5 @@
 import 'package:acakkata/models/language_model.dart';
+import 'package:acakkata/providers/language_db_provider.dart';
 import 'package:acakkata/providers/language_provider.dart';
 import 'package:acakkata/service/coba_echo_socket.dart';
 import 'package:acakkata/theme.dart';
@@ -12,8 +13,10 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isLoading = false;
-    LanguageProvider? languageProvider = Provider.of<LanguageProvider>(context);
-    List<LanguageModel>? listLanguageModel = languageProvider.languages;
+    // LanguageProvider? languageProvider = Provider.of<LanguageProvider>(context);
+    LanguageDBProvider? languageDBProvider =
+        Provider.of<LanguageDBProvider>(context);
+    List<LanguageModel>? listLanguageModel = languageDBProvider.languageList;
 
     Widget header() {
       return Container(
@@ -111,7 +114,7 @@ class HomePage extends StatelessWidget {
               Container(
                 child: Column(
                   children:
-                      listLanguageModel.map((e) => LanguageCard(e)).toList(),
+                      listLanguageModel!.map((e) => LanguageCard(e)).toList(),
                 ),
               )
             ],
@@ -136,7 +139,10 @@ class HomePage extends StatelessWidget {
 
     return Container(
       child: ListView(
-        children: [header(), cardBody()],
+        children: [
+          // header(),
+          cardBody()
+        ],
       ),
     );
   }

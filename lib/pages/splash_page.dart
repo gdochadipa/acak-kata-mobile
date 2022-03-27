@@ -7,6 +7,7 @@ import 'package:acakkata/providers/language_provider.dart';
 import 'package:acakkata/service/socket_service.dart';
 import 'package:acakkata/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,6 +19,10 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
+  Logger logger = Logger(
+    printer: PrettyPrinter(methodCount: 0),
+  );
+
   @override
   void initState() {
     // TODO: implement initState
@@ -35,25 +40,31 @@ class _SplashPageState extends State<SplashPage> {
 
     LanguageDBProvider langProvider =
         Provider.of<LanguageDBProvider>(context, listen: false);
-    langProvider.init();
+    await langProvider.init();
 
     bool login = prefs.getBool('login') ?? false;
     bool isInGame = prefs.getBool('is_in_game') ?? false;
 
-    if (login) {
-      UserModel _user = UserModel(
-          id: prefs.getString('id'),
-          name: prefs.getString('name'),
-          email: prefs.getString('email'),
-          username: prefs.getString('username'),
-          userCode: prefs.getString('userCode'),
-          token: prefs.getString('token'));
-      authProvider.user = _user;
-      await languageProvider.getLanguages();
-      Navigator.pushNamed(context, '/home');
-    } else {
-      await languageProvider.getLanguages();
-      Navigator.pushNamed(context, '/sign-in');
+    try {
+      if (login) {
+        UserModel _user = UserModel(
+            id: prefs.getString('id'),
+            name: prefs.getString('name'),
+            email: prefs.getString('email'),
+            username: prefs.getString('username'),
+            userCode: prefs.getString('userCode'),
+            token: prefs.getString('token'));
+        authProvider.user = _user;
+        // await languageProvider.getLanguages();
+        await langProvider.getLanguage();
+        Navigator.pushNamed(context, '/home');
+      } else {
+        // await languageProvider.getLanguages();
+        await langProvider.getLanguage();
+        Navigator.pushNamed(context, '/sign-in');
+      }
+    } catch (e) {
+      logger.e(e);
     }
   }
 
