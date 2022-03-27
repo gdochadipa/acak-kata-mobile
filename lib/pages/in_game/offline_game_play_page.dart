@@ -10,9 +10,11 @@ import 'package:acakkata/providers/room_provider.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/answer_input_buttons.dart';
 import 'package:acakkata/widgets/custom_page_route.dart';
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
 
 class OfflineGamePlayPage extends StatefulWidget {
@@ -49,7 +51,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
   Timer? _timerScore;
   Timer? _timerInGame;
   Map<int, bool>? isSelected = {};
-  String suffQuestion = "JANGKRIK";
+  List<int>? sequenceAnswer = [];
 
   Future<bool> getInit() async {
     LanguageDBProvider langProvider =
@@ -59,22 +61,22 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
     String language = widget.languageModel?.language_code ?? "indonesia";
 
     setState(() {
-      _isLoading = false;
+      _isLoading = true;
       numberCountDown = langProvider.numberCountDown;
       countDownAnswer = numberCountDown;
       totalQuestion = langProvider.totalQuestion;
     });
 
-    if (await langProvider.getWords("indonesia")) {
-      dataWordList =
-          langProvider.dataWordList!.getRange(0, totalQuestion).toList();
-      setState(() {
-        _isLoading = false;
-      });
-      print("in loading");
-    }
     widget._langProvider = langProvider;
     try {
+      if (await langProvider.getWords("indonesia")) {
+        dataWordList =
+            langProvider.dataWordList!.getRange(0, totalQuestion).toList();
+        setState(() {
+          _isLoading = false;
+        });
+        print("in loading");
+      }
       return true;
     } catch (e) {
       logger.e(e);
@@ -89,60 +91,52 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
     // TODO: implement initState
     super.initState();
     getInit();
-    List<String> listSuffQues = suffQuestion.split('');
-    for (var i = 0; i < listSuffQues.length; i++) {
-      print("${listSuffQues[i]} =  ${i}");
-      setState(() {
-        isSelected!.addEntries([MapEntry(i, false)]);
-      });
-    }
     // getTimeScore();
     // timeInGame();
-    // WidgetsBinding.instance!.addPostFrameCallback((_) => showDialog(
-    //         context: context,
-    //         builder: (BuildContext context) {
-    //           Timer _timer;
-    //           _timer = Timer(Duration(seconds: 5), () {
-    //             Navigator.of(context).pop();
-    //           });
+    WidgetsBinding.instance!.addPostFrameCallback((_) => showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              Timer _timer;
+              _timer = Timer(Duration(seconds: 5), () {
+                Navigator.of(context).pop();
+              });
 
-    //           const duration = Duration(seconds: 1);
-    //           Timer.periodic(duration, (Timer timer) {
-    //             if (_start == 0) {
-    //               timer.cancel();
-    //               setState(() {
-    //                 _start = 5;
-    //               });
-    //             } else {
-    //               setState(() {
-    //                 _start--;
-    //               });
-    //             }
-    //           });
-    //           return Container(
-    //             width:
-    //                 MediaQuery.of(context).size.width - (2 * defaultMargin),
-    //             child: AlertDialog(
-    //               backgroundColor: backgroundColor3,
-    //               shape: RoundedRectangleBorder(
-    //                   borderRadius: BorderRadius.circular(30)),
-    //               content: SingleChildScrollView(
-    //                 child: Column(
-    //                   children: [
-    //                     Text(
-    //                       'Ready ?',
-    //                       style: secondaryTextStyle.copyWith(
-    //                           fontSize: 36, fontWeight: medium),
-    //                     )
-    //                   ],
-    //                 ),
-    //               ),
-    //             ),
-    //           );
-    //         }).then((value) {
-    //       getTimeScore();
-    //       timeInGame();
-    //     }));
+              const duration = Duration(seconds: 1);
+              Timer.periodic(duration, (Timer timer) {
+                if (_start == 0) {
+                  timer.cancel();
+                  setState(() {
+                    _start = 5;
+                  });
+                } else {
+                  setState(() {
+                    _start--;
+                  });
+                }
+              });
+              return Container(
+                width: MediaQuery.of(context).size.width - (2 * defaultMargin),
+                child: AlertDialog(
+                  backgroundColor: backgroundColor3,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30)),
+                  content: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Text(
+                          'Ready ?',
+                          style: secondaryTextStyle.copyWith(
+                              fontSize: 36, fontWeight: medium),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }).then((value) {
+          getTimeScore();
+          timeInGame();
+        }));
   }
 
   void setStateIfMounted(f) {
@@ -167,7 +161,13 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
 
   timeInGame() async {
     Duration duration = Duration(seconds: numberCountDown);
-    List<WordLanguageModel>? listQuestion = dataWordList;
+    List<String> listSuffQues =
+        dataWordList![currentArrayQuestion].word!.split('');
+    for (var i = 0; i < listSuffQues.length; i++) {
+      setState(() {
+        isSelected!.addEntries([MapEntry(i, false)]);
+      });
+    }
     _timerInGame = Timer.periodic(duration, (Timer timer) {
       logger.d({
         'currentArrayQuestion': currentArrayQuestion,
@@ -186,6 +186,11 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
           currentArrayQuestion++;
           currentQuestion++;
         });
+        resetAnswer();
+        if (textAnswer != '' && textAnswer.length > 0) {
+          textAnswer = '';
+          answerController.text = textAnswer;
+        }
       }
     });
   }
@@ -307,26 +312,13 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
   }
 
   resetAnswer() {
-    List<String> listSuffQues = suffQuestion.split('');
+    List<String> listSuffQues =
+        dataWordList![currentArrayQuestion].word!.split('');
     for (var i = 0; i < listSuffQues.length; i++) {
       setState(() {
         isSelected!.addEntries([MapEntry(i, false)]);
       });
     }
-  }
-
-  String createStringHint(String? word_hint) {
-    String stringHint = '';
-    for (int i = 0; i < word_hint!.length; i++) {
-      if (i % 2 == 0) {
-        stringHint += word_hint.characters.elementAt(i);
-      } else {
-        if (word_hint.characters.elementAt(i) == '-') {
-          stringHint += '_';
-        }
-      }
-    }
-    return word_hint;
   }
 
   @override
@@ -401,16 +393,42 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
               height: 50,
               padding: EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
-                  color: grayColor2, borderRadius: BorderRadius.circular(12)),
+                  color: backgroundColor4,
+                  borderRadius: BorderRadius.circular(12)),
               child: Center(
                   child: TextFormField(
-                enabled: !_isButtonDisabled,
+                enabled: false,
                 controller: answerController,
                 style: blackTextStyle,
                 decoration: InputDecoration.collapsed(
-                    hintText: 'Answer', hintStyle: subtitleTextStyle),
+                    hintText: 'Jawaban', hintStyle: subtitleTextStyle),
               )),
             )
+          ],
+        ),
+      );
+    }
+
+    Widget answerPinInput(String? question) {
+      return Container(
+        margin: EdgeInsets.only(top: 20),
+        child: Wrap(
+          alignment: WrapAlignment.center,
+          children: [
+            PinCodeTextField(
+                appContext: context,
+                length: 8,
+                animationType: AnimationType.fade,
+                pinTheme: PinTheme(
+                  shape: PinCodeFieldShape.box,
+                  borderRadius: BorderRadius.circular(5),
+                  fieldHeight: 50,
+                  fieldWidth: 40,
+                  activeFillColor: Colors.white,
+                ),
+                controller: answerController,
+                onCompleted: (result) {},
+                onChanged: (value) {})
           ],
         ),
       );
@@ -464,11 +482,11 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
           onPressed: () {
             //hapus kata per kata
             if (textAnswer != '' && textAnswer.length > 0) {
+              int lett = sequenceAnswer![textAnswer.length - 1];
               textAnswer = textAnswer.substring(0, textAnswer.length - 1);
               answerController.text = textAnswer;
               setState(() {
-                isSelected!.addEntries(
-                    [MapEntry(answerController.text.length, false)]);
+                isSelected!.update(lett, (value) => false);
               });
             }
           },
@@ -528,16 +546,64 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
                           textAnswer = textAnswer + letter;
                           answerController.text = textAnswer;
                           isSelected![e] = true;
+                          sequenceAnswer!.add(e);
                         });
                         if (textAnswer.length == suffle_question.length) {
                           print("Check jawaban Gan !!!");
-                          // print(
-                          //     "${answerController.text.toUpperCase()} == ${question!.toUpperCase()} => ${answerController.text.toUpperCase() == question.toUpperCase()}");
+                          logger.d(
+                              "${answerController.text.toUpperCase()} == ${question!.toUpperCase()} => ${answerController.text.toUpperCase() == question.toUpperCase()}");
                           if (answerController.text.toUpperCase() ==
-                              question!.toUpperCase()) {
+                              question.toUpperCase()) {
                             print("Jawabannya Bener Banget");
+                            Flushbar(
+                              message: "Jawaban Benar",
+                              margin: EdgeInsets.all(8),
+                              borderRadius: BorderRadius.circular(8),
+                              flushbarStyle: FlushbarStyle.FLOATING,
+                              flushbarPosition: FlushbarPosition.TOP,
+                              reverseAnimationCurve: Curves.decelerate,
+                              forwardAnimationCurve: Curves.elasticOut,
+                              isDismissible: false,
+                              duration: Duration(seconds: 2),
+                              backgroundColor: backgroundColor1,
+                              titleColor: successColor,
+                              icon: Icon(
+                                Icons.check_circle_outline_outlined,
+                                color: successColor,
+                              ),
+                              boxShadows: [
+                                BoxShadow(
+                                    color: Colors.green[600] ?? successColor,
+                                    offset: Offset(0.0, 2.0),
+                                    blurRadius: 3.0)
+                              ],
+                            ).show(context);
                           } else {
                             print("Jawabannya Salah");
+                            Flushbar(
+                              message: "Jawaban Salah",
+                              margin: EdgeInsets.all(8),
+                              borderRadius: BorderRadius.circular(8),
+                              flushbarStyle: FlushbarStyle.FLOATING,
+                              flushbarPosition: FlushbarPosition.TOP,
+                              reverseAnimationCurve: Curves.decelerate,
+                              forwardAnimationCurve: Curves.elasticOut,
+                              isDismissible: false,
+                              duration: Duration(seconds: 2),
+                              backgroundColor: backgroundColor1,
+                              titleColor: alertColor,
+                              titleText: Text("Jawaban Salah"),
+                              icon: Icon(
+                                Icons.close_rounded,
+                                color: alertColor,
+                              ),
+                              boxShadows: [
+                                BoxShadow(
+                                    color: Colors.red[800] ?? alertColor,
+                                    offset: Offset(0.0, 2.0),
+                                    blurRadius: 3.0)
+                              ],
+                            ).show(context);
                           }
                         }
                         // onCheckingAnswer(answer);
@@ -564,6 +630,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
             TextTime(10),
             SizedBox(height: 20),
             answerInput(),
+            // answerPinInput(question),
             SizedBox(height: 20),
             AnswerButtons(suffle_question, question)
           ],
@@ -580,7 +647,10 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
                 ? null
                 : ListView(
                     children: [
-                      cardBodyUp("JANGKRIK", "JANGKRIK", "JANGKRIK".split('')),
+                      cardBodyUp(
+                          dataWordList![currentArrayQuestion].word,
+                          dataWordList![currentArrayQuestion].word,
+                          dataWordList![currentArrayQuestion].word_suffle),
                     ],
                   ),
           ),
