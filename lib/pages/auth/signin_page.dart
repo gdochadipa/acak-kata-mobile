@@ -69,6 +69,10 @@ class _SignInPageState extends State<SignInPage> {
       });
     }
 
+    handleOfflineMode() {
+      Navigator.pushNamed(context, '/home');
+    }
+
     checkSocket() async {
       await socket.onTest();
     }
@@ -196,6 +200,26 @@ class _SignInPageState extends State<SignInPage> {
       );
     }
 
+    Widget offlineModeBtn() {
+      return Container(
+        height: 50,
+        width: double.infinity,
+        margin: EdgeInsets.only(top: 30),
+        child: TextButton(
+            onPressed: handleOfflineMode,
+            style: TextButton.styleFrom(
+                backgroundColor: backgroundColor1,
+                side: BorderSide(width: 1, color: primaryColor),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12))),
+            child: Text(
+              'Offline Mode',
+              style:
+                  primaryTextStyle.copyWith(fontSize: 16, fontWeight: medium),
+            )),
+      );
+    }
+
     Widget footer() {
       return Container(
         margin: EdgeInsets.only(bottom: 30),
@@ -227,16 +251,16 @@ class _SignInPageState extends State<SignInPage> {
       body: SafeArea(
         child: Container(
           margin: EdgeInsets.symmetric(horizontal: defaultMargin),
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                header(),
-                emailInput(),
-                passwordInput(),
-                signInButton(),
-                Spacer(),
-                footer()
-              ]),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            header(),
+            emailInput(),
+            passwordInput(),
+            signInButton(),
+            offlineModeBtn(),
+            Spacer(),
+            footer()
+          ]),
         ),
       ),
     );

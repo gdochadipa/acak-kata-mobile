@@ -58,11 +58,63 @@ class ItemLevelCard extends StatelessWidget {
                   style:
                       headerText3.copyWith(fontSize: 18, fontWeight: regular),
                 ),
-                Text(
-                  'Soal(${levelModel!.level_question_count})  Huruf(${levelModel!.level_words})  Waktu(${levelModel!.level_time})',
-                  style: thirdTextStyle.copyWith(
-                      fontSize: 14, color: grayColor3, fontWeight: light),
+                Row(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.all(4),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.text_format,
+                            color: grayColor3,
+                          ),
+                          Text('${levelModel!.level_question_count}',
+                              style: thirdTextStyle.copyWith(
+                                  fontSize: 15,
+                                  color: grayColor3,
+                                  fontWeight: light))
+                        ],
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(left: 4, right: 4, top: 4),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.g_translate_outlined,
+                            color: grayColor3,
+                          ),
+                          Text('${levelModel!.level_words}',
+                              style: thirdTextStyle.copyWith(
+                                  fontSize: 15,
+                                  color: grayColor3,
+                                  fontWeight: light))
+                        ],
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.all(4),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.timer,
+                            color: grayColor3,
+                          ),
+                          Text('${levelModel!.level_time}',
+                              style: thirdTextStyle.copyWith(
+                                  fontSize: 15,
+                                  color: grayColor3,
+                                  fontWeight: light))
+                        ],
+                      ),
+                    )
+                  ],
                 ),
+                // Text(
+                //   'Soal()  Huruf(${levelModel!.level_words})  Waktu(${levelModel!.level_time})',
+                //   style: thirdTextStyle.copyWith(
+                //       fontSize: 14, color: grayColor3, fontWeight: light),
+                // ),
               ],
             )
           ],

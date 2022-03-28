@@ -100,6 +100,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
     // getTimeScore();
     // timeInGame();
     WidgetsBinding.instance!.addPostFrameCallback((_) => showDialog(
+            barrierDismissible: false,
             context: context,
             builder: (BuildContext context) {
               Timer _timer;
