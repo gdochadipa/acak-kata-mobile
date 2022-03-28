@@ -14,7 +14,6 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
 
 class OfflineGamePlayPage extends StatefulWidget {
@@ -499,20 +498,20 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
         child: Wrap(
           alignment: WrapAlignment.center,
           children: [
-            PinCodeTextField(
-                appContext: context,
-                length: 8,
-                animationType: AnimationType.fade,
-                pinTheme: PinTheme(
-                  shape: PinCodeFieldShape.box,
-                  borderRadius: BorderRadius.circular(5),
-                  fieldHeight: 50,
-                  fieldWidth: 40,
-                  activeFillColor: Colors.white,
-                ),
-                controller: answerController,
-                onCompleted: (result) {},
-                onChanged: (value) {})
+            // PinCodeTextField(
+            //     appContext: context,
+            //     length: 8,
+            //     animationType: AnimationType.fade,
+            //     pinTheme: PinTheme(
+            //       shape: PinCodeFieldShape.box,
+            //       borderRadius: BorderRadius.circular(5),
+            //       fieldHeight: 50,
+            //       fieldWidth: 40,
+            //       activeFillColor: Colors.white,
+            //     ),
+            //     controller: answerController,
+            //     onCompleted: (result) {},
+            //     onChanged: (value) {})
           ],
         ),
       );
