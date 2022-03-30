@@ -277,6 +277,106 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
             ));
   }
 
+  Future<void> showCancelGame() async {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) => Container(
+              width: MediaQuery.of(context).size.width - (2 * defaultMargin),
+              child: AlertDialog(
+                backgroundColor: backgroundColor1,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                content: SingleChildScrollView(
+                    child: Column(
+                  children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Icon(
+                          Icons.close,
+                          color: primaryTextColor,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    Text(
+                      'Ingin keluar permainan ?',
+                      style: headerText2.copyWith(
+                        fontSize: 18,
+                        fontWeight: semiBold,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 15, right: 5),
+                      child: Row(
+                        children: [
+                          Flexible(
+                              child: Container(
+                            margin: EdgeInsets.all(2),
+                            height: 44,
+                            child: TextButton(
+                              onPressed: () {
+                                Navigator.pushNamed(context, '/home');
+                              },
+                              style: TextButton.styleFrom(
+                                backgroundColor: primaryColor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                              child: Text(
+                                'Ya, ingin keluar',
+                                style: whiteTextStyle.copyWith(
+                                  fontSize: 16,
+                                  fontWeight: medium,
+                                ),
+                              ),
+                            ),
+                          )),
+                          Flexible(
+                              child: Container(
+                                  child: Container(
+                            margin: EdgeInsets.all(5),
+                            height: 44,
+                            child: TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              style: TextButton.styleFrom(
+                                side: BorderSide(
+                                    width: 1, color: backgroundColor2),
+                                backgroundColor: backgroundColor1,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                              child: Text(
+                                'Tidak, ingin lanjut',
+                                style: primaryTextStyle.copyWith(
+                                  fontSize: 16,
+                                  fontWeight: medium,
+                                ),
+                              ),
+                            ),
+                          )))
+                        ],
+                      ),
+                    )
+                  ],
+                )),
+              ),
+            ));
+  }
+
   Widget textHint(String? word_hint) {
     return Container(
       margin: EdgeInsets.only(top: 40),
@@ -598,6 +698,47 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
       );
     }
 
+    Widget btnExit() {
+      return Container(
+        margin: EdgeInsets.only(
+          top: 15,
+        ),
+        child: Flexible(
+            child: Container(
+          height: 45,
+          width: double.infinity,
+          margin: EdgeInsets.all(5),
+          child: TextButton(
+            onPressed: () {
+              //hapus kata per kata
+              showCancelGame();
+            },
+            style: TextButton.styleFrom(
+                backgroundColor: alertColor,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12))),
+            child: Wrap(
+              children: [
+                Icon(
+                  CupertinoIcons.square_arrow_left,
+                  semanticLabel: 'Add',
+                  color: whiteColor,
+                ),
+                SizedBox(
+                  width: 5,
+                ),
+                Text(
+                  'Keluar',
+                  style:
+                      whiteTextStyle.copyWith(fontSize: 14, fontWeight: bold),
+                ),
+              ],
+            ),
+          ),
+        )),
+      );
+    }
+
     Widget anotherActionAnswer() {
       return Container(
         margin: EdgeInsets.only(top: 15),
@@ -630,7 +771,8 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
                       }))
                   .toList(),
             ),
-            anotherActionAnswer()
+            anotherActionAnswer(),
+            btnExit()
           ],
         ),
       );
@@ -651,7 +793,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
             SizedBox(height: 20),
             answerInput(),
             // answerPinInput(question),
-            SizedBox(height: 20),
+            SizedBox(height: 30),
             AnswerButtons(suffle_question, question)
           ],
         ),

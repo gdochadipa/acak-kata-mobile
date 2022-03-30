@@ -1,7 +1,9 @@
 import 'package:acakkata/pages/auth/signup_page.dart';
 import 'package:acakkata/providers/auth_provider.dart';
+import 'package:acakkata/widgets/btn_raised.dart';
 import 'package:acakkata/service/socket_service.dart';
 import 'package:acakkata/theme.dart';
+import 'package:acakkata/widgets/clicky_button.dart';
 import 'package:acakkata/widgets/custom_page_route.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -200,7 +202,7 @@ class _SignInPageState extends State<SignInPage> {
       );
     }
 
-    Widget offlineModeBtn() {
+    Widget offlineModeBtn2() {
       return Container(
         height: 50,
         width: double.infinity,
@@ -218,6 +220,15 @@ class _SignInPageState extends State<SignInPage> {
                   primaryTextStyle.copyWith(fontSize: 16, fontWeight: medium),
             )),
       );
+    }
+
+    Widget offlineModeBtn() {
+      return ClickyButton(
+          child: Text(
+            "Offline Mode",
+            style: whiteTextStyle.copyWith(fontSize: 16, fontWeight: medium),
+          ),
+          onPressed: () {});
     }
 
     Widget footer() {

@@ -31,6 +31,8 @@ Color firstLinierColor = Color(0xff5FDCF0);
 Color secondLinierColor = Color(0xff05BEF8);
 Color thirdLinierColor = Color(0xff5FF0D6);
 
+Color shadowBackgroundColor2 = Color(0xffD5B8FA);
+
 Color subtitleColor = Color(0xff504F5E);
 Color transparentColor = Colors.transparent;
 Color blackColor = Color(0xff2E2E2E);

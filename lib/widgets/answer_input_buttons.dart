@@ -58,9 +58,9 @@ class _InputAnswerButtonState extends State<InputAnswerButton>
     return Container(
       margin: EdgeInsets.all(2),
       child: Container(
-        width: 45,
-        height: 45,
-        margin: EdgeInsets.all(2),
+        width: 50,
+        height: 50,
+        margin: EdgeInsets.all(8),
         child: TextButton(
           onPressed: widget.isBtnSelected == false
               ? () {
