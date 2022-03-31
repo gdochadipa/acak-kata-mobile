@@ -223,12 +223,20 @@ class _SignInPageState extends State<SignInPage> {
     }
 
     Widget offlineModeBtn() {
-      return ClickyButton(
-          child: Text(
-            "Offline Mode",
-            style: whiteTextStyle.copyWith(fontSize: 16, fontWeight: medium),
-          ),
-          onPressed: () {});
+      return Container(
+        width: double.infinity,
+        child: ClickyButton(
+            color: backgroundColor2,
+            shadowColor: shadowBackgroundColor2,
+            margin: EdgeInsets.all(10),
+            width: 200,
+            height: 70,
+            child: Text(
+              "Offline Mode",
+              style: whiteTextStyle.copyWith(fontSize: 16, fontWeight: medium),
+            ),
+            onPressed: () {}),
+      );
     }
 
     Widget footer() {
