@@ -202,7 +202,7 @@ class _SignInPageState extends State<SignInPage> {
       );
     }
 
-    Widget offlineModeBtn() {
+    Widget offlineModeBtn2() {
       return Container(
         height: 50,
         width: double.infinity,
@@ -223,14 +223,14 @@ class _SignInPageState extends State<SignInPage> {
     }
 
     //set delay sebelum run on click
-    Widget offlineModeBtn2() {
+    Widget offlineModeBtn() {
       return Container(
         width: double.infinity,
         child: ClickyButton(
             color: backgroundColor2,
             shadowColor: shadowBackgroundColor2,
             margin: EdgeInsets.all(10),
-            width: 200,
+            width: 300,
             height: 70,
             child: Text(
               "Offline Mode",

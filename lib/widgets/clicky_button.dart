@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ffi';
 
 import 'package:acakkata/theme.dart';
@@ -62,7 +63,7 @@ class _ClickyButtonState extends State<ClickyButton> {
                   duration: widget._duration,
                   curve: _curve,
                   width: _sideWidth,
-                  height: 60.0,
+                  height: 60,
                   color: widget.shadowColor,
                 ),
               ),
@@ -73,7 +74,7 @@ class _ClickyButtonState extends State<ClickyButton> {
               child: Transform(
                 transform: Matrix4.skewX(-0.8),
                 child: Transform(
-                  origin: Offset(100, 10),
+                  origin: Offset((widget.width! / 2), 10),
                   transform: Matrix4.rotationZ(math.pi),
                   child: AnimatedContainer(
                     duration: widget._duration,
@@ -118,7 +119,9 @@ class _ClickyButtonState extends State<ClickyButton> {
       _sideWidth = 0.0;
       _bottomHeight = 0.0;
     });
-    widget.onPressed();
+    Timer timer = new Timer(Duration(milliseconds: 90), () {
+      widget.onPressed();
+    });
   }
 
   void _unPressedOnTapUp(_) => _unPressed();
