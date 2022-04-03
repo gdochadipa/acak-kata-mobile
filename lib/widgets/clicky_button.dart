@@ -26,7 +26,7 @@ class ClickyButton extends StatefulWidget {
     this.color = Colors.deepPurple,
     this.shadowColor = Colors.deepPurpleAccent,
     this.width = 200.0,
-    this.height = 80.0,
+    this.height = 70.0,
     required this.onPressed,
   })  : assert(onPressed != null),
         assert(child != null),
@@ -44,11 +44,13 @@ class _ClickyButtonState extends State<ClickyButton> {
   double _sideWidth = 5.0; //perubahan jarak shadow
   double _bottomHeight = 5.0; //perubahan jarak shadow
   Curve _curve = Curves.ease;
+  double shadowRangeHeight = 70;
 
   @override
   Widget build(BuildContext context) {
+    shadowRangeHeight = (70 - widget.height!) / 2;
     return Container(
-      width: widget.width,
+      width: widget.width! + 5,
       height: widget.height,
       margin: widget.margin,
       child: GestureDetector(
@@ -63,7 +65,7 @@ class _ClickyButtonState extends State<ClickyButton> {
                   duration: widget._duration,
                   curve: _curve,
                   width: _sideWidth,
-                  height: 60,
+                  height: widget.height! - 10,
                   color: widget.shadowColor,
                 ),
               ),
@@ -74,7 +76,8 @@ class _ClickyButtonState extends State<ClickyButton> {
               child: Transform(
                 transform: Matrix4.skewX(-0.8),
                 child: Transform(
-                  origin: Offset((widget.width! / 2), 10),
+                  origin: Offset((widget.width! / 2) - shadowRangeHeight,
+                      10 - shadowRangeHeight),
                   transform: Matrix4.rotationZ(math.pi),
                   child: AnimatedContainer(
                     duration: widget._duration,
@@ -92,7 +95,7 @@ class _ClickyButtonState extends State<ClickyButton> {
               child: Container(
                 alignment: Alignment.center,
                 width: widget.width,
-                height: 60,
+                height: widget.height! - 10,
                 decoration: BoxDecoration(
                     color: widget.color,
                     border: Border.all(color: widget.shadowColor, width: 1)),
