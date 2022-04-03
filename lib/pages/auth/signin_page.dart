@@ -202,7 +202,7 @@ class _SignInPageState extends State<SignInPage> {
       );
     }
 
-    Widget offlineModeBtn2() {
+    Widget offlineModeBtn() {
       return Container(
         height: 50,
         width: double.infinity,
@@ -222,7 +222,8 @@ class _SignInPageState extends State<SignInPage> {
       );
     }
 
-    Widget offlineModeBtn() {
+    //set delay sebelum run on click
+    Widget offlineModeBtn2() {
       return Container(
         width: double.infinity,
         child: ClickyButton(
@@ -235,7 +236,7 @@ class _SignInPageState extends State<SignInPage> {
               "Offline Mode",
               style: whiteTextStyle.copyWith(fontSize: 16, fontWeight: medium),
             ),
-            onPressed: () {}),
+            onPressed: handleOfflineMode),
       );
     }
 

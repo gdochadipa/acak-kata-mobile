@@ -100,6 +100,15 @@ flutter:
     - assets/images/arrow.png
     - assets/images/icon_logout.png
     - assets/db/mydb.db
+    - assets/images/Heart.png
+    - assets/images/kahoot_lit.png
+    - assets/images/Lightbulb.png
+    - assets/images/logo_biru.png
+    - assets/images/logo_one_line.png
+    - assets/images/logo_putih.png
+    - assets/images/multi_player.png
+    - assets/images/single_player.png
+    - assets/images/trophy_2.png
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
