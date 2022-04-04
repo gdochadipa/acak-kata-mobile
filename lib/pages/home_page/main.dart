@@ -94,9 +94,11 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomNavigationBar: customBottomNav(),
-      body: body(),
-    );
+    return WillPopScope(
+        child: Scaffold(
+          // bottomNavigationBar: customBottomNav(),
+          body: body(),
+        ),
+        onWillPop: () async => false);
   }
 }

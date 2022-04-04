@@ -1,11 +1,15 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:acakkata/models/user_model.dart';
+import 'package:acakkata/pages/home_page/main.dart';
 import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/providers/language_db_provider.dart';
 import 'package:acakkata/providers/language_provider.dart';
 import 'package:acakkata/service/socket_service.dart';
 import 'package:acakkata/theme.dart';
+import 'package:acakkata/widgets/custom_page_route_bounce.dart';
+import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
@@ -23,11 +27,20 @@ class _SplashPageState extends State<SplashPage> {
     printer: PrettyPrinter(methodCount: 0),
   );
 
+  double _width = 80;
+  double _height = 60;
+
   @override
   void initState() {
     // TODO: implement initState
     getInit();
     super.initState();
+    Timer(Duration(milliseconds: 500), () {
+      setState(() {
+        _width = 200;
+        _height = 170;
+      });
+    });
     // Timer(Duration(seconds: 3), () => Navigator.pushNamed(context, '/home'));
   }
 
@@ -56,13 +69,20 @@ class _SplashPageState extends State<SplashPage> {
             token: prefs.getString('token'));
         authProvider.user = _user;
         // await languageProvider.getLanguages();
-        await langProvider.getLanguage();
-        Navigator.pushNamed(context, '/home');
-      } else {
-        // await languageProvider.getLanguages();
-        await langProvider.getLanguage();
-        Navigator.pushNamed(context, '/sign-in');
+        // await langProvider.getLanguage();
+        // Navigator.pushNamed(context, '/home');
       }
+      // else {
+      //   // await languageProvider.getLanguages();
+      //   await langProvider.getLanguage();
+      //   Navigator.pushNamed(context, '/sign-in');
+      // }
+
+      await langProvider.getLanguage();
+      Timer(Duration(milliseconds: 1500), () {
+        // Navigator.pushNamed(context, '/home');
+        Navigator.push(context, CustomPageRouteBounce(widget: MainPage()));
+      });
     } catch (e) {
       logger.e(e);
     }
@@ -71,14 +91,16 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: backgroundColor1,
+      backgroundColor: backgroundColor2,
       body: Center(
-        child: Container(
-          width: 130,
-          height: 150,
+        child: AnimatedContainer(
+          duration: Duration(milliseconds: 1000),
+          curve: Curves.elasticInOut,
+          width: _width,
+          height: _height,
           decoration: BoxDecoration(
               image: DecorationImage(
-                  image: AssetImage('assets/images/icon_game.jpg'))),
+                  image: AssetImage('assets/images/logo_putih.png'))),
         ),
       ),
     );

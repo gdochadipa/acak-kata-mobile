@@ -10,11 +10,16 @@ import 'package:flutter/material.dart';
 
 import 'custom_page_route.dart';
 
-class LanguageCard extends StatelessWidget {
+class LanguageCard extends StatefulWidget {
   // const LanguageCard({Key? key}) : super(key: key);
   late final LanguageModel language;
   LanguageCard(this.language);
 
+  @override
+  State<LanguageCard> createState() => _LanguageCardState();
+}
+
+class _LanguageCardState extends State<LanguageCard> {
   @override
   Widget build(BuildContext context) {
     void handlePopUpPress() {
@@ -33,7 +38,7 @@ class LanguageCard extends StatelessWidget {
                           context,
                           CustomPageRoute(LevelListPage(
                             isOnline: false,
-                            languageModel: language,
+                            languageModel: widget.language,
                           )));
                     }),
                 // ListItemPopOver(
@@ -68,7 +73,16 @@ class LanguageCard extends StatelessWidget {
           margin: const EdgeInsets.only(bottom: 20),
           padding: const EdgeInsets.only(top: 13, bottom: 13, left: 10),
           decoration: BoxDecoration(
-              color: backgroundColor6, borderRadius: BorderRadius.circular(15)),
+              color: backgroundColor8,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                    color: backgroundColorAccent9,
+                    spreadRadius: 1,
+                    blurRadius: 0,
+                    blurStyle: BlurStyle.solid,
+                    offset: Offset(-4, 4))
+              ]),
           child: Row(
             children: [
               Container(
@@ -80,7 +94,7 @@ class LanguageCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: Image.asset(
-                  'assets/images/${language.language_icon}',
+                  'assets/images/${widget.language.language_icon}',
                   width: 36,
                   height: 18,
                 ),
@@ -92,9 +106,9 @@ class LanguageCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${language.language_name}',
+                    '${widget.language.language_name}',
                     style:
-                        headerText3.copyWith(fontSize: 16, fontWeight: regular),
+                        whiteTextStyle.copyWith(fontSize: 18, fontWeight: bold),
                   ),
                   // Text(
                   //   '${language.language_collection}',
