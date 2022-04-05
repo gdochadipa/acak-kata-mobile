@@ -27,96 +27,55 @@ class ItemLevelCard extends StatelessWidget {
                 levelWords: levelModel!.level_words)));
       },
       child: Container(
-        margin: const EdgeInsets.only(bottom: 20),
-        padding: const EdgeInsets.only(top: 13, bottom: 13, left: 10),
+        margin: EdgeInsets.only(bottom: 20),
+        padding: EdgeInsets.only(top: 13, bottom: 13, left: 10, right: 10),
         decoration: BoxDecoration(
-            color: backgroundColor6, borderRadius: BorderRadius.circular(15)),
-        child: Row(
+            // border: Border.all(color: blackColor),
+            boxShadow: [
+              BoxShadow(
+                  color: backgroundColorAccent9,
+                  spreadRadius: 1,
+                  blurRadius: 0,
+                  blurStyle: BlurStyle.solid,
+                  offset: Offset(-4, 4))
+            ], color: backgroundColor8, borderRadius: BorderRadius.circular(5)),
+        child: Column(
           children: [
             Container(
-              height: 61,
-              width: 63.44,
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: whiteColor,
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: Image.asset(
-                'assets/images/${languageModel!.language_icon}',
-                width: 36,
-                height: 18,
-              ),
-            ),
-            const SizedBox(
-              width: 16,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '${levelModel!.level_name}',
-                  style:
-                      headerText3.copyWith(fontSize: 18, fontWeight: regular),
-                ),
-                Row(
+                margin: EdgeInsets.all(5),
+                child: Column(
                   children: [
-                    Container(
-                      margin: EdgeInsets.all(4),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.text_format,
-                            color: grayColor3,
-                          ),
-                          Text('${levelModel!.level_question_count}',
-                              style: thirdTextStyle.copyWith(
-                                  fontSize: 15,
-                                  color: grayColor3,
-                                  fontWeight: light))
-                        ],
+                    Align(
+                      child: Text(
+                        '${levelModel!.level_name}',
+                        style: whiteTextStyle.copyWith(
+                            fontSize: 21, fontWeight: bold),
                       ),
+                      alignment: Alignment.topLeft,
                     ),
-                    Container(
-                      margin: EdgeInsets.only(left: 4, right: 4, top: 4),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.g_translate_outlined,
-                            color: grayColor3,
-                          ),
-                          Text('${levelModel!.level_words}',
-                              style: thirdTextStyle.copyWith(
-                                  fontSize: 15,
-                                  color: grayColor3,
-                                  fontWeight: light))
-                        ],
+                    Align(
+                      child: Text(
+                        '120/240 XP',
+                        style: whiteTextStyle.copyWith(
+                            fontSize: 16, fontWeight: medium),
                       ),
+                      alignment: Alignment.topRight,
                     ),
-                    Container(
-                      margin: EdgeInsets.all(4),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.timer,
-                            color: grayColor3,
-                          ),
-                          Text('${levelModel!.level_time}',
-                              style: thirdTextStyle.copyWith(
-                                  fontSize: 15,
-                                  color: grayColor3,
-                                  fontWeight: light))
-                        ],
-                      ),
-                    )
                   ],
-                ),
-                // Text(
-                //   'Soal()  Huruf(${levelModel!.level_words})  Waktu(${levelModel!.level_time})',
-                //   style: thirdTextStyle.copyWith(
-                //       fontSize: 14, color: grayColor3, fontWeight: light),
-                // ),
-              ],
+                )),
+            Container(
+              margin: EdgeInsets.all(5),
+              child: LinearProgressIndicator(
+                value: 3 / 4,
+                backgroundColor: backgroundColor1,
+                valueColor: AlwaysStoppedAnimation<Color>(accentColor),
+              ),
             )
+            // Text(
+            //   'Soal()  Huruf(${levelModel!.level_words})  Waktu(${levelModel!.level_time})',
+            //   style: thirdTextStyle.copyWith(
+            //       fontSize: 14, color: grayColor3, fontWeight: light),
+            // ),
           ],
         ),
       ),

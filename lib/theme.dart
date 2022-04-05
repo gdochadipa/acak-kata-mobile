@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 double defaultMargin = 30.0;
 
-Color primaryColor = Color(0xffB983FF);
+Color primaryColor = Color(0xff46178F);
 Color secondaryColor = Color(0xff5FDCF0);
 Color secondaryDisabled = Color(0xff97dde8);
 Color thirdColor = Color(0xff2B2937);
@@ -39,6 +39,8 @@ Color shadowBackgroundColor2 = Color(0xffD5B8FA);
 Color subtitleColor = Color(0xff504F5E);
 Color transparentColor = Colors.transparent;
 Color blackColor = Color(0xff2E2E2E);
+
+Color accentColor = Color(0xffFF32F7);
 
 TextStyle primaryTextStyle = GoogleFonts.montserrat(
   color: primaryTextColor,

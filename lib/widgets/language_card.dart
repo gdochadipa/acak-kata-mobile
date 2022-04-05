@@ -4,6 +4,7 @@ import 'package:acakkata/pages/in_game/prepare_game_page.dart';
 import 'package:acakkata/pages/level/level_list_page.dart';
 import 'package:acakkata/pages/result_game/result_game_page.dart';
 import 'package:acakkata/theme.dart';
+import 'package:acakkata/widgets/custom_page_route_bounce.dart';
 import 'package:acakkata/widgets/popover.dart';
 import 'package:acakkata/widgets/widget_popover/list_item_pop_over.dart';
 import 'package:flutter/material.dart';
@@ -34,12 +35,15 @@ class _LanguageCardState extends State<LanguageCard> {
                     title: Text("Single"),
                     leading: Icon(Icons.person),
                     onClick: () {
-                      Navigator.push(
+                      Navigator.pushAndRemoveUntil(
                           context,
-                          CustomPageRoute(LevelListPage(
-                            isOnline: false,
-                            languageModel: widget.language,
-                          )));
+                          CustomPageRouteBounce(
+                              widget: LevelListPage(
+                                isOnline: false,
+                                languageModel: widget.language,
+                              ),
+                              duration: Duration(milliseconds: 500)),
+                          (route) => false);
                     }),
                 // ListItemPopOver(
                 //     title: Text(

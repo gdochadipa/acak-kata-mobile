@@ -285,7 +285,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
               child: AlertDialog(
                 backgroundColor: backgroundColor1,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
+                  borderRadius: BorderRadius.circular(5),
                 ),
                 content: SingleChildScrollView(
                     child: Column(
@@ -319,13 +319,13 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
                       margin: EdgeInsets.only(top: 15, right: 5),
                       child: Row(
                         children: [
-                          Flexible(
-                              child: Container(
+                          Container(
                             margin: EdgeInsets.all(2),
                             height: 44,
                             child: TextButton(
                               onPressed: () {
-                                Navigator.pushNamed(context, '/home');
+                                Navigator.pushNamedAndRemoveUntil(
+                                    context, '/home', (route) => false);
                               },
                               style: TextButton.styleFrom(
                                 backgroundColor: primaryColor,
@@ -336,15 +336,14 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
                               child: Text(
                                 'Ya, ingin keluar',
                                 style: whiteTextStyle.copyWith(
-                                  fontSize: 16,
+                                  fontSize: 12,
                                   fontWeight: medium,
                                 ),
                               ),
                             ),
-                          )),
-                          Flexible(
+                          ),
+                          Container(
                               child: Container(
-                                  child: Container(
                             margin: EdgeInsets.all(5),
                             height: 44,
                             child: TextButton(
@@ -362,12 +361,12 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
                               child: Text(
                                 'Tidak, ingin lanjut',
                                 style: primaryTextStyle.copyWith(
-                                  fontSize: 16,
+                                  fontSize: 12,
                                   fontWeight: medium,
                                 ),
                               ),
                             ),
-                          )))
+                          ))
                         ],
                       ),
                     )
@@ -703,8 +702,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
         margin: EdgeInsets.only(
           top: 15,
         ),
-        child: Flexible(
-            child: Container(
+        child: Container(
           height: 45,
           width: double.infinity,
           margin: EdgeInsets.all(5),
@@ -735,7 +733,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
               ],
             ),
           ),
-        )),
+        ),
       );
     }
 

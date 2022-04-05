@@ -72,17 +72,17 @@ class _LevelListPageState extends State<LevelListPage> {
         title: Column(
           children: [
             SizedBox(
-              height: 5,
+              height: 8,
             ),
             Text(
-              "List Level",
+              "${widget.languageModel.language_name}",
               style: headerText2.copyWith(
-                  fontWeight: regular, fontSize: 16, color: subtitleColor),
+                  fontWeight: extraBold, fontSize: 20, color: primaryTextColor),
             ),
             Text(
-              '${widget.languageModel.language_name}',
+              widget.isOnline == true ? 'Multiplayer' : 'Single Player',
               style:
-                  primaryTextStyle.copyWith(fontSize: 12, fontWeight: medium),
+                  primaryTextStyle.copyWith(fontSize: 14, fontWeight: medium),
             )
           ],
         ),
@@ -114,8 +114,11 @@ class _LevelListPageState extends State<LevelListPage> {
                         LevelCardSkeleton()
                       ]
                     : levelList!
-                        .map((e) => ItemLevelCard(
-                            levelModel: e, languageModel: widget.languageModel))
+                        .map(
+                          (e) => ItemLevelCard(
+                              levelModel: e,
+                              languageModel: widget.languageModel),
+                        )
                         .toList(),
               ),
             )
@@ -129,6 +132,7 @@ class _LevelListPageState extends State<LevelListPage> {
           backgroundColor: backgroundColor1,
           body: Container(
             child: ListView(
+              shrinkWrap: true,
               children: [header(), body()],
             ),
           ),
