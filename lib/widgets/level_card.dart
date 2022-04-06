@@ -26,6 +26,7 @@ class ItemLevelCard extends StatelessWidget {
               isHost: 0,
               levelWords: levelModel!.level_words,
               isOnline: false,
+              Stage: levelModel!.level_name,
             )));
       },
       child: Container(

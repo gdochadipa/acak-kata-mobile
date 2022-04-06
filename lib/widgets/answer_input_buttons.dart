@@ -24,18 +24,18 @@ class _InputAnswerButtonState extends State<InputAnswerButton>
     with SingleTickerProviderStateMixin {
   late double _scale;
   late AnimationController _animationController;
+  late Animation _animation;
 
   @override
   void initState() {
     // TODO: implement initState
-    _animationController = AnimationController(
-        vsync: this,
-        duration: Duration(milliseconds: 50),
-        lowerBound: 0.0,
-        upperBound: 0.1)
-      ..addListener(() {
-        setState(() {});
-      });
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 500))
+          ..addListener(() {
+            setState(() {});
+          });
+    _animation = ColorTween(begin: backgroundColor1, end: Colors.black).animate(
+        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
     super.initState();
   }
 
@@ -53,6 +53,14 @@ class _InputAnswerButtonState extends State<InputAnswerButton>
     _animationController.duration = Duration(milliseconds: 50);
   }
 
+  animateColor(bool isSelected) {
+    if (isSelected) {
+      _animationController.forward();
+    } else {
+      _animationController.reverse();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -68,6 +76,7 @@ class _InputAnswerButtonState extends State<InputAnswerButton>
                     // widget.isBtnSelected = widget.isBtnSelected ? false : true;
                     widget.onSelectButtonLetter(
                         widget.letter, widget.isBtnSelected);
+                    animateColor(widget.isBtnSelected);
                   });
                 }
               : () {},

@@ -10,6 +10,7 @@ import 'package:acakkata/providers/language_db_provider.dart';
 import 'package:acakkata/providers/room_provider.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/answer_input_buttons.dart';
+import 'package:acakkata/widgets/clicky_button.dart';
 import 'package:acakkata/widgets/custom_page_route.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
@@ -26,13 +27,15 @@ class OfflineGamePlayPage extends StatefulWidget {
   late final int? levelWords;
   late final int? isHost;
   late final bool? isOnline;
+  late final String? Stage;
   OfflineGamePlayPage(
       {this.languageModel,
       this.selectedQuestion,
       this.selectedTime,
       this.isHost,
       this.levelWords,
-      this.isOnline});
+      this.isOnline,
+      this.Stage});
 
   @override
   _OfflineGamePlayPageState createState() => _OfflineGamePlayPageState();
@@ -533,6 +536,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
     for (var i = 0; i < listSuffQues.length; i++) {
       setState(() {
         isSelected!.addEntries([MapEntry(i, false)]);
+        sequenceAnswer!.clear();
       });
     }
   }
@@ -573,27 +577,21 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
 
     Widget TextTime() {
       return Container(
-        margin: EdgeInsets.only(top: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              width: 20,
-              height: 20,
+              width: 60,
+              height: 60,
+              margin: EdgeInsets.all(15),
+              alignment: Alignment.center,
               decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                image: DecorationImage(
-                  image: AssetImage(
-                    'assets/images/icon_time.jpg',
-                  ),
-                ),
+                  shape: BoxShape.circle, color: backgroundColorAccent2),
+              child: Text(
+                "${countDownAnswer}",
+                style: whiteTextStyle.copyWith(fontSize: 24, fontWeight: bold),
               ),
             ),
-            Text(
-              "${countDownAnswer}",
-              style:
-                  thirdTextStyle.copyWith(fontSize: 18, fontWeight: semiBold),
-            )
           ],
         ),
       );
@@ -601,7 +599,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
 
     Widget answerInput() {
       return Container(
-        margin: EdgeInsets.only(top: 20),
+        margin: EdgeInsets.only(top: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -613,13 +611,16 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
                   borderRadius: BorderRadius.circular(5)),
               child: Center(
                   child: TextFormField(
+                textAlign: TextAlign.center,
                 enabled: false,
                 controller: answerController,
                 style: whiteTextStyle.copyWith(fontSize: 18, fontWeight: bold),
                 decoration: InputDecoration.collapsed(
                     hintText: 'Jawaban',
                     hintStyle: whiteTextStyle.copyWith(
-                        fontSize: 18, fontWeight: bold)),
+                        fontSize: 18,
+                        fontWeight: medium,
+                        color: backgroundColor7)),
               )),
             )
           ],
@@ -674,12 +675,15 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
         child: TextButton(
           onPressed: () {
             //hapus kata per kata
+            print(sequenceAnswer);
             if (textAnswer != '' && textAnswer.length > 0) {
               int lett = sequenceAnswer![textAnswer.length - 1];
+              print(lett);
               textAnswer = textAnswer.substring(0, textAnswer.length - 1);
               answerController.text = textAnswer;
               setState(() {
                 isSelected!.update(lett, (value) => false);
+                sequenceAnswer!.removeLast();
               });
             }
           },
@@ -714,18 +718,19 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
           top: 15,
         ),
         child: Container(
-          height: 45,
-          width: double.infinity,
           margin: EdgeInsets.all(5),
-          child: TextButton(
+          alignment: Alignment.center,
+          child: ClickyButton(
             onPressed: () {
               //hapus kata per kata
-              showCancelGame();
+              Timer(Duration(milliseconds: 500), () {
+                showCancelGame();
+              });
             },
-            style: TextButton.styleFrom(
-                backgroundColor: alertColor,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12))),
+            color: alertColor,
+            shadowColor: alertAccentColor,
+            width: 200,
+            height: 60,
             child: Wrap(
               children: [
                 Icon(
@@ -780,6 +785,9 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
                       }))
                   .toList(),
             ),
+            SizedBox(
+              height: 10,
+            ),
             anotherActionAnswer(),
             btnExit()
           ],
@@ -788,17 +796,33 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
     }
 
     Widget cardBodyUp() {
-      return Container(
-        margin:
-            EdgeInsets.only(top: 50, left: defaultMargin, right: defaultMargin),
-        padding: EdgeInsets.only(top: 10, left: 15, right: 16, bottom: 16),
-        child: Column(
-          children: [
-            TextTime(),
-            SizedBox(height: 40),
-            answerInput(),
-          ],
-        ),
+      return Column(
+        children: [
+          Container(
+            child: SizedBox(
+              height: 8,
+              child: LinearProgressIndicator(
+                value: countDownAnswer / numberCountDown,
+                backgroundColor: backgroundColor1,
+                valueColor: AlwaysStoppedAnimation<Color>(alertColor),
+              ),
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(left: defaultMargin, right: defaultMargin),
+            padding: EdgeInsets.only(left: 15, right: 15, bottom: 16),
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 20,
+                ),
+                TextTime(),
+                SizedBox(height: 20),
+                answerInput(),
+              ],
+            ),
+          ),
+        ],
       );
     }
 
@@ -858,11 +882,11 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
     AppBar header() {
       return AppBar(
         leading: Container(
-          margin: EdgeInsets.all(5),
-          alignment: Alignment.center,
+          alignment: Alignment.centerLeft,
+          margin: EdgeInsets.only(left: 5),
           child: Text(
             "${currentQuestion} of ${totalQuestion}",
-            style: blackTextStyle.copyWith(fontWeight: bold, fontSize: 18),
+            style: blackTextStyle.copyWith(fontWeight: bold, fontSize: 14),
           ),
         ),
         backgroundColor: backgroundColor1,
@@ -882,7 +906,10 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
               widget.isOnline == true ? 'Multiplayer' : 'Single Player',
               style:
                   primaryTextStyle.copyWith(fontSize: 14, fontWeight: medium),
-            )
+            ),
+            SizedBox(
+              height: 8,
+            ),
           ],
         ),
         actions: [],
@@ -898,21 +925,25 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
             children: [
               Flexible(
                   child: Container(
-                padding: EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                    color: blackColor, borderRadius: BorderRadius.circular(5)),
-                child: Text(
-                  "4865",
-                  style:
-                      whiteTextStyle.copyWith(fontSize: 20, fontWeight: bold),
-                ),
+                alignment: Alignment.centerLeft,
+                padding: EdgeInsets.all(2),
+                child: Container(
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        color: blackColor,
+                        borderRadius: BorderRadius.circular(5)),
+                    child: Text(
+                      "${scoreCount}",
+                      style: whiteTextStyle.copyWith(
+                          fontSize: 20, fontWeight: bold),
+                    )),
               )),
               SizedBox(
                 width: 20,
               ),
               Flexible(
                   child: Container(
-                margin: EdgeInsets.all(15),
+                margin: EdgeInsets.all(5),
                 alignment: Alignment.centerRight,
                 child: Text(
                   "Level 1",
