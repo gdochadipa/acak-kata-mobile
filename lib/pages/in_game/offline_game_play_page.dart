@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:collection';
 import 'dart:developer';
+import 'dart:math';
 
 import 'package:acakkata/models/word_language_model.dart';
 import 'package:acakkata/models/language_model.dart';
@@ -24,18 +25,24 @@ class OfflineGamePlayPage extends StatefulWidget {
   late final int? selectedTime;
   late final int? levelWords;
   late final int? isHost;
+  late final bool? isOnline;
   OfflineGamePlayPage(
       {this.languageModel,
       this.selectedQuestion,
       this.selectedTime,
       this.isHost,
-      this.levelWords});
+      this.levelWords,
+      this.isOnline});
 
   @override
   _OfflineGamePlayPageState createState() => _OfflineGamePlayPageState();
 }
 
-class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
+class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
+    with SingleTickerProviderStateMixin {
+  late final _animationRotateController =
+      AnimationController(vsync: this, duration: Duration(milliseconds: 1000));
+  late Animation animationRotate;
   TextEditingController answerController = TextEditingController(text: '');
   Logger logger = Logger(
     printer: PrettyPrinter(methodCount: 0),
@@ -52,10 +59,14 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
   int score = 0;
   bool _isLoading = false;
   int _start = 5;
+  int startCountDown = 3;
   Timer? _timerScore;
   Timer? _timerInGame;
   Map<int, bool>? isSelected = {};
   List<int>? sequenceAnswer = [];
+  double _widthRotate = 80;
+  double _heightRotate = 60;
+  bool isCountDown = true;
 
   Future<bool> getInit() async {
     LanguageDBProvider langProvider =
@@ -95,54 +106,77 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    _widthRotate = 180;
+    _heightRotate = 180;
+    animationRotate = Tween(begin: 0.0, end: 0.25).animate(CurvedAnimation(
+        parent: _animationRotateController, curve: Curves.elasticOut));
+
     getInit();
+    Timer _timer;
+
+    // const duration = Duration(seconds: 1);
+    _timer = Timer.periodic(Duration(seconds: 1), (Timer timer) {
+      if (startCountDown > 0) {
+        setState(() {
+          startCountDown--;
+          _animationRotateController.forward(from: 0.0);
+        });
+      } else {
+        timer.cancel();
+        setState(() {
+          isCountDown = false;
+        });
+        // getTimeScore();
+        // timeInGame();
+      }
+    });
     // getTimeScore();
     // timeInGame();
-    WidgetsBinding.instance!.addPostFrameCallback((_) => showDialog(
-            barrierDismissible: false,
-            context: context,
-            builder: (BuildContext context) {
-              Timer _timer;
-              _timer = Timer(Duration(seconds: 5), () {
-                Navigator.of(context).pop();
-              });
+    // WidgetsBinding.instance!.addPostFrameCallback((_) => showDialog(
+    //         barrierDismissible: false,
+    //         context: context,
+    //         builder: (BuildContext context) {
+    //           Timer _timer;
+    //           _timer = Timer(Duration(seconds: 5), () {
+    //             Navigator.of(context).pop();
+    //           });
 
-              const duration = Duration(seconds: 1);
-              Timer.periodic(duration, (Timer timer) {
-                if (_start == 0) {
-                  timer.cancel();
-                  setState(() {
-                    _start = 5;
-                  });
-                } else {
-                  setState(() {
-                    _start--;
-                  });
-                }
-              });
-              return Container(
-                width: MediaQuery.of(context).size.width - (2 * defaultMargin),
-                child: AlertDialog(
-                  backgroundColor: backgroundColor3,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30)),
-                  content: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Text(
-                          'Ready ?',
-                          style: secondaryTextStyle.copyWith(
-                              fontSize: 36, fontWeight: medium),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            }).then((value) {
-          getTimeScore();
-          timeInGame();
-        }));
+    //           const duration = Duration(seconds: 1);
+    //           Timer.periodic(duration, (Timer timer) {
+    //             if (_start == 0) {
+    //               timer.cancel();
+    //               setState(() {
+    //                 _start = 5;
+    //               });
+    //             } else {
+    //               setState(() {
+    //                 _start--;
+    //               });
+    //             }
+    //           });
+    //           return Container(
+    //             width: MediaQuery.of(context).size.width - (2 * defaultMargin),
+    //             child: AlertDialog(
+    //               backgroundColor: backgroundColor3,
+    //               shape: RoundedRectangleBorder(
+    //                   borderRadius: BorderRadius.circular(30)),
+    //               content: SingleChildScrollView(
+    //                 child: Column(
+    //                   children: [
+    //                     Text(
+    //                       'Ready ?',
+    //                       style: secondaryTextStyle.copyWith(
+    //                           fontSize: 36, fontWeight: medium),
+    //                     )
+    //                   ],
+    //                 ),
+    //               ),
+    //             ),
+    //           );
+    //         }).then((value) {
+    //       // getTimeScore();
+    //       // timeInGame();
+    //     }));
   }
 
   void setStateIfMounted(f) {
@@ -537,7 +571,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
           ));
     }
 
-    Widget TextTime(int? time) {
+    Widget TextTime() {
       return Container(
         margin: EdgeInsets.only(top: 10),
         child: Column(
@@ -575,42 +609,19 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
               height: 50,
               padding: EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
-                  color: backgroundColor4,
-                  borderRadius: BorderRadius.circular(12)),
+                  color: backgroundColor9,
+                  borderRadius: BorderRadius.circular(5)),
               child: Center(
                   child: TextFormField(
                 enabled: false,
                 controller: answerController,
-                style: blackTextStyle,
+                style: whiteTextStyle.copyWith(fontSize: 18, fontWeight: bold),
                 decoration: InputDecoration.collapsed(
-                    hintText: 'Jawaban', hintStyle: subtitleTextStyle),
+                    hintText: 'Jawaban',
+                    hintStyle: whiteTextStyle.copyWith(
+                        fontSize: 18, fontWeight: bold)),
               )),
             )
-          ],
-        ),
-      );
-    }
-
-    Widget answerPinInput(String? question) {
-      return Container(
-        margin: EdgeInsets.only(top: 20),
-        child: Wrap(
-          alignment: WrapAlignment.center,
-          children: [
-            // PinCodeTextField(
-            //     appContext: context,
-            //     length: 8,
-            //     animationType: AnimationType.fade,
-            //     pinTheme: PinTheme(
-            //       shape: PinCodeFieldShape.box,
-            //       borderRadius: BorderRadius.circular(5),
-            //       fieldHeight: 50,
-            //       fieldWidth: 40,
-            //       activeFillColor: Colors.white,
-            //     ),
-            //     controller: answerController,
-            //     onCompleted: (result) {},
-            //     onChanged: (value) {})
           ],
         ),
       );
@@ -776,7 +787,22 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
       );
     }
 
-    Widget cardBodyUp(String? question, String? hint_question,
+    Widget cardBodyUp() {
+      return Container(
+        margin:
+            EdgeInsets.only(top: 50, left: defaultMargin, right: defaultMargin),
+        padding: EdgeInsets.only(top: 10, left: 15, right: 16, bottom: 16),
+        child: Column(
+          children: [
+            TextTime(),
+            SizedBox(height: 40),
+            answerInput(),
+          ],
+        ),
+      );
+    }
+
+    Widget cardBodyBottom(String? question, String? hint_question,
         List<String>? suffle_question) {
       return Container(
         margin:
@@ -786,34 +812,145 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage> {
             color: backgroundColor1, borderRadius: BorderRadius.circular(15)),
         child: Column(
           children: [
-            textHeader(),
-            TextTime(10),
-            SizedBox(height: 20),
-            answerInput(),
-            // answerPinInput(question),
-            SizedBox(height: 30),
+            // textHeader(),
             AnswerButtons(suffle_question, question)
           ],
         ),
       );
     }
 
+    Widget countStart() {
+      return Container(
+        child: Center(
+          child: AnimatedContainer(
+            duration: Duration(milliseconds: 1000),
+            curve: Curves.elasticInOut,
+            width: _widthRotate,
+            height: _heightRotate,
+            child: Center(
+                child: Stack(
+              children: [
+                AnimatedBuilder(
+                    animation: animationRotate,
+                    child: Container(
+                        width: 180, height: 180, color: backgroundColor9),
+                    builder: (context, child) {
+                      return Transform.rotate(
+                        angle: animationRotate.value * pi,
+                        child: child,
+                      );
+                    }),
+                Center(
+                  child: Text(
+                    "${startCountDown}",
+                    style:
+                        whiteTextStyle.copyWith(fontSize: 55, fontWeight: bold),
+                  ),
+                )
+              ],
+              alignment: Alignment.center,
+            )),
+          ),
+        ),
+      );
+    }
+
+    AppBar header() {
+      return AppBar(
+        leading: Container(
+          margin: EdgeInsets.all(5),
+          alignment: Alignment.center,
+          child: Text(
+            "${currentQuestion} of ${totalQuestion}",
+            style: blackTextStyle.copyWith(fontWeight: bold, fontSize: 18),
+          ),
+        ),
+        backgroundColor: backgroundColor1,
+        elevation: 0,
+        centerTitle: true,
+        title: Column(
+          children: [
+            SizedBox(
+              height: 8,
+            ),
+            Text(
+              "${widget.languageModel!.language_name}",
+              style: headerText2.copyWith(
+                  fontWeight: extraBold, fontSize: 20, color: primaryTextColor),
+            ),
+            Text(
+              widget.isOnline == true ? 'Multiplayer' : 'Single Player',
+              style:
+                  primaryTextStyle.copyWith(fontSize: 14, fontWeight: medium),
+            )
+          ],
+        ),
+        actions: [],
+      );
+    }
+
+    Widget footer() {
+      return Container(
+        padding: EdgeInsets.all(15),
+        decoration: BoxDecoration(color: backgroundColor1),
+        child: Center(
+          child: Row(
+            children: [
+              Flexible(
+                  child: Container(
+                padding: EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                    color: blackColor, borderRadius: BorderRadius.circular(5)),
+                child: Text(
+                  "4865",
+                  style:
+                      whiteTextStyle.copyWith(fontSize: 20, fontWeight: bold),
+                ),
+              )),
+              SizedBox(
+                width: 20,
+              ),
+              Flexible(
+                  child: Container(
+                margin: EdgeInsets.all(15),
+                alignment: Alignment.centerRight,
+                child: Text(
+                  "Level 1",
+                  style:
+                      blackTextStyle.copyWith(fontSize: 20, fontWeight: bold),
+                ),
+              ))
+            ],
+          ),
+        ),
+      );
+    }
+
+    Widget mainBody() {
+      return Container(
+        child: _isLoading
+            ? null
+            : ListView(
+                children: [
+                  cardBodyUp(),
+                  cardBodyBottom(
+                      dataWordList![currentArrayQuestion].word,
+                      dataWordList![currentArrayQuestion].word,
+                      dataWordList![currentArrayQuestion].word_suffle),
+                ],
+              ),
+      );
+    }
+
     return WillPopScope(
         onWillPop: () async => false,
         child: Scaffold(
+          appBar: header(),
+          bottomNavigationBar: Container(
+              constraints: BoxConstraints(maxHeight: 84), child: footer()),
           backgroundColor: backgroundColor2,
-          body: Container(
-            child: _isLoading
-                ? null
-                : ListView(
-                    children: [
-                      cardBodyUp(
-                          dataWordList![currentArrayQuestion].word,
-                          dataWordList![currentArrayQuestion].word,
-                          dataWordList![currentArrayQuestion].word_suffle),
-                    ],
-                  ),
-          ),
+          // body: isCountDown ? countStart() : mainBody(),
+          body: mainBody(),
         ));
   }
 }

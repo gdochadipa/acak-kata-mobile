@@ -20,11 +20,13 @@ class ItemLevelCard extends StatelessWidget {
         Navigator.push(
             context,
             CustomPageRoute(OfflineGamePlayPage(
-                languageModel: languageModel,
-                selectedQuestion: levelModel!.level_question_count,
-                selectedTime: levelModel!.level_time,
-                isHost: 0,
-                levelWords: levelModel!.level_words)));
+              languageModel: languageModel,
+              selectedQuestion: levelModel!.level_question_count,
+              selectedTime: levelModel!.level_time,
+              isHost: 0,
+              levelWords: levelModel!.level_words,
+              isOnline: false,
+            )));
       },
       child: Container(
         margin: EdgeInsets.only(bottom: 20),
@@ -33,7 +35,7 @@ class ItemLevelCard extends StatelessWidget {
             // border: Border.all(color: blackColor),
             boxShadow: [
               BoxShadow(
-                  color: backgroundColorAccent9,
+                  color: backgroundColorAccent8,
                   spreadRadius: 1,
                   blurRadius: 0,
                   blurStyle: BlurStyle.solid,

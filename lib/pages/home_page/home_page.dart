@@ -41,7 +41,7 @@ class HomePage extends StatelessWidget {
     Widget header() {
       return Container(
         margin: EdgeInsets.only(top: 30, left: 15, right: 15),
-        padding: EdgeInsets.only(left: 15, right: 8, top: 15, bottom: 15),
+        padding: EdgeInsets.only(left: 15, right: 8, top: 15, bottom: 5),
         decoration: BoxDecoration(
             color: backgroundColor1,
             borderRadius: BorderRadius.circular(5),
@@ -61,7 +61,7 @@ class HomePage extends StatelessWidget {
             ),
             Row(
               children: [
-                Center(
+                Flexible(
                   child: Container(
                     margin: EdgeInsets.only(top: 10),
                     alignment: Alignment.center,
@@ -86,7 +86,7 @@ class HomePage extends StatelessWidget {
                         }),
                   ),
                 ),
-                Center(
+                Flexible(
                   child: Container(
                     margin: EdgeInsets.only(top: 10),
                     alignment: Alignment.center,

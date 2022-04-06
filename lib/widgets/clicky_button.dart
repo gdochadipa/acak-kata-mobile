@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:ffi';
-
 import 'package:acakkata/theme.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;

@@ -81,7 +81,7 @@ class _LanguageCardState extends State<LanguageCard> {
               borderRadius: BorderRadius.circular(10),
               boxShadow: [
                 BoxShadow(
-                    color: backgroundColorAccent9,
+                    color: backgroundColorAccent8,
                     spreadRadius: 1,
                     blurRadius: 0,
                     blurStyle: BlurStyle.solid,
