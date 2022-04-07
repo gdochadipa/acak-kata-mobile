@@ -916,44 +916,110 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
       );
     }
 
-    Widget footer() {
+    Widget resultAnswer(
+        bool resultAnswer, int pointGet, String? meaning, String? word) {
       return Container(
-        padding: EdgeInsets.all(15),
-        decoration: BoxDecoration(color: backgroundColor1),
+        margin: EdgeInsets.all(15),
         child: Center(
-          child: Row(
+          child: Column(
             children: [
-              Flexible(
-                  child: Container(
-                alignment: Alignment.centerLeft,
-                padding: EdgeInsets.all(2),
-                child: Container(
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                        color: blackColor,
-                        borderRadius: BorderRadius.circular(5)),
-                    child: Text(
-                      "${scoreCount}",
-                      style: whiteTextStyle.copyWith(
-                          fontSize: 20, fontWeight: bold),
-                    )),
-              )),
               SizedBox(
-                width: 20,
+                height: 20,
               ),
-              Flexible(
-                  child: Container(
-                margin: EdgeInsets.all(5),
-                alignment: Alignment.centerRight,
-                child: Text(
-                  "Level 1",
-                  style:
-                      blackTextStyle.copyWith(fontSize: 20, fontWeight: bold),
+              Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 60,
+                      height: 60,
+                      margin: EdgeInsets.all(15),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: backgroundColorAccent2),
+                      child: Text(
+                        "${countDownAnswer}",
+                        style: whiteTextStyle.copyWith(
+                            fontSize: 24, fontWeight: bold),
+                      ),
+                    ),
+                  ],
                 ),
-              ))
+              ),
+              Container(
+                  margin: EdgeInsets.only(bottom: 15),
+                  child: Center(
+                    child: Text(
+                      resultAnswer ? "Benar" : "Salah",
+                      style: whiteTextStyle.copyWith(
+                          fontSize: 32, fontWeight: bold),
+                    ),
+                  )),
+              Container(
+                margin: EdgeInsets.only(bottom: 32),
+                child: Center(
+                  child: Image.asset(
+                    'assets/images/success_icon.png',
+                    width: 74.92,
+                    height: 74.92,
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.all(15),
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: backgroundColor9,
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Center(
+                  child: Text(
+                    "+ ${pointGet}",
+                    style:
+                        whiteTextStyle.copyWith(fontSize: 32, fontWeight: bold),
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.all(15),
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: backgroundColor1,
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Center(
+                  child: Column(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.symmetric(vertical: 5),
+                        child: Text(
+                          " ${word}",
+                          style: whiteTextStyle.copyWith(
+                              fontSize: 15, fontWeight: bold),
+                        ),
+                      ),
+                      Container(
+                        child: Text(
+                          " ${meaning}",
+                          style: whiteTextStyle.copyWith(
+                              fontSize: 13, fontWeight: medium),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              )
             ],
           ),
         ),
+      );
+    }
+
+    Widget footer() {
+      return FooterGamePlayPage(
+        scoreCount: scoreCount,
+        stage: "Level 1",
       );
     }
 
@@ -983,5 +1049,55 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
           // body: isCountDown ? countStart() : mainBody(),
           body: mainBody(),
         ));
+  }
+}
+
+class FooterGamePlayPage extends StatelessWidget {
+  const FooterGamePlayPage(
+      {Key? key, required this.scoreCount, required this.stage})
+      : super(key: key);
+
+  final int scoreCount;
+  final String stage;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(15),
+      decoration: BoxDecoration(color: backgroundColor1),
+      child: Center(
+        child: Row(
+          children: [
+            Flexible(
+                child: Container(
+              alignment: Alignment.centerLeft,
+              padding: EdgeInsets.all(2),
+              child: Container(
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                      color: blackColor,
+                      borderRadius: BorderRadius.circular(5)),
+                  child: Text(
+                    "${scoreCount}",
+                    style:
+                        whiteTextStyle.copyWith(fontSize: 20, fontWeight: bold),
+                  )),
+            )),
+            SizedBox(
+              width: 20,
+            ),
+            Flexible(
+                child: Container(
+              margin: EdgeInsets.all(5),
+              alignment: Alignment.centerRight,
+              child: Text(
+                "${stage}",
+                style: blackTextStyle.copyWith(fontSize: 20, fontWeight: bold),
+              ),
+            ))
+          ],
+        ),
+      ),
+    );
   }
 }
