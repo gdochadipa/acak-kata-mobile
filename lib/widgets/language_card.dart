@@ -37,12 +37,12 @@ class _LanguageCardState extends State<LanguageCard> {
                     onClick: () {
                       Navigator.pushAndRemoveUntil(
                           context,
-                          CustomPageRouteBounce(
-                              widget: LevelListPage(
-                                isOnline: false,
-                                languageModel: widget.language,
-                              ),
-                              duration: Duration(milliseconds: 500)),
+                          CustomPageRoute(
+                            LevelListPage(
+                              isOnline: false,
+                              languageModel: widget.language,
+                            ),
+                          ),
                           (route) => false);
                     }),
                 // ListItemPopOver(

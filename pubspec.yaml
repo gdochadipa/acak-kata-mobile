@@ -51,6 +51,8 @@ dependencies:
   draggable_home: ^1.0.2
   reactive_pin_input_text_field: ^0.1.0
   confetti: ^0.6.0
+  flutter_staggered_animations: ^1.0.0
+  flutter_bounce: ^1.1.0
 
 dev_dependencies:
   flutter_test:
@@ -112,6 +114,7 @@ flutter:
     - assets/images/trophy_2.png
     - assets/images/success_icon.png
     - assets/images/fail_icon.png
+    - assets/images/background.png
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg

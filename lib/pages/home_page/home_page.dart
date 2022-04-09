@@ -12,11 +12,16 @@ import 'package:acakkata/widgets/custom_page_route_bounce.dart';
 import 'package:acakkata/widgets/language_card.dart';
 import 'package:draggable_home/draggable_home.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:provider/provider.dart';
 
-class HomePage extends StatelessWidget {
-  // const HomePage({Key? key}) : super(key: key);
+class HomePage extends StatefulWidget {
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
 
+class _HomePageState extends State<HomePage> {
+  // const HomePage({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     bool isLoading = false;
@@ -175,7 +180,34 @@ class HomePage extends StatelessWidget {
 
     return Container(
       child: ListView(
-        children: [logoHeader(), header(), cardBody()],
+        children: [
+          AnimationConfiguration.staggeredList(
+            duration: Duration(milliseconds: 1000),
+            position: 0,
+            child: SlideAnimation(
+              child: FadeInAnimation(child: logoHeader()),
+              horizontalOffset: 50.0,
+            ),
+          ),
+          AnimationConfiguration.staggeredList(
+            duration: Duration(milliseconds: 1000),
+            position: 1,
+            child: SlideAnimation(
+              child: FadeInAnimation(
+                child: header(),
+              ),
+              horizontalOffset: 50.0,
+            ),
+          ),
+          AnimationConfiguration.staggeredList(
+            duration: Duration(milliseconds: 1000),
+            position: 2,
+            child: SlideAnimation(
+              child: FadeInAnimation(child: cardBody()),
+              horizontalOffset: 50.0,
+            ),
+          ),
+        ],
       ),
     );
 

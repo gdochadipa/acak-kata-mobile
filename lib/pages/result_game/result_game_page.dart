@@ -1,6 +1,10 @@
+import 'dart:async';
+import 'dart:math';
+
 import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/pages/in_game/game_play_page.dart';
 import 'package:acakkata/theme.dart';
+import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 
 class ResultGamePage extends StatefulWidget {
@@ -14,6 +18,23 @@ class ResultGamePage extends StatefulWidget {
 }
 
 class _ResultGamePageState extends State<ResultGamePage> {
+  late ConfettiController _confettiController;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _confettiController = ConfettiController(duration: Duration(seconds: 5));
+    _confettiController.play();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _confettiController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget textHeader() {
@@ -42,7 +63,8 @@ class _ResultGamePageState extends State<ResultGamePage> {
         margin: EdgeInsets.only(top: 15),
         child: TextButton(
             onPressed: () {
-              Navigator.pushNamed(context, '/home');
+              Navigator.pushNamedAndRemoveUntil(
+                  context, '/home', (route) => false);
             },
             style: TextButton.styleFrom(
                 backgroundColor: alertColor,
@@ -76,8 +98,32 @@ class _ResultGamePageState extends State<ResultGamePage> {
       );
     }
 
+    Path drawStar(Size size) {
+      double degToRad(double deg) => deg * (pi / 180.0);
+
+      const numberOfPoints = 5;
+      final halfWidth = size.width / 2;
+      final externalRadius = halfWidth;
+      final internalRadius = halfWidth / 2.5;
+      final degreesPerStep = degToRad(360 / numberOfPoints);
+      final halfDegreesPerStep = degreesPerStep / 2;
+      final path = Path();
+      final fullAngle = degToRad(360);
+      path.moveTo(size.width, halfWidth);
+
+      for (double step = 0; step < fullAngle; step += degreesPerStep) {
+        path.lineTo(halfWidth + externalRadius * cos(step),
+            halfWidth + externalRadius * sin(step));
+        path.lineTo(halfWidth + internalRadius * cos(step + halfDegreesPerStep),
+            halfWidth + internalRadius * sin(step + halfDegreesPerStep));
+      }
+      path.close();
+      return path;
+    }
+
     Widget cardBody() {
       return Container(
+        alignment: Alignment.center,
         margin:
             EdgeInsets.only(top: 70, left: defaultMargin, right: defaultMargin),
         padding: EdgeInsets.all(15),
@@ -104,12 +150,40 @@ class _ResultGamePageState extends State<ResultGamePage> {
       );
     }
 
+    Widget confettiStar() {
+      return Align(
+        alignment: Alignment.topCenter,
+        child: ConfettiWidget(
+          confettiController: _confettiController,
+          blastDirectionality: BlastDirectionality
+              .explosive, // don't specify a direction, blast randomly
+          shouldLoop: true, // start again as soon as the animation is finished
+          colors: const [
+            Colors.green,
+            Colors.blue,
+            Colors.pink,
+            Colors.orange,
+            Colors.purple
+          ], // manually specify the colors to be used
+          createParticlePath: drawStar, // define a custom shape/path.
+        ),
+      );
+    }
+
     return Scaffold(
         backgroundColor: backgroundColor2,
         body: Container(
-          child: ListView(
-            children: [cardBody()],
-          ),
+          child: SafeArea(
+              child: Stack(
+            children: [
+              ListView(
+                children: [
+                  cardBody(),
+                ],
+              ),
+              confettiStar(),
+            ],
+          )),
         ));
   }
 }

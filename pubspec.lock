@@ -153,6 +153,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_bounce:
+    dependency: "direct main"
+    description:
+      name: flutter_bounce
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.0"
   flutter_launcher_icons:
     dependency: "direct dev"
     description:
@@ -167,6 +174,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.4"
+  flutter_staggered_animations:
+    dependency: "direct main"
+    description:
+      name: flutter_staggered_animations
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   flutter_svg:
     dependency: "direct main"
     description:

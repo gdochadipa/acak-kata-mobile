@@ -5,6 +5,7 @@ import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/level_card.dart';
 import 'package:acakkata/widgets/skeleton/level_card_skeleton.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
@@ -63,7 +64,9 @@ class _LevelListPageState extends State<LevelListPage> {
             color: primaryColor,
           ),
           onPressed: () {
-            Navigator.pop(context);
+            // Navigator.pop(context);
+            Navigator.pushNamedAndRemoveUntil(
+                context, '/home', (route) => false);
           },
         ),
         backgroundColor: backgroundColor1,
@@ -115,9 +118,16 @@ class _LevelListPageState extends State<LevelListPage> {
                       ]
                     : levelList!
                         .map(
-                          (e) => ItemLevelCard(
-                              levelModel: e,
-                              languageModel: widget.languageModel),
+                          (e) => AnimationConfiguration.staggeredList(
+                              position: levelList!.indexOf(e),
+                              duration: Duration(milliseconds: 1000),
+                              child: SlideAnimation(
+                                horizontalOffset: 50.0,
+                                child: FadeInAnimation(
+                                    child: ItemLevelCard(
+                                        levelModel: e,
+                                        languageModel: widget.languageModel)),
+                              )),
                         )
                         .toList(),
               ),

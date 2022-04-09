@@ -8,6 +8,7 @@ import 'package:acakkata/providers/language_db_provider.dart';
 import 'package:acakkata/providers/language_provider.dart';
 import 'package:acakkata/service/socket_service.dart';
 import 'package:acakkata/theme.dart';
+import 'package:acakkata/widgets/custom_page_route.dart';
 import 'package:acakkata/widgets/custom_page_route_bounce.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
@@ -81,7 +82,7 @@ class _SplashPageState extends State<SplashPage> {
       await langProvider.getLanguage();
       Timer(Duration(milliseconds: 1500), () {
         // Navigator.pushNamed(context, '/home');
-        Navigator.push(context, CustomPageRouteBounce(widget: MainPage()));
+        Navigator.push(context, CustomPageRoute(MainPage()));
       });
     } catch (e) {
       logger.e(e);
@@ -92,17 +93,25 @@ class _SplashPageState extends State<SplashPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColor2,
-      body: Center(
-        child: AnimatedContainer(
-          duration: Duration(milliseconds: 1000),
-          curve: Curves.elasticInOut,
-          width: _width,
-          height: _height,
+      body: Stack(children: [
+        Container(
           decoration: BoxDecoration(
               image: DecorationImage(
-                  image: AssetImage('assets/images/logo_putih.png'))),
+                  image: AssetImage("assets/images/background.png"),
+                  fit: BoxFit.cover)),
         ),
-      ),
+        Center(
+          child: AnimatedContainer(
+            duration: Duration(milliseconds: 1000),
+            curve: Curves.elasticInOut,
+            width: _width,
+            height: _height,
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage('assets/images/logo_putih.png'))),
+          ),
+        )
+      ]),
     );
   }
 }

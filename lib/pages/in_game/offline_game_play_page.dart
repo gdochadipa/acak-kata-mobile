@@ -12,6 +12,7 @@ import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/answer_input_buttons.dart';
 import 'package:acakkata/widgets/clicky_button.dart';
 import 'package:acakkata/widgets/custom_page_route.dart';
+import 'package:acakkata/widgets/gameplay/footer_gameplay_page.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -129,57 +130,12 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
         setState(() {
           isCountDown = false;
         });
-        // getTimeScore();
-        // timeInGame();
+        getTimeScore();
+        timeInGame();
       }
     });
     // getTimeScore();
     // timeInGame();
-    // WidgetsBinding.instance!.addPostFrameCallback((_) => showDialog(
-    //         barrierDismissible: false,
-    //         context: context,
-    //         builder: (BuildContext context) {
-    //           Timer _timer;
-    //           _timer = Timer(Duration(seconds: 5), () {
-    //             Navigator.of(context).pop();
-    //           });
-
-    //           const duration = Duration(seconds: 1);
-    //           Timer.periodic(duration, (Timer timer) {
-    //             if (_start == 0) {
-    //               timer.cancel();
-    //               setState(() {
-    //                 _start = 5;
-    //               });
-    //             } else {
-    //               setState(() {
-    //                 _start--;
-    //               });
-    //             }
-    //           });
-    //           return Container(
-    //             width: MediaQuery.of(context).size.width - (2 * defaultMargin),
-    //             child: AlertDialog(
-    //               backgroundColor: backgroundColor3,
-    //               shape: RoundedRectangleBorder(
-    //                   borderRadius: BorderRadius.circular(30)),
-    //               content: SingleChildScrollView(
-    //                 child: Column(
-    //                   children: [
-    //                     Text(
-    //                       'Ready ?',
-    //                       style: secondaryTextStyle.copyWith(
-    //                           fontSize: 36, fontWeight: medium),
-    //                     )
-    //                   ],
-    //                 ),
-    //               ),
-    //             ),
-    //           );
-    //         }).then((value) {
-    //       // getTimeScore();
-    //       // timeInGame();
-    //     }));
   }
 
   void setStateIfMounted(f) {
@@ -919,14 +875,14 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
     Widget resultAnswer(
         bool resultAnswer, int pointGet, String? meaning, String? word) {
       return Container(
-        margin: EdgeInsets.all(15),
         child: Center(
-          child: Column(
+          child: ListView(
             children: [
               SizedBox(
                 height: 20,
               ),
               Container(
+                margin: EdgeInsets.all(15),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -948,7 +904,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
                 ),
               ),
               Container(
-                  margin: EdgeInsets.only(bottom: 15),
+                  margin: EdgeInsets.only(bottom: 30, left: 15, right: 15),
                   child: Center(
                     child: Text(
                       resultAnswer ? "Benar" : "Salah",
@@ -957,7 +913,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
                     ),
                   )),
               Container(
-                margin: EdgeInsets.only(bottom: 32),
+                margin: EdgeInsets.only(bottom: 32, left: 15, right: 15),
                 child: Center(
                   child: Image.asset(
                     'assets/images/success_icon.png',
@@ -967,7 +923,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
                 ),
               ),
               Container(
-                margin: EdgeInsets.all(15),
+                margin: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
                 padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   color: backgroundColor9,
@@ -982,7 +938,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
                 ),
               ),
               Container(
-                margin: EdgeInsets.all(15),
+                margin: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
                 padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   color: backgroundColor1,
@@ -995,15 +951,16 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
                         margin: EdgeInsets.symmetric(vertical: 5),
                         child: Text(
                           " ${word}",
-                          style: whiteTextStyle.copyWith(
-                              fontSize: 15, fontWeight: bold),
+                          style: blackTextStyle.copyWith(
+                              fontSize: 23, fontWeight: bold),
                         ),
                       ),
                       Container(
                         child: Text(
-                          " ${meaning}",
-                          style: whiteTextStyle.copyWith(
-                              fontSize: 13, fontWeight: medium),
+                          "${meaning}",
+                          textAlign: TextAlign.center,
+                          style: blackTextStyle.copyWith(
+                              fontSize: 18, fontWeight: semiBold),
                         ),
                       )
                     ],
@@ -1046,58 +1003,12 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
           bottomNavigationBar: Container(
               constraints: BoxConstraints(maxHeight: 84), child: footer()),
           backgroundColor: backgroundColor2,
-          // body: isCountDown ? countStart() : mainBody(),
-          body: mainBody(),
+          body: isCountDown ? countStart() : mainBody(),
+          //   body: resultAnswer(
+          //       true,
+          //       250,
+          //       "secara harfiah berarti suatu waktu yang diperlukan seekor lintah untuk merasa kenyang (menghisap darah). Secara kias ungkapan ini bermakna waktu yang singkat atau sebentar, karena seekor lintah yang kecil tidak memerlukan waktu yang lama untuk kenyang (mengenyangkan perut). (Kata sifat (adjectiva))",
+          //       "abetekan lelintah"),
         ));
-  }
-}
-
-class FooterGamePlayPage extends StatelessWidget {
-  const FooterGamePlayPage(
-      {Key? key, required this.scoreCount, required this.stage})
-      : super(key: key);
-
-  final int scoreCount;
-  final String stage;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(15),
-      decoration: BoxDecoration(color: backgroundColor1),
-      child: Center(
-        child: Row(
-          children: [
-            Flexible(
-                child: Container(
-              alignment: Alignment.centerLeft,
-              padding: EdgeInsets.all(2),
-              child: Container(
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                      color: blackColor,
-                      borderRadius: BorderRadius.circular(5)),
-                  child: Text(
-                    "${scoreCount}",
-                    style:
-                        whiteTextStyle.copyWith(fontSize: 20, fontWeight: bold),
-                  )),
-            )),
-            SizedBox(
-              width: 20,
-            ),
-            Flexible(
-                child: Container(
-              margin: EdgeInsets.all(5),
-              alignment: Alignment.centerRight,
-              child: Text(
-                "${stage}",
-                style: blackTextStyle.copyWith(fontSize: 20, fontWeight: bold),
-              ),
-            ))
-          ],
-        ),
-      ),
-    );
   }
 }
