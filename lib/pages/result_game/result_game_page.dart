@@ -28,7 +28,7 @@ class _ResultGamePageState extends State<ResultGamePage> {
     // TODO: implement initState
     super.initState();
     _confettiController = ConfettiController(duration: Duration(seconds: 5));
-    Timer(Duration(milliseconds: 1000), () {
+    Timer(Duration(milliseconds: 800), () {
       _confettiController.play();
     });
   }

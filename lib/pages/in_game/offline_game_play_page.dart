@@ -67,13 +67,17 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
   bool _isLoading = false;
   int _start = 5;
   int startCountDown = 3;
+  int answerCountDown = 5;
   Timer? _timerScore;
   Timer? _timerInGame;
+  Timer? _timeInRes;
   Map<int, bool>? isSelected = {};
   List<int>? sequenceAnswer = [];
   double _widthRotate = 80;
   double _heightRotate = 60;
   bool isCountDown = true;
+  bool afterAnswer = false;
+  bool resultAnswerStatus = false;
 
   Future<bool> getInit() async {
     LanguageDBProvider langProvider =
@@ -161,6 +165,32 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
     });
   }
 
+  runTimeResult(bool endGame) {
+    _timeInRes = Timer.periodic(Duration(seconds: 1), (Timer timer) {
+      if (answerCountDown > 0) {
+        setState(() {
+          answerCountDown--;
+        });
+      } else {
+        timer.cancel();
+        if (endGame) {
+          Navigator.push(
+              context,
+              CustomPageRoute(ResultGamePage(
+                  widget.languageModel, scoreCount, widget.levelModel)));
+        }
+        setState(() {
+          currentArrayQuestion++;
+          currentQuestion++;
+          afterAnswer = false;
+        });
+        resetAnswerField();
+        getTimeScore();
+        timeInGame(numberCountDown);
+      }
+    });
+  }
+
   timeInGame(int countDownNumber) async {
     Duration duration = Duration(seconds: countDownNumber);
     List<String> listSuffQues =
@@ -178,50 +208,33 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
         'nowQuestion': dataWordList![currentArrayQuestion].word_suffle,
         'nowAnswer': dataWordList![currentArrayQuestion].word
       });
-      Flushbar(
-        message: "Jawaban",
-        margin: EdgeInsets.all(8),
-        borderRadius: BorderRadius.circular(8),
-        flushbarStyle: FlushbarStyle.FLOATING,
-        flushbarPosition: FlushbarPosition.TOP,
-        reverseAnimationCurve: Curves.decelerate,
-        forwardAnimationCurve: Curves.elasticOut,
-        isDismissible: false,
-        duration: Duration(seconds: 2),
-        backgroundColor: backgroundColor1,
-        titleColor: alertColor,
-        titleText: Text(
-            "Jawaban : ${dataWordList![currentArrayQuestion].word!.toUpperCase()}"),
-        icon: Icon(
-          Icons.error,
-          color: Colors.yellow[600],
-        ),
-        boxShadows: [
-          BoxShadow(
-              color: Colors.yellow[600] ?? alertColor,
-              offset: Offset(0.0, 2.0),
-              blurRadius: 3.0)
-        ],
-      ).show(context);
       getTimeScore();
       if (currentArrayQuestion == (totalQuestion - 1)) {
         timer.cancel();
+        _timerScore!.cancel();
         Navigator.push(
             context,
             CustomPageRoute(ResultGamePage(
                 widget.languageModel, scoreCount, widget.levelModel)));
       } else {
+        timer.cancel();
+        _timerScore!.cancel();
         setState(() {
-          currentArrayQuestion++;
-          currentQuestion++;
+          afterAnswer = true;
+          answerCountDown = 5;
+          resultAnswerStatus = false;
         });
-        resetAnswer();
-        if (textAnswer != '' && textAnswer.length > 0) {
-          textAnswer = '';
-          answerController.text = textAnswer;
-        }
+        runTimeResult(false);
       }
     });
+  }
+
+  resetAnswerField() {
+    resetAnswer();
+    if (textAnswer != '' && textAnswer.length > 0) {
+      textAnswer = '';
+      answerController.text = textAnswer;
+    }
   }
 
   Future<void> showTimesUpDialog() async {
@@ -407,24 +420,34 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
           "${answerController.text.toUpperCase()} == ${question!.toUpperCase()} => ${answerController.text.toUpperCase() == question.toUpperCase()}");
       if (answerController.text.toUpperCase() == question.toUpperCase()) {
         setState(() {
-          var score = countDownAnswer * 10;
+          score = countDownAnswer * 10;
           scoreCount += score;
 
           _timerScore!.cancel();
           _timerInGame!.cancel();
 
           if (currentArrayQuestion == (totalQuestion - 1)) {
-            Navigator.push(
-                context,
-                CustomPageRoute(ResultGamePage(
-                    widget.languageModel, scoreCount, widget.levelModel)));
+            setState(() {
+              afterAnswer = true;
+              answerCountDown = 5;
+              countDownAnswer = numberCountDown;
+              resultAnswerStatus = true;
+            });
+            runTimeResult(true);
           } else {
-            currentArrayQuestion++;
-            currentQuestion++;
+            // currentArrayQuestion++;
+            // currentQuestion++;
 
-            countDownAnswer = numberCountDown;
-            getTimeScore();
-            timeInGame(numberCountDown);
+            // countDownAnswer = numberCountDown;
+            // getTimeScore();
+            // timeInGame(numberCountDown);
+            setState(() {
+              afterAnswer = true;
+              answerCountDown = 5;
+              countDownAnswer = numberCountDown;
+              resultAnswerStatus = false;
+            });
+            runTimeResult(false);
           }
         });
 
@@ -883,24 +906,34 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
         child: Center(
           child: ListView(
             children: [
+              Container(
+                child: SizedBox(
+                  height: 8,
+                  child: LinearProgressIndicator(
+                    value: answerCountDown / 5,
+                    backgroundColor: backgroundColor1,
+                    valueColor: AlwaysStoppedAnimation<Color>(alertColor),
+                  ),
+                ),
+              ),
               SizedBox(
-                height: 20,
+                height: 10,
               ),
               Container(
-                margin: EdgeInsets.all(15),
+                margin: EdgeInsets.symmetric(vertical: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
-                      width: 60,
-                      height: 60,
+                      width: 50,
+                      height: 50,
                       margin: EdgeInsets.all(15),
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: backgroundColorAccent2),
                       child: Text(
-                        "${countDownAnswer}",
+                        "${answerCountDown}",
                         style: whiteTextStyle.copyWith(
                             fontSize: 24, fontWeight: bold),
                       ),
@@ -1008,7 +1041,15 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
           bottomNavigationBar: Container(
               constraints: BoxConstraints(maxHeight: 84), child: footer()),
           backgroundColor: backgroundColor2,
-          body: isCountDown ? countStart() : mainBody(),
+          body: isCountDown
+              ? countStart()
+              : (afterAnswer
+                  ? resultAnswer(
+                      resultAnswerStatus,
+                      score,
+                      dataWordList![currentArrayQuestion].word_hint,
+                      dataWordList![currentArrayQuestion].word)
+                  : mainBody()),
           //   body: resultAnswer(
           //       true,
           //       250,
