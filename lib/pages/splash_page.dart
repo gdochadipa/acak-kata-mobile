@@ -1,8 +1,11 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:acakkata/models/language_model.dart';
+import 'package:acakkata/models/level_model.dart';
 import 'package:acakkata/models/user_model.dart';
 import 'package:acakkata/pages/home_page/main.dart';
+import 'package:acakkata/pages/result_game/result_game_page.dart';
 import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/providers/language_db_provider.dart';
 import 'package:acakkata/providers/language_provider.dart';
@@ -97,7 +100,7 @@ class _SplashPageState extends State<SplashPage> {
         Container(
           decoration: BoxDecoration(
               image: DecorationImage(
-                  image: AssetImage("assets/images/background.png"),
+                  image: AssetImage("assets/images/background_512w.png"),
                   fit: BoxFit.cover)),
         ),
         Center(

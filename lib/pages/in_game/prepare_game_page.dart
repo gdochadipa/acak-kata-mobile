@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:math';
 
 import 'package:acakkata/models/language_model.dart';
+import 'package:acakkata/models/level_model.dart';
 import 'package:acakkata/models/room_match_detail_model.dart';
 import 'package:acakkata/pages/in_game/game_play_page.dart';
 import 'package:acakkata/pages/in_game/offline_game_play_page.dart';
@@ -348,6 +349,17 @@ class _PrepareGamePageState extends State<PrepareGamePage> {
     }
 
     Widget CreateGameOffline() {
+      LevelModel levelModel = LevelModel(
+          id: 0,
+          level_name: "Custom",
+          level_time: 15,
+          level_words: 3,
+          level_lang_id: widget.language.id,
+          is_unlock: 1,
+          current_score: 0,
+          level_lang_code: widget.language.language_code,
+          target_score: 0,
+          level_question_count: 10);
       return Container(
         height: 50,
         width: double.infinity,

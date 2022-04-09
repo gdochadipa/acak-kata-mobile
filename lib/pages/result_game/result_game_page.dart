@@ -2,8 +2,10 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:acakkata/models/language_model.dart';
+import 'package:acakkata/models/level_model.dart';
 import 'package:acakkata/pages/in_game/game_play_page.dart';
 import 'package:acakkata/theme.dart';
+import 'package:acakkata/widgets/clicky_button.dart';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 
@@ -11,8 +13,9 @@ class ResultGamePage extends StatefulWidget {
   // const ResultGamePage({Key? key}) : super(key: key);
   late final LanguageModel? languageModel;
   late final int finalScore;
+  late final LevelModel? level;
 
-  ResultGamePage(this.languageModel, this.finalScore);
+  ResultGamePage(this.languageModel, this.finalScore, this.level);
   @override
   _ResultGamePageState createState() => _ResultGamePageState();
 }
@@ -25,7 +28,9 @@ class _ResultGamePageState extends State<ResultGamePage> {
     // TODO: implement initState
     super.initState();
     _confettiController = ConfettiController(duration: Duration(seconds: 5));
-    _confettiController.play();
+    Timer(Duration(milliseconds: 1000), () {
+      _confettiController.play();
+    });
   }
 
   @override
@@ -40,16 +45,23 @@ class _ResultGamePageState extends State<ResultGamePage> {
     Widget textHeader() {
       return Container(
           margin: EdgeInsets.only(top: 10, left: 10, right: 10),
-          padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-              color: backgroundColor4, borderRadius: BorderRadius.circular(15)),
+          padding: EdgeInsets.symmetric(vertical: 10),
           child: Center(
             child: Column(
               children: [
                 Text(
                   '${widget.languageModel?.language_name}',
-                  style: blackTextStyle.copyWith(
-                      fontSize: 15, fontWeight: semiBold),
+                  textAlign: TextAlign.center,
+                  style:
+                      whiteTextStyle.copyWith(fontSize: 32, fontWeight: bold),
+                ),
+                SizedBox(
+                  height: 6,
+                ),
+                Text(
+                  '${widget.level?.level_name}',
+                  style:
+                      whiteTextStyle.copyWith(fontSize: 23, fontWeight: bold),
                 ),
               ],
             ),
@@ -58,42 +70,39 @@ class _ResultGamePageState extends State<ResultGamePage> {
 
     Widget BacktoMenu() {
       return Container(
-        height: 45,
         width: double.infinity,
-        margin: EdgeInsets.only(top: 15),
-        child: TextButton(
+        margin: EdgeInsets.only(top: 20),
+        alignment: Alignment.center,
+        child: ClickyButton(
             onPressed: () {
               Navigator.pushNamedAndRemoveUntil(
                   context, '/home', (route) => false);
             },
-            style: TextButton.styleFrom(
-                backgroundColor: alertColor,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12))),
+            color: alertColor,
+            shadowColor: alertAccentColor,
+            margin: EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
+            width: 245,
+            height: 60,
             child: Text(
-              'Back to Menu',
-              style: whiteTextStyle.copyWith(fontSize: 16, fontWeight: medium),
+              'KEMBALI KE MENU',
+              style: whiteTextStyle.copyWith(fontSize: 16, fontWeight: bold),
             )),
       );
     }
 
     Widget scoreMatch() {
       return Container(
-        margin: EdgeInsets.only(top: 12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              "Skor Permainan",
-              style:
-                  subtitleTextStyle.copyWith(fontSize: 14, fontWeight: regular),
-            ),
-            Text(
-              "${widget.finalScore}",
-              style:
-                  blackTextStyle.copyWith(fontSize: 36, fontWeight: semiBold),
-            ),
-          ],
+        margin: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+        padding: EdgeInsets.symmetric(vertical: 10),
+        decoration: BoxDecoration(
+          color: backgroundColor9,
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: Center(
+          child: Text(
+            "+ ${widget.finalScore}",
+            style: whiteTextStyle.copyWith(fontSize: 32, fontWeight: bold),
+          ),
         ),
       );
     }
@@ -124,21 +133,18 @@ class _ResultGamePageState extends State<ResultGamePage> {
     Widget cardBody() {
       return Container(
         alignment: Alignment.center,
-        margin:
-            EdgeInsets.only(top: 70, left: defaultMargin, right: defaultMargin),
-        padding: EdgeInsets.all(15),
-        decoration: BoxDecoration(
-            color: backgroundColor1, borderRadius: BorderRadius.circular(15)),
+        margin: EdgeInsets.only(top: 80, left: 10, right: 10),
+        padding: EdgeInsets.all(5),
         child: Column(
           children: [
             textHeader(),
             SizedBox(
-              height: 30,
+              height: 8,
             ),
             Image.asset(
-              'assets/images/trophy.png',
-              width: 140,
-              height: 167,
+              'assets/images/trophy_2.png',
+              width: 162.76,
+              height: 162.76,
             ),
             scoreMatch(),
             SizedBox(
@@ -151,39 +157,45 @@ class _ResultGamePageState extends State<ResultGamePage> {
     }
 
     Widget confettiStar() {
-      return Align(
-        alignment: Alignment.topCenter,
-        child: ConfettiWidget(
-          confettiController: _confettiController,
-          blastDirectionality: BlastDirectionality
-              .explosive, // don't specify a direction, blast randomly
-          shouldLoop: true, // start again as soon as the animation is finished
-          colors: const [
-            Colors.green,
-            Colors.blue,
-            Colors.pink,
-            Colors.orange,
-            Colors.purple
-          ], // manually specify the colors to be used
-          createParticlePath: drawStar, // define a custom shape/path.
-        ),
+      return ConfettiWidget(
+        confettiController: _confettiController,
+        blastDirectionality: BlastDirectionality
+            .explosive, // don't specify a direction, blast randomly
+        shouldLoop: true, // start again as soon as the animation is finished
+        colors: const [
+          Colors.green,
+          Colors.blue,
+          Colors.pink,
+          Colors.orange,
+          Colors.purple
+        ], // manually specify the colors to be used
+        createParticlePath: drawStar, // define a custom shape/path.
       );
     }
 
     return Scaffold(
-        backgroundColor: backgroundColor2,
-        body: Container(
-          child: SafeArea(
-              child: Stack(
-            children: [
-              ListView(
-                children: [
-                  cardBody(),
-                ],
-              ),
-              confettiStar(),
-            ],
-          )),
-        ));
+      backgroundColor: backgroundColor2,
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage("assets/images/background_512w.png"),
+                    fit: BoxFit.cover)),
+          ),
+          Container(
+            child: Align(
+              alignment: Alignment.center,
+              child: cardBody(),
+            ),
+          ),
+          Align(
+            alignment: Alignment.topCenter,
+            child: confettiStar(),
+          ),
+        ],
+      ),
+    );
   }
 }

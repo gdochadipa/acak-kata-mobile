@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'dart:developer';
 import 'dart:math';
 
+import 'package:acakkata/models/level_model.dart';
 import 'package:acakkata/models/word_language_model.dart';
 import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/pages/result_game/result_game_page.dart';
@@ -29,6 +30,7 @@ class OfflineGamePlayPage extends StatefulWidget {
   late final int? isHost;
   late final bool? isOnline;
   late final String? Stage;
+  late final LevelModel? levelModel;
   OfflineGamePlayPage(
       {this.languageModel,
       this.selectedQuestion,
@@ -36,7 +38,8 @@ class OfflineGamePlayPage extends StatefulWidget {
       this.isHost,
       this.levelWords,
       this.isOnline,
-      this.Stage});
+      this.Stage,
+      this.levelModel});
 
   @override
   _OfflineGamePlayPageState createState() => _OfflineGamePlayPageState();
@@ -131,7 +134,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
           isCountDown = false;
         });
         getTimeScore();
-        timeInGame();
+        timeInGame(numberCountDown);
       }
     });
     // getTimeScore();
@@ -158,8 +161,8 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
     });
   }
 
-  timeInGame() async {
-    Duration duration = Duration(seconds: numberCountDown);
+  timeInGame(int countDownNumber) async {
+    Duration duration = Duration(seconds: countDownNumber);
     List<String> listSuffQues =
         dataWordList![currentArrayQuestion].word!.split('');
     for (var i = 0; i < listSuffQues.length; i++) {
@@ -203,8 +206,10 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
       getTimeScore();
       if (currentArrayQuestion == (totalQuestion - 1)) {
         timer.cancel();
-        Navigator.push(context,
-            CustomPageRoute(ResultGamePage(widget.languageModel, scoreCount)));
+        Navigator.push(
+            context,
+            CustomPageRoute(ResultGamePage(
+                widget.languageModel, scoreCount, widget.levelModel)));
       } else {
         setState(() {
           currentArrayQuestion++;
@@ -411,15 +416,15 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
           if (currentArrayQuestion == (totalQuestion - 1)) {
             Navigator.push(
                 context,
-                CustomPageRoute(
-                    ResultGamePage(widget.languageModel, scoreCount)));
+                CustomPageRoute(ResultGamePage(
+                    widget.languageModel, scoreCount, widget.levelModel)));
           } else {
             currentArrayQuestion++;
             currentQuestion++;
 
             countDownAnswer = numberCountDown;
             getTimeScore();
-            timeInGame();
+            timeInGame(numberCountDown);
           }
         });
 

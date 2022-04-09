@@ -7,7 +7,7 @@ class LevelModel {
   int? level_words;
   int? level_time;
   int? level_question_count;
-  int? level_lang_id;
+  String? level_lang_id;
   String? level_lang_code;
   int? is_unlock;
   int? current_score;

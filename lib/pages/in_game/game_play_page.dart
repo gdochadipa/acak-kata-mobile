@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:acakkata/models/level_model.dart';
 import 'package:acakkata/models/word_language_model.dart';
 import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/pages/result_game/result_game_page.dart';
@@ -19,8 +20,9 @@ class GamePlayPage extends StatefulWidget {
   late final int? selectedQuestion;
   late final int? selectedTime;
   late final int? isHost;
+  late final LevelModel? levelModel;
   GamePlayPage(this.languageModel, this.selectedQuestion, this.selectedTime,
-      this.isHost);
+      this.isHost, this.levelModel);
 
   @override
   _GamePlayPageState createState() => _GamePlayPageState();
@@ -163,8 +165,10 @@ class _GamePlayPageState extends State<GamePlayPage> {
       getTimeScore();
       if (currentArrayQuestion == (totalQuestion - 1)) {
         timer.cancel();
-        Navigator.push(context,
-            CustomPageRoute(ResultGamePage(widget.languageModel, scoreCount)));
+        Navigator.push(
+            context,
+            CustomPageRoute(ResultGamePage(
+                widget.languageModel, scoreCount, widget.levelModel)));
       } else {
         setState(() {
           currentArrayQuestion++;
@@ -258,8 +262,8 @@ class _GamePlayPageState extends State<GamePlayPage> {
         if (currentArrayQuestion == (totalQuestion - 1)) {
           Navigator.push(
               context,
-              CustomPageRoute(
-                  ResultGamePage(widget.languageModel, scoreCount)));
+              CustomPageRoute(ResultGamePage(
+                  widget.languageModel, scoreCount, widget.levelModel)));
         } else {
           currentArrayQuestion++;
           currentQuestion++;
