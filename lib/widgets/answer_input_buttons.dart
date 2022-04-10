@@ -1,5 +1,6 @@
 import 'package:acakkata/callbacks/CheckingWordCallback.dart';
 import 'package:acakkata/theme.dart';
+import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:flutter/material.dart';
 
 class InputAnswerButton extends StatefulWidget {
@@ -63,37 +64,36 @@ class _InputAnswerButtonState extends State<InputAnswerButton>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.all(2),
+    return BouncingWidget(
+      onPressed: widget.isBtnSelected == false
+          ? () {
+              setState(() {
+                // widget.isBtnSelected = widget.isBtnSelected ? false : true;
+                widget.onSelectButtonLetter(
+                    widget.letter, widget.isBtnSelected);
+                animateColor(widget.isBtnSelected);
+              });
+            }
+          : () {},
       child: Container(
-        width: 50,
-        height: 50,
-        margin: EdgeInsets.all(8),
-        child: TextButton(
-          onPressed: widget.isBtnSelected == false
-              ? () {
-                  setState(() {
-                    // widget.isBtnSelected = widget.isBtnSelected ? false : true;
-                    widget.onSelectButtonLetter(
-                        widget.letter, widget.isBtnSelected);
-                    animateColor(widget.isBtnSelected);
-                  });
-                }
-              : () {},
-          style: TextButton.styleFrom(
-              side: BorderSide(
+        margin: EdgeInsets.all(2),
+        child: Container(
+          width: 50,
+          height: 50,
+          margin: EdgeInsets.all(8),
+          decoration: BoxDecoration(
+              border: Border.all(
                   width: 1,
                   color: widget.isBtnSelected ? backgroundColor1 : blackColor),
-              backgroundColor:
-                  widget.isBtnSelected ? backgroundColor7 : backgroundColor1,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              )),
-          child: Text(
-            "${widget.letter}",
-            style: widget.isBtnSelected
-                ? whiteTextStyle.copyWith(fontSize: 20, fontWeight: bold)
-                : blackTextStyle.copyWith(fontSize: 20, fontWeight: bold),
+              color: widget.isBtnSelected ? backgroundColor7 : backgroundColor1,
+              borderRadius: BorderRadius.circular(12)),
+          child: Center(
+            child: Text(
+              "${widget.letter}",
+              style: widget.isBtnSelected
+                  ? whiteTextStyle.copyWith(fontSize: 20, fontWeight: bold)
+                  : blackTextStyle.copyWith(fontSize: 20, fontWeight: bold),
+            ),
           ),
         ),
       ),

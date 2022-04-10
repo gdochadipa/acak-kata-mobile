@@ -19,6 +19,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
+import 'package:animate_do/animate_do.dart';
 
 class OfflineGamePlayPage extends StatefulWidget {
   // const GamePlayPage({Key? key}) : super(key: key);
@@ -461,60 +462,78 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
           }
         });
 
-        Flushbar(
-          message: "Jawaban",
-          margin: EdgeInsets.all(8),
-          borderRadius: BorderRadius.circular(8),
-          flushbarStyle: FlushbarStyle.FLOATING,
-          flushbarPosition: FlushbarPosition.TOP,
-          reverseAnimationCurve: Curves.decelerate,
-          forwardAnimationCurve: Curves.elasticOut,
-          isDismissible: false,
-          titleText: Text("Jawaban Benar"),
-          duration: Duration(seconds: 2),
-          backgroundColor: backgroundColor1,
-          titleColor: successColor,
-          icon: Icon(
-            Icons.check_circle_outline_outlined,
-            color: successColor,
+        // Flushbar(
+        //   message: "Jawaban",
+        //   margin: EdgeInsets.all(8),
+        //   borderRadius: BorderRadius.circular(8),
+        //   flushbarStyle: FlushbarStyle.FLOATING,
+        //   flushbarPosition: FlushbarPosition.TOP,
+        //   reverseAnimationCurve: Curves.decelerate,
+        //   forwardAnimationCurve: Curves.elasticOut,
+        //   isDismissible: false,
+        //   titleText: Text("Jawaban Benar"),
+        //   duration: Duration(seconds: 2),
+        //   backgroundColor: backgroundColor1,
+        //   titleColor: successColor,
+        //   icon: Icon(
+        //     Icons.check_circle_outline_outlined,
+        //     color: successColor,
+        //   ),
+        //   boxShadows: [
+        //     BoxShadow(
+        //         color: Colors.green[600] ?? successColor,
+        //         offset: Offset(0.0, 2.0),
+        //         blurRadius: 3.0)
+        //   ],
+        // ).show(context);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          duration: Duration(milliseconds: 700),
+          content: Text(
+            "Benar !",
+            textAlign: TextAlign.center,
+            style: whiteTextStyle.copyWith(fontWeight: bold, fontSize: 20),
           ),
-          boxShadows: [
-            BoxShadow(
-                color: Colors.green[600] ?? successColor,
-                offset: Offset(0.0, 2.0),
-                blurRadius: 3.0)
-          ],
-        ).show(context);
+          backgroundColor: successColor,
+        ));
+
         resetAnswer();
         if (textAnswer != '' && textAnswer.length > 0) {
           textAnswer = '';
           answerController.text = textAnswer;
         }
       } else {
-        Flushbar(
-          message: "Jawaban",
-          margin: EdgeInsets.all(8),
-          borderRadius: BorderRadius.circular(8),
-          flushbarStyle: FlushbarStyle.FLOATING,
-          flushbarPosition: FlushbarPosition.TOP,
-          reverseAnimationCurve: Curves.decelerate,
-          forwardAnimationCurve: Curves.elasticOut,
-          isDismissible: false,
-          duration: Duration(seconds: 2),
-          backgroundColor: backgroundColor1,
-          titleColor: alertColor,
-          titleText: Text("Jawaban Salah"),
-          icon: Icon(
-            Icons.close_rounded,
-            color: alertColor,
-          ),
-          boxShadows: [
-            BoxShadow(
-                color: Colors.red[800] ?? alertColor,
-                offset: Offset(0.0, 2.0),
-                blurRadius: 3.0)
-          ],
-        ).show(context);
+        // Flushbar(
+        //   message: "Jawaban",
+        //   margin: EdgeInsets.all(8),
+        //   borderRadius: BorderRadius.circular(8),
+        //   flushbarStyle: FlushbarStyle.FLOATING,
+        //   flushbarPosition: FlushbarPosition.TOP,
+        //   reverseAnimationCurve: Curves.decelerate,
+        //   forwardAnimationCurve: Curves.elasticOut,
+        //   isDismissible: false,
+        //   duration: Duration(seconds: 2),
+        //   backgroundColor: backgroundColor1,
+        //   titleColor: alertColor,
+        //   titleText: Text("Jawaban Salah"),
+        //   icon: Icon(
+        //     Icons.close_rounded,
+        //     color: alertColor,
+        //   ),
+        //   boxShadows: [
+        //     BoxShadow(
+        //         color: Colors.red[800] ?? alertColor,
+        //         offset: Offset(0.0, 2.0),
+        //         blurRadius: 3.0)
+        //   ],
+        // ).show(context);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            duration: Duration(milliseconds: 700),
+            backgroundColor: alertColor,
+            content: Text(
+              "Salah !",
+              textAlign: TextAlign.center,
+              style: whiteTextStyle.copyWith(fontWeight: bold, fontSize: 20),
+            )));
         resetAnswer();
         if (textAnswer != '' && textAnswer.length > 0) {
           textAnswer = '';
@@ -802,18 +821,21 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
               ),
             ),
           ),
-          Container(
-            margin: EdgeInsets.only(left: defaultMargin, right: defaultMargin),
-            padding: EdgeInsets.only(left: 15, right: 15, bottom: 16),
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 20,
-                ),
-                TextTime(),
-                SizedBox(height: 20),
-                answerInput(),
-              ],
+          ElasticIn(
+            child: Container(
+              margin:
+                  EdgeInsets.only(left: defaultMargin, right: defaultMargin),
+              padding: EdgeInsets.only(left: 15, right: 15, bottom: 16),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 20,
+                  ),
+                  TextTime(),
+                  SizedBox(height: 20),
+                  answerInput(),
+                ],
+              ),
             ),
           ),
         ],
@@ -838,36 +860,39 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
     }
 
     Widget countStart() {
-      return Container(
-        child: Center(
-          child: AnimatedContainer(
-            duration: Duration(milliseconds: 1000),
-            curve: Curves.elasticInOut,
-            width: _widthRotate,
-            height: _heightRotate,
-            child: Center(
-                child: Stack(
-              children: [
-                AnimatedBuilder(
-                    animation: animationRotate,
-                    child: Container(
-                        width: 180, height: 180, color: backgroundColor9),
-                    builder: (context, child) {
-                      return Transform.rotate(
-                        angle: animationRotate.value * pi,
-                        child: child,
-                      );
-                    }),
-                Center(
-                  child: Text(
-                    "${startCountDown}",
-                    style:
-                        whiteTextStyle.copyWith(fontSize: 55, fontWeight: bold),
-                  ),
-                )
-              ],
-              alignment: Alignment.center,
-            )),
+      return ElasticIn(
+        delay: Duration(milliseconds: 50),
+        child: Container(
+          child: Center(
+            child: AnimatedContainer(
+              duration: Duration(milliseconds: 1000),
+              curve: Curves.elasticInOut,
+              width: _widthRotate,
+              height: _heightRotate,
+              child: Center(
+                  child: Stack(
+                children: [
+                  AnimatedBuilder(
+                      animation: animationRotate,
+                      child: Container(
+                          width: 180, height: 180, color: backgroundColor9),
+                      builder: (context, child) {
+                        return Transform.rotate(
+                          angle: animationRotate.value * pi,
+                          child: child,
+                        );
+                      }),
+                  Center(
+                    child: Text(
+                      "${startCountDown}",
+                      style: whiteTextStyle.copyWith(
+                          fontSize: 55, fontWeight: bold),
+                    ),
+                  )
+                ],
+                alignment: Alignment.center,
+              )),
+            ),
           ),
         ),
       );
@@ -929,95 +954,110 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
               SizedBox(
                 height: 10,
               ),
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 50,
-                      height: 50,
-                      margin: EdgeInsets.all(15),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: backgroundColorAccent2),
-                      child: Text(
-                        "${answerCountDown}",
-                        style: whiteTextStyle.copyWith(
-                            fontSize: 24, fontWeight: bold),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                  margin: EdgeInsets.only(bottom: 30, left: 15, right: 15),
-                  child: Center(
-                    child: Text(
-                      resultAnswerStatus ? "Benar" : "Salah",
-                      style: whiteTextStyle.copyWith(
-                          fontSize: 32, fontWeight: bold),
-                    ),
-                  )),
-              Container(
-                margin: EdgeInsets.only(bottom: 32, left: 15, right: 15),
-                child: Center(
-                  child: resultAnswerStatus
-                      ? Image.asset(
-                          'assets/images/success_icon.png',
-                          width: 74.92,
-                          height: 74.92,
-                        )
-                      : Image.asset(
-                          'assets/images/fail_icon.png',
-                          width: 74.92,
-                          height: 74.92,
+              ElasticIn(
+                delay: Duration(milliseconds: 50),
+                child: Container(
+                  margin: EdgeInsets.symmetric(vertical: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 50,
+                        height: 50,
+                        margin: EdgeInsets.all(15),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: backgroundColorAccent2),
+                        child: Text(
+                          "${answerCountDown}",
+                          style: whiteTextStyle.copyWith(
+                              fontSize: 24, fontWeight: bold),
                         ),
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-                padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: backgroundColor9,
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: Center(
-                  child: Text(
-                    "+ ${pointGet}",
-                    style:
-                        whiteTextStyle.copyWith(fontSize: 32, fontWeight: bold),
+                      ),
+                    ],
                   ),
                 ),
               ),
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-                padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: backgroundColor1,
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: Center(
-                  child: Column(
-                    children: [
-                      Container(
-                        margin: EdgeInsets.symmetric(vertical: 5),
-                        child: Text(
-                          " ${word}",
-                          style: blackTextStyle.copyWith(
-                              fontSize: 23, fontWeight: bold),
-                        ),
+              ElasticIn(
+                delay: Duration(milliseconds: 50),
+                child: Container(
+                    margin: EdgeInsets.only(bottom: 30, left: 15, right: 15),
+                    child: Center(
+                      child: Text(
+                        resultAnswerStatus ? "Benar" : "Salah",
+                        style: whiteTextStyle.copyWith(
+                            fontSize: 32, fontWeight: bold),
                       ),
-                      Container(
-                        child: Text(
-                          "${meaning}",
-                          textAlign: TextAlign.center,
-                          style: blackTextStyle.copyWith(
-                              fontSize: 18, fontWeight: semiBold),
+                    )),
+              ),
+              ElasticIn(
+                delay: Duration(milliseconds: 50),
+                child: Container(
+                  margin: EdgeInsets.only(bottom: 32, left: 15, right: 15),
+                  child: Center(
+                    child: resultAnswerStatus
+                        ? Image.asset(
+                            'assets/images/success_icon.png',
+                            width: 74.92,
+                            height: 74.92,
+                          )
+                        : Image.asset(
+                            'assets/images/fail_icon.png',
+                            width: 74.92,
+                            height: 74.92,
+                          ),
+                  ),
+                ),
+              ),
+              ElasticIn(
+                delay: Duration(milliseconds: 50),
+                child: Container(
+                  margin: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: backgroundColor9,
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: Center(
+                    child: Text(
+                      "+ ${pointGet}",
+                      style: whiteTextStyle.copyWith(
+                          fontSize: 32, fontWeight: bold),
+                    ),
+                  ),
+                ),
+              ),
+              ElasticIn(
+                delay: Duration(milliseconds: 50),
+                child: Container(
+                  margin: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: backgroundColor1,
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: Center(
+                    child: Column(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.symmetric(vertical: 5),
+                          child: Text(
+                            " ${word}",
+                            style: blackTextStyle.copyWith(
+                                fontSize: 23, fontWeight: bold),
+                          ),
                         ),
-                      )
-                    ],
+                        Container(
+                          child: Text(
+                            "${meaning}",
+                            textAlign: TextAlign.center,
+                            style: blackTextStyle.copyWith(
+                                fontSize: 18, fontWeight: semiBold),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               )
@@ -1041,10 +1081,12 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
             : ListView(
                 children: [
                   cardBodyUp(),
-                  cardBodyBottom(
-                      dataWordList![currentArrayQuestion].word,
-                      dataWordList![currentArrayQuestion].word,
-                      dataWordList![currentArrayQuestion].word_suffle),
+                  ElasticIn(
+                    child: cardBodyBottom(
+                        dataWordList![currentArrayQuestion].word,
+                        dataWordList![currentArrayQuestion].word,
+                        dataWordList![currentArrayQuestion].word_suffle),
+                  ),
                 ],
               ),
       );
@@ -1066,11 +1108,6 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
                       dataWordList![currentArrayQuestion].word_hint,
                       dataWordList![currentArrayQuestion].word)
                   : mainBody()),
-          //   body: resultAnswer(
-          //       true,
-          //       250,
-          //       "secara harfiah berarti suatu waktu yang diperlukan seekor lintah untuk merasa kenyang (menghisap darah). Secara kias ungkapan ini bermakna waktu yang singkat atau sebentar, karena seekor lintah yang kecil tidak memerlukan waktu yang lama untuk kenyang (mengenyangkan perut). (Kata sifat (adjectiva))",
-          //       "abetekan lelintah"),
         ));
   }
 }

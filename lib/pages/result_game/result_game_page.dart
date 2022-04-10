@@ -36,17 +36,19 @@ class _ResultGamePageState extends State<ResultGamePage> {
     _languageDBProvider =
         Provider.of<LanguageDBProvider>(context, listen: false);
     try {
-      if (await _languageDBProvider!
-          .setUpdateLevelProgress(widget.finalScore, widget.level!.id)) {
-        if (await _languageDBProvider!.updateNextLevel(widget.level)) {
-          logger.d("berhasil update, coba cek di db");
-        } else {
-          logger.d(" berhasil update xp level, cek db ");
+      if (widget.finalScore > widget.level!.current_score!.toDouble()) {
+        if (await _languageDBProvider!
+            .setUpdateLevelProgress(widget.finalScore, widget.level!.id)) {
+          if (await _languageDBProvider!.updateNextLevel(widget.level)) {
+            logger.d("berhasil update, coba cek di db");
+          } else {
+            logger.d(" berhasil update xp level, cek db ");
+          }
         }
-        setState(() {
-          isLoading = false;
-        });
       }
+      setState(() {
+        isLoading = false;
+      });
     } catch (e) {
       logger.e(e);
     }
