@@ -145,6 +145,15 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
     // timeInGame();
   }
 
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _timerInGame!.cancel();
+    _timerScore!.cancel();
+    _timeInRes!.cancel();
+  }
+
   void setStateIfMounted(f) {
     if (mounted) setState(f);
   }
@@ -178,12 +187,13 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
               context,
               CustomPageRoute(ResultGamePage(
                   widget.languageModel, scoreCount, widget.levelModel)));
+        } else {
+          setState(() {
+            currentArrayQuestion++;
+            currentQuestion++;
+            afterAnswer = false;
+          });
         }
-        setState(() {
-          currentArrayQuestion++;
-          currentQuestion++;
-          afterAnswer = false;
-        });
         resetAnswerField();
         getTimeScore();
         timeInGame(numberCountDown);
@@ -445,7 +455,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
               afterAnswer = true;
               answerCountDown = 5;
               countDownAnswer = numberCountDown;
-              resultAnswerStatus = false;
+              resultAnswerStatus = true;
             });
             runTimeResult(false);
           }
@@ -901,7 +911,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
     }
 
     Widget resultAnswer(
-        bool resultAnswer, int pointGet, String? meaning, String? word) {
+        bool resultAnswerStatus, int pointGet, String? meaning, String? word) {
       return Container(
         child: Center(
           child: ListView(
@@ -945,7 +955,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
                   margin: EdgeInsets.only(bottom: 30, left: 15, right: 15),
                   child: Center(
                     child: Text(
-                      resultAnswer ? "Benar" : "Salah",
+                      resultAnswerStatus ? "Benar" : "Salah",
                       style: whiteTextStyle.copyWith(
                           fontSize: 32, fontWeight: bold),
                     ),
@@ -953,11 +963,17 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
               Container(
                 margin: EdgeInsets.only(bottom: 32, left: 15, right: 15),
                 child: Center(
-                  child: Image.asset(
-                    'assets/images/success_icon.png',
-                    width: 74.92,
-                    height: 74.92,
-                  ),
+                  child: resultAnswerStatus
+                      ? Image.asset(
+                          'assets/images/success_icon.png',
+                          width: 74.92,
+                          height: 74.92,
+                        )
+                      : Image.asset(
+                          'assets/images/fail_icon.png',
+                          width: 74.92,
+                          height: 74.92,
+                        ),
                 ),
               ),
               Container(
@@ -1014,7 +1030,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
     Widget footer() {
       return FooterGamePlayPage(
         scoreCount: scoreCount,
-        stage: "Level 1",
+        stage: "${widget.levelModel!.level_name}",
       );
     }
 

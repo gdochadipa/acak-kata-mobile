@@ -12,6 +12,7 @@ class LevelModel {
   int? is_unlock;
   int? current_score;
   int? target_score;
+  int? sorting_level;
 
   LevelModel(
       {this.id,
@@ -23,7 +24,8 @@ class LevelModel {
       this.level_lang_code,
       this.is_unlock,
       this.current_score,
-      this.target_score});
+      this.target_score,
+      this.sorting_level});
 
   LevelModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -31,11 +33,12 @@ class LevelModel {
     level_words = json['level_words'];
     level_time = json['level_time'];
     level_question_count = json['level_question_count'];
-    level_lang_id = json['level_lang_id'];
+    level_lang_id = json['level_lang_id'].toString();
     level_lang_code = json['level_lang_code'];
     is_unlock = json['is_unlock'];
     current_score = json['current_score'];
     target_score = json['target_score'];
+    sorting_level = json['sorting_level'];
   }
 
   Map<String, dynamic> toJson() {
@@ -49,7 +52,8 @@ class LevelModel {
       'level_lang_code': level_lang_code,
       'is_unlock': is_unlock,
       'current_score': current_score,
-      'target_score': target_score
+      'target_score': target_score,
+      'sorting_level': sorting_level
     };
   }
 }

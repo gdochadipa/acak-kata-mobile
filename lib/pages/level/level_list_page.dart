@@ -36,7 +36,8 @@ class _LevelListPageState extends State<LevelListPage> {
       setState(() {
         isLoading = true;
       });
-      if (await languageDBProvider!.getLevel()) {
+      if (await languageDBProvider!
+          .getLevel(widget.languageModel.language_code)) {
         levelList = languageDBProvider!.levelList;
         setState(() {
           isLoading = false;

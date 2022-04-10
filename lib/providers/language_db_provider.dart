@@ -137,7 +137,7 @@ class LanguageDBProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> getLevel() async {
+  Future<bool> getLevel(String? language_code) async {
     try {
       if (_db == null) {
         throw Exception("local data not found");
@@ -145,13 +145,22 @@ class LanguageDBProvider with ChangeNotifier {
       late List<Map<String, dynamic>> levels;
 
       await _db.transaction((txn) async {
-        levels = await txn.query("tb_level", columns: [
-          "id",
-          "level_name",
-          "level_words",
-          "level_time",
-          "level_question_count"
-        ]);
+        levels = await txn.query("tb_level",
+            columns: [
+              "id",
+              "level_name",
+              "level_words",
+              "level_time",
+              "level_question_count",
+              "level_lang_id",
+              "level_lang_code",
+              "is_unlock",
+              "current_score",
+              "target_score",
+              "sorting_level"
+            ],
+            where: "level_lang_code = ?",
+            whereArgs: [language_code]);
       });
 
       _levelList = levels.map((e) => LevelModel.fromJson(e)).toList();
@@ -159,6 +168,70 @@ class LanguageDBProvider with ChangeNotifier {
     } catch (e) {
       throw Exception(e);
       return false;
+    }
+  }
+
+  Future<bool> setUpdateLevelProgress(int newScore, int? level_id) async {
+    try {
+      if (_db == null) {
+        throw Exception("local data not found");
+      }
+
+      Map<String, dynamic> row = {"current_score": newScore};
+
+      await _db.transaction((txn) async {
+        int updateCount = await txn
+            .update("tb_level", row, where: "id = ?", whereArgs: [level_id]);
+        print("update tb_level ${updateCount}");
+      });
+
+      return true;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<bool> updateNextLevel(LevelModel? levelModel) async {
+    try {
+      if (_db == null) {
+        throw Exception("local data not found");
+      }
+      late List<Map<String, dynamic>> levels;
+      Map<String, dynamic> row = {"is_unlock": 1};
+
+      int nextLevel = (levelModel!.sorting_level ?? 0) + 1;
+
+      await _db.transaction((txn) async {
+        levels = await txn.query("tb_level",
+            columns: [
+              "id",
+              "level_name",
+              "level_words",
+              "level_time",
+              "level_question_count",
+              "level_lang_id",
+              "level_lang_code",
+              "is_unlock",
+              "current_score",
+              "target_score",
+              "sorting_level"
+            ],
+            where: "level_lang_code = ? AND sorting_level = ?",
+            limit: 1,
+            orderBy: "sorting_level DESC",
+            whereArgs: [levelModel.level_lang_code, nextLevel]);
+        print("length ${levels.length}");
+
+        if (levels.isNotEmpty) {
+          await txn.update("tb_level", row,
+              where: "level_lang_code = ? AND sorting_level = ?",
+              whereArgs: [levelModel.level_lang_code, nextLevel]);
+        }
+      });
+
+      return true;
+    } catch (e) {
+      throw Exception(e);
     }
   }
 }

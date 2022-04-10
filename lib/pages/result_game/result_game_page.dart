@@ -4,10 +4,13 @@ import 'dart:math';
 import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/models/level_model.dart';
 import 'package:acakkata/pages/in_game/game_play_page.dart';
+import 'package:acakkata/providers/language_db_provider.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/clicky_button.dart';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
+import 'package:provider/provider.dart';
 
 class ResultGamePage extends StatefulWidget {
   // const ResultGamePage({Key? key}) : super(key: key);
@@ -22,11 +25,38 @@ class ResultGamePage extends StatefulWidget {
 
 class _ResultGamePageState extends State<ResultGamePage> {
   late ConfettiController _confettiController;
+  late LanguageDBProvider? _languageDBProvider;
+  bool isLoading = false;
+  Logger logger = Logger(
+    printer: PrettyPrinter(methodCount: 0),
+  );
+
+  updateLevel() async {
+    isLoading = true;
+    _languageDBProvider =
+        Provider.of<LanguageDBProvider>(context, listen: false);
+    try {
+      if (await _languageDBProvider!
+          .setUpdateLevelProgress(widget.finalScore, widget.level!.id)) {
+        if (await _languageDBProvider!.updateNextLevel(widget.level)) {
+          logger.d("berhasil update, coba cek di db");
+        } else {
+          logger.d(" berhasil update xp level, cek db ");
+        }
+        setState(() {
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      logger.e(e);
+    }
+  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    updateLevel();
     _confettiController = ConfettiController(duration: Duration(seconds: 5));
     Timer(Duration(milliseconds: 800), () {
       _confettiController.play();
@@ -74,10 +104,12 @@ class _ResultGamePageState extends State<ResultGamePage> {
         margin: EdgeInsets.only(top: 20),
         alignment: Alignment.center,
         child: ClickyButton(
-            onPressed: () {
-              Navigator.pushNamedAndRemoveUntil(
-                  context, '/home', (route) => false);
-            },
+            onPressed: isLoading
+                ? () {}
+                : () {
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, '/home', (route) => false);
+                  },
             color: alertColor,
             shadowColor: alertAccentColor,
             margin: EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),

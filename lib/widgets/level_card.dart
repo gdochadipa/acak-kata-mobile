@@ -16,20 +16,22 @@ class ItemLevelCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-            context,
-            CustomPageRoute(OfflineGamePlayPage(
-              languageModel: languageModel,
-              selectedQuestion: levelModel!.level_question_count,
-              selectedTime: levelModel!.level_time,
-              isHost: 0,
-              levelWords: levelModel!.level_words,
-              isOnline: false,
-              Stage: levelModel!.level_name,
-              levelModel: levelModel,
-            )));
-      },
+      onTap: levelModel!.is_unlock == 1
+          ? () {
+              Navigator.push(
+                  context,
+                  CustomPageRoute(OfflineGamePlayPage(
+                    languageModel: languageModel,
+                    selectedQuestion: levelModel!.level_question_count,
+                    selectedTime: levelModel!.level_time,
+                    isHost: 0,
+                    levelWords: levelModel!.level_words,
+                    isOnline: false,
+                    Stage: levelModel!.level_name,
+                    levelModel: levelModel,
+                  )));
+            }
+          : null,
       child: Container(
         margin: EdgeInsets.only(bottom: 20),
         padding: EdgeInsets.only(top: 13, bottom: 13, left: 10, right: 10),
@@ -47,21 +49,36 @@ class ItemLevelCard extends StatelessWidget {
           children: [
             Container(
                 margin: EdgeInsets.all(5),
-                child: Column(
+                child: Stack(
                   children: [
                     Align(
-                      child: Text(
-                        '${levelModel!.level_name}',
-                        style: whiteTextStyle.copyWith(
-                            fontSize: 21, fontWeight: bold),
+                      child: Row(
+                        children: [
+                          if (levelModel!.is_unlock == 0)
+                            Container(
+                              child: Image.asset(
+                                'assets/images/icon_password.png',
+                                width: 36,
+                                height: 18,
+                              ),
+                            ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            '${levelModel!.level_name}',
+                            style: whiteTextStyle.copyWith(
+                                fontSize: 21, fontWeight: bold),
+                          )
+                        ],
                       ),
                       alignment: Alignment.topLeft,
                     ),
                     Align(
                       child: Text(
-                        '120/240 XP',
+                        '${levelModel!.current_score}/${levelModel!.target_score}',
                         style: whiteTextStyle.copyWith(
-                            fontSize: 16, fontWeight: medium),
+                            fontSize: 16, fontWeight: semiBold),
                       ),
                       alignment: Alignment.topRight,
                     ),
@@ -70,16 +87,12 @@ class ItemLevelCard extends StatelessWidget {
             Container(
               margin: EdgeInsets.all(5),
               child: LinearProgressIndicator(
-                value: 3 / 4,
+                value: levelModel!.current_score!.toDouble() /
+                    levelModel!.target_score!.toDouble(),
                 backgroundColor: backgroundColor1,
                 valueColor: AlwaysStoppedAnimation<Color>(accentColor),
               ),
             )
-            // Text(
-            //   'Soal()  Huruf(${levelModel!.level_words})  Waktu(${levelModel!.level_time})',
-            //   style: thirdTextStyle.copyWith(
-            //       fontSize: 14, color: grayColor3, fontWeight: light),
-            // ),
           ],
         ),
       ),
