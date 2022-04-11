@@ -462,30 +462,6 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
           }
         });
 
-        // Flushbar(
-        //   message: "Jawaban",
-        //   margin: EdgeInsets.all(8),
-        //   borderRadius: BorderRadius.circular(8),
-        //   flushbarStyle: FlushbarStyle.FLOATING,
-        //   flushbarPosition: FlushbarPosition.TOP,
-        //   reverseAnimationCurve: Curves.decelerate,
-        //   forwardAnimationCurve: Curves.elasticOut,
-        //   isDismissible: false,
-        //   titleText: Text("Jawaban Benar"),
-        //   duration: Duration(seconds: 2),
-        //   backgroundColor: backgroundColor1,
-        //   titleColor: successColor,
-        //   icon: Icon(
-        //     Icons.check_circle_outline_outlined,
-        //     color: successColor,
-        //   ),
-        //   boxShadows: [
-        //     BoxShadow(
-        //         color: Colors.green[600] ?? successColor,
-        //         offset: Offset(0.0, 2.0),
-        //         blurRadius: 3.0)
-        //   ],
-        // ).show(context);
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           duration: Duration(milliseconds: 700),
           content: Text(
@@ -502,30 +478,6 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
           answerController.text = textAnswer;
         }
       } else {
-        // Flushbar(
-        //   message: "Jawaban",
-        //   margin: EdgeInsets.all(8),
-        //   borderRadius: BorderRadius.circular(8),
-        //   flushbarStyle: FlushbarStyle.FLOATING,
-        //   flushbarPosition: FlushbarPosition.TOP,
-        //   reverseAnimationCurve: Curves.decelerate,
-        //   forwardAnimationCurve: Curves.elasticOut,
-        //   isDismissible: false,
-        //   duration: Duration(seconds: 2),
-        //   backgroundColor: backgroundColor1,
-        //   titleColor: alertColor,
-        //   titleText: Text("Jawaban Salah"),
-        //   icon: Icon(
-        //     Icons.close_rounded,
-        //     color: alertColor,
-        //   ),
-        //   boxShadows: [
-        //     BoxShadow(
-        //         color: Colors.red[800] ?? alertColor,
-        //         offset: Offset(0.0, 2.0),
-        //         blurRadius: 3.0)
-        //   ],
-        // ).show(context);
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             duration: Duration(milliseconds: 700),
             backgroundColor: alertColor,
