@@ -32,6 +32,15 @@ Color primaryBeningColor = Color.fromRGBO(185, 131, 255, 0.5);
 Color kLineDarkColor = Color(0xffEAEAEA);
 Color kWhiteGreyColor = Color(0xffF1F1F5);
 
+Color purpleColor = Color(0xffA076CC);
+Color purpleAccentColor = Color(0xff6C4298);
+
+Color greenColor = Color(0xff34D49D);
+Color greenAccentColor = Color(0xff00A06A);
+
+Color progressGreen = Color(0xff1AAA79);
+Color progressOrange = Color(0xffFF931A);
+
 Color firstLinierColor = Color(0xff5FDCF0);
 Color secondLinierColor = Color(0xff05BEF8);
 Color thirdLinierColor = Color(0xff5FF0D6);

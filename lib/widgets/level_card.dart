@@ -86,11 +86,18 @@ class ItemLevelCard extends StatelessWidget {
                 )),
             Container(
               margin: EdgeInsets.all(5),
-              child: LinearProgressIndicator(
-                value: levelModel!.current_score!.toDouble() /
-                    levelModel!.target_score!.toDouble(),
-                backgroundColor: backgroundColor1,
-                valueColor: AlwaysStoppedAnimation<Color>(accentColor),
+              decoration: BoxDecoration(
+                  // border: Border.all(color: blackColor),
+                  color: backgroundColor8,
+                  borderRadius: BorderRadius.circular(5)),
+              child: SizedBox(
+                height: 8,
+                child: LinearProgressIndicator(
+                  value: levelModel!.current_score!.toDouble() /
+                      levelModel!.target_score!.toDouble(),
+                  backgroundColor: backgroundColor1,
+                  valueColor: AlwaysStoppedAnimation<Color>(greenColor),
+                ),
               ),
             )
           ],

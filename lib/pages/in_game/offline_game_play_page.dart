@@ -183,6 +183,8 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
         });
       } else {
         timer.cancel();
+        _timerInGame!.cancel();
+        _timerScore!.cancel();
         if (endGame) {
           Navigator.push(
               context,
@@ -223,10 +225,16 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
       if (currentArrayQuestion == (totalQuestion - 1)) {
         timer.cancel();
         _timerScore!.cancel();
-        Navigator.push(
-            context,
-            CustomPageRoute(ResultGamePage(
-                widget.languageModel, scoreCount, widget.levelModel)));
+        setState(() {
+          afterAnswer = true;
+          answerCountDown = 5;
+          resultAnswerStatus = false;
+        });
+        runTimeResult(true);
+        // Navigator.push(
+        //     context,
+        //     CustomPageRoute(ResultGamePage(
+        //         widget.languageModel, scoreCount, widget.levelModel)));
       } else {
         timer.cancel();
         _timerScore!.cancel();
