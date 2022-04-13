@@ -152,7 +152,9 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
     super.dispose();
     _timerInGame!.cancel();
     _timerScore!.cancel();
-    _timeInRes!.cancel();
+    if (_timeInRes != null) {
+      _timeInRes!.cancel();
+    }
   }
 
   void setStateIfMounted(f) {
