@@ -66,12 +66,22 @@ class _LanguageCardState extends State<LanguageCard> {
     return GestureDetector(
         onTap: () {
           // Navigator.push(context, CustomPageRoute(PrepareGamePage(language)));
-          handlePopUpPress();
+          // handlePopUpPress();
           // Navigator.push(
           //     context,
           //     CustomPageRoute(LevelListPage(
           //       languageModel: language,
           //     )));
+
+          Navigator.pushAndRemoveUntil(
+              context,
+              CustomPageRoute(
+                LevelListPage(
+                  isOnline: false,
+                  languageModel: widget.language,
+                ),
+              ),
+              (route) => false);
         },
         child: Container(
           margin: const EdgeInsets.only(bottom: 20),

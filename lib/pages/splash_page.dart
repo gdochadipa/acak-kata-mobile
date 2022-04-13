@@ -5,6 +5,7 @@ import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/models/level_model.dart';
 import 'package:acakkata/models/user_model.dart';
 import 'package:acakkata/pages/home_page/main.dart';
+import 'package:acakkata/pages/home_page/new_home_page.dart';
 import 'package:acakkata/pages/result_game/result_game_page.dart';
 import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/providers/language_db_provider.dart';
@@ -85,7 +86,7 @@ class _SplashPageState extends State<SplashPage> {
       await langProvider.getLanguage();
       Timer(Duration(milliseconds: 1500), () {
         // Navigator.pushNamed(context, '/home');
-        Navigator.push(context, CustomPageRoute(MainPage()));
+        Navigator.push(context, CustomPageRoute(NewHomePage()));
       });
     } catch (e) {
       logger.e(e);

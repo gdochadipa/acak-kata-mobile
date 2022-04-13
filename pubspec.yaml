@@ -119,6 +119,12 @@ flutter:
     - assets/images/fail_icon.png
     - assets/images/background.png
     - assets/images/background_512w.png
+    - assets/images/icon_exit.png
+    - assets/images/icon_group_white.png
+    - assets/images/icon_play.png
+    - assets/images/icon_play_white.png
+    - assets/images/icon_profile.png
+    - assets/images/icon_setting.png
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg

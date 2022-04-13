@@ -1,6 +1,7 @@
 import 'package:acakkata/pages/auth/signin_page.dart';
 import 'package:acakkata/pages/auth/signup_page.dart';
 import 'package:acakkata/pages/home_page/main.dart';
+import 'package:acakkata/pages/home_page/new_home_page.dart';
 import 'package:acakkata/pages/splash_page.dart';
 import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/providers/language_db_provider.dart';
@@ -32,7 +33,8 @@ class MyApp extends StatelessWidget {
           '/': (context) => SplashPage(),
           '/sign-in': (context) => SignInPage(),
           '/sign-up': (context) => SignUpPage(),
-          '/home': (context) => MainPage(),
+          // '/home': (context) => MainPage(),
+          '/home': (context) => NewHomePage(),
         },
         // onGenerateRoute: (setting) {
 

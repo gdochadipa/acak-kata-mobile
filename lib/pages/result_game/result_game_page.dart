@@ -7,6 +7,7 @@ import 'package:acakkata/pages/in_game/game_play_page.dart';
 import 'package:acakkata/providers/language_db_provider.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/clicky_button.dart';
+import 'package:animate_do/animate_do.dart';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
@@ -171,16 +172,18 @@ class _ResultGamePageState extends State<ResultGamePage> {
         padding: EdgeInsets.all(5),
         child: Column(
           children: [
-            textHeader(),
+            ElasticIn(child: textHeader()),
             SizedBox(
               height: 8,
             ),
-            Image.asset(
-              'assets/images/trophy_2.png',
-              width: 162.76,
-              height: 162.76,
+            ElasticIn(
+              child: Image.asset(
+                'assets/images/trophy_2.png',
+                width: 162.76,
+                height: 162.76,
+              ),
             ),
-            scoreMatch(),
+            ElasticIn(child: scoreMatch()),
             SizedBox(
               height: 30,
             ),
