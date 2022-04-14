@@ -79,6 +79,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
   bool isCountDown = true;
   bool afterAnswer = false;
   bool resultAnswerStatus = false;
+  Map<int, bool>? listQuestionQueue;
 
   Future<bool> getInit() async {
     LanguageDBProvider langProvider =
@@ -100,6 +101,8 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
           widget.languageModel!.language_code, widget.levelWords)) {
         dataWordList =
             langProvider.dataWordList!.getRange(0, totalQuestion).toList();
+        // setup antrian pertanyaan, gunanya untuk mekanisme skip pertanyaan
+        setUpListQuestionQueue();
         setState(() {
           _isLoading = false;
         });
@@ -112,6 +115,16 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
     }
 
     return false;
+  }
+
+  void setUpListQuestionQueue() {
+    if (dataWordList!.isNotEmpty) {
+      for (var i = 0; i < dataWordList!.length; i++) {
+        setState(() {
+          listQuestionQueue!.addEntries([MapEntry(i, false)]);
+        });
+      }
+    }
   }
 
   @override
@@ -161,6 +174,9 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
     if (mounted) setState(f);
   }
 
+  /// get Time Score digunakan untuk menghitung secara manual untuk durasi utama permainan
+  /// sebagai pencetak  angka pada stopwatch
+  ///
   getTimeScore() {
     const duration = Duration(seconds: 1);
     _timerScore = Timer.periodic(duration, (Timer timer) {
@@ -177,6 +193,8 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
     });
   }
 
+  /// runTime Result merupakan mekanisme perhitungan timer untuk melihat
+  /// hasil jawaban. batas waktu yang ditentukan  adalah 5 detik setelah pertanyaan
   runTimeResult(bool endGame) {
     _timeInRes = Timer.periodic(Duration(seconds: 1), (Timer timer) {
       if (answerCountDown > 0) {
@@ -193,6 +211,10 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
               CustomPageRoute(ResultGamePage(
                   widget.languageModel, scoreCount, widget.levelModel)));
         } else {
+          /**
+           * setelah perhitungan jika belum diakhir pertanyaan maka akan lanjut
+           *  ke pertanyaan selanjutnya
+           */
           setState(() {
             currentArrayQuestion++;
             currentQuestion++;
@@ -208,6 +230,11 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
 
   timeInGame(int countDownNumber) async {
     Duration duration = Duration(seconds: countDownNumber);
+    /** 
+     * memetakan kata menjadi per huruf, ini digunakan dalam mekanisme pemilihan huruf 
+     * setiap huruf yang dipilih tidak akan dipilih
+     * 
+     * */
     List<String> listSuffQues =
         dataWordList![currentArrayQuestion].word!.split('');
     for (var i = 0; i < listSuffQues.length; i++) {
@@ -215,6 +242,14 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
         isSelected!.addEntries([MapEntry(i, false)]);
       });
     }
+    /**
+     * end mechanism pemecah kata
+     * 
+     */
+
+    /**
+     * timer satu soal, timer ini akan menjalankan eksekusi ketika durasi telah habis
+     */
     _timerInGame = Timer.periodic(duration, (Timer timer) {
       logger.d({
         'currentArrayQuestion': currentArrayQuestion,
@@ -223,7 +258,9 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
         'nowQuestion': dataWordList![currentArrayQuestion].word_suffle,
         'nowAnswer': dataWordList![currentArrayQuestion].word
       });
+      /** untuk merestart perhitungan permainan, nilai per 1 detik */
       getTimeScore();
+      /** mengecek apakah pertanyaan sudah memasuki pertanyaan terakhir */
       if (currentArrayQuestion == (totalQuestion - 1)) {
         timer.cancel();
         _timerScore!.cancel();
@@ -232,11 +269,8 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
           answerCountDown = 5;
           resultAnswerStatus = false;
         });
+        /** masuk ke hasil permainan */
         runTimeResult(true);
-        // Navigator.push(
-        //     context,
-        //     CustomPageRoute(ResultGamePage(
-        //         widget.languageModel, scoreCount, widget.levelModel)));
       } else {
         timer.cancel();
         _timerScore!.cancel();
@@ -245,11 +279,13 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
           answerCountDown = 5;
           resultAnswerStatus = false;
         });
+        /** ke soal selanjutnya */
         runTimeResult(false);
       }
     });
   }
 
+  /// fungsi untuk mereset jawaban dan juga tombol
   resetAnswerField() {
     resetAnswer();
     if (textAnswer != '' && textAnswer.length > 0) {
@@ -258,57 +294,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
     }
   }
 
-  Future<void> showTimesUpDialog() async {
-    return showDialog(
-        context: context,
-        builder: (BuildContext context) => Container(
-              width: MediaQuery.of(context).size.width - (2 * defaultMargin),
-              child: AlertDialog(
-                backgroundColor: backgroundColor3,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                content: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: 12,
-                      ),
-                      Text(
-                        "${_start}",
-                        style: primaryTextStyle.copyWith(
-                            fontSize: 18, fontWeight: semiBold),
-                      ),
-                      SizedBox(
-                        height: 12,
-                      ),
-                      Container(
-                        width: 154,
-                        height: 44,
-                        child: TextButton(
-                          onPressed: () {},
-                          style: TextButton.styleFrom(
-                            backgroundColor: primaryColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          child: Text(
-                            'Lihat Hasil',
-                            style: primaryTextStyle.copyWith(
-                              fontSize: 16,
-                              fontWeight: medium,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ));
-  }
-
+  ///membuat modal keluar permainan
   Future<void> showCancelGame() async {
     return showDialog(
         context: context,
@@ -408,46 +394,49 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
             ));
   }
 
-  Widget textHint(String? word_hint) {
-    return Container(
-      margin: EdgeInsets.only(top: 40),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Petunjuk',
-            style:
-                subtitleTextStyle.copyWith(fontSize: 16, fontWeight: semiBold),
-          ),
-          Text(
-            '${word_hint}',
-            style: subtitleTextStyle.copyWith(fontSize: 20, fontWeight: medium),
-          )
-        ],
-      ),
-    );
-  }
-
+  /// fungsi untuk memberikan input jawaban setelah menekan tombol huruf
+  /// fungsi ini akan mengecek jawaban ketika pemain menekan tombol terakhir jawaban
   answerQuestion(
       String letter, int e, List<String>? suffle_question, String? question) {
+    /**
+         * menginputkan huruf ke kolom jawaban 
+         * sekaligus juga menginputkan ke sequenceAnswer (urutan huruf jawaban)
+         * ngecek tombol apakah sudah dinputkan sebelumnya [isSelected]
+         */
     setState(() {
       textAnswer = textAnswer + letter;
       answerController.text = textAnswer;
       isSelected![e] = true;
       sequenceAnswer!.add(e);
     });
+    /**
+     * mengecek apakah panjang kata jawaban sesuai dengan panjang kata soal
+     */
     if (textAnswer.length == suffle_question!.length) {
       logger.d(
           "${answerController.text.toUpperCase()} == ${question!.toUpperCase()} => ${answerController.text.toUpperCase() == question.toUpperCase()}");
+      /**
+           * membandingkan apakah jawaban sesuai dengan kata tujuan
+           */
       if (answerController.text.toUpperCase() == question.toUpperCase()) {
         setState(() {
+          /**
+           * mekanisme perhitungan skor
+           * ! mekanisme perhitungan berubah
+           */
           score = countDownAnswer * 10;
           scoreCount += score;
 
+          /**
+           * persiapan untuk next soal
+           */
           _timerScore!.cancel();
           _timerInGame!.cancel();
 
           if (currentArrayQuestion == (totalQuestion - 1)) {
+            /**
+           * ketika tidak ada soal yang tersisa
+           */
             setState(() {
               afterAnswer = true;
               answerCountDown = 5;
@@ -462,6 +451,9 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
             // countDownAnswer = numberCountDown;
             // getTimeScore();
             // timeInGame(numberCountDown);
+            /**
+             ** ketika soal masih tersisa
+             */
             setState(() {
               afterAnswer = true;
               answerCountDown = 5;
@@ -472,6 +464,9 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
           }
         });
 
+        /**
+         * * munculin status jawaban benar
+         */
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           duration: Duration(milliseconds: 700),
           content: Text(
@@ -481,13 +476,18 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
           ),
           backgroundColor: successColor,
         ));
-
+        /**
+         ** reset jawaban 
+         */
         resetAnswer();
         if (textAnswer != '' && textAnswer.length > 0) {
           textAnswer = '';
           answerController.text = textAnswer;
         }
       } else {
+        /**
+         * * munculin status jawaban salah
+         */
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             duration: Duration(milliseconds: 700),
             backgroundColor: alertColor,
@@ -505,6 +505,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
     }
   }
 
+  /// reset jawban pada sequence jawaban
   resetAnswer() {
     List<String> listSuffQues =
         dataWordList![currentArrayQuestion].word!.split('');
@@ -518,38 +519,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
 
   @override
   Widget build(BuildContext context) {
-    Widget textHeader() {
-      return Container(
-          margin: EdgeInsets.only(top: 10, left: 10, right: 10),
-          padding: EdgeInsets.all(18),
-          decoration: BoxDecoration(
-              color: backgroundColor4, borderRadius: BorderRadius.circular(15)),
-          child: Center(
-            child: Column(
-              children: [
-                Text(
-                  '${widget.languageModel!.language_name}',
-                  style: blackTextStyle.copyWith(
-                      fontSize: 15, fontWeight: semiBold),
-                ),
-                Text(
-                  '#${currentQuestion}/${totalQuestion}',
-                  style: subtitleTextStyle.copyWith(
-                      fontSize: 13, fontWeight: regular),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                LinearProgressIndicator(
-                  value: currentQuestion / totalQuestion,
-                  backgroundColor: backgroundColor5,
-                  valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
-                ),
-              ],
-            ),
-          ));
-    }
-
+    /// perhitungan waktu permainan saat menjawab soal
     Widget TextTime() {
       return Container(
         child: Column(
@@ -572,6 +542,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
       );
     }
 
+    /// form jawaban input huruf
     Widget answerInput() {
       return Container(
         margin: EdgeInsets.only(top: 10),
@@ -603,6 +574,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
       );
     }
 
+    ///  implementasi tombol reset jawaban
     Widget btnResetAnswer() {
       return Container(
         height: 45,
@@ -642,6 +614,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
       );
     }
 
+    /// tombol hapus kata pada jawaban
     Widget btnDeleteLetterAnswer() {
       return Container(
         height: 45,
@@ -740,6 +713,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
       );
     }
 
+    /// list tombol jawaban [list per huruf]
     Widget AnswerButtons(List<String>? suffle_question, String? question) {
       List fixedList = Iterable.generate(suffle_question!.length).toList();
       return Container(
@@ -813,10 +787,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
         decoration: BoxDecoration(
             color: backgroundColor1, borderRadius: BorderRadius.circular(15)),
         child: Column(
-          children: [
-            // textHeader(),
-            AnswerButtons(suffle_question, question)
-          ],
+          children: [AnswerButtons(suffle_question, question)],
         ),
       );
     }
@@ -860,6 +831,8 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
       );
     }
 
+    /// ------------------------header soal -----------------------------
+    /// header soal
     AppBar header() {
       return AppBar(
         leading: Container(
@@ -897,6 +870,8 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
       );
     }
 
+    ///*-------------------------result jawaban-----------------------------------
+    ///* akan muncul ketika soal berakhir dan jawaban benar
     Widget resultAnswer(
         bool resultAnswerStatus, int pointGet, String? meaning, String? word) {
       return Container(
@@ -1029,6 +1004,8 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
       );
     }
 
+    ///*-------------------------footer-----------------------------------
+    ///* tampilan footer
     Widget footer() {
       return FooterGamePlayPage(
         scoreCount: scoreCount,
