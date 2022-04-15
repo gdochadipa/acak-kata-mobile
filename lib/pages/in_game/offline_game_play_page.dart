@@ -79,7 +79,8 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
   bool isCountDown = true;
   bool afterAnswer = false;
   bool resultAnswerStatus = false;
-  Map<int, bool>? listQuestionQueue;
+  List<int>? listQuestionQueue = [];
+  int queueNow = 0;
 
   Future<bool> getInit() async {
     LanguageDBProvider langProvider =
@@ -101,8 +102,8 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
           widget.languageModel!.language_code, widget.levelWords)) {
         dataWordList =
             langProvider.dataWordList!.getRange(0, totalQuestion).toList();
+        await setUpListQuestionQueue(dataWordList);
         // setup antrian pertanyaan, gunanya untuk mekanisme skip pertanyaan
-        setUpListQuestionQueue();
         setState(() {
           _isLoading = false;
         });
@@ -117,11 +118,11 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
     return false;
   }
 
-  void setUpListQuestionQueue() {
-    if (dataWordList!.isNotEmpty) {
-      for (var i = 0; i < dataWordList!.length; i++) {
+  setUpListQuestionQueue(List<WordLanguageModel>? wordList) async {
+    if (wordList!.length > 0) {
+      for (var i = 0; i < wordList.length; i++) {
         setState(() {
-          listQuestionQueue!.addEntries([MapEntry(i, false)]);
+          listQuestionQueue!.add(i);
         });
       }
     }
@@ -152,11 +153,11 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
           isCountDown = false;
         });
         getTimeScore();
-        timeInGame(numberCountDown);
+        onCoreCountTimeInGame(numberCountDown);
       }
     });
     // getTimeScore();
-    // timeInGame();
+    // onCoreCountTimeInGame();
   }
 
   @override
@@ -193,10 +194,41 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
     });
   }
 
+  /// digunakan untuk menentukan apakah question akan lanjut atau tidak
+  onSkipQueueQuestion(bool isAnswer) async {
+    setState(() {
+      if (listQuestionQueue!.asMap().containsKey(queueNow)) {
+        if (isAnswer) {
+          int removeQueue = queueNow;
+          listQuestionQueue!.removeAt(removeQueue);
+          if (listQuestionQueue!.length <= queueNow) {
+            queueNow--;
+          }
+        } else {
+          if (listQuestionQueue!.asMap().containsKey(queueNow + 1)) {
+            queueNow++;
+          } else {
+            queueNow = 0;
+          }
+        }
+      } else {
+        queueNow = 0;
+      }
+
+      if (listQuestionQueue!.asMap().containsKey(queueNow)) {
+        currentArrayQuestion = listQuestionQueue![queueNow];
+      } else {
+        logger.d("game is done");
+      }
+
+      logger.d(listQuestionQueue);
+    });
+  }
+
   /// runTime Result merupakan mekanisme perhitungan timer untuk melihat
   /// hasil jawaban. batas waktu yang ditentukan  adalah 5 detik setelah pertanyaan
-  runTimeResult(bool endGame) {
-    _timeInRes = Timer.periodic(Duration(seconds: 1), (Timer timer) {
+  onRunTimeResult(bool endGame) async {
+    _timeInRes = Timer.periodic(Duration(seconds: 1), (Timer timer) async {
       if (answerCountDown > 0) {
         setState(() {
           answerCountDown--;
@@ -215,20 +247,21 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
            * setelah perhitungan jika belum diakhir pertanyaan maka akan lanjut
            *  ke pertanyaan selanjutnya
            */
+
           setState(() {
             currentArrayQuestion++;
             currentQuestion++;
             afterAnswer = false;
           });
         }
-        resetAnswerField();
+        onResetAnswerField();
         getTimeScore();
-        timeInGame(numberCountDown);
+        onCoreCountTimeInGame(numberCountDown);
       }
     });
   }
 
-  timeInGame(int countDownNumber) async {
+  onCoreCountTimeInGame(int countDownNumber) async {
     Duration duration = Duration(seconds: countDownNumber);
     /** 
      * memetakan kata menjadi per huruf, ini digunakan dalam mekanisme pemilihan huruf 
@@ -269,8 +302,11 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
           answerCountDown = 5;
           resultAnswerStatus = false;
         });
-        /** masuk ke hasil permainan */
-        runTimeResult(true);
+        /** 
+         * *masuk ke hasil permainan
+         *  *nextQuestion
+         *  */
+        onRunTimeResult(true);
       } else {
         timer.cancel();
         _timerScore!.cancel();
@@ -279,14 +315,17 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
           answerCountDown = 5;
           resultAnswerStatus = false;
         });
-        /** ke soal selanjutnya */
-        runTimeResult(false);
+        /** ke soal selanjutnya 
+         * 
+         * *nextQuestion
+        */
+        onRunTimeResult(false);
       }
     });
   }
 
   /// fungsi untuk mereset jawaban dan juga tombol
-  resetAnswerField() {
+  onResetAnswerField() {
     resetAnswer();
     if (textAnswer != '' && textAnswer.length > 0) {
       textAnswer = '';
@@ -443,14 +482,17 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
               countDownAnswer = numberCountDown;
               resultAnswerStatus = true;
             });
-            runTimeResult(true);
+            /**
+             * *nextQuestion
+             */
+            onRunTimeResult(true);
           } else {
             // currentArrayQuestion++;
             // currentQuestion++;
 
             // countDownAnswer = numberCountDown;
             // getTimeScore();
-            // timeInGame(numberCountDown);
+            // onCoreCountTimeInGame(numberCountDown);
             /**
              ** ketika soal masih tersisa
              */
@@ -460,7 +502,11 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
               countDownAnswer = numberCountDown;
               resultAnswerStatus = true;
             });
-            runTimeResult(false);
+
+            /**
+             * *nextQuestion
+             */
+            onRunTimeResult(false);
           }
         });
 
