@@ -86,8 +86,8 @@ class _SplashPageState extends State<SplashPage> {
 
       await langProvider.getLanguage();
       Timer(Duration(milliseconds: 1500), () {
-        // Navigator.pushNamed(context, '/home');
-        Navigator.push(context, CustomPageRoute(ExamplePage()));
+        Navigator.pushNamed(context, '/home');
+        // Navigator.push(context, CustomPageRoute(ExamplePage()));
       });
     } catch (e) {
       logger.e(e);
