@@ -220,9 +220,47 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
       } else {
         logger.d("game is done");
       }
-
       logger.d(listQuestionQueue);
     });
+  }
+
+  onSkipedAnswer() async {
+    setState(() {
+      if (_timeInRes != null) {
+        _timeInRes!.cancel();
+        logger.d(" time result on cancel ");
+      }
+
+      if (_timerInGame != null) {
+        _timerInGame!.cancel();
+        logger.d(" time in game on cancel ");
+      }
+
+      if (_timerScore != null) {
+        _timerScore!.cancel();
+        logger.d(" time score on cancel ");
+      }
+    });
+
+    await onSkipQueueQuestion(false);
+    setState(() {
+      // currentArrayQuestion++;
+      currentQuestion = currentArrayQuestion + 1;
+      afterAnswer = false;
+      answerCountDown = 0;
+      countDownAnswer = numberCountDown;
+    });
+    setState(() {
+      _isLoading = true;
+    });
+    Timer(Duration(milliseconds: 50), () {
+      setState(() {
+        _isLoading = false;
+      });
+    });
+    onResetAnswerField();
+    getTimeScore();
+    onCoreCountTimeInGame(numberCountDown);
   }
 
   /// runTime Result merupakan mekanisme perhitungan timer untuk melihat
@@ -234,23 +272,24 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
           answerCountDown--;
         });
       } else {
-        timer.cancel();
+        _timeInRes!.cancel();
         _timerInGame!.cancel();
         _timerScore!.cancel();
         if (endGame) {
-          Navigator.push(
+          Navigator.pushAndRemoveUntil(
               context,
               CustomPageRoute(ResultGamePage(
-                  widget.languageModel, scoreCount, widget.levelModel)));
+                  widget.languageModel, scoreCount, widget.levelModel)),
+              (route) => false);
         } else {
           /**
            * setelah perhitungan jika belum diakhir pertanyaan maka akan lanjut
            *  ke pertanyaan selanjutnya
            */
-
+          await onSkipQueueQuestion(true);
           setState(() {
-            currentArrayQuestion++;
-            currentQuestion++;
+            // currentArrayQuestion++;
+            currentQuestion = currentArrayQuestion + 1;
             afterAnswer = false;
           });
         }
@@ -261,6 +300,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
     });
   }
 
+  /// merupakan perhitungan waktu utama, waktu ditentukan sesuai level atau custom
   onCoreCountTimeInGame(int countDownNumber) async {
     Duration duration = Duration(seconds: countDownNumber);
     /** 
@@ -472,7 +512,10 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
           _timerScore!.cancel();
           _timerInGame!.cancel();
 
-          if (currentArrayQuestion == (totalQuestion - 1)) {
+          logger.d("is listQuestionQueue ${listQuestionQueue!.isEmpty}");
+
+          ///currentArrayQuestion == (totalQuestion - 1)
+          if (!(listQuestionQueue!.length > 0)) {
             /**
            * ketika tidak ada soal yang tersisa
            */
@@ -485,7 +528,12 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
             /**
              * *nextQuestion
              */
+
             onRunTimeResult(true);
+            // if () {
+            // } else {
+            //   onRunTimeResult(false);
+            // }
           } else {
             // currentArrayQuestion++;
             // currentQuestion++;
@@ -723,7 +771,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
             },
             color: alertColor,
             shadowColor: alertAccentColor,
-            width: 200,
+            width: 120,
             height: 60,
             child: Wrap(
               children: [
@@ -747,6 +795,47 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
       );
     }
 
+    Widget btnSkipQuestion() {
+      return Container(
+        margin: EdgeInsets.only(
+          top: 15,
+        ),
+        child: Container(
+          margin: EdgeInsets.all(5),
+          alignment: Alignment.center,
+          child: ClickyButton(
+            onPressed: () {
+              //hapus kata per kata
+              Timer(Duration(milliseconds: 500), () {
+                onSkipedAnswer();
+              });
+            },
+            color: whiteColor,
+            shadowColor: backgroundColorAccent8,
+            width: 120,
+            height: 60,
+            child: Wrap(
+              children: [
+                Icon(
+                  CupertinoIcons.forward_end_alt_fill,
+                  semanticLabel: 'Add',
+                  color: primaryColor,
+                ),
+                SizedBox(
+                  width: 5,
+                ),
+                Text(
+                  'Skip',
+                  style:
+                      primaryTextStyle.copyWith(fontSize: 14, fontWeight: bold),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
     Widget anotherActionAnswer() {
       return Container(
         margin: EdgeInsets.only(top: 15),
@@ -754,6 +843,18 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
           children: [
             Flexible(child: btnResetAnswer()),
             Flexible(child: btnDeleteLetterAnswer())
+          ],
+        ),
+      );
+    }
+
+    Widget anotherActionQuestion() {
+      return Container(
+        margin: EdgeInsets.only(top: 15),
+        child: Row(
+          children: [
+            Flexible(child: btnExit()),
+            Flexible(child: btnSkipQuestion())
           ],
         ),
       );
@@ -784,7 +885,8 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
               height: 10,
             ),
             anotherActionAnswer(),
-            btnExit()
+            anotherActionQuestion()
+            // btnExit()
           ],
         ),
       );
@@ -877,7 +979,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
       );
     }
 
-    /// ------------------------header soal -----------------------------
+    /// *------------------------header soal -----------------------------
     /// header soal
     AppBar header() {
       return AppBar(
@@ -1061,19 +1163,17 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
 
     Widget mainBody() {
       return Container(
-        child: _isLoading
-            ? null
-            : ListView(
-                children: [
-                  cardBodyUp(),
-                  ElasticIn(
-                    child: cardBodyBottom(
-                        dataWordList![currentArrayQuestion].word,
-                        dataWordList![currentArrayQuestion].word,
-                        dataWordList![currentArrayQuestion].word_suffle),
-                  ),
-                ],
-              ),
+        child: ListView(
+          children: [
+            cardBodyUp(),
+            ElasticIn(
+              child: cardBodyBottom(
+                  dataWordList![currentArrayQuestion].word,
+                  dataWordList![currentArrayQuestion].word,
+                  dataWordList![currentArrayQuestion].word_suffle),
+            ),
+          ],
+        ),
       );
     }
 
@@ -1092,7 +1192,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
                       score,
                       dataWordList![currentArrayQuestion].word_hint,
                       dataWordList![currentArrayQuestion].word)
-                  : mainBody()),
+                  : (_isLoading ? Container() : mainBody())),
         ));
   }
 }
