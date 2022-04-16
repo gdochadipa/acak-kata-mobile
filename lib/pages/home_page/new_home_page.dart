@@ -36,37 +36,42 @@ class _NewHomePageState extends State<NewHomePage> {
     Future<void> showListLanguagePop() async {
       return showModal(
         context: context,
-        builder: (context) {
+        builder: (BuildContext context) {
           final theme = Theme.of(context);
-          return PopoverListView(
-              child: Column(
-            children: [
-              Container(
-                padding:
-                    EdgeInsets.only(left: 8, right: 8, top: 15, bottom: 15),
+          return Container(
+            width: MediaQuery.of(context).size.width,
+            child: PopoverListView(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Pilih Bahasa",
-                      style: headerText2.copyWith(
-                          fontWeight: medium, fontSize: 20, color: blackColor),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      child: Column(
-                        children: listLanguageModel!
-                            .map((e) => LanguageCard(e))
-                            .toList(),
+              children: [
+                Container(
+                  padding:
+                      EdgeInsets.only(left: 8, right: 8, top: 15, bottom: 15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Pilih Bahasa untuk Permainan",
+                        style: headerText2.copyWith(
+                            fontWeight: medium,
+                            fontSize: 20,
+                            color: blackColor),
                       ),
-                    )
-                  ],
-                ),
-              )
-            ],
-          ));
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        child: Column(
+                          children: listLanguageModel!
+                              .map((e) => LanguageCard(e))
+                              .toList(),
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            )),
+          );
         },
       );
     }

@@ -15,6 +15,7 @@ import 'package:acakkata/widgets/clicky_button.dart';
 import 'package:acakkata/widgets/custom_page_route.dart';
 import 'package:acakkata/widgets/gameplay/footer_gameplay_page.dart';
 import 'package:another_flushbar/flushbar.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
@@ -224,21 +225,19 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
     });
   }
 
+  /// fungsi untuk proses tambah pertanyaan
   onSkipedAnswer() async {
     setState(() {
       if (_timeInRes != null) {
         _timeInRes!.cancel();
-        logger.d(" time result on cancel ");
       }
 
       if (_timerInGame != null) {
         _timerInGame!.cancel();
-        logger.d(" time in game on cancel ");
       }
 
       if (_timerScore != null) {
         _timerScore!.cancel();
-        logger.d(" time score on cancel ");
       }
     });
 
@@ -334,7 +333,8 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
       /** untuk merestart perhitungan permainan, nilai per 1 detik */
       getTimeScore();
       /** mengecek apakah pertanyaan sudah memasuki pertanyaan terakhir */
-      if (currentArrayQuestion == (totalQuestion - 1)) {
+      ///currentArrayQuestion == (totalQuestion - 1)
+      if (!((listQuestionQueue!.length - 1) > 0)) {
         timer.cancel();
         _timerScore!.cancel();
         setState(() {
@@ -515,7 +515,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
           logger.d("is listQuestionQueue ${listQuestionQueue!.isEmpty}");
 
           ///currentArrayQuestion == (totalQuestion - 1)
-          if (!(listQuestionQueue!.length > 0)) {
+          if (!((listQuestionQueue!.length - 1) > 0)) {
             /**
            * ketika tidak ada soal yang tersisa
            */
@@ -1134,11 +1134,15 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
                           ),
                         ),
                         Container(
-                          child: Text(
+                          child: AutoSizeText(
                             "${meaning}",
                             textAlign: TextAlign.center,
                             style: blackTextStyle.copyWith(
                                 fontSize: 18, fontWeight: semiBold),
+                            minFontSize: 14,
+                            maxFontSize: 18,
+                            maxLines: 8,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         )
                       ],

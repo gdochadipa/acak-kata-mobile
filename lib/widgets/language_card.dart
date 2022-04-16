@@ -7,6 +7,7 @@ import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/custom_page_route_bounce.dart';
 import 'package:acakkata/widgets/popover.dart';
 import 'package:acakkata/widgets/widget_popover/list_item_pop_over.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 import 'custom_page_route.dart';
@@ -119,11 +120,16 @@ class _LanguageCardState extends State<LanguageCard> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    '${widget.language.language_name}',
-                    style:
-                        whiteTextStyle.copyWith(fontSize: 18, fontWeight: bold),
+                  FittedBox(
+                    fit: BoxFit.contain,
+                    child: AutoSizeText(
+                      '${widget.language.language_name}',
+                      style: whiteTextStyle.copyWith(fontWeight: bold),
+                      presetFontSizes: [18, 16],
+                      maxLines: 2,
+                    ),
                   ),
+
                   // Text(
                   //   '${language.language_collection}',
                   //   style: thirdTextStyle.copyWith(

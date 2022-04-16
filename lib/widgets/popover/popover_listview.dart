@@ -40,15 +40,18 @@ class PopoverListView extends StatelessWidget {
       );
     }
 
-    return Container(
-      margin: const EdgeInsets.all(16),
-      padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-          color: theme.cardColor,
-          borderRadius: BorderRadius.all(Radius.circular(16))),
-      child: ListView(
-        shrinkWrap: true,
-        children: [_buildHandle(context), child],
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 16, horizontal: 0),
+        padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+            color: theme.cardColor,
+            borderRadius: BorderRadius.all(Radius.circular(16))),
+        child: SingleChildScrollView(
+            child: Column(
+          children: [_buildHandle(context), child],
+        )),
       ),
     );
   }
