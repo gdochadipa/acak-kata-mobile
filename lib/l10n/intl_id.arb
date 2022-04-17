@@ -16,5 +16,11 @@
     "answer": "Jawaban",
     "exit_game": "Ingin keluar permainan ?",
     "exit_game_yes": "Ya, ingin keluar",
-    "exit_game_no": "Tidak, ingin lanjut"
+    "exit_game_no": "Tidak, ingin lanjut",
+    "letter": "Huruf",
+    "second": "Detik",
+    "ques": "Soal",
+    "question": "Soal",
+    "second_question":"Detik / \n Soal",
+    "challenge": "Tantang \n Teman"
 }

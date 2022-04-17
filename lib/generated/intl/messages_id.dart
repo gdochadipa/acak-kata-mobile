@@ -24,6 +24,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "answer": MessageLookupByLibrary.simpleMessage("Jawaban"),
         "back": MessageLookupByLibrary.simpleMessage("Kembali"),
+        "challenge": MessageLookupByLibrary.simpleMessage("Tantang \n Teman"),
         "code": MessageLookupByLibrary.simpleMessage("id"),
         "delete": MessageLookupByLibrary.simpleMessage("Hapus"),
         "exit": MessageLookupByLibrary.simpleMessage("Keluar"),
@@ -34,13 +35,19 @@ class MessageLookup extends MessageLookupByLibrary {
         "exit_game_yes":
             MessageLookupByLibrary.simpleMessage("Ya, ingin keluar"),
         "false_string": MessageLookupByLibrary.simpleMessage("Salah"),
+        "letter": MessageLookupByLibrary.simpleMessage("Huruf"),
         "listLanguage": MessageLookupByLibrary.simpleMessage(
             "Pilih Bahasa untuk Permainan"),
         "multi_player": MessageLookupByLibrary.simpleMessage("Pemain Ganda"),
         "next": MessageLookupByLibrary.simpleMessage("Selanjutnya"),
         "of_string": MessageLookupByLibrary.simpleMessage("dari"),
         "play": MessageLookupByLibrary.simpleMessage("Main"),
+        "ques": MessageLookupByLibrary.simpleMessage("Soal"),
+        "question": MessageLookupByLibrary.simpleMessage("Soal"),
         "reset": MessageLookupByLibrary.simpleMessage("Reset"),
+        "second": MessageLookupByLibrary.simpleMessage("Detik"),
+        "second_question":
+            MessageLookupByLibrary.simpleMessage("Detik / \n Soal"),
         "single_player": MessageLookupByLibrary.simpleMessage("Pemain Tunggal"),
         "true_string": MessageLookupByLibrary.simpleMessage("Benar"),
         "welcome": MessageLookupByLibrary.simpleMessage("Hi Welcome")

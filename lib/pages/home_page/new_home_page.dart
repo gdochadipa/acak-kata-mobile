@@ -20,6 +20,7 @@ import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:draggable_home/draggable_home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -78,44 +79,52 @@ class _NewHomePageState extends State<NewHomePage> {
 
     List<LanguageModel>? listLanguageModel = languageDBProvider.languageList;
 
-    Future<void> showListLanguagePop() async {
+    showListLanguagePop() async {
       return showModal(
         context: context,
         builder: (BuildContext context) {
           final theme = Theme.of(context);
           return Container(
             width: MediaQuery.of(context).size.width,
-            child: PopoverListView(
-                child: Column(
-              children: [
-                Container(
-                  padding:
-                      EdgeInsets.only(left: 8, right: 8, top: 15, bottom: 15),
+            child: Dialog(
+              insetAnimationCurve: Curves.easeInOut,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.0)),
+              child: PopoverListView(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "${setLanguage.listLanguage}",
-                        style: headerText2.copyWith(
-                            fontWeight: medium,
-                            fontSize: 20,
-                            color: blackColor),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        child: Column(
-                          children: listLanguageModel!
-                              .map((e) => LanguageCard(e))
-                              .toList(),
+                children: [
+                  Container(
+                    padding:
+                        EdgeInsets.only(left: 8, right: 8, top: 15, bottom: 15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "${setLanguage.listLanguage}",
+                          style: headerText2.copyWith(
+                              fontWeight: medium,
+                              fontSize: 20,
+                              color: blackColor),
                         ),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            )),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          child: Column(
+                            children: listLanguageModel!
+                                .map((e) => LanguageCard(e))
+                                .toList(),
+                            // children: [
+                            //   for (var e in listLanguageModel!) LanguageCard(e)
+                            // ],
+                          ),
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              )),
+            ),
           );
         },
       );

@@ -16,5 +16,11 @@
   "answer" : "Answer",
   "exit_game":"Do you want to exit game? the progress will be lost",
   "exit_game_yes":"Yes, Exit",
-  "exit_game_no":"No, Continue"
+  "exit_game_no":"No, Continue",
+  "letter":"Letter",
+  "second":"Second",
+  "ques":"ques",
+  "question":"Question",
+  "second_question": "Second / \n ques",
+  "challenge":"Challenge \n Friends"
 }

@@ -132,6 +132,9 @@ flutter:
     - assets/images/icon_setting.png
     - assets/images/en_flag.png
     - assets/images/id_flag.png
+    - assets/images/edit_icon.png
+    - assets/images/time_square_icon.png
+    - assets/images/words_icon.png
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg

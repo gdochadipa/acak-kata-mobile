@@ -24,6 +24,8 @@ class MessageLookup extends MessageLookupByLibrary {
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "answer": MessageLookupByLibrary.simpleMessage("Answer"),
         "back": MessageLookupByLibrary.simpleMessage("Back"),
+        "challenge":
+            MessageLookupByLibrary.simpleMessage("Challenge \n Friends"),
         "code": MessageLookupByLibrary.simpleMessage("en"),
         "delete": MessageLookupByLibrary.simpleMessage("Delete"),
         "exit": MessageLookupByLibrary.simpleMessage("Exit"),
@@ -32,12 +34,18 @@ class MessageLookup extends MessageLookupByLibrary {
         "exit_game_no": MessageLookupByLibrary.simpleMessage("No, Continue"),
         "exit_game_yes": MessageLookupByLibrary.simpleMessage("Yes, Exit"),
         "false_string": MessageLookupByLibrary.simpleMessage("Wrong"),
+        "letter": MessageLookupByLibrary.simpleMessage("Letter"),
         "listLanguage": MessageLookupByLibrary.simpleMessage("List Language"),
         "multi_player": MessageLookupByLibrary.simpleMessage("Multi Player"),
         "next": MessageLookupByLibrary.simpleMessage("Next"),
         "of_string": MessageLookupByLibrary.simpleMessage("of"),
         "play": MessageLookupByLibrary.simpleMessage("Play"),
+        "ques": MessageLookupByLibrary.simpleMessage("ques"),
+        "question": MessageLookupByLibrary.simpleMessage("Question"),
         "reset": MessageLookupByLibrary.simpleMessage("Reset"),
+        "second": MessageLookupByLibrary.simpleMessage("Second"),
+        "second_question":
+            MessageLookupByLibrary.simpleMessage("Second / \n ques"),
         "single_player": MessageLookupByLibrary.simpleMessage("Single Player"),
         "true_string": MessageLookupByLibrary.simpleMessage("Correct"),
         "welcome": MessageLookupByLibrary.simpleMessage("Hi Welcome")
