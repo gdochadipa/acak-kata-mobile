@@ -1,0 +1,20 @@
+{
+  "welcome" : "Hi Welcome",
+  "listLanguage": "List Language",
+  "code": "en",
+  "true_string": "Correct",
+  "false_string": "Wrong",
+  "of_string" : "of",
+  "single_player" : "Single Player",
+  "multi_player" : "Multi Player",
+  "exit": "Exit",
+  "play": "Play",
+  "next": "Next",
+  "back": "Back",
+  "delete": "Delete",
+  "reset": "Reset",
+  "answer" : "Answer",
+  "exit_game":"Do you want to exit game? the progress will be lost",
+  "exit_game_yes":"Yes, Exit",
+  "exit_game_no":"No, Continue"
+}

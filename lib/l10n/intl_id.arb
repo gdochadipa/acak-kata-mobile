@@ -1,0 +1,20 @@
+{
+    "welcome": "Hi Welcome",
+    "listLanguage" : "Pilih Bahasa untuk Permainan",
+    "code" : "id",
+    "true_string" : "Benar",
+    "false_string": "Salah",
+    "of_string": "dari",
+    "single_player": "Pemain Tunggal",
+    "multi_player": "Pemain Ganda",
+    "exit" : "Keluar",
+    "play" : "Main",
+    "next" :  "Selanjutnya",
+    "back" : "Kembali",
+    "delete" : "Hapus",
+    "reset" : "Reset",
+    "answer": "Jawaban",
+    "exit_game": "Ingin keluar permainan ?",
+    "exit_game_yes": "Ya, ingin keluar",
+    "exit_game_no": "Tidak, ingin lanjut"
+}

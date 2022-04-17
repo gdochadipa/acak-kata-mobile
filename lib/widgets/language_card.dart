@@ -1,3 +1,4 @@
+import 'package:acakkata/generated/l10n.dart';
 import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/pages/in_game/game_play_page.dart';
 import 'package:acakkata/pages/in_game/prepare_game_page.dart';
@@ -24,6 +25,7 @@ class LanguageCard extends StatefulWidget {
 class _LanguageCardState extends State<LanguageCard> {
   @override
   Widget build(BuildContext context) {
+    S? setLanguage = S.of(context);
     void handlePopUpPress() {
       showModalBottomSheet(
           backgroundColor: transparentColor,
@@ -123,7 +125,9 @@ class _LanguageCardState extends State<LanguageCard> {
                   FittedBox(
                     fit: BoxFit.contain,
                     child: AutoSizeText(
-                      '${widget.language.language_name}',
+                      (setLanguage.code == 'en'
+                          ? '${widget.language.language_name_en}'
+                          : '${widget.language.language_name_id}'),
                       style: whiteTextStyle.copyWith(fontWeight: bold),
                       presetFontSizes: [18, 16],
                       maxLines: 2,

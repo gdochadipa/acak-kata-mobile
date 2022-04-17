@@ -130,6 +130,8 @@ flutter:
     - assets/images/icon_play_white.png
     - assets/images/icon_profile.png
     - assets/images/icon_setting.png
+    - assets/images/en_flag.png
+    - assets/images/id_flag.png
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
@@ -159,3 +161,5 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+flutter_intl:
+  enabled: true

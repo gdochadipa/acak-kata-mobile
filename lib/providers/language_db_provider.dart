@@ -124,7 +124,9 @@ class LanguageDBProvider with ChangeNotifier {
           "language_name",
           "language_icon",
           "language_collection",
-          "language_code"
+          "language_code",
+          "language_name_en",
+          "language_name_id"
         ]);
       });
 

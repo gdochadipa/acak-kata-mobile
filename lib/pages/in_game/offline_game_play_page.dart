@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'dart:developer';
 import 'dart:math';
 
+import 'package:acakkata/generated/l10n.dart';
 import 'package:acakkata/models/level_model.dart';
 import 'package:acakkata/models/word_language_model.dart';
 import 'package:acakkata/models/language_model.dart';
@@ -403,7 +404,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
                       height: 12,
                     ),
                     Text(
-                      'Ingin keluar permainan ?',
+                      '${S.of(context).exit_game}',
                       style: headerText2.copyWith(
                         fontSize: 18,
                         fontWeight: semiBold,
@@ -431,7 +432,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
                                 ),
                               ),
                               child: Text(
-                                'Ya, ingin keluar',
+                                '${S.of(context).exit_game_yes}',
                                 style: whiteTextStyle.copyWith(
                                   fontSize: 12,
                                   fontWeight: medium,
@@ -456,7 +457,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
                                 ),
                               ),
                               child: Text(
-                                'Tidak, ingin lanjut',
+                                '${S.of(context).exit_game_no}',
                                 style: primaryTextStyle.copyWith(
                                   fontSize: 12,
                                   fontWeight: medium,
@@ -512,8 +513,6 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
           _timerScore!.cancel();
           _timerInGame!.cancel();
 
-          logger.d("is listQuestionQueue ${listQuestionQueue!.isEmpty}");
-
           ///currentArrayQuestion == (totalQuestion - 1)
           if (!((listQuestionQueue!.length - 1) > 0)) {
             /**
@@ -564,7 +563,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           duration: Duration(milliseconds: 700),
           content: Text(
-            "Benar !",
+            "${S.of(context).true_string} !",
             textAlign: TextAlign.center,
             style: whiteTextStyle.copyWith(fontWeight: bold, fontSize: 20),
           ),
@@ -586,7 +585,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
             duration: Duration(milliseconds: 700),
             backgroundColor: alertColor,
             content: Text(
-              "Salah !",
+              "${S.of(context).false_string} !",
               textAlign: TextAlign.center,
               style: whiteTextStyle.copyWith(fontWeight: bold, fontSize: 20),
             )));
@@ -613,6 +612,8 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
 
   @override
   Widget build(BuildContext context) {
+    S? setLanguage = S.of(context);
+
     /// perhitungan waktu permainan saat menjawab soal
     Widget TextTime() {
       return Container(
@@ -656,7 +657,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
                 controller: answerController,
                 style: whiteTextStyle.copyWith(fontSize: 18, fontWeight: bold),
                 decoration: InputDecoration.collapsed(
-                    hintText: 'Jawaban',
+                    hintText: '${setLanguage.answer}',
                     hintStyle: whiteTextStyle.copyWith(
                         fontSize: 18,
                         fontWeight: medium,
@@ -699,7 +700,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
                 width: 1,
               ),
               Text(
-                'Reset Answer',
+                '${setLanguage.reset}',
                 style: blackTextStyle.copyWith(fontSize: 13, fontWeight: bold),
               )
             ],
@@ -745,7 +746,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
                 width: 5,
               ),
               Text(
-                'Delete',
+                '${setLanguage.delete}',
                 style: blackTextStyle.copyWith(fontSize: 14, fontWeight: bold),
               ),
             ],
@@ -784,7 +785,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
                   width: 5,
                 ),
                 Text(
-                  'Keluar',
+                  '${setLanguage.exit}',
                   style:
                       whiteTextStyle.copyWith(fontSize: 14, fontWeight: bold),
                 ),
@@ -825,7 +826,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
                   width: 5,
                 ),
                 Text(
-                  'Skip',
+                  '${setLanguage.next}',
                   style:
                       primaryTextStyle.copyWith(fontSize: 14, fontWeight: bold),
                 ),
@@ -987,7 +988,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
           alignment: Alignment.centerLeft,
           margin: EdgeInsets.only(left: 5),
           child: Text(
-            "${currentQuestion} of ${totalQuestion}",
+            "${currentQuestion} ${setLanguage.of_string} ${totalQuestion}",
             style: blackTextStyle.copyWith(fontWeight: bold, fontSize: 14),
           ),
         ),
@@ -1000,12 +1001,16 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
               height: 8,
             ),
             Text(
-              "${widget.languageModel!.language_name}",
+              (setLanguage.code == 'en'
+                  ? '${widget.languageModel!.language_name_en}'
+                  : '${widget.languageModel!.language_name_id}'),
               style: headerText2.copyWith(
                   fontWeight: extraBold, fontSize: 20, color: primaryTextColor),
             ),
             Text(
-              widget.isOnline == true ? 'Multiplayer' : 'Single Player',
+              widget.isOnline == true
+                  ? '${setLanguage.multi_player}'
+                  : '${setLanguage.single_player}',
               style:
                   primaryTextStyle.copyWith(fontSize: 14, fontWeight: medium),
             ),
@@ -1070,7 +1075,9 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
                     margin: EdgeInsets.only(bottom: 30, left: 15, right: 15),
                     child: Center(
                       child: Text(
-                        resultAnswerStatus ? "Benar" : "Salah",
+                        resultAnswerStatus
+                            ? "${setLanguage.true_string}"
+                            : "${setLanguage.false_string}",
                         style: whiteTextStyle.copyWith(
                             fontSize: 32, fontWeight: bold),
                       ),
