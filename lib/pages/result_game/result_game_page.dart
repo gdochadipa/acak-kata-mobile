@@ -16,10 +16,12 @@ import 'package:provider/provider.dart';
 class ResultGamePage extends StatefulWidget {
   // const ResultGamePage({Key? key}) : super(key: key);
   late final LanguageModel? languageModel;
-  late final int finalScore;
+  late final double finalTimeRate;
+  late final double finalScoreRate;
   late final LevelModel? level;
 
-  ResultGamePage(this.languageModel, this.finalScore, this.level);
+  ResultGamePage(
+      this.languageModel, this.finalTimeRate, this.finalScoreRate, this.level);
   @override
   _ResultGamePageState createState() => _ResultGamePageState();
 }
@@ -36,14 +38,22 @@ class _ResultGamePageState extends State<ResultGamePage> {
     isLoading = true;
     _languageDBProvider =
         Provider.of<LanguageDBProvider>(context, listen: false);
+    // logger.d(widget.finalScoreRate);
+    // logger.d(widget.finalTimeRate);
+    int finalScore =
+        ((widget.finalScoreRate + widget.finalTimeRate) * 100).round();
     try {
-      if (widget.finalScore > widget.level!.current_score!.toDouble()) {
+      /// !bug
+      if (finalScore > widget.level!.current_score!.toDouble()) {
         if (await _languageDBProvider!
-            .setUpdateLevelProgress(widget.finalScore, widget.level!.id)) {
+            .setUpdateLevelProgress(finalScore, widget.level!.id)) {
+          logger.d(" berhasil update xp level, cek db ");
+        }
+        if (widget.level!.target_score!.toDouble() <= finalScore) {
           if (await _languageDBProvider!.updateNextLevel(widget.level)) {
             logger.d("berhasil update, coba cek di db");
           } else {
-            logger.d(" berhasil update xp level, cek db ");
+            logger.d(" gagal membuka level selanjutnya ");
           }
         }
       }
@@ -126,6 +136,8 @@ class _ResultGamePageState extends State<ResultGamePage> {
     }
 
     Widget scoreMatch() {
+      int finalScore =
+          ((widget.finalScoreRate + widget.finalTimeRate) * 100).round();
       return Container(
         margin: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
         padding: EdgeInsets.symmetric(vertical: 10),
@@ -135,7 +147,7 @@ class _ResultGamePageState extends State<ResultGamePage> {
         ),
         child: Center(
           child: Text(
-            "+ ${widget.finalScore}",
+            "+ ${finalScore.toStringAsFixed(0)} %",
             style: whiteTextStyle.copyWith(fontSize: 32, fontWeight: bold),
           ),
         ),

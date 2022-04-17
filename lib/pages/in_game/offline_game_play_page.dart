@@ -83,6 +83,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
   bool resultAnswerStatus = false;
   List<int>? listQuestionQueue = [];
   int queueNow = 0;
+  List<int> scoreTime = [];
 
   Future<bool> getInit() async {
     LanguageDBProvider langProvider =
@@ -276,10 +277,22 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
         _timerInGame!.cancel();
         _timerScore!.cancel();
         if (endGame) {
+          double allScoreTime = scoreTime.fold(
+              0, (previousValue, element) => previousValue + element);
+          double newScoreTime = 0;
+          double newScoreCount = 0;
+          if (allScoreTime > 0 && scoreTime.length > 0) {
+            newScoreTime =
+                (((allScoreTime / scoreTime.length) / (numberCountDown)) * 0.4);
+          }
+          if (scoreCount > 0) {
+            newScoreCount = ((scoreCount / totalQuestion) * 0.6);
+          }
+
           Navigator.pushAndRemoveUntil(
               context,
-              CustomPageRoute(ResultGamePage(
-                  widget.languageModel, scoreCount, widget.levelModel)),
+              CustomPageRoute(ResultGamePage(widget.languageModel, newScoreTime,
+                  newScoreCount, widget.levelModel)),
               (route) => false);
         } else {
           /**
@@ -504,8 +517,9 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
            * mekanisme perhitungan skor
            * ! mekanisme perhitungan berubah
            */
-          score = countDownAnswer * 10;
-          scoreCount += score;
+          score = 1;
+          scoreTime.add(countDownAnswer);
+          scoreCount += 1;
 
           /**
            * persiapan untuk next soal
