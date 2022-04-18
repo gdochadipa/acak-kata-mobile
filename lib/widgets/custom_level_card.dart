@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:acakkata/generated/l10n.dart';
 import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/models/level_model.dart';
@@ -75,8 +77,7 @@ class CustomLevelCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            margin: const EdgeInsets.only(
-                                left: 8, right: 8, top: 15),
+                            margin: EdgeInsets.only(left: 8, right: 8, top: 15),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -293,7 +294,9 @@ class CustomLevelCard extends StatelessWidget {
                                         ],
                                       ),
                                       onPressed: () {
-                                        _saveForm();
+                                        Timer(Duration(milliseconds: 500), () {
+                                          _saveForm();
+                                        });
                                       }),
                                 )),
                                 SizedBox(

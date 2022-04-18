@@ -27,85 +27,84 @@ class ItemLevelCard extends StatelessWidget {
           builder: (BuildContext context) {
             S? setLanguage = S.of(context);
             return Container(
-              width: MediaQuery.of(context).size.width,
               child: Dialog(
                 insetAnimationCurve: Curves.easeInOut,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12.0)),
-                child: PopoverListView(
-                    child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(left: 8, right: 8),
+                child: SingleChildScrollView(
+                  child: PopoverListView(
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(left: 8, right: 8),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                                margin: EdgeInsets.all(5),
+                                child: Stack(
+                                  children: [
+                                    Align(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            '${levelModel!.level_name}',
+                                            style: blackTextStyle.copyWith(
+                                                fontSize: 21, fontWeight: bold),
+                                          ),
+                                          Text(
+                                            (setLanguage.code == 'en'
+                                                ? '${languageModel!.language_name_en}'
+                                                : '${languageModel!.language_name_id}'),
+                                            style: blackTextStyle.copyWith(
+                                                fontSize: 14,
+                                                fontWeight: medium),
+                                          )
+                                        ],
+                                      ),
+                                      alignment: Alignment.topLeft,
+                                    ),
+                                    Align(
+                                      child: Text(
+                                        '${levelModel!.current_score}/${levelModel!.target_score}',
+                                        style: blackTextStyle.copyWith(
+                                            fontSize: 16, fontWeight: semiBold),
+                                      ),
+                                      alignment: Alignment.topRight,
+                                    ),
+                                  ],
+                                )),
+                            Container(
                               margin: EdgeInsets.all(5),
-                              child: Stack(
-                                children: [
-                                  Align(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          '${levelModel!.level_name}',
-                                          style: blackTextStyle.copyWith(
-                                              fontSize: 21, fontWeight: bold),
-                                        ),
-                                        Text(
-                                          (setLanguage.code == 'en'
-                                              ? '${languageModel!.language_name_en}'
-                                              : '${languageModel!.language_name_id}'),
-                                          style: blackTextStyle.copyWith(
-                                              fontSize: 14, fontWeight: medium),
-                                        )
-                                      ],
-                                    ),
-                                    alignment: Alignment.topLeft,
-                                  ),
-                                  Align(
-                                    child: Text(
-                                      '${levelModel!.current_score}/${levelModel!.target_score}',
-                                      style: blackTextStyle.copyWith(
-                                          fontSize: 16, fontWeight: semiBold),
-                                    ),
-                                    alignment: Alignment.topRight,
-                                  ),
-                                ],
-                              )),
-                          Container(
-                            margin: EdgeInsets.all(5),
-                            decoration: BoxDecoration(
-                                // border: Border.all(color: blackColor),
-                                color: backgroundColor8,
-                                borderRadius: BorderRadius.circular(5)),
-                            child: SizedBox(
-                              height: 10,
-                              child: LinearProgressIndicator(
-                                value: levelModel!.current_score!.toDouble() /
-                                    levelModel!.target_score!.toDouble(),
-                                backgroundColor: grayColor2,
-                                valueColor:
-                                    AlwaysStoppedAnimation<Color>(greenColor),
+                              decoration: BoxDecoration(
+                                  // border: Border.all(color: blackColor),
+                                  color: backgroundColor8,
+                                  borderRadius: BorderRadius.circular(5)),
+                              child: SizedBox(
+                                height: 10,
+                                child: LinearProgressIndicator(
+                                  value: levelModel!.current_score!.toDouble() /
+                                      levelModel!.target_score!.toDouble(),
+                                  backgroundColor: grayColor2,
+                                  valueColor:
+                                      AlwaysStoppedAnimation<Color>(greenColor),
+                                ),
                               ),
-                            ),
-                          )
-                        ],
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 8, right: 8, top: 25),
-                      padding: EdgeInsets.all(11),
-                      decoration: BoxDecoration(
-                        color: grayColor2,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Flexible(
-                        flex: 1,
-                        fit: FlexFit.tight,
+                      Container(
+                        margin:
+                            const EdgeInsets.only(left: 8, right: 8, top: 25),
+                        padding: EdgeInsets.all(11),
+                        decoration: BoxDecoration(
+                          color: grayColor2,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -142,7 +141,7 @@ class ItemLevelCard extends StatelessWidget {
                                         child: Text(
                                           "${setLanguage.letter}",
                                           style: blackTextStyle.copyWith(
-                                              fontSize: 18, fontWeight: medium),
+                                              fontSize: 12, fontWeight: medium),
                                         ),
                                       )
                                     ],
@@ -183,7 +182,7 @@ class ItemLevelCard extends StatelessWidget {
                                         child: Text(
                                           "${setLanguage.second_question}",
                                           style: blackTextStyle.copyWith(
-                                              fontSize: 12, fontWeight: medium),
+                                              fontSize: 10, fontWeight: medium),
                                         ),
                                       )
                                     ],
@@ -221,7 +220,7 @@ class ItemLevelCard extends StatelessWidget {
                                         child: Text(
                                           "${setLanguage.question}",
                                           style: blackTextStyle.copyWith(
-                                              fontSize: 18, fontWeight: medium),
+                                              fontSize: 13, fontWeight: medium),
                                         ),
                                       )
                                     ],
@@ -230,89 +229,91 @@ class ItemLevelCard extends StatelessWidget {
                           ],
                         ),
                       ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 8, right: 8, top: 30),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Flexible(
-                              child: Container(
-                            child: ClickyButton(
-                                color: greenColor,
-                                shadowColor: greenAccentColor,
-                                width: 120,
-                                height: 60,
-                                child: Wrap(
-                                  children: [
-                                    Text(
-                                      '${setLanguage.play}',
-                                      style: whiteTextStyle.copyWith(
-                                          fontSize: 14, fontWeight: bold),
-                                    ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    Image.asset(
-                                      'assets/images/icon_play_white.png',
-                                      height: 25,
-                                      width: 25,
-                                    )
-                                  ],
-                                ),
-                                onPressed: () {
-                                  Timer(Duration(milliseconds: 500), () {
-                                    Navigator.push(
-                                        context,
-                                        CustomPageRoute(OfflineGamePlayPage(
-                                          languageModel: languageModel,
-                                          selectedQuestion:
-                                              levelModel!.level_question_count,
-                                          selectedTime: levelModel!.level_time,
-                                          isHost: 0,
-                                          levelWords: levelModel!.level_words,
-                                          isOnline: false,
-                                          Stage: levelModel!.level_name,
-                                          levelModel: levelModel,
-                                          isCustom: false,
-                                        )));
-                                  });
-                                }),
-                          )),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Flexible(
-                              child: Container(
-                            child: ClickyButton(
-                                color: purpleColor,
-                                shadowColor: purpleAccentColor,
-                                width: 120,
-                                height: 60,
-                                child: Wrap(
-                                  children: [
-                                    Text(
-                                      '${setLanguage.challenge}',
-                                      style: whiteTextStyle.copyWith(
-                                          fontSize: 14, fontWeight: bold),
-                                    ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    Image.asset(
-                                      'assets/images/icon_group_white.png',
-                                      height: 25,
-                                      width: 25,
-                                    )
-                                  ],
-                                ),
-                                onPressed: () {}),
-                          ))
-                        ],
+                      Container(
+                        margin:
+                            const EdgeInsets.only(left: 8, right: 8, top: 30),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Flexible(
+                                child: Container(
+                              child: ClickyButton(
+                                  color: greenColor,
+                                  shadowColor: greenAccentColor,
+                                  width: 120,
+                                  height: 60,
+                                  child: Wrap(
+                                    children: [
+                                      Text(
+                                        '${setLanguage.play}',
+                                        style: whiteTextStyle.copyWith(
+                                            fontSize: 14, fontWeight: bold),
+                                      ),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      Image.asset(
+                                        'assets/images/icon_play_white.png',
+                                        height: 25,
+                                        width: 25,
+                                      )
+                                    ],
+                                  ),
+                                  onPressed: () {
+                                    Timer(Duration(milliseconds: 500), () {
+                                      Navigator.push(
+                                          context,
+                                          CustomPageRoute(OfflineGamePlayPage(
+                                            languageModel: languageModel,
+                                            selectedQuestion: levelModel!
+                                                .level_question_count,
+                                            selectedTime:
+                                                levelModel!.level_time,
+                                            isHost: 0,
+                                            levelWords: levelModel!.level_words,
+                                            isOnline: false,
+                                            Stage: levelModel!.level_name,
+                                            levelModel: levelModel,
+                                            isCustom: false,
+                                          )));
+                                    });
+                                  }),
+                            )),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Flexible(
+                                child: Container(
+                              child: ClickyButton(
+                                  color: purpleColor,
+                                  shadowColor: purpleAccentColor,
+                                  width: 120,
+                                  height: 60,
+                                  child: Wrap(
+                                    children: [
+                                      Text(
+                                        '${setLanguage.challenge}',
+                                        style: whiteTextStyle.copyWith(
+                                            fontSize: 14, fontWeight: bold),
+                                      ),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      Image.asset(
+                                        'assets/images/icon_group_white.png',
+                                        height: 25,
+                                        width: 25,
+                                      )
+                                    ],
+                                  ),
+                                  onPressed: () {}),
+                            ))
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                )),
+                    ],
+                  )),
+                ),
               ),
             );
           });
