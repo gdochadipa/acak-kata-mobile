@@ -22,5 +22,18 @@
     "ques": "Soal",
     "question": "Soal",
     "second_question":"Detik / \n Soal",
-    "challenge": "Tantang \n Teman"
+    "challenge": "Tantang \n Teman",
+    "question_count": "Jumlah Soal",
+    "word_length" : "Panjang Kata",
+    "time": "Waktu",
+    "question_number": "Isi Jumlah Soal !",
+    "question_number_error_min": "Minimal lima soal !",
+    "question_number_error_max": "Minimal 25 soal !",
+    "word_length_form": "Isi panjang kata !",
+    "word_length_form_error_min": "Minimal panjang 3 kata !",
+    "word_length_form_error_max": "Minimal panjang 10 kata !",
+    "question_time": "Isi pajang waktu !",
+    "question_time_error_min": "Minimal waktu 7 detik !",
+    "question_time_error_max": "Maximal waktu 30 detik !",
+    "custom_level": "Kustom Level"
 }

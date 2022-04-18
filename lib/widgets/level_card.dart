@@ -274,6 +274,7 @@ class ItemLevelCard extends StatelessWidget {
                                           isOnline: false,
                                           Stage: levelModel!.level_name,
                                           levelModel: levelModel,
+                                          isCustom: false,
                                         )));
                                   });
                                 }),

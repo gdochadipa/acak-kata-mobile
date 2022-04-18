@@ -27,6 +27,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "challenge":
             MessageLookupByLibrary.simpleMessage("Challenge \n Friends"),
         "code": MessageLookupByLibrary.simpleMessage("en"),
+        "custom_level": MessageLookupByLibrary.simpleMessage("Custom Level"),
         "delete": MessageLookupByLibrary.simpleMessage("Delete"),
         "exit": MessageLookupByLibrary.simpleMessage("Exit"),
         "exit_game": MessageLookupByLibrary.simpleMessage(
@@ -42,12 +43,34 @@ class MessageLookup extends MessageLookupByLibrary {
         "play": MessageLookupByLibrary.simpleMessage("Play"),
         "ques": MessageLookupByLibrary.simpleMessage("ques"),
         "question": MessageLookupByLibrary.simpleMessage("Question"),
+        "question_count":
+            MessageLookupByLibrary.simpleMessage("Number of Questions"),
+        "question_number":
+            MessageLookupByLibrary.simpleMessage("Question Number is empty !"),
+        "question_number_error_max":
+            MessageLookupByLibrary.simpleMessage("Max 25 Ques !"),
+        "question_number_error_min":
+            MessageLookupByLibrary.simpleMessage("Min 5 Ques !"),
+        "question_time":
+            MessageLookupByLibrary.simpleMessage("Time is empty !"),
+        "question_time_error_max":
+            MessageLookupByLibrary.simpleMessage("Max 30 second per Ques !"),
+        "question_time_error_min":
+            MessageLookupByLibrary.simpleMessage("Min 7 second per Ques !"),
         "reset": MessageLookupByLibrary.simpleMessage("Reset"),
         "second": MessageLookupByLibrary.simpleMessage("Second"),
         "second_question":
             MessageLookupByLibrary.simpleMessage("Second / \n ques"),
         "single_player": MessageLookupByLibrary.simpleMessage("Single Player"),
+        "time": MessageLookupByLibrary.simpleMessage("Time"),
         "true_string": MessageLookupByLibrary.simpleMessage("Correct"),
-        "welcome": MessageLookupByLibrary.simpleMessage("Hi Welcome")
+        "welcome": MessageLookupByLibrary.simpleMessage("Hi Welcome"),
+        "word_length": MessageLookupByLibrary.simpleMessage("Word Length"),
+        "word_length_form":
+            MessageLookupByLibrary.simpleMessage("Length word is empty !"),
+        "word_length_form_error_max":
+            MessageLookupByLibrary.simpleMessage("Max 10 letter !"),
+        "word_length_form_error_min":
+            MessageLookupByLibrary.simpleMessage("Min 3 letter !")
       };
 }

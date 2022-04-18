@@ -289,6 +289,136 @@ class S {
       args: [],
     );
   }
+
+  /// `Number of Questions`
+  String get question_count {
+    return Intl.message(
+      'Number of Questions',
+      name: 'question_count',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Word Length`
+  String get word_length {
+    return Intl.message(
+      'Word Length',
+      name: 'word_length',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Time`
+  String get time {
+    return Intl.message(
+      'Time',
+      name: 'time',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Question Number is empty !`
+  String get question_number {
+    return Intl.message(
+      'Question Number is empty !',
+      name: 'question_number',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Min 5 Ques !`
+  String get question_number_error_min {
+    return Intl.message(
+      'Min 5 Ques !',
+      name: 'question_number_error_min',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Max 25 Ques !`
+  String get question_number_error_max {
+    return Intl.message(
+      'Max 25 Ques !',
+      name: 'question_number_error_max',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Length word is empty !`
+  String get word_length_form {
+    return Intl.message(
+      'Length word is empty !',
+      name: 'word_length_form',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Min 3 letter !`
+  String get word_length_form_error_min {
+    return Intl.message(
+      'Min 3 letter !',
+      name: 'word_length_form_error_min',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Max 10 letter !`
+  String get word_length_form_error_max {
+    return Intl.message(
+      'Max 10 letter !',
+      name: 'word_length_form_error_max',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Time is empty !`
+  String get question_time {
+    return Intl.message(
+      'Time is empty !',
+      name: 'question_time',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Min 7 second per Ques !`
+  String get question_time_error_min {
+    return Intl.message(
+      'Min 7 second per Ques !',
+      name: 'question_time_error_min',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Max 30 second per Ques !`
+  String get question_time_error_max {
+    return Intl.message(
+      'Max 30 second per Ques !',
+      name: 'question_time_error_max',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Custom Level`
+  String get custom_level {
+    return Intl.message(
+      'Custom Level',
+      name: 'custom_level',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

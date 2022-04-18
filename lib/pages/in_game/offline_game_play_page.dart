@@ -34,6 +34,7 @@ class OfflineGamePlayPage extends StatefulWidget {
   late final bool? isOnline;
   late final String? Stage;
   late final LevelModel? levelModel;
+  late final bool? isCustom;
   OfflineGamePlayPage(
       {this.languageModel,
       this.selectedQuestion,
@@ -42,7 +43,8 @@ class OfflineGamePlayPage extends StatefulWidget {
       this.levelWords,
       this.isOnline,
       this.Stage,
-      this.levelModel});
+      this.levelModel,
+      this.isCustom});
 
   @override
   _OfflineGamePlayPageState createState() => _OfflineGamePlayPageState();
@@ -292,7 +294,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
           Navigator.pushAndRemoveUntil(
               context,
               CustomPageRoute(ResultGamePage(widget.languageModel, newScoreTime,
-                  newScoreCount, widget.levelModel)),
+                  newScoreCount, widget.levelModel, widget.isCustom)),
               (route) => false);
         } else {
           /**

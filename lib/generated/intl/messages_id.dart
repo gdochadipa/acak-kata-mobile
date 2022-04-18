@@ -26,6 +26,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "back": MessageLookupByLibrary.simpleMessage("Kembali"),
         "challenge": MessageLookupByLibrary.simpleMessage("Tantang \n Teman"),
         "code": MessageLookupByLibrary.simpleMessage("id"),
+        "custom_level": MessageLookupByLibrary.simpleMessage("Kustom Level"),
         "delete": MessageLookupByLibrary.simpleMessage("Hapus"),
         "exit": MessageLookupByLibrary.simpleMessage("Keluar"),
         "exit_game":
@@ -44,12 +45,33 @@ class MessageLookup extends MessageLookupByLibrary {
         "play": MessageLookupByLibrary.simpleMessage("Main"),
         "ques": MessageLookupByLibrary.simpleMessage("Soal"),
         "question": MessageLookupByLibrary.simpleMessage("Soal"),
+        "question_count": MessageLookupByLibrary.simpleMessage("Jumlah Soal"),
+        "question_number":
+            MessageLookupByLibrary.simpleMessage("Isi Jumlah Soal !"),
+        "question_number_error_max":
+            MessageLookupByLibrary.simpleMessage("Minimal 25 soal !"),
+        "question_number_error_min":
+            MessageLookupByLibrary.simpleMessage("Minimal lima soal !"),
+        "question_time":
+            MessageLookupByLibrary.simpleMessage("Isi pajang waktu !"),
+        "question_time_error_max":
+            MessageLookupByLibrary.simpleMessage("Maximal waktu 30 detik !"),
+        "question_time_error_min":
+            MessageLookupByLibrary.simpleMessage("Minimal waktu 7 detik !"),
         "reset": MessageLookupByLibrary.simpleMessage("Reset"),
         "second": MessageLookupByLibrary.simpleMessage("Detik"),
         "second_question":
             MessageLookupByLibrary.simpleMessage("Detik / \n Soal"),
         "single_player": MessageLookupByLibrary.simpleMessage("Pemain Tunggal"),
+        "time": MessageLookupByLibrary.simpleMessage("Waktu"),
         "true_string": MessageLookupByLibrary.simpleMessage("Benar"),
-        "welcome": MessageLookupByLibrary.simpleMessage("Hi Welcome")
+        "welcome": MessageLookupByLibrary.simpleMessage("Hi Welcome"),
+        "word_length": MessageLookupByLibrary.simpleMessage("Panjang Kata"),
+        "word_length_form":
+            MessageLookupByLibrary.simpleMessage("Isi panjang kata !"),
+        "word_length_form_error_max":
+            MessageLookupByLibrary.simpleMessage("Minimal panjang 10 kata !"),
+        "word_length_form_error_min":
+            MessageLookupByLibrary.simpleMessage("Minimal panjang 3 kata !")
       };
 }

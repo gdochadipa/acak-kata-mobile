@@ -375,6 +375,7 @@ class _PrepareGamePageState extends State<PrepareGamePage> {
                     isHost: 1,
                     levelWords: 3,
                     Stage: "Level 1",
+                    isCustom: false,
                   )));
             },
             style: TextButton.styleFrom(

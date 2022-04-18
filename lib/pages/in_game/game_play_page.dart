@@ -167,8 +167,8 @@ class _GamePlayPageState extends State<GamePlayPage> {
         timer.cancel();
         Navigator.push(
             context,
-            CustomPageRoute(
-                ResultGamePage(widget.languageModel, 0, 0, widget.levelModel)));
+            CustomPageRoute(ResultGamePage(
+                widget.languageModel, 0, 0, widget.levelModel, true)));
       } else {
         setState(() {
           currentArrayQuestion++;
@@ -263,7 +263,7 @@ class _GamePlayPageState extends State<GamePlayPage> {
           Navigator.push(
               context,
               CustomPageRoute(ResultGamePage(
-                  widget.languageModel, 0, 0, widget.levelModel)));
+                  widget.languageModel, 0, 0, widget.levelModel, true)));
         } else {
           currentArrayQuestion++;
           currentQuestion++;
