@@ -19,6 +19,7 @@ import 'package:animations/animations.dart';
 import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:draggable_home/draggable_home.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -78,6 +79,105 @@ class _NewHomePageState extends State<NewHomePage> {
     S? setLanguage = S.of(context);
 
     List<LanguageModel>? listLanguageModel = languageDBProvider.languageList;
+
+    Future<void> showCancelGame() async {
+      return showDialog(
+          context: context,
+          builder: (BuildContext context) => Container(
+                width: MediaQuery.of(context).size.width - (2 * defaultMargin),
+                child: AlertDialog(
+                  backgroundColor: backgroundColor1,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  content: SingleChildScrollView(
+                      child: Column(
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Icon(
+                            Icons.close,
+                            color: primaryTextColor,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 12,
+                      ),
+                      Text(
+                        '${S.of(context).exit_game_menu}',
+                        style: headerText2.copyWith(
+                          fontSize: 18,
+                          fontWeight: semiBold,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 12,
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(top: 15, right: 5),
+                        child: Row(
+                          children: [
+                            Container(
+                              margin: EdgeInsets.all(2),
+                              height: 44,
+                              child: TextButton(
+                                onPressed: () {
+                                  SystemChannels.platform
+                                      .invokeMethod('SystemNavigator.pop');
+                                },
+                                style: TextButton.styleFrom(
+                                  backgroundColor: primaryColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                child: Text(
+                                  '${S.of(context).exit_game_yes}',
+                                  style: whiteTextStyle.copyWith(
+                                    fontSize: 12,
+                                    fontWeight: medium,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Container(
+                                child: Container(
+                              margin: EdgeInsets.all(5),
+                              height: 44,
+                              child: TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                style: TextButton.styleFrom(
+                                  side: BorderSide(
+                                      width: 1, color: backgroundColor2),
+                                  backgroundColor: backgroundColor1,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                child: Text(
+                                  '${S.of(context).exit_game_no}',
+                                  style: primaryTextStyle.copyWith(
+                                    fontSize: 12,
+                                    fontWeight: medium,
+                                  ),
+                                ),
+                              ),
+                            ))
+                          ],
+                        ),
+                      )
+                    ],
+                  )),
+                ),
+              ));
+    }
 
     showListLanguagePop() async {
       return showModal(
@@ -194,7 +294,9 @@ class _NewHomePageState extends State<NewHomePage> {
 
     Widget btnExits() {
       return BouncingWidget(
-        onPressed: () {},
+        onPressed: () {
+          showCancelGame();
+        },
         child: Container(
           width: 39,
           height: 39,

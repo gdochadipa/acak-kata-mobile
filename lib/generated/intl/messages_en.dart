@@ -32,6 +32,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "exit": MessageLookupByLibrary.simpleMessage("Exit"),
         "exit_game": MessageLookupByLibrary.simpleMessage(
             "Do you want to exit game? the progress will be lost"),
+        "exit_game_menu":
+            MessageLookupByLibrary.simpleMessage("Do you want to exit game?"),
         "exit_game_no": MessageLookupByLibrary.simpleMessage("No, Continue"),
         "exit_game_yes": MessageLookupByLibrary.simpleMessage("Yes, Exit"),
         "false_string": MessageLookupByLibrary.simpleMessage("Wrong"),

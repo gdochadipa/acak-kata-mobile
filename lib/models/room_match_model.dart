@@ -7,7 +7,7 @@ class RoomMatchModel {
   String? room_code;
   String? channel_code;
   int? status_game;
-  DateTime? time_start;
+  DateTime? datetime_match;
   int? totalQuestion;
   int? time_match;
   int? max_player;
@@ -23,7 +23,7 @@ class RoomMatchModel {
       this.room_code,
       this.channel_code,
       this.status_game,
-      this.time_start,
+      this.datetime_match,
       this.totalQuestion,
       this.time_match,
       this.max_player,
@@ -43,7 +43,7 @@ class RoomMatchModel {
     channel_code = json['channel_code'];
     status_game = int.parse('${json['status_game'] ?? 0}');
     time_match = int.parse('${json['time_match'] ?? 0}');
-    time_start = DateTime.parse('${json['time_start']}');
+    datetime_match = DateTime.parse('${json['time_start']}');
     totalQuestion = int.parse('${json['total_question'] ?? 0}');
     max_player = int.parse('${json['max_player'] ?? 0}');
     createdAt = DateTime.parse(json['createdAt'].toString());
@@ -65,7 +65,7 @@ class RoomMatchModel {
       'status_game': status_game,
       'time_match': time_match,
       'max_player': max_player,
-      'time_start': time_start.toString(),
+      'time_start': datetime_match.toString(),
       'room_match_detail':
           room_match_detail!.map((detail) => detail.toJson()).toList(),
       'created_at': createdAt.toString(),

@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/models/level_model.dart';
 import 'package:acakkata/models/user_model.dart';
-import 'package:acakkata/pages/example/example.dart';
 import 'package:acakkata/pages/home_page/main.dart';
 import 'package:acakkata/pages/home_page/new_home_page.dart';
 import 'package:acakkata/pages/result_game/result_game_page.dart';

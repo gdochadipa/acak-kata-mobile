@@ -210,6 +210,16 @@ class S {
     );
   }
 
+  /// `Do you want to exit game?`
+  String get exit_game_menu {
+    return Intl.message(
+      'Do you want to exit game?',
+      name: 'exit_game_menu',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Yes, Exit`
   String get exit_game_yes {
     return Intl.message(

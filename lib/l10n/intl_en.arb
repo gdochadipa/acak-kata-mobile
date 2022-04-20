@@ -15,6 +15,7 @@
   "reset": "Reset",
   "answer" : "Answer",
   "exit_game":"Do you want to exit game? the progress will be lost",
+  "exit_game_menu": "Do you want to exit game?",
   "exit_game_yes":"Yes, Exit",
   "exit_game_no":"No, Continue",
   "letter":"Letter",

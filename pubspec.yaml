@@ -61,6 +61,7 @@ dependencies:
   graphx: ^1.0.3
   auto_size_text: ^3.0.0
   intl: ^0.17.0
+  workmanager: ^0.4.1
 
 dev_dependencies:
   flutter_test:
