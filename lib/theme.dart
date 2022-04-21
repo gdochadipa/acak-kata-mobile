@@ -35,6 +35,9 @@ Color kWhiteGreyColor = Color(0xffF1F1F5);
 Color purpleColor = Color(0xffA076CC);
 Color purpleAccentColor = Color(0xff6C4298);
 
+Color disablePurpleColor = Color(0xffA792C8);
+Color disablePurpleAccentColor = Color(0xff775F9D);
+
 Color greenColor = Color(0xff34D49D);
 Color greenAccentColor = Color(0xff00A06A);
 

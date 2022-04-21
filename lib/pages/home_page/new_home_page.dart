@@ -42,10 +42,7 @@ class _NewHomePageState extends State<NewHomePage> {
     prefs = await SharedPreferences.getInstance();
     setState(() {
       languageChoice = prefs!.getString("choiceLang");
-      if (languageChoice == null) {
-      } else {
-        wasSelectedLanguage = true;
-      }
+      wasSelectedLanguage = prefs!.getBool("wasSelectedLanguage") ?? false;
     });
   }
 
@@ -55,6 +52,7 @@ class _NewHomePageState extends State<NewHomePage> {
       setState(() {
         wasSelectedLanguage = true;
         prefs!.setString("choiceLang", flag);
+        prefs!.setBool("wasSelectedLanguage", true);
       });
     });
   }

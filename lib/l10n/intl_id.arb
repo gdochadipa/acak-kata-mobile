@@ -36,5 +36,6 @@
     "question_time": "Isi pajang waktu !",
     "question_time_error_min": "Minimal waktu 7 detik !",
     "question_time_error_max": "Maximal waktu 30 detik !",
-    "custom_level": "Kustom Level"
+    "custom_level": "Kustom Level",
+    "back_to_menu": "KEMBALI KE MENU"
 }

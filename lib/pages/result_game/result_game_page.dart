@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:acakkata/generated/l10n.dart';
 import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/models/level_model.dart';
+import 'package:acakkata/models/range_result_txt_model.dart';
 import 'package:acakkata/pages/in_game/game_play_page.dart';
 import 'package:acakkata/providers/language_db_provider.dart';
 import 'package:acakkata/theme.dart';
@@ -39,6 +41,7 @@ class _ResultGamePageState extends State<ResultGamePage> {
     isLoading = true;
     _languageDBProvider =
         Provider.of<LanguageDBProvider>(context, listen: false);
+
     // logger.d(widget.finalScoreRate);
     // logger.d(widget.finalTimeRate);
     int finalScore =
@@ -88,6 +91,7 @@ class _ResultGamePageState extends State<ResultGamePage> {
 
   @override
   Widget build(BuildContext context) {
+    S? setLanguage = S.of(context);
     Widget textHeader() {
       return Container(
           margin: EdgeInsets.only(top: 10, left: 10, right: 10),
@@ -96,7 +100,9 @@ class _ResultGamePageState extends State<ResultGamePage> {
             child: Column(
               children: [
                 Text(
-                  '${widget.languageModel?.language_name}',
+                  (setLanguage.code == 'en'
+                      ? '${widget.languageModel?.language_name_en}'
+                      : '${widget.languageModel?.language_name_id}'),
                   textAlign: TextAlign.center,
                   style:
                       whiteTextStyle.copyWith(fontSize: 32, fontWeight: bold),
@@ -132,15 +138,27 @@ class _ResultGamePageState extends State<ResultGamePage> {
             width: 245,
             height: 60,
             child: Text(
-              'KEMBALI KE MENU',
+              "${setLanguage.back_to_menu}",
               style: whiteTextStyle.copyWith(fontSize: 16, fontWeight: bold),
             )),
       );
     }
 
     Widget scoreMatch() {
+      String? resultText = "";
       int finalScore =
           ((widget.finalScoreRate + widget.finalTimeRate) * 100).round();
+      List<RangeResultTxtModel>? rangeRes = _languageDBProvider!.rangeTextList;
+      for (var range in rangeRes!) {
+        if (range.range_min! <= finalScore && range.range_max! >= finalScore) {
+          setState(() {
+            resultText = (setLanguage.code == 'en'
+                ? range.name_range_en
+                : range.name_range_id);
+          });
+        }
+      }
+
       return Container(
         margin: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
         padding: EdgeInsets.symmetric(vertical: 10),
@@ -150,7 +168,7 @@ class _ResultGamePageState extends State<ResultGamePage> {
         ),
         child: Center(
           child: Text(
-            "+ ${finalScore.toStringAsFixed(0)} %",
+            " ${resultText}",
             style: whiteTextStyle.copyWith(fontSize: 32, fontWeight: bold),
           ),
         ),

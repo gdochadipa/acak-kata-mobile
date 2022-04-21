@@ -429,6 +429,16 @@ class S {
       args: [],
     );
   }
+
+  /// `BACK TO MENU`
+  String get back_to_menu {
+    return Intl.message(
+      'BACK TO MENU',
+      name: 'back_to_menu',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -1118,24 +1118,24 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
                   ),
                 ),
               ),
-              ElasticIn(
-                delay: Duration(milliseconds: 50),
-                child: Container(
-                  margin: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: backgroundColor9,
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: Center(
-                    child: Text(
-                      "+ ${pointGet}",
-                      style: whiteTextStyle.copyWith(
-                          fontSize: 32, fontWeight: bold),
-                    ),
-                  ),
-                ),
-              ),
+              // ElasticIn(
+              //   delay: Duration(milliseconds: 50),
+              //   child: Container(
+              //     margin: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+              //     padding: EdgeInsets.all(10),
+              //     decoration: BoxDecoration(
+              //       color: backgroundColor9,
+              //       borderRadius: BorderRadius.circular(5),
+              //     ),
+              //     child: Center(
+              //       child: Text(
+              //         "+ ${pointGet}",
+              //         style: whiteTextStyle.copyWith(
+              //             fontSize: 32, fontWeight: bold),
+              //       ),
+              //     ),
+              //   ),
+              // ),
               ElasticIn(
                 delay: Duration(milliseconds: 50),
                 child: Container(

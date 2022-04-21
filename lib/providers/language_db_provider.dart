@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/models/level_model.dart';
+import 'package:acakkata/models/range_result_txt_model.dart';
 import 'package:acakkata/models/word_language_model.dart';
 import 'package:acakkata/models/word_language_model.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +28,9 @@ class LanguageDBProvider with ChangeNotifier {
 
   List<int>? _queueQuestion;
   List<int>? get queueQuestion => _queueQuestion;
+
+  List<RangeResultTxtModel>? _dataRangeTextList;
+  List<RangeResultTxtModel>? get rangeTextList => _dataRangeTextList;
 
   int get numberCountDown => _numberCountDown;
   int get totalQuestion => _totalQuestion;
@@ -166,6 +170,31 @@ class LanguageDBProvider with ChangeNotifier {
       });
 
       _levelList = levels.map((e) => LevelModel.fromJson(e)).toList();
+      return true;
+    } catch (e) {
+      throw Exception(e);
+      return false;
+    }
+  }
+
+  Future<bool> getRangeText() async {
+    try {
+      if (_db == null) {
+        throw Exception("local data not found");
+      }
+      late List<Map<String, dynamic>> rangeText;
+
+      await _db.transaction((txn) async {
+        rangeText = await txn.query('tb_range_result_text', columns: [
+          "id",
+          "name_range_id",
+          "name_range_en",
+          "range_min",
+          "range_max"
+        ]);
+      });
+      _dataRangeTextList =
+          rangeText.map((e) => RangeResultTxtModel.fromJson(e)).toList();
       return true;
     } catch (e) {
       throw Exception(e);

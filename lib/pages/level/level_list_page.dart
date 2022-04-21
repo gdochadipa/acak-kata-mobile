@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:acakkata/generated/l10n.dart';
 import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/models/level_model.dart';
@@ -5,7 +7,9 @@ import 'package:acakkata/providers/language_db_provider.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/custom_level_card.dart';
 import 'package:acakkata/widgets/level_card.dart';
+import 'package:acakkata/widgets/popover/custom_match_form.dart';
 import 'package:acakkata/widgets/skeleton/level_card_skeleton.dart';
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:logger/logger.dart';
@@ -60,6 +64,15 @@ class _LevelListPageState extends State<LevelListPage> {
   @override
   Widget build(BuildContext context) {
     S? setLanguage = S.of(context);
+
+    showCustomFormLevelPop() async {
+      return showModal(
+          context: context,
+          builder: (BuildContext context) {
+            return CustomMatchForm(languageModel: widget.languageModel);
+          });
+    }
+
     Widget header() {
       return AppBar(
         leading: IconButton(
@@ -97,7 +110,18 @@ class _LevelListPageState extends State<LevelListPage> {
             )
           ],
         ),
-        actions: [],
+        actions: [
+          GestureDetector(
+            onTap: () {
+              showCustomFormLevelPop();
+            },
+            child: Container(
+                width: 30,
+                height: 30,
+                padding: EdgeInsets.only(right: 10),
+                child: Image.asset('assets/images/icon_setting.png')),
+          )
+        ],
       );
     }
 
@@ -117,50 +141,28 @@ class _LevelListPageState extends State<LevelListPage> {
             ),
             Container(
               child: Column(
-                  children: isLoading
-                      ? [
-                          LevelCardSkeleton(),
-                          LevelCardSkeleton(),
-                          LevelCardSkeleton(),
-                          LevelCardSkeleton()
-                        ]
-                      : [
-                          AnimationConfiguration.staggeredList(
-                              position: 0,
+                children: isLoading
+                    ? [
+                        LevelCardSkeleton(),
+                        LevelCardSkeleton(),
+                        LevelCardSkeleton(),
+                        LevelCardSkeleton()
+                      ]
+                    : levelList!
+                        .map(
+                          (e) => AnimationConfiguration.staggeredList(
+                              position: levelList!.indexOf(e),
                               duration: Duration(milliseconds: 1000),
                               child: SlideAnimation(
-                                  horizontalOffset: 50.0,
-                                  child: FadeInAnimation(
-                                    child: CustomLevelCard(
-                                        languageModel: widget.languageModel),
-                                  ))),
-                          for (var e in levelList!)
-                            AnimationConfiguration.staggeredList(
-                                position: levelList!.indexOf(e),
-                                duration: Duration(milliseconds: 1000),
-                                child: SlideAnimation(
-                                  horizontalOffset: 50.0,
-                                  child: FadeInAnimation(
-                                      child: ItemLevelCard(
-                                          levelModel: e,
-                                          languageModel: widget.languageModel)),
-                                ))
-                        ]
-                  // levelList!
-                  //     .map(
-                  //       (e) => AnimationConfiguration.staggeredList(
-                  //           position: levelList!.indexOf(e),
-                  //           duration: Duration(milliseconds: 1000),
-                  //           child: SlideAnimation(
-                  //             horizontalOffset: 50.0,
-                  //             child: FadeInAnimation(
-                  //                 child: ItemLevelCard(
-                  //                     levelModel: e,
-                  //                     languageModel: widget.languageModel)),
-                  //           )),
-                  //     )
-                  //     .toList(),
-                  ),
+                                horizontalOffset: 50.0,
+                                child: FadeInAnimation(
+                                    child: ItemLevelCard(
+                                        levelModel: e,
+                                        languageModel: widget.languageModel)),
+                              )),
+                        )
+                        .toList(),
+              ),
             )
           ],
         ),

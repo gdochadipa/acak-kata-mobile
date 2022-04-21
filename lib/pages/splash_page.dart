@@ -1,20 +1,11 @@
 import 'dart:async';
 import 'dart:io';
-
-import 'package:acakkata/models/language_model.dart';
-import 'package:acakkata/models/level_model.dart';
 import 'package:acakkata/models/user_model.dart';
-import 'package:acakkata/pages/home_page/main.dart';
-import 'package:acakkata/pages/home_page/new_home_page.dart';
-import 'package:acakkata/pages/result_game/result_game_page.dart';
 import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/providers/language_db_provider.dart';
 import 'package:acakkata/providers/language_provider.dart';
 import 'package:acakkata/service/socket_service.dart';
 import 'package:acakkata/theme.dart';
-import 'package:acakkata/widgets/custom_page_route.dart';
-import 'package:acakkata/widgets/custom_page_route_bounce.dart';
-import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
@@ -84,6 +75,7 @@ class _SplashPageState extends State<SplashPage> {
       // }
 
       await langProvider.getLanguage();
+      await langProvider.getRangeText();
       Timer(Duration(milliseconds: 1500), () {
         Navigator.pushNamed(context, '/home');
         // Navigator.push(context, CustomPageRoute(ExamplePage()));
