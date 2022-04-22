@@ -13,6 +13,7 @@ import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/clicky_button.dart';
 import 'package:acakkata/widgets/custom_page_route_bounce.dart';
 import 'package:acakkata/widgets/language_card.dart';
+import 'package:acakkata/widgets/popover/language_app_modal.dart';
 import 'package:acakkata/widgets/popover/popover_listview.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:animations/animations.dart';
@@ -47,9 +48,10 @@ class _NewHomePageState extends State<NewHomePage> {
   }
 
   void onChangeLanguage(String flag) {
-    _changeLanguageProvider!.changeLocale(flag);
     Timer(Duration(milliseconds: 50), () {
+      print("${flag}");
       setState(() {
+        _changeLanguageProvider!.changeLocale(flag);
         wasSelectedLanguage = true;
         prefs!.setString("choiceLang", flag);
         prefs!.setBool("wasSelectedLanguage", true);
@@ -228,6 +230,14 @@ class _NewHomePageState extends State<NewHomePage> {
       );
     }
 
+    showLanguageAppSetting() async {
+      return showModal(
+          context: context,
+          builder: (BuildContext context) {
+            return LanguageAppSettingModal();
+          });
+    }
+
     Widget logoHeader() {
       return ElasticIn(
         child: Container(
@@ -276,7 +286,9 @@ class _NewHomePageState extends State<NewHomePage> {
 
     Widget btnSetting() {
       return BouncingWidget(
-        onPressed: () {},
+        onPressed: () {
+          showLanguageAppSetting();
+        },
         child: Container(
           width: 64,
           height: 64,
@@ -351,7 +363,7 @@ class _NewHomePageState extends State<NewHomePage> {
                             style: whiteTextStyle.copyWith(
                                 fontSize: 16, fontWeight: bold),
                           )
-                        : Text(" Indonesia",
+                        : Text("Indonesia",
                             textAlign: TextAlign.center,
                             style: whiteTextStyle.copyWith(
                                 fontSize: 16, fontWeight: bold)),

@@ -37,5 +37,7 @@
       "question_time_error_min": "Min 7 second per Ques !",
       "question_time_error_max": "Max 30 second per Ques !",
     "custom_level": "Custom Level",
-    "back_to_menu":"BACK TO MENU"
+    "back_to_menu":"BACK TO MENU",
+    "setting": "Setting",
+    "save_setting" : "Save Setting"
 }

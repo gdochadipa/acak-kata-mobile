@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:acakkata/generated/l10n.dart';
 import 'package:acakkata/models/user_model.dart';
 import 'package:acakkata/providers/auth_provider.dart';
+import 'package:acakkata/providers/change_language_provider.dart';
 import 'package:acakkata/providers/language_db_provider.dart';
 import 'package:acakkata/providers/language_provider.dart';
 import 'package:acakkata/service/socket_service.dart';
@@ -46,10 +48,16 @@ class _SplashPageState extends State<SplashPage> {
     LanguageProvider languageProvider =
         Provider.of<LanguageProvider>(context, listen: false);
     SharedPreferences prefs = await SharedPreferences.getInstance();
-
+    ChangeLanguageProvider changeLanguageProvider =
+        Provider.of<ChangeLanguageProvider>(context, listen: false);
+    changeLanguageProvider.changeLocale('id');
     LanguageDBProvider langProvider =
         Provider.of<LanguageDBProvider>(context, listen: false);
     await langProvider.init();
+    String? localLang = prefs.getString("choiceLang");
+    setState(() {
+      changeLanguageProvider.changeLocale(localLang!);
+    });
 
     bool login = prefs.getBool('login') ?? false;
     bool isInGame = prefs.getBool('is_in_game') ?? false;

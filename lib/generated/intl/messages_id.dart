@@ -62,9 +62,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "question_time_error_min":
             MessageLookupByLibrary.simpleMessage("Minimal waktu 7 detik !"),
         "reset": MessageLookupByLibrary.simpleMessage("Reset"),
+        "save_setting":
+            MessageLookupByLibrary.simpleMessage("Simpan Pengaturan"),
         "second": MessageLookupByLibrary.simpleMessage("Detik"),
         "second_question":
             MessageLookupByLibrary.simpleMessage("Detik / \n Soal"),
+        "setting": MessageLookupByLibrary.simpleMessage("Pengaturan"),
         "single_player": MessageLookupByLibrary.simpleMessage("Pemain Tunggal"),
         "time": MessageLookupByLibrary.simpleMessage("Waktu"),
         "true_string": MessageLookupByLibrary.simpleMessage("Benar"),

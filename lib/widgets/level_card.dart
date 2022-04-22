@@ -345,12 +345,18 @@ class ItemLevelCard extends StatelessWidget {
             // border: Border.all(color: blackColor),
             boxShadow: [
               BoxShadow(
-                  color: backgroundColorAccent8,
+                  color: levelModel!.is_unlock == 0
+                      ? disablePurpleAccentColor
+                      : backgroundColorAccent8,
                   spreadRadius: 1,
                   blurRadius: 0,
                   blurStyle: BlurStyle.solid,
                   offset: Offset(-4, 4))
-            ], color: backgroundColor8, borderRadius: BorderRadius.circular(5)),
+            ],
+            color: levelModel!.is_unlock == 0
+                ? disablePurpleColor
+                : backgroundColor8,
+            borderRadius: BorderRadius.circular(5)),
         child: Column(
           children: [
             Container(

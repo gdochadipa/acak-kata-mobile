@@ -61,9 +61,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "question_time_error_min":
             MessageLookupByLibrary.simpleMessage("Min 7 second per Ques !"),
         "reset": MessageLookupByLibrary.simpleMessage("Reset"),
+        "save_setting": MessageLookupByLibrary.simpleMessage("Save Setting"),
         "second": MessageLookupByLibrary.simpleMessage("Second"),
         "second_question":
             MessageLookupByLibrary.simpleMessage("Second / \n ques"),
+        "setting": MessageLookupByLibrary.simpleMessage("Setting"),
         "single_player": MessageLookupByLibrary.simpleMessage("Single Player"),
         "time": MessageLookupByLibrary.simpleMessage("Time"),
         "true_string": MessageLookupByLibrary.simpleMessage("Correct"),
