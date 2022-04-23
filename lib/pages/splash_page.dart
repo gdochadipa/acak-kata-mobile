@@ -50,19 +50,19 @@ class _SplashPageState extends State<SplashPage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     ChangeLanguageProvider changeLanguageProvider =
         Provider.of<ChangeLanguageProvider>(context, listen: false);
-    changeLanguageProvider.changeLocale('id');
     LanguageDBProvider langProvider =
         Provider.of<LanguageDBProvider>(context, listen: false);
-    await langProvider.init();
-    String? localLang = prefs.getString("choiceLang");
+
+    String? localLang = prefs.getString("choiceLang") ?? 'id';
     setState(() {
-      changeLanguageProvider.changeLocale(localLang!);
+      changeLanguageProvider.changeLocale(localLang);
     });
 
     bool login = prefs.getBool('login') ?? false;
     bool isInGame = prefs.getBool('is_in_game') ?? false;
 
     try {
+      await langProvider.init();
       if (login) {
         UserModel _user = UserModel(
             id: prefs.getString('id'),

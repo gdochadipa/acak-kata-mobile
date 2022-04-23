@@ -15,13 +15,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.2"
-  another_flushbar:
-    dependency: "direct main"
-    description:
-      name: another_flushbar
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.10.28"
   archive:
     dependency: transitive
     description:
@@ -92,13 +85,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
-  code_field:
-    dependency: "direct main"
-    description:
-      name: code_field
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.22.0"
   collection:
     dependency: transitive
     description:
@@ -134,13 +120,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.4"
-  draggable_home:
-    dependency: "direct main"
-    description:
-      name: draggable_home
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.2"
   encrypt:
     dependency: "direct main"
     description:
@@ -231,13 +210,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.2.0"
-  graphx:
-    dependency: "direct main"
-    description:
-      name: graphx
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.3"
   group_button:
     dependency: "direct main"
     description:
@@ -413,13 +385,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.4.0"
-  pin_input_text_field:
-    dependency: transitive
-    description:
-      name: pin_input_text_field
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "4.1.2"
   platform:
     dependency: transitive
     description:
@@ -455,27 +420,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.0.0"
-  reactive_forms:
-    dependency: transitive
-    description:
-      name: reactive_forms
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "11.0.1"
-  reactive_pin_input_text_field:
-    dependency: "direct main"
-    description:
-      name: reactive_pin_input_text_field
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.0"
-  rxdart:
-    dependency: transitive
-    description:
-      name: rxdart
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.27.3"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -671,5 +615,5 @@ packages:
     source: hosted
     version: "3.1.0"
 sdks:
-  dart: ">=2.15.0 <3.0.0"
-  flutter: ">=2.8.0"
+  dart: ">=2.14.4 <3.0.0"
+  flutter: ">=2.5.0"

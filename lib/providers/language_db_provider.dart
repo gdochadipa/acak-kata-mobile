@@ -40,6 +40,27 @@ class LanguageDBProvider with ChangeNotifier {
     _totalQuestion = totalQuestion ?? 15;
   }
 
+  Future onConfigure(Database db) async {
+    await db.execute('PRAGMA foreign_keys = ON');
+  }
+
+  void _createTableResultRangeV2(Batch batch) {
+    batch.execute('DROP TABLE IF EXISTS tb_result_range');
+    batch.execute('''CREATE TABLE tb_result_range (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name_range_id TEXT,
+    name_range_en TEXT,
+    range_min INTEGER,
+    range_max INTEGER
+)''');
+    batch.execute(''' 
+      INSERT INTO "tb_result_range" ("id","name_range_id","name_range_en","range_min","range_max") VALUES (1,'Super','Super',90,100),
+ (2,'Bagus','Good',70,89),
+ (3,'Cukup','Enough',60,69),
+ (4,'Kurang','Not Enough',0,56)
+    ''');
+  }
+
   Future<void> init() async {
     try {
       io.Directory applicationDirectory =
@@ -55,7 +76,12 @@ class LanguageDBProvider with ChangeNotifier {
         await io.File(dbDictionaryPath).writeAsBytes(bytes, flush: true);
       }
 
-      _db = await openDatabase(dbDictionaryPath);
+      _db = await openDatabase(dbDictionaryPath,
+          version: 1, onConfigure: onConfigure, onCreate: (db, version) async {
+        var batch = db.batch();
+        _createTableResultRangeV2(batch);
+        await batch.commit();
+      });
     } catch (e) {
       print(e);
     }
@@ -185,16 +211,17 @@ class LanguageDBProvider with ChangeNotifier {
       late List<Map<String, dynamic>> rangeText;
 
       await _db.transaction((txn) async {
-        rangeText = await txn.query('tb_range_result_text', columns: [
+        rangeText = await txn.query('tb_result_range', columns: [
           "id",
           "name_range_id",
           "name_range_en",
           "range_min",
           "range_max"
         ]);
+
+        _dataRangeTextList =
+            rangeText.map((e) => RangeResultTxtModel.fromJson(e)).toList();
       });
-      _dataRangeTextList =
-          rangeText.map((e) => RangeResultTxtModel.fromJson(e)).toList();
       return true;
     } catch (e) {
       throw Exception(e);
