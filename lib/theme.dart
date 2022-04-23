@@ -35,6 +35,11 @@ Color kWhiteGreyColor = Color(0xffF1F1F5);
 Color purpleColor = Color(0xffA076CC);
 Color purpleAccentColor = Color(0xff6C4298);
 
+Color purpleCard = Color(0xff381272);
+
+Color whitePurpleColor = Color(0xffffffff);
+Color whiteAccentPurpleColor = Color(0xFF6C4298);
+
 Color disablePurpleColor = Color(0xff9970D9);
 Color disablePurpleAccentColor = Color(0xff775F9D);
 

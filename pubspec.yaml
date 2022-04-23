@@ -58,6 +58,8 @@ dependencies:
   intl: ^0.17.0
   workmanager: ^0.4.1
   group_button: ^5.0.0
+  datetime_picker_formfield: ^2.0.0
+  flutter_switch: ^0.3.2
 
 dev_dependencies:
   flutter_test:
@@ -132,6 +134,8 @@ flutter:
     - assets/images/edit_icon.png
     - assets/images/time_square_icon.png
     - assets/images/words_icon.png
+    - assets/images/white_clock_icon.png
+    - assets/images/arrow_blue.png
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg

@@ -9,7 +9,6 @@ import 'package:acakkata/widgets/clicky_button.dart';
 import 'package:acakkata/widgets/custom_page_route.dart';
 import 'package:acakkata/widgets/popover/popover_listview.dart';
 import 'package:animations/animations.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CustomLevelCard extends StatelessWidget {
@@ -31,7 +30,6 @@ class CustomLevelCard extends StatelessWidget {
             TextEditingController lengthWord = TextEditingController(text: '');
             TextEditingController questionTime =
                 TextEditingController(text: '');
-            Map<String, bool>? validation = {};
             final _form = GlobalKey<FormState>();
 
             void _saveForm() {
@@ -41,7 +39,7 @@ class CustomLevelCard extends StatelessWidget {
               } else {
                 LevelModel levelModel = LevelModel(
                     id: 77,
-                    level_name: "${setLanguage.custom_level}",
+                    level_name: setLanguage.custom_level,
                     level_words: int.parse(lengthWord.text),
                     level_time: int.parse(questionTime.text),
                     level_lang_code: setLanguage.code,
@@ -57,6 +55,36 @@ class CustomLevelCard extends StatelessWidget {
                       isHost: 0,
                       levelWords: int.parse(lengthWord.text),
                       isOnline: false,
+                      Stage: "${setLanguage.custom_level}",
+                      levelModel: levelModel,
+                      isCustom: true,
+                    )));
+              }
+            }
+
+            void _saveFormOnlineMode() {
+              final isValid = _form.currentState!.validate();
+              if (!isValid) {
+                return;
+              } else {
+                LevelModel levelModel = LevelModel(
+                    id: 77,
+                    level_name: setLanguage.custom_level,
+                    level_words: int.parse(lengthWord.text),
+                    level_time: int.parse(questionTime.text),
+                    level_lang_code: setLanguage.code,
+                    level_lang_id: setLanguage.code,
+                    current_score: 0,
+                    target_score: 0);
+                Navigator.push(
+                    context,
+                    CustomPageRoute(OfflineGamePlayPage(
+                      languageModel: languageModel,
+                      selectedQuestion: int.parse(questionNumber.text),
+                      selectedTime: int.parse(questionTime.text),
+                      isHost: 0,
+                      levelWords: int.parse(lengthWord.text),
+                      isOnline: true,
                       Stage: "${setLanguage.custom_level}",
                       levelModel: levelModel,
                       isCustom: true,
@@ -326,7 +354,9 @@ class CustomLevelCard extends StatelessWidget {
                                           )
                                         ],
                                       ),
-                                      onPressed: () {}),
+                                      onPressed: () {
+                                        _saveFormOnlineMode();
+                                      }),
                                 ))
                               ],
                             ),

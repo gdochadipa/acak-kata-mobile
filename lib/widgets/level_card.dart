@@ -4,6 +4,8 @@ import 'package:acakkata/generated/l10n.dart';
 import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/models/level_model.dart';
 import 'package:acakkata/pages/in_game/offline_game_play_page.dart';
+import 'package:acakkata/pages/in_game/prepare_game_page.dart';
+import 'package:acakkata/pages/in_game/prepare_online_game_play.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/clicky_button.dart';
 import 'package:acakkata/widgets/custom_page_route.dart';
@@ -306,7 +308,25 @@ class ItemLevelCard extends StatelessWidget {
                                       )
                                     ],
                                   ),
-                                  onPressed: () {}),
+                                  onPressed: () {
+                                    Timer(Duration(milliseconds: 500), () {
+                                      Navigator.push(
+                                          context,
+                                          CustomPageRoute(PrepareOnlineGamePlay(
+                                            languageModel: languageModel,
+                                            selectedQuestion: levelModel!
+                                                .level_question_count,
+                                            selectedTime:
+                                                levelModel!.level_time,
+                                            isHost: 0,
+                                            levelWords: levelModel!.level_words,
+                                            isOnline: true,
+                                            Stage: levelModel!.level_name,
+                                            levelModel: levelModel,
+                                            isCustom: false,
+                                          )));
+                                    });
+                                  }),
                             ))
                           ],
                         ),
