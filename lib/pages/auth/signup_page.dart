@@ -1,9 +1,11 @@
 import 'package:acakkata/pages/auth/signin_page.dart';
+import 'package:acakkata/pages/home_page/new_home_page.dart';
 import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/btn_loading.dart';
 import 'package:acakkata/widgets/clicky_button.dart';
 import 'package:acakkata/widgets/custom_page_route.dart';
+import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -37,7 +39,11 @@ class _SignUpPageState extends State<SignUpPage> {
             name: nameController.text,
             email: emailController.text,
             password: passwordController.text)) {
-          Navigator.pushNamed(context, '/home');
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            '/home',
+            (route) => false,
+          );
         }
       } catch (e) {
         print(e);
@@ -56,16 +62,43 @@ class _SignUpPageState extends State<SignUpPage> {
       });
     }
 
-    Widget header() {
-      return Container(
-        margin: EdgeInsets.only(top: 70),
-        child: Center(
-          child: Image.asset(
-            'assets/images/logo_putih.png',
-            height: 132,
-            width: 158,
+    Widget btnBack() {
+      return BouncingWidget(
+        onPressed: () {
+          Navigator.of(context)
+              .pushNamedAndRemoveUntil('/home', (route) => false);
+        },
+        child: Container(
+          width: 39,
+          height: 39,
+          margin: EdgeInsets.all(11),
+          decoration: BoxDecoration(color: whiteColor, shape: BoxShape.circle),
+          padding: EdgeInsets.all(10),
+          child: Center(
+            child: Icon(Icons.arrow_back_ios_new, size: 20),
           ),
         ),
+      );
+    }
+
+    Widget header() {
+      return Container(
+        child: Stack(children: [
+          Container(
+            margin: EdgeInsets.only(left: 10, top: 10),
+            alignment: Alignment.topLeft,
+            child: btnBack(),
+          ),
+          Container(
+            margin: EdgeInsets.only(left: 10, top: 80),
+            alignment: Alignment.center,
+            child: Image.asset(
+              'assets/images/logo_putih.png',
+              height: 132,
+              width: 158,
+            ),
+          )
+        ]),
       );
     }
 
@@ -213,7 +246,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
     Widget body() {
       return Container(
-        margin: const EdgeInsets.only(left: 10, right: 10, top: 50),
+        margin: const EdgeInsets.only(left: 20, right: 20, top: 50),
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
         decoration: BoxDecoration(
             color: whiteColor, borderRadius: BorderRadius.circular(0)),
@@ -259,12 +292,10 @@ class _SignUpPageState extends State<SignUpPage> {
       backgroundColor: backgroundColor2,
       resizeToAvoidBottomInset: false,
       body: SafeArea(
-        child: Container(
-          margin: EdgeInsets.symmetric(horizontal: defaultMargin),
-          child: ListView(
-            children: [header(), body(), footer()],
-          ),
-        ),
+        child: SingleChildScrollView(
+            child: Column(
+          children: [header(), body(), footer()],
+        )),
       ),
     );
   }

@@ -8,16 +8,24 @@ import 'package:http/http.dart' as http;
 class RoomService {
   String baseUrl = 'http://10.0.2.2:3000/api/v1/room';
 
-  Future<RoomMatchModel> createRoom(String language_id, int time_watch,
-      int max_player, int total_question, String token) async {
+  Future<RoomMatchModel> createRoom(
+      String language_code,
+      int time_watch,
+      int max_player,
+      int total_question,
+      String token,
+      DateTime datetime_match,
+      int level) async {
     var url = Uri.parse('$baseUrl/create-room');
     print(url);
     var headers = {'Content-Type': 'application/json', 'Authorization': token};
     var body = jsonEncode({
-      'language_id': language_id,
+      'language_code': language_code,
       'time_watch': time_watch,
       'max_player': max_player,
-      'total_question': total_question
+      'total_question': total_question,
+      'datetime_match': datetime_match.toString(),
+      'level': level
     });
 
     var response = await http.post(url, headers: headers, body: body);
@@ -38,11 +46,12 @@ class RoomService {
   }
 
   Future<RoomMatchModel> findRoomWithCode(
-      String language_id, String token, String room_code) async {
+      String language_code, String token, String room_code) async {
     var url = Uri.parse('$baseUrl/search-code-room');
     print(url);
     var headers = {'Content-Type': 'application/json', 'Authorization': token};
-    var body = jsonEncode({'language_id': language_id, 'room_code': room_code});
+    var body =
+        jsonEncode({'language_code': language_code, 'room_code': room_code});
 
     var response = await http.post(url, headers: headers, body: body);
     print(response.body);
@@ -116,10 +125,10 @@ class RoomService {
   }
 
   Future<List<WordLanguageModel>> getPackageQuestion(String token,
-      String language_id, int question_num, String channel_code) async {
+      String language_code, int question_num, String channel_code) async {
     var headers = {'Content-Type': 'application/json', 'Authorization': token};
     var query_parameter = {
-      'language_id': language_id,
+      'language_code': language_code,
       'question_num': question_num,
       'channel_code': channel_code
     };

@@ -76,7 +76,7 @@ TextStyle subtitleTextStyle = GoogleFonts.montserrat(
 );
 
 TextStyle purpleTextStyle = GoogleFonts.montserrat(
-  color: primaryColor,
+  color: disablePurpleColor,
 );
 
 TextStyle blackTextStyle = GoogleFonts.montserrat(

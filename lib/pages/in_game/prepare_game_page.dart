@@ -105,7 +105,7 @@ class _PrepareGamePageState extends State<PrepareGamePage> {
       try {
         print('${selectedQuestion}');
         if (await roomProvider.createRoom(
-            language_id: widget.language.id,
+            language_code: widget.language.id,
             max_player: 2,
             time_watch: selectedTime,
             total_question: selectedQuestion)) {

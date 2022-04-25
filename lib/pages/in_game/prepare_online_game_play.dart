@@ -11,6 +11,7 @@ import 'package:acakkata/widgets/custom_page_route.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 class PrepareOnlineGamePlay extends StatefulWidget {
@@ -44,6 +45,7 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
   TextEditingController room_code = TextEditingController(text: '');
   TextEditingController gameTime = TextEditingController(text: '');
   SocketService socketService = SocketService();
+  bool? isLoading = false;
 
   late RoomProvider roomProvider =
       Provider.of<RoomProvider>(context, listen: false);
@@ -77,6 +79,9 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
     S? setLanguage = S.of(context);
     TextEditingController countPlayer = TextEditingController(text: '');
     TextEditingController dateTime = TextEditingController(text: '');
+    Logger logger = Logger(
+      printer: PrettyPrinter(methodCount: 0),
+    );
     DateTime? valueDateTime;
     final _form = GlobalKey<FormState>();
 
@@ -120,6 +125,48 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
       );
     }
 
+    handleCreateRoom() async {
+      setState(() {
+        isLoading = true;
+      });
+
+      try {
+        if (await roomProvider.createRoom(
+            language_code: widget.languageModel!.language_code,
+            max_player: int.parse(countPlayer.text),
+            time_watch: widget.selectedTime,
+            total_question: widget.selectedQuestion,
+            datetime_match:
+                DateFormat('yyyy-MM-dd hh:mm:ss').parse(dateTime.text),
+            level: widget.levelModel!.id)) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(
+              "Berhasil membuat Room",
+              textAlign: TextAlign.center,
+            ),
+            backgroundColor: successColor,
+          ));
+
+          // Navigator.push(
+          //     context,
+          //     CustomPageRoute(WaitingOnlineRoomPage(
+          //       languageModel: widget.languageModel,
+          //       isOnline: true,
+          //     )));
+        }
+      } catch (e) {
+        logger.e(e);
+
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+            e.toString().replaceAll('Exception:', ''),
+            textAlign: TextAlign.center,
+          ),
+          backgroundColor: alertColor,
+        ));
+      }
+    }
+
     Widget ButtonCreateRoom() {
       return Container(
         width: double.infinity,
@@ -156,12 +203,6 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
                 print(
                     "test date time ${dateTime.text} jumlah pemain ${countPlayer.text}");
               }
-              // Navigator.push(
-              //     context,
-              //     CustomPageRoute(WaitingOnlineRoomPage(
-              //       languageModel: widget.languageModel,
-              //       isOnline: true,
-              //     )));
             }),
       );
     }

@@ -26,45 +26,6 @@ class _LanguageCardState extends State<LanguageCard> {
   @override
   Widget build(BuildContext context) {
     S? setLanguage = S.of(context);
-    void handlePopUpPress() {
-      showModalBottomSheet(
-          backgroundColor: transparentColor,
-          context: context,
-          builder: (context) {
-            return Popover(
-                child: Column(
-              children: [
-                ListItemPopOver(
-                    title: Text("Single"),
-                    leading: Icon(Icons.person),
-                    onClick: () {
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          CustomPageRoute(
-                            LevelListPage(
-                              isOnline: false,
-                              languageModel: widget.language,
-                            ),
-                          ),
-                          (route) => false);
-                    }),
-                // ListItemPopOver(
-                //     title: Text(
-                //       "Multiplayer",
-                //     ),
-                //     leading: Icon(Icons.group),
-                //     onClick: () {
-                //       Navigator.push(
-                //           context,
-                //           CustomPageRoute(LevelListPage(
-                //             isOnline: true,
-                //             languageModel: language,
-                //           )));
-                //     })
-              ],
-            ));
-          });
-    }
 
     return GestureDetector(
         onTap: () {

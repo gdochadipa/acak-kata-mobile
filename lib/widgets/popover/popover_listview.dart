@@ -48,6 +48,7 @@ class PopoverListView extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(16))),
       child: SingleChildScrollView(
           child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [_buildHandle(context), child],
       )),
     );

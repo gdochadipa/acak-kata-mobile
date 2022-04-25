@@ -34,10 +34,12 @@ class RoomProvider with ChangeNotifier {
   }
 
   Future<bool> createRoom(
-      {String? language_id,
+      {String? language_code,
       int? max_player,
       int? time_watch,
-      int? total_question}) async {
+      int? total_question,
+      DateTime? datetime_match,
+      int? level}) async {
     try {
       _maxPlayer = max_player ?? 2;
       _numberCountDown = time_watch ?? 15;
@@ -45,7 +47,13 @@ class RoomProvider with ChangeNotifier {
       SharedPreferences pref = await SharedPreferences.getInstance();
       String? token = pref.getString('token');
       RoomMatchModel roomMatchModel = await RoomService().createRoom(
-          language_id!, time_watch!, max_player!, total_question!, token!);
+          language_code!,
+          time_watch!,
+          max_player!,
+          total_question!,
+          token!,
+          datetime_match!,
+          level!);
       _roomMatch = roomMatchModel;
 
       return true;
@@ -109,13 +117,13 @@ class RoomProvider with ChangeNotifier {
   }
 
   Future<bool> getPackageQuestion(
-      String? language_id, String? channel_code) async {
+      String? language_code, String? channel_code) async {
     try {
       SharedPreferences pref = await SharedPreferences.getInstance();
       String? token = pref.getString('token');
       List<WordLanguageModel> listQuestion = await RoomService()
           .getPackageQuestion(
-              token!, language_id!, roomMatch!.totalQuestion!, channel_code!);
+              token!, language_code!, roomMatch!.totalQuestion!, channel_code!);
       _listQuestion = listQuestion;
       return true;
     } catch (e) {

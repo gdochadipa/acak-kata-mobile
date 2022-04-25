@@ -5,6 +5,7 @@ import 'package:acakkata/service/socket_service.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/clicky_button.dart';
 import 'package:acakkata/widgets/custom_page_route.dart';
+import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -52,7 +53,11 @@ class _SignInPageState extends State<SignInPage> {
       try {
         if (await authProvider.login(
             email: emailController.text, password: passwordController.text)) {
-          Navigator.pushNamed(context, '/home');
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            '/home',
+            (route) => false,
+          );
         }
       } catch (e, stack) {
         print(e);
@@ -72,24 +77,47 @@ class _SignInPageState extends State<SignInPage> {
       });
     }
 
-    handleOfflineMode() {
-      Navigator.pushNamed(context, '/home');
-    }
-
     checkSocket() async {
       await socket.onTest();
     }
 
-    Widget header() {
-      return Container(
-        margin: EdgeInsets.only(top: 70),
-        child: Center(
-          child: Image.asset(
-            'assets/images/logo_putih.png',
-            height: 132,
-            width: 158,
+    Widget btnBack() {
+      return BouncingWidget(
+        onPressed: () {
+          Navigator.of(context)
+              .pushNamedAndRemoveUntil('/home', (route) => false);
+        },
+        child: Container(
+          width: 39,
+          height: 39,
+          margin: EdgeInsets.all(11),
+          decoration: BoxDecoration(color: whiteColor, shape: BoxShape.circle),
+          padding: EdgeInsets.all(10),
+          child: Center(
+            child: Icon(Icons.arrow_back_ios_new, size: 20),
           ),
         ),
+      );
+    }
+
+    Widget header() {
+      return Container(
+        child: Stack(children: [
+          Container(
+            margin: EdgeInsets.only(left: 10, top: 10),
+            alignment: Alignment.topLeft,
+            child: btnBack(),
+          ),
+          Container(
+            margin: EdgeInsets.only(left: 10, top: 80),
+            alignment: Alignment.center,
+            child: Image.asset(
+              'assets/images/logo_putih.png',
+              height: 132,
+              width: 158,
+            ),
+          )
+        ]),
       );
     }
 
@@ -194,30 +222,12 @@ class _SignInPageState extends State<SignInPage> {
       );
     }
 
-    //set delay sebelum run on click
-    Widget offlineModeBtn() {
-      return Container(
-        width: double.infinity,
-        child: ClickyButton(
-            color: backgroundColor2,
-            shadowColor: shadowBackgroundColor2,
-            margin: EdgeInsets.all(10),
-            width: 300,
-            height: 62,
-            child: Text(
-              "Offline Mode",
-              style: whiteTextStyle.copyWith(fontSize: 16, fontWeight: medium),
-            ),
-            onPressed: handleOfflineMode),
-      );
-    }
-
     Widget body() {
       return Container(
-        margin: const EdgeInsets.only(left: 10, right: 10, top: 50),
+        margin: const EdgeInsets.only(left: 20, right: 20, top: 50),
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
         decoration: BoxDecoration(
-            color: whiteColor, borderRadius: BorderRadius.circular(0)),
+            color: whiteColor, borderRadius: BorderRadius.circular(5)),
         child: Center(
             child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -244,7 +254,11 @@ class _SignInPageState extends State<SignInPage> {
             ),
             GestureDetector(
               onTap: () {
-                Navigator.push(context, CustomPageRoute(SignUpPage()));
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  CustomPageRoute(SignUpPage()),
+                  (route) => false,
+                );
               },
               child: Text(
                 'Sign Up',
@@ -261,12 +275,10 @@ class _SignInPageState extends State<SignInPage> {
       backgroundColor: backgroundColor2,
       resizeToAvoidBottomInset: false,
       body: SafeArea(
-        child: Container(
-          margin: EdgeInsets.symmetric(horizontal: defaultMargin),
-          child: ListView(
-            children: [header(), body(), footer()],
-          ),
-        ),
+        child: SingleChildScrollView(
+            child: Column(
+          children: [header(), body(), footer()],
+        )),
       ),
     );
   }

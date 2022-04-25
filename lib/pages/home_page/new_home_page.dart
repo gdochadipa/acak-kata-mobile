@@ -3,6 +3,8 @@ import 'dart:ui';
 
 import 'package:acakkata/generated/l10n.dart';
 import 'package:acakkata/models/language_model.dart';
+import 'package:acakkata/pages/auth/modal/show_login_modal.dart';
+import 'package:acakkata/pages/auth/modal/show_profile_modal.dart';
 import 'package:acakkata/pages/auth/signin_page.dart';
 import 'package:acakkata/pages/auth/signup_page.dart';
 import 'package:acakkata/providers/change_language_provider.dart';
@@ -37,12 +39,14 @@ class _NewHomePageState extends State<NewHomePage> {
   String? languageChoice = 'en';
   SharedPreferences? prefs;
   bool wasSelectedLanguage = false;
+  bool? login = false;
 
   init() async {
     prefs = await SharedPreferences.getInstance();
     setState(() {
       languageChoice = prefs!.getString("choiceLang");
       wasSelectedLanguage = prefs!.getBool("wasSelectedLanguage") ?? false;
+      login = prefs!.getBool('login');
     });
   }
 
@@ -178,6 +182,18 @@ class _NewHomePageState extends State<NewHomePage> {
               ));
     }
 
+    Future<void> showAuthModal() async {
+      return showModalBottomSheet(
+          context: context,
+          builder: (BuildContext context) => ShowLoginModal());
+    }
+
+    Future<void> showProfileModal() async {
+      return showModal(
+          context: context,
+          builder: (BuildContext context) => ShowProfileModal());
+    }
+
     showListLanguagePop() async {
       return showModal(
         context: context,
@@ -269,7 +285,10 @@ class _NewHomePageState extends State<NewHomePage> {
 
     Widget btnProfile() {
       return BouncingWidget(
-        onPressed: () {},
+        onPressed: () {
+          showAuthModal();
+          // showProfileModal();
+        },
         child: Container(
           width: 64,
           height: 64,
@@ -283,10 +302,10 @@ class _NewHomePageState extends State<NewHomePage> {
       );
     }
 
-    Widget btnSetting() {
+    Widget btnFindRoom() {
       return BouncingWidget(
         onPressed: () {
-          showLanguageAppSetting();
+          //
         },
         child: Container(
           width: 64,
@@ -295,7 +314,7 @@ class _NewHomePageState extends State<NewHomePage> {
           decoration: BoxDecoration(color: whiteColor, shape: BoxShape.circle),
           padding: EdgeInsets.all(16),
           child: Center(
-            child: Image.asset('assets/images/icon_setting.png'),
+            child: Image.asset('assets/images/icon_black_game.png'),
           ),
         ),
       );
@@ -319,12 +338,30 @@ class _NewHomePageState extends State<NewHomePage> {
       );
     }
 
+    Widget btnSetting() {
+      return BouncingWidget(
+        onPressed: () {
+          showLanguageAppSetting();
+        },
+        child: Container(
+          width: 39,
+          height: 39,
+          margin: EdgeInsets.all(11),
+          decoration: BoxDecoration(color: whiteColor, shape: BoxShape.circle),
+          padding: EdgeInsets.all(10),
+          child: Center(
+            child: Image.asset('assets/images/icon_setting.png'),
+          ),
+        ),
+      );
+    }
+
     Widget middleMenu() {
       return ElasticIn(
         child: Container(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [btnProfile(), btnPlayGame(), btnSetting()],
+            children: [btnProfile(), btnPlayGame(), btnFindRoom()],
           ),
         ),
       );
@@ -422,6 +459,11 @@ class _NewHomePageState extends State<NewHomePage> {
                   margin: EdgeInsets.only(left: 10, top: 10),
                   alignment: Alignment.topLeft,
                   child: btnExits(),
+                ),
+                Container(
+                  margin: EdgeInsets.only(left: 10, top: 10),
+                  alignment: Alignment.topRight,
+                  child: btnSetting(),
                 )
               ],
             ),
