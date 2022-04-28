@@ -41,7 +41,7 @@ class _NewHomePageState extends State<NewHomePage> {
   String? languageChoice = 'en';
   SharedPreferences? prefs;
   bool wasSelectedLanguage = false;
-  bool? login = false;
+  bool login = false;
 
   init() async {
     prefs = await SharedPreferences.getInstance();
@@ -49,7 +49,7 @@ class _NewHomePageState extends State<NewHomePage> {
     setState(() {
       languageChoice = prefs!.getString("choiceLang");
       wasSelectedLanguage = prefs!.getBool("wasSelectedLanguage") ?? false;
-      login = prefs!.getBool('login');
+      login = prefs!.getBool('login') ?? false;
     });
   }
 
@@ -296,7 +296,7 @@ class _NewHomePageState extends State<NewHomePage> {
     Widget btnProfile() {
       return BouncingWidget(
         onPressed: () {
-          if (!login!) {
+          if (!(login)) {
             showAuthModal();
           } else {
             showProfileModal();
@@ -318,7 +318,7 @@ class _NewHomePageState extends State<NewHomePage> {
     Widget btnFindRoom() {
       return BouncingWidget(
         onPressed: () {
-          if (!login!) {
+          if (!login) {
             showAuthModal();
           } else {
             showJoinRoomModal();

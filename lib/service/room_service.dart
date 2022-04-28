@@ -38,9 +38,9 @@ class RoomService {
     } else {
       if (response.statusCode == 403) {
         var data = jsonDecode(response.body);
-        throw Exception(data['message']);
+        throw Exception("Server: ${data['message']}");
       } else {
-        throw Exception("Gagal Membuat Room");
+        throw Exception("Gagal Membuat Room ${response.statusCode}");
       }
     }
   }

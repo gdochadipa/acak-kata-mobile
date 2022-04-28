@@ -158,7 +158,9 @@ class _PrepareGamePageState extends State<PrepareGamePage> {
               .where((detail) => detail.player_id!.contains('${idUser}'))
               .first;
           socketService.emitSearchRoom(
-              room_code.text, widget.language.id ?? '', roomSend);
+              roomProvider.roomMatch!.channel_code.toString(),
+              widget.language.id ?? '',
+              roomSend);
 
           Navigator.push(
               context, CustomPageRoute(RoomMatchPage(widget.language)));

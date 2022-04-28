@@ -7,6 +7,7 @@ import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/clicky_button.dart';
 import 'package:acakkata/widgets/popover/popover_listview.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 class JoinRoomModal extends StatefulWidget {
@@ -24,6 +25,9 @@ class _JoinRoomModalState extends State<JoinRoomModal> {
   SocketService socketService = SocketService();
   late FocusNode roomCode = FocusNode();
   bool isLoading = false;
+  Logger logger = Logger(
+    printer: PrettyPrinter(methodCount: 0),
+  );
 
   @override
   void initState() {
@@ -65,15 +69,21 @@ class _JoinRoomModalState extends State<JoinRoomModal> {
             ),
             backgroundColor: successColor,
           ));
-          socketService.emitJoinRoom(roomCodeController.text, 'client');
+          socketService.emitJoinRoom(
+              '${roomProvider!.roomMatch!.channel_code}', 'client');
+          logger.d(roomProvider!.listRoommatchDet![0].player_id ==
+              authProvider!.user!.id);
           RoomMatchDetailModel roomSend = roomProvider!.listRoommatchDet!
-              .where((detail) =>
-                  detail.player_id!.contains('${authProvider!.user!.id}'))
+              .where((detail) => detail.player_id! == authProvider!.user!.id)
               .first;
-          socketService.emitSearchRoom(roomCodeController.text, 'en', roomSend);
+          socketService.emitSearchRoom(
+              '${roomProvider!.roomMatch!.channel_code}',
+              '${roomProvider!.roomMatch!.language!.language_code}',
+              roomSend);
         }
-      } catch (e) {
-        print(e);
+      } catch (e, trace) {
+        logger.e(e);
+        logger.e(trace);
         String error = e.toString().replaceAll('Exception:', '');
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(
@@ -142,7 +152,9 @@ class _JoinRoomModalState extends State<JoinRoomModal> {
                         ),
                       ],
                     ),
-                    onPressed: () {}),
+                    onPressed: () {
+                      handleSearchRoom();
+                    }),
               )
             ],
           ),

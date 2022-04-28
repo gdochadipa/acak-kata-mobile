@@ -1,10 +1,21 @@
+import 'dart:convert';
+
 import 'package:acakkata/generated/l10n.dart';
 import 'package:acakkata/models/language_model.dart';
+import 'package:acakkata/models/room_match_detail_model.dart';
+import 'package:acakkata/models/room_match_model.dart';
+import 'package:acakkata/models/user_model.dart';
+import 'package:acakkata/providers/auth_provider.dart';
+import 'package:acakkata/providers/room_provider.dart';
+import 'package:acakkata/service/socket_service.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/clicky_button.dart';
 import 'package:acakkata/widgets/custom_page_route.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
+import 'package:provider/provider.dart';
 
 class WaitingOnlineRoomPage extends StatefulWidget {
   late final LanguageModel? languageModel;
@@ -17,23 +28,61 @@ class WaitingOnlineRoomPage extends StatefulWidget {
 }
 
 class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
+  SocketService socketService = SocketService();
+  AuthProvider? authProvider;
+  RoomProvider? roomProvider;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    authProvider = Provider.of<AuthProvider>(context, listen: false);
+    roomProvider = Provider.of<RoomProvider>(context, listen: false);
+    connectSocket();
+    super.initState();
+  }
+
+  connectSocket() async {
+    await socketService.fireSocket();
+    socketService.emitJoinRoom(
+        '${roomProvider!.roomMatch!.channel_code}', 'allhost');
+    await socketService.bindEventSearchRoom();
+    await socketService.bindReceiveStatusPlayer();
+  }
+
+  disconnectSocket() async {
+    await socketService.disconnect();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     S? setLanguage = S.of(context);
+    UserModel? user = authProvider!.user;
+    RoomMatchModel? roomMatch = roomProvider!.roomMatch!;
+    Logger logger = Logger(
+      printer: PrettyPrinter(methodCount: 0),
+    );
 
     Widget joinPlayerCard(String username_player) {
-      return Container(
-        padding: EdgeInsets.all(7),
-        margin: EdgeInsets.only(right: 10, bottom: 10),
-        decoration: BoxDecoration(
-            color: purpleCard, borderRadius: BorderRadius.circular(5)),
+      return ElasticIn(
         child: Container(
-            margin: EdgeInsets.all(5),
-            child: Text(
-              "${username_player}",
-              style:
-                  whiteTextStyle.copyWith(fontSize: 20, fontWeight: semiBold),
-            )),
+          padding: EdgeInsets.all(7),
+          margin: EdgeInsets.only(right: 10, bottom: 10),
+          decoration: BoxDecoration(
+              color: purpleCard, borderRadius: BorderRadius.circular(5)),
+          child: Container(
+              margin: EdgeInsets.all(5),
+              child: Text(
+                "${username_player}",
+                style:
+                    whiteTextStyle.copyWith(fontSize: 20, fontWeight: semiBold),
+              )),
+        ),
       );
     }
 
@@ -65,7 +114,6 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
     Widget ButtonCreateRoom() {
       return Container(
         width: double.infinity,
-        margin: EdgeInsets.only(top: 20),
         alignment: Alignment.center,
         child: ClickyButton(
             color: whitePurpleColor,
@@ -101,19 +149,57 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
       );
     }
 
+    Widget ButtonCancelRoom() {
+      return Container(
+        width: double.infinity,
+        alignment: Alignment.center,
+        child: ClickyButton(
+            color: alertColor,
+            shadowColor: alertAccentColor,
+            margin: EdgeInsets.only(top: 5, bottom: 5, left: 15, right: 15),
+            width: 245,
+            height: 60,
+            child: Wrap(
+              children: [
+                Text(
+                  setLanguage.exit,
+                  style:
+                      primaryTextStyle.copyWith(fontSize: 14, fontWeight: bold),
+                ),
+                SizedBox(
+                  width: 5,
+                ),
+                Icon(
+                  CupertinoIcons.square_arrow_left,
+                  semanticLabel: 'Add',
+                  color: whiteColor,
+                ),
+              ],
+            ),
+            onPressed: () {
+              // Navigator.push(
+              //     context,
+              //     CustomPageRoute(WaitingOnlineRoomPage(
+              //       languageModel: widget.languageModel,
+              //       isOnline: true,
+              //     )));
+            }),
+      );
+    }
+
     AppBar header() {
       return AppBar(
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: primaryColor,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-            // Navigator.pushNamedAndRemoveUntil(
-            //     context, '/home', (route) => false);
-          },
-        ),
+        // leading: IconButton(
+        //   icon: Icon(
+        //     Icons.arrow_back,
+        //     color: primaryColor,
+        //   ),
+        //   onPressed: () {
+        //     Navigator.pop(context);
+        //     // Navigator.pushNamedAndRemoveUntil(
+        //     //     context, '/home', (route) => false);
+        //   },
+        // ),
         backgroundColor: backgroundColor1,
         elevation: 0,
         centerTitle: true,
@@ -143,103 +229,126 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
 
     Widget body() {
       return SingleChildScrollView(
-        child: Container(
-          margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
-          padding: EdgeInsets.all(10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ElasticIn(
-                child: Container(
-                  alignment: Alignment.topCenter,
-                  child: Image.asset(
-                    'assets/images/logo_putih.png',
-                    height: 111.87,
-                    width: 84.33,
-                  ),
-                ),
-              ),
+        child: StreamBuilder(
+            stream: socketService.eventStream,
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              logger.d(snapshot.data);
 
-              /// * room code  match
-              ElasticIn(
-                child: Container(
-                    margin: EdgeInsets.symmetric(vertical: 14),
-                    padding: EdgeInsets.all(18),
-                    decoration: BoxDecoration(
-                      color: whiteColor,
-                      borderRadius: BorderRadius.circular(5),
+              if (snapshot.hasData) {
+                try {
+                  var data = json.decode(snapshot.data.toString());
+                  if (data['target'] == 'update-player') {
+                    RoomMatchDetailModel matchDetailModel =
+                        RoomMatchDetailModel.fromJson(data['room_detail']);
+                    roomProvider!.updateRoomDetail(matchDetailModel);
+                  }
+                } catch (e) {
+                  logger.e(e);
+                }
+              }
+
+              return Container(
+                margin:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
+                padding: EdgeInsets.all(10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ElasticIn(
+                      child: Container(
+                        alignment: Alignment.topCenter,
+                        child: Image.asset(
+                          'assets/images/logo_putih.png',
+                          height: 111.87,
+                          width: 84.33,
+                        ),
+                      ),
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
+
+                    /// * room code  match
+                    ElasticIn(
+                      child: Container(
+                          margin: EdgeInsets.symmetric(vertical: 14),
+                          padding: EdgeInsets.all(18),
+                          decoration: BoxDecoration(
+                            color: whiteColor,
+                            borderRadius: BorderRadius.circular(5),
+                          ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                "Game Room",
-                                style: blackTextStyle.copyWith(
-                                    fontSize: 13, fontWeight: bold),
+                              Container(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Game Room",
+                                      style: blackTextStyle.copyWith(
+                                          fontSize: 13, fontWeight: bold),
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                      "${roomMatch.room_code}",
+                                      style: blackTextStyle.copyWith(
+                                          fontSize: 50, fontWeight: extraBold),
+                                    ),
+                                  ],
+                                ),
                               ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                "5718 6821",
-                                style: blackTextStyle.copyWith(
-                                    fontSize: 50, fontWeight: extraBold),
+
+                              ///* setting up match
+                              Container(
+                                margin: EdgeInsets.only(top: 20),
+                                child: Row(
+                                  children: [
+                                    settingCard(
+                                        "${roomMatch.max_player}",
+                                        Image.asset(
+                                          'assets/images/icon_username.png',
+                                          height: 26,
+                                          width: 26,
+                                        )),
+                                    settingCard(
+                                        "13:15",
+                                        Image.asset(
+                                          'assets/images/white_clock_icon.png',
+                                          height: 26,
+                                          width: 26,
+                                        ))
+                                  ],
+                                ),
                               ),
                             ],
-                          ),
-                        ),
+                          )),
+                    ),
 
-                        ///* setting up match
-                        Container(
-                          margin: EdgeInsets.only(top: 20),
-                          child: Row(
-                            children: [
-                              settingCard(
-                                  "3",
-                                  Image.asset(
-                                    'assets/images/icon_username.png',
-                                    height: 26,
-                                    width: 26,
-                                  )),
-                              settingCard(
-                                  "13:15",
-                                  Image.asset(
-                                    'assets/images/white_clock_icon.png',
-                                    height: 26,
-                                    width: 26,
-                                  ))
-                            ],
-                          ),
+                    /// * name player has join
+                    ElasticIn(
+                      child: Container(
+                        margin: EdgeInsets.symmetric(vertical: 14),
+                        child: Wrap(
+                          // children: [
+                          //   joinPlayerCard("Giga"),
+                          //   joinPlayerCard("Meta"),
+                          //   joinPlayerCard("Lica")
+                          // ],
+                          children: roomMatch.room_match_detail!
+                              .map((e) =>
+                                  joinPlayerCard('${e.player!.username}'))
+                              .toList(),
                         ),
-                      ],
-                    )),
-              ),
+                      ),
+                    ),
 
-              /// * name player has join
-              ElasticIn(
-                child: Container(
-                  margin: EdgeInsets.symmetric(vertical: 14),
-                  child: Wrap(
-                    children: [
-                      joinPlayerCard("Giga"),
-                      joinPlayerCard("Meta"),
-                      joinPlayerCard("Lica")
-                    ],
-                  ),
+                    SizedBox(
+                      height: 20,
+                    )
+                  ],
                 ),
-              ),
-
-              SizedBox(
-                height: 20,
-              ),
-              ElasticIn(child: ButtonCreateRoom())
-            ],
-          ),
-        ),
+              );
+            }),
       );
     }
 
@@ -261,6 +370,12 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
             ),
           ),
           backgroundColor: backgroundColor2,
+          bottomNavigationBar: Container(
+              height: 90,
+              padding: EdgeInsets.all(5),
+              child: Column(
+                children: [ElasticIn(child: ButtonCreateRoom())],
+              )),
         ),
         onWillPop: () async => false);
   }

@@ -43,7 +43,7 @@ class RoomMatchModel {
     channel_code = json['channel_code'];
     status_game = int.parse('${json['status_game'] ?? 0}');
     time_match = int.parse('${json['time_match'] ?? 0}');
-    datetime_match = DateTime.parse('${json['time_start']}');
+    datetime_match = DateTime.parse(json['datetime_match'].toString());
     totalQuestion = int.parse('${json['total_question'] ?? 0}');
     max_player = int.parse('${json['max_player'] ?? 0}');
     createdAt = DateTime.parse(json['createdAt'].toString());

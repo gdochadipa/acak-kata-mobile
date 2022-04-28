@@ -136,8 +136,7 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
             max_player: int.parse(countPlayer.text),
             time_watch: widget.selectedTime,
             total_question: widget.selectedQuestion,
-            datetime_match:
-                DateFormat('yyyy-MM-dd hh:mm:ss').parse(dateTime.text),
+            datetime_match: DateFormat('yyyy-MM-dd hh:mm').parse(dateTime.text),
             level: widget.levelModel!.id)) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(
@@ -147,12 +146,12 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
             backgroundColor: successColor,
           ));
 
-          // Navigator.push(
-          //     context,
-          //     CustomPageRoute(WaitingOnlineRoomPage(
-          //       languageModel: widget.languageModel,
-          //       isOnline: true,
-          //     )));
+          Navigator.push(
+              context,
+              CustomPageRoute(WaitingOnlineRoomPage(
+                languageModel: widget.languageModel,
+                isOnline: true,
+              )));
         }
       } catch (e) {
         logger.e(e);
@@ -200,8 +199,7 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
               if (!isValid) {
                 return;
               } else {
-                print(
-                    "test date time ${dateTime.text} jumlah pemain ${countPlayer.text}");
+                handleCreateRoom();
               }
             }),
       );
