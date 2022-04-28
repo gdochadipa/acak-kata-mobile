@@ -3,17 +3,18 @@ import 'dart:ui';
 
 import 'package:acakkata/generated/l10n.dart';
 import 'package:acakkata/models/language_model.dart';
+import 'package:acakkata/models/user_model.dart';
 import 'package:acakkata/pages/auth/modal/show_login_modal.dart';
 import 'package:acakkata/pages/auth/modal/show_profile_modal.dart';
 import 'package:acakkata/pages/auth/signin_page.dart';
 import 'package:acakkata/pages/auth/signup_page.dart';
+import 'package:acakkata/pages/in_game/modal/join_room_modal.dart';
+import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/providers/change_language_provider.dart';
 import 'package:acakkata/providers/language_db_provider.dart';
 import 'package:acakkata/providers/language_provider.dart';
 import 'package:acakkata/service/coba_echo_socket.dart';
 import 'package:acakkata/theme.dart';
-import 'package:acakkata/widgets/clicky_button.dart';
-import 'package:acakkata/widgets/custom_page_route_bounce.dart';
 import 'package:acakkata/widgets/language_card.dart';
 import 'package:acakkata/widgets/popover/language_app_modal.dart';
 import 'package:acakkata/widgets/popover/popover_listview.dart';
@@ -36,6 +37,7 @@ class NewHomePage extends StatefulWidget {
 
 class _NewHomePageState extends State<NewHomePage> {
   ChangeLanguageProvider? _changeLanguageProvider;
+  AuthProvider? _authProvider;
   String? languageChoice = 'en';
   SharedPreferences? prefs;
   bool wasSelectedLanguage = false;
@@ -43,6 +45,7 @@ class _NewHomePageState extends State<NewHomePage> {
 
   init() async {
     prefs = await SharedPreferences.getInstance();
+    _authProvider = Provider.of<AuthProvider>(context, listen: false);
     setState(() {
       languageChoice = prefs!.getString("choiceLang");
       wasSelectedLanguage = prefs!.getBool("wasSelectedLanguage") ?? false;
@@ -69,7 +72,6 @@ class _NewHomePageState extends State<NewHomePage> {
     _changeLanguageProvider =
         Provider.of<ChangeLanguageProvider>(context, listen: false);
     init();
-    print(wasSelectedLanguage);
     super.initState();
   }
 
@@ -189,9 +191,17 @@ class _NewHomePageState extends State<NewHomePage> {
     }
 
     Future<void> showProfileModal() async {
+      UserModel? userModel = _authProvider!.user;
       return showModal(
           context: context,
-          builder: (BuildContext context) => ShowProfileModal());
+          builder: (BuildContext context) => ShowProfileModal(
+                userModel: userModel,
+              ));
+    }
+
+    Future<void> showJoinRoomModal() async {
+      return showModal(
+          context: context, builder: (BuildContext context) => JoinRoomModal());
     }
 
     showListLanguagePop() async {
@@ -286,8 +296,11 @@ class _NewHomePageState extends State<NewHomePage> {
     Widget btnProfile() {
       return BouncingWidget(
         onPressed: () {
-          showAuthModal();
-          // showProfileModal();
+          if (!login!) {
+            showAuthModal();
+          } else {
+            showProfileModal();
+          }
         },
         child: Container(
           width: 64,
@@ -305,7 +318,11 @@ class _NewHomePageState extends State<NewHomePage> {
     Widget btnFindRoom() {
       return BouncingWidget(
         onPressed: () {
-          //
+          if (!login!) {
+            showAuthModal();
+          } else {
+            showJoinRoomModal();
+          }
         },
         child: Container(
           width: 64,

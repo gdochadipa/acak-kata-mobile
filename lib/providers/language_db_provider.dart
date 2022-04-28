@@ -153,7 +153,6 @@ class LanguageDBProvider with ChangeNotifier {
           "id",
           "language_name",
           "language_icon",
-          "language_collection",
           "language_code",
           "language_name_en",
           "language_name_id"
