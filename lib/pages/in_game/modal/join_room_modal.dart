@@ -5,6 +5,7 @@ import 'package:acakkata/providers/room_provider.dart';
 import 'package:acakkata/service/socket_service.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/clicky_button.dart';
+import 'package:acakkata/widgets/loading/LoadingOverlay.dart';
 import 'package:acakkata/widgets/popover/popover_listview.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
@@ -21,7 +22,8 @@ class _JoinRoomModalState extends State<JoinRoomModal> {
   TextEditingController roomCodeController = TextEditingController(text: '');
   RoomProvider? roomProvider;
   AuthProvider? authProvider;
-
+  bool _validation = false;
+  String? _textValidation = '';
   SocketService socketService = SocketService();
   late FocusNode roomCode = FocusNode();
   bool isLoading = false;
@@ -50,16 +52,21 @@ class _JoinRoomModalState extends State<JoinRoomModal> {
   void dispose() {
     // TODO: implement dispose
     roomCode.dispose();
-    disconnectSocket();
+    // disconnectSocket();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final overlay = LoadingOverlay.of(context);
+
     /// !masalahnya disini untuk language code nya, kyknya perbaiki untuk
     /// !pencarian room pada api dan socket engga butuh language code
     handleSearchRoom() async {
       try {
+        setState(() {
+          _validation = false;
+        });
         if (await roomProvider!
             .checkingRoomWithCode("1", roomCodeController.text)) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -83,8 +90,12 @@ class _JoinRoomModalState extends State<JoinRoomModal> {
         }
       } catch (e, trace) {
         logger.e(e);
-        logger.e(trace);
+        // logger.e(trace);
         String error = e.toString().replaceAll('Exception:', '');
+        setState(() {
+          _validation = true;
+          _textValidation = error;
+        });
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(
             error,
@@ -127,15 +138,26 @@ class _JoinRoomModalState extends State<JoinRoomModal> {
                     child: Row(
                   children: [
                     Expanded(
-                        child: TextField(
+                        child: TextFormField(
                       style: primaryTextStyle.copyWith(fontSize: 20),
                       controller: roomCodeController,
                       decoration: InputDecoration.collapsed(
-                          hintText: 'AXXXXX', hintStyle: subtitleTextStyle),
-                    ))
+                        hintText: 'AXXXXX',
+                        hintStyle: subtitleTextStyle,
+                      ),
+                    )),
                   ],
                 )),
               ),
+              SizedBox(
+                height: 5,
+              ),
+              if (_validation)
+                Text(
+                  _textValidation ?? 'Gagal membuat room',
+                  textAlign: TextAlign.left,
+                  style: alertTextStyle.copyWith(fontSize: 11),
+                ),
               Container(
                 margin: EdgeInsets.only(top: 20, left: 5, right: 5),
                 child: ClickyButton(

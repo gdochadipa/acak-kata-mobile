@@ -9,6 +9,7 @@ import 'package:acakkata/providers/change_language_provider.dart';
 import 'package:acakkata/providers/language_db_provider.dart';
 import 'package:acakkata/providers/language_provider.dart';
 import 'package:acakkata/providers/room_provider.dart';
+import 'package:acakkata/providers/socket_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -47,7 +48,8 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(create: (context) => RoomProvider()),
         ChangeNotifierProvider(create: (context) => LanguageDBProvider()),
-        ChangeNotifierProvider(create: (context) => ChangeLanguageProvider())
+        ChangeNotifierProvider(create: (context) => ChangeLanguageProvider()),
+        ChangeNotifierProvider(create: (context) => SocketProvider())
       ],
       child: MaterialApp(
         localizationsDelegates: [

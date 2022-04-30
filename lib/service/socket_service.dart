@@ -117,9 +117,11 @@ class SocketService {
   }
 
   Future<void> disconnect() async {
-    socket.disconnect();
-    socket.onDisconnect((data) => print("Disconnect"));
-    _eventData.close();
+    if (socket.connected) {
+      socket.disconnect();
+      socket.onDisconnect((data) => print("Disconnect"));
+      _eventData.close();
+    }
   }
 
   disconnectCloseStream() {
@@ -139,8 +141,9 @@ class SocketService {
           IO.OptionBuilder()
               .setTransports(['websocket']) // for Flutter or Dart VM
               .build());
-
-      socket.connect();
+      if (socket.disconnected) {
+        socket.connect();
+      }
 
       socket.on('connect', (data) {
         print('connected');

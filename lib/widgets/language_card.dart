@@ -1,7 +1,7 @@
 import 'package:acakkata/generated/l10n.dart';
 import 'package:acakkata/models/language_model.dart';
-import 'package:acakkata/pages/in_game/game_play_page.dart';
-import 'package:acakkata/pages/in_game/prepare_game_page.dart';
+import 'package:acakkata/pages/in_game/old/game_play_page.dart';
+import 'package:acakkata/pages/in_game/old/prepare_game_page.dart';
 import 'package:acakkata/pages/level/level_list_page.dart';
 import 'package:acakkata/pages/result_game/result_game_page.dart';
 import 'package:acakkata/theme.dart';
