@@ -10,11 +10,17 @@ class RoomMatchDetailModel {
 
   ///
   /// 0 is not ready
+  /// 1 is ready
+  ///
+  int? is_ready;
+
+  ///
+  /// 0 is not ready
   /// 1 is ready but not receive question
   /// 2 is receive question
   /// 3 is game done
+  /// 4 is player out from room
   ///
-  int? is_ready;
   int? status_player;
   UserModel? player;
 

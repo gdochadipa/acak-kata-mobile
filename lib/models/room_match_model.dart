@@ -36,9 +36,10 @@ class RoomMatchModel {
   RoomMatchModel.fromJson(Map<String, dynamic> json) {
     id = json['_id'];
 
-    language = json['language_id'] == null || json['language_id'] == 'null'
+    language = json['language'] == null || json['language'] == 'null'
         ? UninitializedLanguageModel()
-        : LanguageModel.fromJson(json['language_id']);
+        : LanguageModel.fromJson(json['language']);
+
     room_code = json['room_code'];
     channel_code = json['channel_code'];
     status_game = int.parse('${json['status_game'] ?? 0}');

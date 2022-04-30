@@ -7,6 +7,7 @@ import 'package:acakkata/models/room_match_model.dart';
 import 'package:acakkata/models/user_model.dart';
 import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/providers/room_provider.dart';
+import 'package:acakkata/providers/socket_provider.dart';
 import 'package:acakkata/service/socket_service.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/clicky_button.dart';
@@ -28,7 +29,8 @@ class WaitingOnlineRoomPage extends StatefulWidget {
 }
 
 class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
-  SocketService socketService = SocketService();
+  // SocketService socketService = SocketService();
+  SocketProvider? socketProvider;
   AuthProvider? authProvider;
   RoomProvider? roomProvider;
 
@@ -37,20 +39,26 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
     // TODO: implement initState
     authProvider = Provider.of<AuthProvider>(context, listen: false);
     roomProvider = Provider.of<RoomProvider>(context, listen: false);
+    socketProvider = Provider.of<SocketProvider>(context, listen: false);
     connectSocket();
     super.initState();
   }
 
   connectSocket() async {
-    await socketService.fireSocket();
-    socketService.emitJoinRoom(
-        '${roomProvider!.roomMatch!.channel_code}', 'allhost');
-    await socketService.bindEventSearchRoom();
-    await socketService.bindReceiveStatusPlayer();
+    socketProvider!.socketJoinRoom(
+        channelCode: '${roomProvider!.roomMatch!.channel_code}',
+        playerCode: '${authProvider!.user!.userCode}');
+    socketProvider!.socketReceiveFindRoom();
+    socketProvider!.socketReceiveStatusGame();
+    // await socketService.fireSocket();
+    // socketService.emitJoinRoom(
+    //     '${roomProvider!.roomMatch!.channel_code}', 'allhost');
+    // await socketService.bindEventSearchRoom();
+    // await socketService.bindReceiveStatusPlayer();
   }
 
   disconnectSocket() async {
-    await socketService.disconnect();
+    // await socketService.disconnect();
   }
 
   @override
@@ -67,6 +75,8 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
     Logger logger = Logger(
       printer: PrettyPrinter(methodCount: 0),
     );
+
+    handleStartGame() {}
 
     Widget joinPlayerCard(String username_player) {
       return ElasticIn(
@@ -230,9 +240,9 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
     Widget body() {
       return SingleChildScrollView(
         child: StreamBuilder(
-            stream: socketService.eventStream,
+            stream: socketProvider!.streamDataSocket,
             builder: (BuildContext context, AsyncSnapshot snapshot) {
-              logger.d(snapshot.data);
+              logger.d("waiting online room ${snapshot.data}");
 
               if (snapshot.hasData) {
                 try {

@@ -73,6 +73,13 @@ class SocketService {
     });
   }
 
+  Future<void> bindReceiveStatusGame() async {
+    socket.on('broadcast-status-game', (last) {
+      final String? data = last.toString();
+      _inEventData.add(data);
+    });
+  }
+
   emitJoinRoom(String channelCode, String player) {
     socket.emit(
         'join-room',

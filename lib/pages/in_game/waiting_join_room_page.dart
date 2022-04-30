@@ -1,12 +1,10 @@
-import 'dart:html';
-
 import 'package:acakkata/generated/l10n.dart';
 import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/models/room_match_model.dart';
 import 'package:acakkata/models/user_model.dart';
 import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/providers/room_provider.dart';
-import 'package:acakkata/service/socket_service.dart';
+import 'package:acakkata/providers/socket_provider.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/clicky_button.dart';
 import 'package:animate_do/animate_do.dart';
@@ -14,6 +12,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
+import 'package:socket_io_client/socket_io_client.dart';
 
 class WaitingJoinRoomPage extends StatefulWidget {
   late final LanguageModel? languageModel;
@@ -26,7 +25,8 @@ class WaitingJoinRoomPage extends StatefulWidget {
 }
 
 class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
-  SocketService socketService = SocketService();
+  // SocketService socketService = SocketService();
+  SocketProvider? socketProvider;
   AuthProvider? authProvider;
   RoomProvider? roomProvider;
 
@@ -35,13 +35,16 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
     // TODO: implement initState
     authProvider = Provider.of<AuthProvider>(context, listen: false);
     roomProvider = Provider.of<RoomProvider>(context, listen: false);
+    socketProvider = Provider.of<SocketProvider>(context, listen: false);
     super.initState();
   }
 
   connectSocket() async {
-    await socketService.fireSocket();
-    await socketService.bindEventSearchRoom();
-    await socketService.bindReceiveStatusPlayer();
+    socketProvider!.socketReceiveFindRoom();
+    socketProvider!.socketReceiveStatusPlayer();
+    // await socketService.fireSocket();
+    // await socketService.bindEventSearchRoom();
+    // await socketService.bindReceiveStatusPlayer();
   }
 
   @override
@@ -157,60 +160,66 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
 
     Widget body() {
       return SingleChildScrollView(
-        child: Container(
-          margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
-          padding: EdgeInsets.all(10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ElasticIn(
-                child: Container(
-                  alignment: Alignment.topCenter,
-                  child: Image.asset(
-                    'assets/images/logo_putih.png',
-                    height: 111.87,
-                    width: 84.33,
-                  ),
-                ),
-              ),
+        child: StreamBuilder(
+            stream: socketProvider!.streamDataSocket,
+            builder: (context, snapshot) {
+              logger.d(snapshot.data);
+              return Container(
+                margin:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
+                padding: EdgeInsets.all(10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ElasticIn(
+                      child: Container(
+                        alignment: Alignment.topCenter,
+                        child: Image.asset(
+                          'assets/images/logo_putih.png',
+                          height: 111.87,
+                          width: 84.33,
+                        ),
+                      ),
+                    ),
 
-              ///* setting up match
-              ElasticIn(
-                child: Container(
-                  margin: EdgeInsets.only(top: 20),
-                  child: Row(
-                    children: [
-                      settingCard(
-                          "${roomMatch.max_player}",
-                          Image.asset(
-                            'assets/images/icon_username.png',
-                            height: 26,
-                            width: 26,
-                          )),
-                      settingCard(
-                          "13:15",
-                          Image.asset(
-                            'assets/images/white_clock_icon.png',
-                            height: 26,
-                            width: 26,
-                          ))
-                    ],
-                  ),
+                    ///* setting up match
+                    ElasticIn(
+                      child: Container(
+                        margin: EdgeInsets.only(top: 20),
+                        child: Row(
+                          children: [
+                            settingCard(
+                                "${roomMatch.max_player}",
+                                Image.asset(
+                                  'assets/images/icon_username.png',
+                                  height: 26,
+                                  width: 26,
+                                )),
+                            settingCard(
+                                "13:15",
+                                Image.asset(
+                                  'assets/images/white_clock_icon.png',
+                                  height: 26,
+                                  width: 26,
+                                ))
+                          ],
+                        ),
+                      ),
+                    ),
+                    ElasticIn(
+                      child: Container(
+                        alignment: Alignment.topCenter,
+                        child: Text(
+                          "Waiting Host",
+                          style: whiteTextStyle.copyWith(
+                              fontWeight: extraBold, fontSize: 25),
+                        ),
+                      ),
+                    )
+                  ],
                 ),
-              ),
-              ElasticIn(
-                child: Container(
-                  alignment: Alignment.topCenter,
-                  child: Text(
-                    "Waiting Host",
-                    style: whiteTextStyle.copyWith(
-                        fontWeight: extraBold, fontSize: 25),
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
+              );
+            }),
       );
     }
 
