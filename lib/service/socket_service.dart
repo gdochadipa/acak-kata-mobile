@@ -88,19 +88,31 @@ class SocketService {
   }
 
   emitStatusPlayer(
-      String channel_code, RoomMatchDetailModel? roomMatchDet, bool is_ready) {
-    log('on status player ${roomMatchDet!.id} ${is_ready}');
+      String channelCode, String? roomDetID, int? isReady, int? statusPlayer) {
+    log('on status player ${roomDetID} ${isReady}, ${statusPlayer}');
     socket.emit(
         'status-player',
         json.encode({
-          'channel_code': channel_code,
-          'room_detail_id': roomMatchDet.id,
-          'status': is_ready
+          'channel_code': channelCode,
+          'room_detail_id': roomDetID,
+          'is_ready': isReady,
+          'status_player': statusPlayer
+        }));
+  }
+
+  emitStatusGame(String channelCode, String? roomID, int? statusGame) {
+    log('on status Game  ${roomID} ${statusGame}');
+    socket.emit(
+        'status-game',
+        json.encode({
+          'channel_code': channelCode,
+          'room_id': roomID,
+          'status_game': statusGame
         }));
   }
 
   Future<void> emitSendQuestion(String channelCode, String languageCode,
-      String playerId, Map<String, dynamic> question) async {
+      String playerId, String question) async {
     socket.emit(
         'send-question',
         json.encode({

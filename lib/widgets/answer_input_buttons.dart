@@ -1,4 +1,4 @@
-import 'package:acakkata/callbacks/CheckingWordCallback.dart';
+import 'package:acakkata/callbacks/checking_word_callback.dart';
 import 'package:acakkata/theme.dart';
 import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:flutter/material.dart';

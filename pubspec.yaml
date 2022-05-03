@@ -61,6 +61,7 @@ dependencies:
   datetime_picker_formfield: ^2.0.0
   flutter_switch: ^0.3.2
   loader_overlay: ^2.0.6
+  loading_indicator: ^3.0.3
 
 dev_dependencies:
   flutter_test:

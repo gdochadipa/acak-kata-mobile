@@ -79,12 +79,12 @@ class _RoomMatchPageState extends State<RoomMatchPage> {
             .roomMatch!.room_match_detail!
             .where((detail) => detail.player_id!.contains('${idUser}'))
             .first;
-        socketService.emitStatusPlayer(
-            '${roomProvider.roomMatch!.room_code}', sendUpdate, true);
-        setState(() {
-          afterConfirm = true;
-        });
-        roomProvider.updateStatusPlayer(sendUpdate.id, true);
+        // socketService.emitStatusPlayer(
+        //     '${roomProvider.roomMatch!.room_code}', sendUpdate, true);
+        // setState(() {
+        //   afterConfirm = true;
+        // });
+        // roomProvider.updateStatusPlayer(sendUpdate.id, true);
       } catch (e) {
         logger.e(e);
       }
@@ -269,8 +269,8 @@ class _RoomMatchPageState extends State<RoomMatchPage> {
                 roomProvider.updateRoomDetail(matchDetail);
               }
               if (data['target'] == 'update-status') {
-                roomProvider.updateStatusPlayer(
-                    data['room_detail_id'], data['status'] == 0 ? false : true);
+                // roomProvider.updateStatusPlayer(
+                //     data['room_detail_id'], data['status'] == 0 ? false : true);
                 if (roomProvider.checkAllAreReady()) {
                   //is loading  true
                   print("Going to game play");

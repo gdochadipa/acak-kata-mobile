@@ -8,13 +8,13 @@ import 'package:acakkata/models/user_model.dart';
 import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/providers/room_provider.dart';
 import 'package:acakkata/providers/socket_provider.dart';
-import 'package:acakkata/service/socket_service.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/clicky_button.dart';
 import 'package:acakkata/widgets/custom_page_route.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
@@ -49,7 +49,7 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
         channelCode: '${roomProvider!.roomMatch!.channel_code}',
         playerCode: '${authProvider!.user!.userCode}');
     socketProvider!.socketReceiveFindRoom();
-    socketProvider!.socketReceiveStatusGame();
+    socketProvider!.socketReceiveStatusPlayer();
     // await socketService.fireSocket();
     // socketService.emitJoinRoom(
     //     '${roomProvider!.roomMatch!.channel_code}', 'allhost');
@@ -76,7 +76,37 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
       printer: PrettyPrinter(methodCount: 0),
     );
 
-    handleStartGame() {}
+    ///1. get question berdasarkan setting room match
+    ///!3. share soal dan status game lewat socket
+    /// !4. tunggu update kalo semua pemain udah dapet soal (receive socket)
+    /// 5. ketika semua pemain udah dapet soal,
+    /// !baru update status game mulai dan share lewat socket
+    handleStartGame() async {
+      try {
+        logger.d("Start Game");
+        if (await roomProvider!.getPackageQuestion(
+            roomMatch.language!.language_code, roomMatch.channel_code)) {
+          socketProvider!.socketSendQuestion(
+              channelCode: roomMatch.channel_code!,
+              languageCode: roomMatch.language!.language_code!,
+              playerId: user!.id!,
+              question: json.encode(roomProvider!.listQuestion));
+
+          /// send status
+          RoomMatchDetailModel matchDetail = roomProvider!
+              .getRoomMatchDetailByUser(userID: user.id, statusPlayer: 2);
+          logger.d(matchDetail.status_player);
+          socketProvider!.socketSendStatusPlayer(
+              channelCode: roomMatch.channel_code!,
+              roomMatchDetailModel: matchDetail);
+        } else {
+          logger.e("gagal");
+        }
+      } catch (e, trace) {
+        logger.e(e);
+        logger.e(trace);
+      }
+    }
 
     Widget joinPlayerCard(String username_player) {
       return ElasticIn(
@@ -121,7 +151,7 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
       );
     }
 
-    Widget ButtonCreateRoom() {
+    Widget btnCreateRoom() {
       return Container(
         width: double.infinity,
         alignment: Alignment.center,
@@ -149,6 +179,7 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
               ],
             ),
             onPressed: () {
+              handleStartGame();
               // Navigator.push(
               //     context,
               //     CustomPageRoute(WaitingOnlineRoomPage(
@@ -252,6 +283,21 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
                         RoomMatchDetailModel.fromJson(data['room_detail']);
                     roomProvider!.updateRoomDetail(matchDetailModel);
                   }
+
+                  ///! menerima status pemain lain
+                  if (data['target'] == 'update-status-player') {
+                    roomProvider!.updateStatusPlayer(
+                        roomDetailId: data['room_detail_id'],
+                        status: data['status_player'],
+                        isReady: data['is_ready']);
+                    if (roomProvider!.checkAllAreReceiveQuestion()) {
+                      roomProvider!.updateStatusGame(roomMatch.id, 1);
+                      socketProvider!.socketSendStatusGame(
+                          channelCode: roomMatch.channel_code ?? '',
+                          roomMatch: roomProvider!.roomMatch);
+                      logger.d("Game Start ");
+                    }
+                  }
                 } catch (e) {
                   logger.e(e);
                 }
@@ -321,7 +367,9 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
                                           width: 26,
                                         )),
                                     settingCard(
-                                        "13:15",
+                                        DateFormat('dd MMMMM yyyy').format(
+                                            roomMatch.datetime_match ??
+                                                DateTime.now()),
                                         Image.asset(
                                           'assets/images/white_clock_icon.png',
                                           height: 26,
@@ -354,7 +402,8 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
 
                     SizedBox(
                       height: 20,
-                    )
+                    ),
+                    btnCreateRoom()
                   ],
                 ),
               );
@@ -384,7 +433,7 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
               height: 90,
               padding: EdgeInsets.all(5),
               child: Column(
-                children: [ElasticIn(child: ButtonCreateRoom())],
+                children: [],
               )),
         ),
         onWillPop: () async => false);

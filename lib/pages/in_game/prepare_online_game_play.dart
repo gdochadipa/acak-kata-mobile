@@ -137,7 +137,8 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
             time_watch: widget.selectedTime,
             total_question: widget.selectedQuestion,
             datetime_match: DateFormat('yyyy-MM-dd hh:mm').parse(dateTime.text),
-            level: widget.levelModel!.id)) {
+            level: widget.levelModel!.id,
+            length_word: widget.levelWords)) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(
               "Berhasil membuat Room",
@@ -153,9 +154,9 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
                 isOnline: true,
               )));
         }
-      } catch (e) {
+      } catch (e, stackTrace) {
         logger.e(e);
-
+        logger.e(stackTrace);
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(
             e.toString().replaceAll('Exception:', ''),

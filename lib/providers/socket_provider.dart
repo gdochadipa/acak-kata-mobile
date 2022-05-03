@@ -1,4 +1,5 @@
 import 'package:acakkata/models/room_match_detail_model.dart';
+import 'package:acakkata/models/room_match_model.dart';
 import 'package:acakkata/service/socket_service.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -23,6 +24,10 @@ class SocketProvider with ChangeNotifier {
     await _socketService.bindReceiveStatusGame();
   }
 
+  Future<void> socketReceiveQuestion() async {
+    await _socketService.bindReceiveQuestion();
+  }
+
   Future<void> socketSendJoinRoom(
       {required String channelCode,
       required String playerCode,
@@ -30,6 +35,28 @@ class SocketProvider with ChangeNotifier {
       required RoomMatchDetailModel roomMatchDet}) async {
     _socketService.emitJoinRoom(channelCode, playerCode);
     _socketService.emitSearchRoom(channelCode, languageCode, roomMatchDet);
+  }
+
+  Future<void> socketSendQuestion(
+      {required String channelCode,
+      required String languageCode,
+      required String playerId,
+      required String question}) async {
+    await _socketService.emitSendQuestion(
+        channelCode, languageCode, playerId, question);
+  }
+
+  Future<void> socketSendStatusPlayer(
+      {required String channelCode,
+      required RoomMatchDetailModel roomMatchDetailModel}) async {
+    await _socketService.emitStatusPlayer(channelCode, roomMatchDetailModel.id,
+        roomMatchDetailModel.is_ready, roomMatchDetailModel.status_player);
+  }
+
+  Future<void> socketSendStatusGame(
+      {required String channelCode, required RoomMatchModel? roomMatch}) async {
+    await _socketService.emitStatusGame(
+        channelCode, roomMatch!.id, roomMatch.status_game);
   }
 
   Future<void> socketJoinRoom(

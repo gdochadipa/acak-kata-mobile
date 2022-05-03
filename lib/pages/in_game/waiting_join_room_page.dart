@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:acakkata/generated/l10n.dart';
 import 'package:acakkata/models/language_model.dart';
+import 'package:acakkata/models/room_match_detail_model.dart';
 import 'package:acakkata/models/room_match_model.dart';
 import 'package:acakkata/models/user_model.dart';
+import 'package:acakkata/models/word_language_model.dart';
 import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/providers/room_provider.dart';
 import 'package:acakkata/providers/socket_provider.dart';
@@ -10,6 +14,7 @@ import 'package:acakkata/widgets/clicky_button.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart';
@@ -36,12 +41,15 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
     authProvider = Provider.of<AuthProvider>(context, listen: false);
     roomProvider = Provider.of<RoomProvider>(context, listen: false);
     socketProvider = Provider.of<SocketProvider>(context, listen: false);
+    connectSocket();
     super.initState();
   }
 
   connectSocket() async {
     socketProvider!.socketReceiveFindRoom();
     socketProvider!.socketReceiveStatusPlayer();
+    socketProvider!.socketReceiveStatusGame();
+    socketProvider!.socketReceiveQuestion();
     // await socketService.fireSocket();
     // await socketService.bindEventSearchRoom();
     // await socketService.bindReceiveStatusPlayer();
@@ -135,7 +143,7 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
                 Text(
                   setLanguage.exit,
                   style:
-                      primaryTextStyle.copyWith(fontSize: 14, fontWeight: bold),
+                      whiteTextStyle.copyWith(fontSize: 14, fontWeight: bold),
                 ),
                 SizedBox(
                   width: 5,
@@ -164,6 +172,60 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
             stream: socketProvider!.streamDataSocket,
             builder: (context, snapshot) {
               logger.d(snapshot.data);
+              String status = "Waiting Host";
+              List<WordLanguageModel>? questionList = [];
+              if (snapshot.hasData) {
+                try {
+                  var data = json.decode(snapshot.data.toString());
+
+                  ///! menerima soal dari socket
+                  if (data['target'] == 'receive_question') {
+                    logger.d(data['question']);
+                    // if (!roomProvider!.isGetQuestion) {
+
+                    // }
+                    var questions = json.decode(data['question'].toString());
+                    for (var itemQuestion in questions) {
+                      WordLanguageModel questi =
+                          WordLanguageModel.fromJson(itemQuestion);
+                      questionList.add(questi);
+                    }
+                    roomProvider!.setQuestionList(questionList);
+                    socketProvider!.socketSendStatusPlayer(
+                        channelCode:
+                            roomProvider!.roomMatch!.channel_code ?? '',
+                        roomMatchDetailModel: roomProvider!
+                            .getRoomMatchDetailByUser(
+                                userID: user!.id, statusPlayer: 2));
+                    // roomProvider!.isGetQuestion = true;
+                    status = "Berhasil menerima Pengaturan";
+                  }
+
+                  ///! menerima status permainan
+                  if (data['target'] == 'update-status-game') {
+                    if (int.parse(data['status_game']) == 1) {
+                      roomProvider!.updateStatusGame(
+                          data['room_id'], int.parse(data['status_game']));
+                      logger.d("Game Start ");
+                      status = "Permainan Segera Dimulai";
+                    }
+                  }
+
+                  ///! menerima status pemain lain
+                  if (data['target'] == 'update-status-player') {
+                    if (int.parse(data['status_player']) == 2) {
+                      roomProvider!.updateStatusPlayer(
+                          roomDetailId: data['room_detail_id'],
+                          status: data['status_player'],
+                          isReady: data['is_ready']);
+                      logger.d("Menerima status permainan");
+                    }
+                  }
+                } catch (e, t) {
+                  logger.e(t);
+                }
+              }
+
               return Container(
                 margin:
                     const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
@@ -206,15 +268,33 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
                         ),
                       ),
                     ),
+                    const SizedBox(
+                      height: 15,
+                    ),
                     ElasticIn(
                       child: Container(
                         alignment: Alignment.topCenter,
                         child: Text(
-                          "Waiting Host",
+                          "${status}",
                           style: whiteTextStyle.copyWith(
                               fontWeight: extraBold, fontSize: 25),
                         ),
                       ),
+                    ),
+                    const SizedBox(
+                      height: 50,
+                    ),
+                    Center(
+                      child: ElasticIn(
+                          child: Container(
+                        height: 100,
+                        width: 100,
+                        alignment: Alignment.topCenter,
+                        child: LoadingIndicator(
+                            indicatorType: Indicator.lineScalePulseOut,
+                            colors: [Colors.white],
+                            strokeWidth: 2),
+                      )),
                     )
                   ],
                 ),

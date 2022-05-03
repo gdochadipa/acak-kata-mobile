@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:math';
 
 import 'package:acakkata/models/room_match_detail_model.dart';
 import 'package:acakkata/models/room_match_model.dart';
@@ -28,9 +29,38 @@ class RoomProvider with ChangeNotifier {
   int get totalQuestion => _totalQuestion;
   int get maxPlayer => _maxPlayer;
 
+  bool _isGetQuestion = false;
+  bool get isGetQuestion => _isGetQuestion;
+
+  set isGetQuestion(bool isGet) {
+    _isGetQuestion = isGet;
+  }
+
   set roomMatch(RoomMatchModel? roomMatch) {
     _roomMatch = roomMatch;
     notifyListeners();
+  }
+
+  Future<void> setQuestionList(List<WordLanguageModel>? question) async {
+    _listQuestion = question;
+    if (_listQuestion != null) {
+      _queueQuestion = [for (var i = 0; i < _listQuestion!.length; i++) i];
+    }
+
+    var rand = Random();
+    // for (var i = _queueQuestion!.length - 1; i > 0; i--) {
+    //   var n = rand.nextInt(i + 1);
+    //   var temp = _queueQuestion![i];
+    //   _queueQuestion![i] = _queueQuestion![n];
+    //   _queueQuestion![n] = temp;
+    // }
+    for (var i = _queueQuestion!.length - 1; i > 0; i--) {
+      var n = rand.nextInt(i + 1);
+      var temp = _listQuestion![i];
+      _listQuestion![i] = _listQuestion![n];
+      _listQuestion![n] = temp;
+    }
+    // notifyListeners();
   }
 
   Future<bool> createRoom(
@@ -39,6 +69,7 @@ class RoomProvider with ChangeNotifier {
       int? time_watch,
       int? total_question,
       DateTime? datetime_match,
+      int? length_word,
       int? level}) async {
     try {
       _maxPlayer = max_player ?? 2;
@@ -53,7 +84,8 @@ class RoomProvider with ChangeNotifier {
           total_question!,
           token!,
           datetime_match!,
-          level!);
+          level!,
+          length_word!);
       _roomMatch = roomMatchModel;
 
       return true;
@@ -100,6 +132,7 @@ class RoomProvider with ChangeNotifier {
 
       return isConfirm;
     } catch (e) {
+      throw Exception(e);
       return false;
     }
   }
@@ -112,6 +145,7 @@ class RoomProvider with ChangeNotifier {
 
       return isCancel;
     } catch (e) {
+      throw Exception(e);
       return false;
     }
   }
@@ -121,12 +155,14 @@ class RoomProvider with ChangeNotifier {
     try {
       SharedPreferences pref = await SharedPreferences.getInstance();
       String? token = pref.getString('token');
+
       List<WordLanguageModel> listQuestion = await RoomService()
-          .getPackageQuestion(
-              token!, language_code!, roomMatch!.totalQuestion!, channel_code!);
+          .getPackageQuestion(token!, language_code!, roomMatch!.totalQuestion!,
+              channel_code!, roomMatch!.length_word!);
       _listQuestion = listQuestion;
       return true;
-    } catch (e) {
+    } catch (e, trace) {
+      throw Exception(e);
       return false;
     }
   }
@@ -151,18 +187,37 @@ class RoomProvider with ChangeNotifier {
     }
   }
 
-  updateStatusPlayer(String? roomDetailId, bool? status) {
-    if (status == true) {
-      List<RoomMatchDetailModel> detail = roomMatch!.room_match_detail!
-          .where((detail) => detail.id!.contains(roomDetailId ?? ''))
-          .toList();
-      if (detail.length == 1) {
-        roomMatch!.room_match_detail!
-            .where((detail) => detail.id!.contains(roomDetailId ?? ''))
-            .first
-            .is_ready = 1;
-      }
+  updateStatusPlayer(
+      {required String? roomDetailId,
+      required int? status,
+      required int? isReady}) async {
+    roomMatch!.room_match_detail!
+        .where((detail) => detail.id!.contains(roomDetailId ?? ''))
+        .first
+        .is_ready = 1;
+
+    roomMatch!.room_match_detail!
+        .where((detail) => detail.id!.contains(roomDetailId ?? ''))
+        .first
+        .status_player = status;
+  }
+
+  updateStatusGame(String? roomId, int? statusGame) async {
+    if (_roomMatch!.id == roomId) {
+      _roomMatch!.status_game = statusGame;
     }
+  }
+
+  RoomMatchDetailModel getRoomMatchDetailByUser(
+      {required String? userID, required int? statusPlayer}) {
+    roomMatch!.room_match_detail!
+        .where((roomMatchDetail) => roomMatchDetail.player_id == userID)
+        .first
+        .status_player = statusPlayer;
+
+    return roomMatch!.room_match_detail!
+        .where((roomMatchDetail) => roomMatchDetail.player_id == userID)
+        .first;
   }
 
   bool checkAllAreReady() {
@@ -171,6 +226,19 @@ class RoomProvider with ChangeNotifier {
           .where((detail) => detail.is_ready == 0)
           .toList();
       if (detail.length == 0) {
+        return true;
+      }
+      return false;
+    }
+    return false;
+  }
+
+  bool checkAllAreReceiveQuestion() {
+    if (_roomMatch!.max_player! == _roomMatch!.room_match_detail!.length) {
+      List<RoomMatchDetailModel> detail = roomMatch!.room_match_detail!
+          .where((detail) => detail.status_player == 2)
+          .toList();
+      if (detail.length == roomMatch!.room_match_detail!.length) {
         return true;
       }
       return false;

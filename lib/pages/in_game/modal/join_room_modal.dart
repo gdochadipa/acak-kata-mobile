@@ -69,8 +69,7 @@ class _JoinRoomModalState extends State<JoinRoomModal> {
     final overlay = LoadingOverlay.of(context);
     S? setLanguage = S.of(context);
 
-    /// !masalahnya disini untuk language code nya, kyknya perbaiki untuk
-    /// !pencarian room pada api dan socket engga butuh language code
+    /// !ketika join room berhasil status player itu sama dengan 1
     handleSearchRoom() async {
       try {
         setState(() {
@@ -91,6 +90,7 @@ class _JoinRoomModalState extends State<JoinRoomModal> {
           RoomMatchDetailModel roomSend = roomProvider!.listRoommatchDet!
               .where((detail) => detail.player_id! == authProvider!.user!.id)
               .first;
+          roomSend.is_ready = 1;
           await socketProvider!.socketSendJoinRoom(
               channelCode: '${roomProvider!.roomMatch!.channel_code}',
               playerCode: '${authProvider!.user!.userCode}',
@@ -112,7 +112,7 @@ class _JoinRoomModalState extends State<JoinRoomModal> {
         }
       } catch (e, trace) {
         logger.e(e);
-        // logger.e(trace);
+        logger.e(trace);
         String error = e.toString().replaceAll('Exception:', '');
         setState(() {
           _validation = true;
