@@ -49,7 +49,7 @@ class _LanguageAppSettingModalState extends State<LanguageAppSettingModal> {
 
   void onChangeLanguage(String flag) {
     S language = S.of(context);
-    print("set flag ${language.code}");
+    // print("set flag ${language.code}");
     setState(() {
       _changeLanguageProvider!.changeLocale(flag);
       wasSelectedLanguage = true;
@@ -104,8 +104,8 @@ class _LanguageAppSettingModalState extends State<LanguageAppSettingModal> {
                           languageSelected =
                               listLang[int.parse(item.toString())];
                         });
-                        print(
-                            "on selected = ${selected}  ${listLang[int.parse(item.toString())]} ");
+                        // print(
+                        //     "on selected = ${selected}  ${listLang[int.parse(item.toString())]} ");
                         return;
                       }
                       // _groupButtonController!
@@ -177,7 +177,7 @@ class _LanguageAppSettingModalState extends State<LanguageAppSettingModal> {
                             fontSize: 14, fontWeight: bold),
                       ),
                       onPressed: () {
-                        print("selected lang ${languageSelected}");
+                        // print("selected lang ${languageSelected}");
                         Timer(Duration(milliseconds: 50), () {
                           onChangeLanguage(languageSelected!);
                         });

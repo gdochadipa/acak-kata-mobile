@@ -111,7 +111,7 @@ class _OfflineGamePlayPageState extends State<OnlineGamePlayPage>
         setState(() {
           _isLoading = false;
         });
-        print("in loading");
+        // print("in loading");
       }
       return true;
     } catch (e) {
@@ -733,10 +733,10 @@ class _OfflineGamePlayPageState extends State<OnlineGamePlayPage>
         child: TextButton(
           onPressed: () {
             //hapus kata per kata
-            print(sequenceAnswer);
+            // print(sequenceAnswer);
             if (textAnswer != '' && textAnswer.length > 0) {
               int lett = sequenceAnswer![textAnswer.length - 1];
-              print(lett);
+              // print(lett);
               textAnswer = textAnswer.substring(0, textAnswer.length - 1);
               answerController.text = textAnswer;
               setState(() {

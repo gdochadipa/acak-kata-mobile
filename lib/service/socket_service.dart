@@ -149,7 +149,7 @@ class SocketService {
 
   Future<void> onTest() async {
     socket.on('eventName', (data) {
-      print(data.toString());
+      // print(data.toString());
     });
   }
 

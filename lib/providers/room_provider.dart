@@ -169,7 +169,7 @@ class RoomProvider with ChangeNotifier {
 
   bool updateRoomDetail(RoomMatchDetailModel? roomMatchDetailModel) {
     if (_roomMatch!.max_player! > _roomMatch!.room_match_detail!.length) {
-      print(_roomMatch!.room_match_detail!.length);
+      // print(_roomMatch!.room_match_detail!.length);
       List<RoomMatchDetailModel> detail = roomMatch!.room_match_detail!
           .where(
               (detail) => detail.id!.contains(roomMatchDetailModel!.id ?? ''))

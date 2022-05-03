@@ -103,7 +103,7 @@ class _PrepareGamePageState extends State<PrepareGamePage> {
       });
       // provider.setRuleGame(selectedTime, selectedQuestion);
       try {
-        print('${selectedQuestion}');
+        // print('${selectedQuestion}');
         if (await roomProvider.createRoom(
             language_code: widget.language.id,
             max_player: 2,
@@ -152,7 +152,7 @@ class _PrepareGamePageState extends State<PrepareGamePage> {
             backgroundColor: successColor,
           ));
           String? idUser = authProvider.user!.id;
-          print('${idUser}');
+          // print('${idUser}');
           socketService.emitJoinRoom('${room_code.text}', 'client');
           RoomMatchDetailModel roomSend = roomProvider.listRoommatchDet!
               .where((detail) => detail.player_id!.contains('${idUser}'))

@@ -46,7 +46,6 @@ class _SignInPageState extends State<SignInPage> {
   Widget build(BuildContext context) {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
     handleSignIn() async {
-      print("on handle Sign in");
       setState(() {
         isLoading = true;
       });
@@ -62,10 +61,10 @@ class _SignInPageState extends State<SignInPage> {
       } catch (e, stack) {
         print(e);
         print(stack);
-        String error = e.toString().replaceAll('Exception:', '');
+
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(
-            '${error}',
+            e.toString().replaceAll('Exception:', ''),
             textAlign: TextAlign.center,
           ),
           backgroundColor: alertColor,

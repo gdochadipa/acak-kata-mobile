@@ -55,7 +55,6 @@ class _NewHomePageState extends State<NewHomePage> {
 
   void onChangeLanguage(String flag) {
     Timer(Duration(milliseconds: 50), () {
-      print("${flag}");
       setState(() {
         _changeLanguageProvider!.changeLocale(flag);
         wasSelectedLanguage = true;
