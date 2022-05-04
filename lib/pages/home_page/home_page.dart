@@ -1,16 +1,26 @@
+import 'dart:async';
+
 import 'package:acakkata/models/language_model.dart';
+import 'package:acakkata/pages/auth/signin_page.dart';
+import 'package:acakkata/pages/auth/signup_page.dart';
 import 'package:acakkata/providers/language_db_provider.dart';
 import 'package:acakkata/providers/language_provider.dart';
 import 'package:acakkata/service/coba_echo_socket.dart';
 import 'package:acakkata/theme.dart';
+import 'package:acakkata/widgets/clicky_button.dart';
+import 'package:acakkata/widgets/custom_page_route_bounce.dart';
 import 'package:acakkata/widgets/language_card.dart';
-import 'package:draggable_home/draggable_home.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:provider/provider.dart';
 
-class HomePage extends StatelessWidget {
-  // const HomePage({Key? key}) : super(key: key);
+class HomePage extends StatefulWidget {
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
 
+class _HomePageState extends State<HomePage> {
+  // const HomePage({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     bool isLoading = false;
@@ -19,81 +29,100 @@ class HomePage extends StatelessWidget {
         Provider.of<LanguageDBProvider>(context);
     List<LanguageModel>? listLanguageModel = languageDBProvider.languageList;
 
+    Widget logoHeader() {
+      return Container(
+        margin: EdgeInsets.only(top: 20),
+        child: Center(
+          child: Image.asset(
+            'assets/images/logo_biru.png',
+            height: 100,
+            width: 80,
+          ),
+        ),
+      );
+    }
+
     Widget header() {
       return Container(
         margin: EdgeInsets.only(top: 30, left: 15, right: 15),
-        padding: EdgeInsets.only(left: 15, right: 8, top: 15, bottom: 15),
+        padding: EdgeInsets.only(left: 15, right: 8, top: 15, bottom: 5),
         decoration: BoxDecoration(
-            color: backgroundColor6,
-            borderRadius: BorderRadius.circular(15),
-            boxShadow: [
-              BoxShadow(
-                  color: backgroundColor5.withOpacity(0.5),
-                  spreadRadius: 2,
-                  blurRadius: 7,
-                  offset: Offset(0, 3))
-            ]),
+            color: backgroundColor1,
+            borderRadius: BorderRadius.circular(5),
+            border: Border.all(color: blackColor, width: 1)),
         child: Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    height: 40,
-                    width: 40,
-                    padding: EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      color: whiteColor,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Image.asset(
-                      'assets/images/bali_lang.png',
-                      width: 25,
-                      height: 15,
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Daily Achievement',
-                        style: headerText3.copyWith(
-                            fontSize: 16, fontWeight: medium),
-                      ),
-                      Text(
-                        'Base Bali',
-                        style: thirdTextStyle.copyWith(
-                            fontSize: 11,
-                            fontWeight: medium,
-                            color: grayColor3),
-                      ),
-                      Text(
-                        '3 out 4 games',
-                        style: thirdTextStyle.copyWith(
-                            fontSize: 12, fontWeight: light),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 15),
-                child: LinearProgressIndicator(
-                  value: 3 / 4,
-                  backgroundColor: backgroundColor5,
-                  valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
+            child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              child: Center(
+                child: Text(
+                  "Bermain dengan teman ?",
+                  style:
+                      blackTextStyle.copyWith(fontWeight: medium, fontSize: 16),
                 ),
-              )
-            ],
-          ),
-        ),
+              ),
+            ),
+            Row(
+              children: [
+                Flexible(
+                  child: Container(
+                    margin: EdgeInsets.only(top: 10),
+                    alignment: Alignment.center,
+                    child: ClickyButton(
+                        color: backgroundColor1,
+                        shadowColor: backgroundColor2,
+                        margin: const EdgeInsets.only(
+                            top: 10, bottom: 10, left: 15, right: 15),
+                        width: 120,
+                        height: 60,
+                        child: Text(
+                          'LOG IN',
+                          style: primaryTextStyle.copyWith(
+                              fontSize: 16, fontWeight: bold),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              CustomPageRouteBounce(
+                                  widget: SignInPage(),
+                                  duration: const Duration(milliseconds: 200)));
+                        }),
+                  ),
+                ),
+                Flexible(
+                  child: Container(
+                    margin: EdgeInsets.only(top: 10),
+                    alignment: Alignment.center,
+                    child: ClickyButton(
+                        color: backgroundColor2,
+                        shadowColor: backgroundColorAccent2,
+                        margin: const EdgeInsets.only(
+                            top: 10, bottom: 10, left: 15, right: 15),
+                        width: 120,
+                        height: 60,
+                        child: Text(
+                          'SIGN UP',
+                          style: whiteTextStyle.copyWith(
+                              fontSize: 16, fontWeight: bold),
+                        ),
+                        onPressed: () {
+                          Timer(Duration(milliseconds: 500), () {
+                            // Navigator.pushNamed(context, '/home');
+                            Navigator.push(
+                                context,
+                                CustomPageRouteBounce(
+                                    widget: SignUpPage(),
+                                    duration:
+                                        const Duration(milliseconds: 1000)));
+                          });
+                        }),
+                  ),
+                )
+              ],
+            )
+          ],
+        )),
       );
     }
 
@@ -106,8 +135,8 @@ class HomePage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "List Bahasa",
-                style: headerText2.copyWith(fontWeight: regular, fontSize: 28),
+                "Let's Play !",
+                style: headerText2.copyWith(fontWeight: medium, fontSize: 20),
               ),
               SizedBox(
                 height: 10,
@@ -119,20 +148,6 @@ class HomePage extends StatelessWidget {
                 ),
               )
             ],
-          ),
-        );
-      } else {
-        return Container(
-          margin: EdgeInsets.only(
-              top: 50, left: defaultMargin, right: defaultMargin),
-          padding: EdgeInsets.all(15),
-          decoration: BoxDecoration(
-              color: backgroundColor3, borderRadius: BorderRadius.circular(15)),
-          child: Center(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: const [CircularProgressIndicator(), Text("Loading")],
-            ),
           ),
         );
       }
@@ -165,8 +180,32 @@ class HomePage extends StatelessWidget {
     return Container(
       child: ListView(
         children: [
-          // header(),
-          cardBody()
+          AnimationConfiguration.staggeredList(
+            duration: Duration(milliseconds: 1000),
+            position: 0,
+            child: SlideAnimation(
+              child: FadeInAnimation(child: logoHeader()),
+              horizontalOffset: 50.0,
+            ),
+          ),
+          AnimationConfiguration.staggeredList(
+            duration: Duration(milliseconds: 1000),
+            position: 1,
+            child: SlideAnimation(
+              child: FadeInAnimation(
+                child: header(),
+              ),
+              horizontalOffset: 50.0,
+            ),
+          ),
+          AnimationConfiguration.staggeredList(
+            duration: Duration(milliseconds: 1000),
+            position: 2,
+            child: SlideAnimation(
+              child: FadeInAnimation(child: cardBody()),
+              horizontalOffset: 50.0,
+            ),
+          ),
         ],
       ),
     );

@@ -1,10 +1,17 @@
+import 'dart:ui';
+
+import 'package:acakkata/generated/l10n.dart';
 import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/models/level_model.dart';
 import 'package:acakkata/providers/language_db_provider.dart';
 import 'package:acakkata/theme.dart';
+import 'package:acakkata/widgets/custom_level_card.dart';
 import 'package:acakkata/widgets/level_card.dart';
+import 'package:acakkata/widgets/popover/custom_match_form.dart';
 import 'package:acakkata/widgets/skeleton/level_card_skeleton.dart';
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
@@ -35,7 +42,8 @@ class _LevelListPageState extends State<LevelListPage> {
       setState(() {
         isLoading = true;
       });
-      if (await languageDBProvider!.getLevel()) {
+      if (await languageDBProvider!
+          .getLevel(widget.languageModel.language_code)) {
         levelList = languageDBProvider!.levelList;
         setState(() {
           isLoading = false;
@@ -55,6 +63,16 @@ class _LevelListPageState extends State<LevelListPage> {
 
   @override
   Widget build(BuildContext context) {
+    S? setLanguage = S.of(context);
+
+    showCustomFormLevelPop() async {
+      return showModal(
+          context: context,
+          builder: (BuildContext context) {
+            return CustomMatchForm(languageModel: widget.languageModel);
+          });
+    }
+
     Widget header() {
       return AppBar(
         leading: IconButton(
@@ -63,7 +81,9 @@ class _LevelListPageState extends State<LevelListPage> {
             color: primaryColor,
           ),
           onPressed: () {
-            Navigator.pop(context);
+            // Navigator.pop(context);
+            Navigator.pushNamedAndRemoveUntil(
+                context, '/home', (route) => false);
           },
         ),
         backgroundColor: backgroundColor1,
@@ -72,21 +92,36 @@ class _LevelListPageState extends State<LevelListPage> {
         title: Column(
           children: [
             SizedBox(
-              height: 5,
+              height: 8,
             ),
             Text(
-              "List Level",
+              (setLanguage.code == 'en'
+                  ? '${widget.languageModel.language_name_en}'
+                  : '${widget.languageModel.language_name_id}'),
               style: headerText2.copyWith(
-                  fontWeight: regular, fontSize: 16, color: subtitleColor),
+                  fontWeight: extraBold, fontSize: 20, color: primaryTextColor),
             ),
             Text(
-              '${widget.languageModel.language_name}',
+              widget.isOnline == true
+                  ? '${setLanguage.multi_player}'
+                  : '${setLanguage.single_player}',
               style:
-                  primaryTextStyle.copyWith(fontSize: 12, fontWeight: medium),
+                  primaryTextStyle.copyWith(fontSize: 14, fontWeight: medium),
             )
           ],
         ),
-        actions: [],
+        actions: [
+          GestureDetector(
+            onTap: () {
+              showCustomFormLevelPop();
+            },
+            child: Container(
+                width: 30,
+                height: 30,
+                padding: EdgeInsets.only(right: 10),
+                child: Image.asset('assets/images/icon_setting.png')),
+          )
+        ],
       );
     }
 
@@ -114,8 +149,18 @@ class _LevelListPageState extends State<LevelListPage> {
                         LevelCardSkeleton()
                       ]
                     : levelList!
-                        .map((e) => ItemLevelCard(
-                            levelModel: e, languageModel: widget.languageModel))
+                        .map(
+                          (e) => AnimationConfiguration.staggeredList(
+                              position: levelList!.indexOf(e),
+                              duration: Duration(milliseconds: 1000),
+                              child: SlideAnimation(
+                                horizontalOffset: 50.0,
+                                child: FadeInAnimation(
+                                    child: ItemLevelCard(
+                                        levelModel: e,
+                                        languageModel: widget.languageModel)),
+                              )),
+                        )
                         .toList(),
               ),
             )
@@ -129,6 +174,7 @@ class _LevelListPageState extends State<LevelListPage> {
           backgroundColor: backgroundColor1,
           body: Container(
             child: ListView(
+              shrinkWrap: true,
               children: [header(), body()],
             ),
           ),

@@ -6,7 +6,7 @@ import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/models/room_match_detail_model.dart';
 import 'package:acakkata/models/room_match_model.dart';
 import 'package:acakkata/models/user_model.dart';
-import 'package:acakkata/pages/in_game/room_match_page.dart';
+import 'package:acakkata/pages/in_game/old/room_match_page.dart';
 import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/providers/room_provider.dart';
 import 'package:acakkata/service/socket_service.dart';

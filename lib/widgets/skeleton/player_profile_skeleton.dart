@@ -19,7 +19,7 @@ class PlayerProfileSkeleton extends StatelessWidget {
               decoration:
                   ShapeDecoration(color: kLineDarkColor, shape: CircleBorder()),
             ),
-            SizedBox(
+            const SizedBox(
               height: 15,
             ),
             Shimmer.fromColors(
@@ -31,7 +31,7 @@ class PlayerProfileSkeleton extends StatelessWidget {
               baseColor: kLineDarkColor,
               highlightColor: kWhiteGreyColor,
             ),
-            SizedBox(
+            const SizedBox(
               height: 15,
             ),
             Shimmer.fromColors(

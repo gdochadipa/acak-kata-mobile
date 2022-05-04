@@ -2,11 +2,12 @@ import 'dart:developer';
 import 'dart:math';
 
 import 'package:acakkata/models/language_model.dart';
+import 'package:acakkata/models/level_model.dart';
 import 'package:acakkata/models/room_match_detail_model.dart';
-import 'package:acakkata/pages/in_game/game_play_page.dart';
+import 'package:acakkata/pages/in_game/old/game_play_page.dart';
 import 'package:acakkata/pages/in_game/offline_game_play_page.dart';
-import 'package:acakkata/pages/in_game/room_match_page.dart';
-import 'package:acakkata/pages/in_game/waiting_room_page.dart';
+import 'package:acakkata/pages/in_game/old/room_match_page.dart';
+import 'package:acakkata/pages/in_game/old/waiting_room_page.dart';
 import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/providers/language_db_provider.dart';
 import 'package:acakkata/providers/room_provider.dart';
@@ -102,9 +103,9 @@ class _PrepareGamePageState extends State<PrepareGamePage> {
       });
       // provider.setRuleGame(selectedTime, selectedQuestion);
       try {
-        print('${selectedQuestion}');
+        // print('${selectedQuestion}');
         if (await roomProvider.createRoom(
-            language_id: widget.language.id,
+            language_code: widget.language.id,
             max_player: 2,
             time_watch: selectedTime,
             total_question: selectedQuestion)) {
@@ -151,13 +152,15 @@ class _PrepareGamePageState extends State<PrepareGamePage> {
             backgroundColor: successColor,
           ));
           String? idUser = authProvider.user!.id;
-          print('${idUser}');
+          // print('${idUser}');
           socketService.emitJoinRoom('${room_code.text}', 'client');
           RoomMatchDetailModel roomSend = roomProvider.listRoommatchDet!
               .where((detail) => detail.player_id!.contains('${idUser}'))
               .first;
           socketService.emitSearchRoom(
-              room_code.text, widget.language.id ?? '', roomSend);
+              roomProvider.roomMatch!.channel_code.toString(),
+              widget.language.id ?? '',
+              roomSend);
 
           Navigator.push(
               context, CustomPageRoute(RoomMatchPage(widget.language)));
@@ -348,6 +351,17 @@ class _PrepareGamePageState extends State<PrepareGamePage> {
     }
 
     Widget CreateGameOffline() {
+      LevelModel levelModel = LevelModel(
+          id: 0,
+          level_name: "Custom",
+          level_time: 15,
+          level_words: 3,
+          level_lang_id: widget.language.id,
+          is_unlock: 1,
+          current_score: 0,
+          level_lang_code: widget.language.language_code,
+          target_score: 0,
+          level_question_count: 10);
       return Container(
         height: 50,
         width: double.infinity,
@@ -357,11 +371,14 @@ class _PrepareGamePageState extends State<PrepareGamePage> {
               Navigator.push(
                   context,
                   CustomPageRoute(OfflineGamePlayPage(
-                      languageModel: widget.language,
-                      selectedQuestion: 10,
-                      selectedTime: 15,
-                      isHost: 1,
-                      levelWords: 3)));
+                    languageModel: widget.language,
+                    selectedQuestion: 10,
+                    selectedTime: 15,
+                    isHost: 1,
+                    levelWords: 3,
+                    Stage: "Level 1",
+                    isCustom: false,
+                  )));
             },
             style: TextButton.styleFrom(
                 backgroundColor: primaryColor,

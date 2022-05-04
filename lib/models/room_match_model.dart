@@ -7,8 +7,9 @@ class RoomMatchModel {
   String? room_code;
   String? channel_code;
   int? status_game;
-  DateTime? time_start;
+  DateTime? datetime_match;
   int? totalQuestion;
+  int? length_word;
   int? time_match;
   int? max_player;
   DateTime? createdAt;
@@ -23,8 +24,9 @@ class RoomMatchModel {
       this.room_code,
       this.channel_code,
       this.status_game,
-      this.time_start,
+      this.datetime_match,
       this.totalQuestion,
+      this.length_word,
       this.time_match,
       this.max_player,
       this.createdAt,
@@ -36,15 +38,17 @@ class RoomMatchModel {
   RoomMatchModel.fromJson(Map<String, dynamic> json) {
     id = json['_id'];
 
-    language = json['language_id'] == null || json['language_id'] == 'null'
+    language = json['language'] == null || json['language'] == 'null'
         ? UninitializedLanguageModel()
-        : LanguageModel.fromJson(json['language_id']);
+        : LanguageModel.fromJson(json['language']);
+
     room_code = json['room_code'];
     channel_code = json['channel_code'];
     status_game = int.parse('${json['status_game'] ?? 0}');
-    time_match = int.parse('${json['time_match'] ?? 0}');
-    time_start = DateTime.parse('${json['time_start']}');
+    time_match = json['time_match'];
+    datetime_match = DateTime.parse(json['datetime_match'].toString());
     totalQuestion = int.parse('${json['total_question'] ?? 0}');
+    length_word = json['length_word'];
     max_player = int.parse('${json['max_player'] ?? 0}');
     createdAt = DateTime.parse(json['createdAt'].toString());
     updatedAt = DateTime.parse(json['updatedAt'].toString());
@@ -65,7 +69,7 @@ class RoomMatchModel {
       'status_game': status_game,
       'time_match': time_match,
       'max_player': max_player,
-      'time_start': time_start.toString(),
+      'time_start': datetime_match.toString(),
       'room_match_detail':
           room_match_detail!.map((detail) => detail.toJson()).toList(),
       'created_at': createdAt.toString(),

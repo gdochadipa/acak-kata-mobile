@@ -7,7 +7,20 @@ class RoomMatchDetailModel {
   String? player_id;
   int? is_host;
   int? score;
+
+  ///
+  /// 0 is not ready
+  /// 1 is ready
+  ///
   int? is_ready;
+
+  ///
+  /// 0 is not ready
+  /// 1 is ready but not receive question
+  /// 2 is receive question
+  /// 3 is game done
+  /// 4 is player out from room
+  ///
   int? status_player;
   UserModel? player;
 

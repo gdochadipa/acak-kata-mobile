@@ -1,5 +1,6 @@
-import 'package:acakkata/callbacks/CheckingWordCallback.dart';
+import 'package:acakkata/callbacks/checking_word_callback.dart';
 import 'package:acakkata/theme.dart';
+import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:flutter/material.dart';
 
 class InputAnswerButton extends StatefulWidget {
@@ -24,18 +25,18 @@ class _InputAnswerButtonState extends State<InputAnswerButton>
     with SingleTickerProviderStateMixin {
   late double _scale;
   late AnimationController _animationController;
+  late Animation _animation;
 
   @override
   void initState() {
     // TODO: implement initState
-    _animationController = AnimationController(
-        vsync: this,
-        duration: Duration(milliseconds: 50),
-        lowerBound: 0.0,
-        upperBound: 0.1)
-      ..addListener(() {
-        setState(() {});
-      });
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 500))
+          ..addListener(() {
+            setState(() {});
+          });
+    _animation = ColorTween(begin: backgroundColor1, end: Colors.black).animate(
+        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
     super.initState();
   }
 
@@ -53,38 +54,46 @@ class _InputAnswerButtonState extends State<InputAnswerButton>
     _animationController.duration = Duration(milliseconds: 50);
   }
 
+  animateColor(bool isSelected) {
+    if (isSelected) {
+      _animationController.forward();
+    } else {
+      _animationController.reverse();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.all(2),
+    return BouncingWidget(
+      onPressed: widget.isBtnSelected == false
+          ? () {
+              setState(() {
+                // widget.isBtnSelected = widget.isBtnSelected ? false : true;
+                widget.onSelectButtonLetter(
+                    widget.letter, widget.isBtnSelected);
+                animateColor(widget.isBtnSelected);
+              });
+            }
+          : () {},
       child: Container(
-        width: 45,
-        height: 45,
         margin: EdgeInsets.all(2),
-        child: TextButton(
-          onPressed: widget.isBtnSelected == false
-              ? () {
-                  setState(() {
-                    // widget.isBtnSelected = widget.isBtnSelected ? false : true;
-                    widget.onSelectButtonLetter(
-                        widget.letter, widget.isBtnSelected);
-                  });
-                }
-              : () {},
-          style: TextButton.styleFrom(
-              side: BorderSide(
+        child: Container(
+          width: 50,
+          height: 50,
+          margin: EdgeInsets.all(8),
+          decoration: BoxDecoration(
+              border: Border.all(
                   width: 1,
                   color: widget.isBtnSelected ? backgroundColor1 : blackColor),
-              backgroundColor:
-                  widget.isBtnSelected ? backgroundColor7 : backgroundColor1,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              )),
-          child: Text(
-            "${widget.letter}",
-            style: widget.isBtnSelected
-                ? whiteTextStyle.copyWith(fontSize: 20, fontWeight: bold)
-                : blackTextStyle.copyWith(fontSize: 20, fontWeight: bold),
+              color: widget.isBtnSelected ? backgroundColor7 : backgroundColor1,
+              borderRadius: BorderRadius.circular(12)),
+          child: Center(
+            child: Text(
+              "${widget.letter}",
+              style: widget.isBtnSelected
+                  ? whiteTextStyle.copyWith(fontSize: 20, fontWeight: bold)
+                  : blackTextStyle.copyWith(fontSize: 20, fontWeight: bold),
+            ),
           ),
         ),
       ),

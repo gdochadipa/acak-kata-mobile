@@ -12,12 +12,17 @@ const String SOCKET_URL = 'http://10.0.2.2:3000';
 class SocketService {
   late IO.Socket socket;
 
-  StreamController<String> _eventData = StreamController<String>();
+  StreamController<String> _eventData = StreamController<String>.broadcast();
   Sink get _inEventData => _eventData.sink;
   Stream get eventStream => _eventData.stream;
 
-  stopStream() {
-    _eventData.close();
+  pausedStream() {
+    // _eventData.onPause;
+  }
+
+  onResumeStream() {
+    // _eventData = StreamController<String>.broadcast();
+    // _eventData.onResume!;
   }
 
   Future<void> bindEvent(String eventName) async {
@@ -43,6 +48,7 @@ class SocketService {
  */
   Future<void> bindReceiveQuestion() async {
     socket.on('broadcast-question', (last) {
+      print("soal diterima");
       final String? data = last.toString();
       _inEventData.add(data);
     });
@@ -73,6 +79,13 @@ class SocketService {
     });
   }
 
+  Future<void> bindReceiveStatusGame() async {
+    socket.on('broadcast-status-game', (last) {
+      final String? data = last.toString();
+      _inEventData.add(data);
+    });
+  }
+
   emitJoinRoom(String channelCode, String player) {
     socket.emit(
         'join-room',
@@ -81,19 +94,32 @@ class SocketService {
   }
 
   emitStatusPlayer(
-      String channel_code, RoomMatchDetailModel? roomMatchDet, bool is_ready) {
-    log('on status player ${roomMatchDet!.id} ${is_ready}');
+      String channelCode, String? roomDetID, int? isReady, int? statusPlayer) {
+    log('on status player ${roomDetID} ${isReady}, ${statusPlayer}');
     socket.emit(
         'status-player',
         json.encode({
-          'channel_code': channel_code,
-          'room_detail_id': roomMatchDet.id,
-          'status': is_ready
+          'channel_code': channelCode,
+          'room_detail_id': roomDetID,
+          'is_ready': isReady,
+          'status_player': statusPlayer
+        }));
+  }
+
+  emitStatusGame(String channelCode, String? roomID, int? statusGame) {
+    log('on status Game  ${roomID} ${statusGame}');
+    socket.emit(
+        'status-game',
+        json.encode({
+          'channel_code': channelCode,
+          'room_id': roomID,
+          'status_game': statusGame
         }));
   }
 
   Future<void> emitSendQuestion(String channelCode, String languageCode,
-      String playerId, Map<String, dynamic> question) async {
+      String playerId, String question) async {
+    print("Kirim soal ke pemain lain");
     socket.emit(
         'send-question',
         json.encode({
@@ -117,18 +143,19 @@ class SocketService {
   }
 
   Future<void> disconnect() async {
-    socket.disconnect();
-    socket.onDisconnect((data) => print("Disconnect"));
-    _eventData.close();
+    if (socket.connected) {
+      socket.disconnect();
+      socket.onDisconnect((data) => print("Disconnect"));
+    }
   }
 
   disconnectCloseStream() {
-    _eventData.close();
+    // _eventData.close();
   }
 
   Future<void> onTest() async {
     socket.on('eventName', (data) {
-      print(data.toString());
+      // print(data.toString());
     });
   }
 
@@ -139,8 +166,9 @@ class SocketService {
           IO.OptionBuilder()
               .setTransports(['websocket']) // for Flutter or Dart VM
               .build());
-
-      socket.connect();
+      if (socket.disconnected) {
+        socket.connect();
+      }
 
       socket.on('connect', (data) {
         print('connected');

@@ -1,8 +1,11 @@
 import 'package:acakkata/pages/auth/signup_page.dart';
 import 'package:acakkata/providers/auth_provider.dart';
+import 'package:acakkata/widgets/btn_raised.dart';
 import 'package:acakkata/service/socket_service.dart';
 import 'package:acakkata/theme.dart';
+import 'package:acakkata/widgets/clicky_button.dart';
 import 'package:acakkata/widgets/custom_page_route.dart';
+import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -49,15 +52,19 @@ class _SignInPageState extends State<SignInPage> {
       try {
         if (await authProvider.login(
             email: emailController.text, password: passwordController.text)) {
-          Navigator.pushNamed(context, '/home');
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            '/home',
+            (route) => false,
+          );
         }
       } catch (e, stack) {
         print(e);
         print(stack);
-        String error = e.toString().replaceAll('Exception:', '');
+
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(
-            '${error}',
+            e.toString().replaceAll('Exception:', ''),
             textAlign: TextAlign.center,
           ),
           backgroundColor: alertColor,
@@ -69,59 +76,74 @@ class _SignInPageState extends State<SignInPage> {
       });
     }
 
-    handleOfflineMode() {
-      Navigator.pushNamed(context, '/home');
-    }
-
     checkSocket() async {
       await socket.onTest();
     }
 
+    Widget btnBack() {
+      return BouncingWidget(
+        onPressed: () {
+          Navigator.of(context)
+              .pushNamedAndRemoveUntil('/home', (route) => false);
+        },
+        child: Container(
+          width: 39,
+          height: 39,
+          margin: EdgeInsets.all(11),
+          decoration: BoxDecoration(color: whiteColor, shape: BoxShape.circle),
+          padding: EdgeInsets.all(10),
+          child: Center(
+            child: Icon(Icons.arrow_back_ios_new, size: 20),
+          ),
+        ),
+      );
+    }
+
     Widget header() {
       return Container(
-        margin: EdgeInsets.only(top: 30),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Login',
-              style: headerText1.copyWith(color: primaryTextColor),
+        child: Stack(children: [
+          Container(
+            margin: EdgeInsets.only(left: 10, top: 10),
+            alignment: Alignment.topLeft,
+            child: btnBack(),
+          ),
+          Container(
+            margin: EdgeInsets.only(left: 10, top: 80),
+            alignment: Alignment.center,
+            child: Image.asset(
+              'assets/images/logo_putih.png',
+              height: 132,
+              width: 158,
             ),
-            SizedBox(
-              height: 2,
-            ),
-            Text('Sign In to Continue')
-          ],
-        ),
+          )
+        ]),
       );
     }
 
     Widget emailInput() {
       return Container(
-        margin: EdgeInsets.only(top: 70),
+        margin: EdgeInsets.only(top: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Email Address',
+              'Email',
               style:
-                  primaryTextStyle.copyWith(fontSize: 16, fontWeight: medium),
+                  blackTextStyle.copyWith(fontSize: 17, fontWeight: semiBold),
             ),
             SizedBox(
-              height: 12,
+              height: 5,
             ),
             Container(
               height: 50,
               padding: EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
-                  color: grayColor2, borderRadius: BorderRadius.circular(12)),
+                  border: Border.all(color: blackColor),
+                  color: whiteColor,
+                  borderRadius: BorderRadius.circular(5)),
               child: Center(
                 child: Row(
                   children: [
-                    Image.asset('assets/images/icon_email.png', width: 17),
-                    SizedBox(
-                      width: 16,
-                    ),
                     Expanded(
                         child: TextFormField(
                       controller: emailController,
@@ -147,23 +169,21 @@ class _SignInPageState extends State<SignInPage> {
             Text(
               'Password',
               style:
-                  primaryTextStyle.copyWith(fontSize: 16, fontWeight: medium),
+                  blackTextStyle.copyWith(fontSize: 17, fontWeight: semiBold),
             ),
             SizedBox(
-              height: 12,
+              height: 5,
             ),
             Container(
               height: 50,
               padding: EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
-                  color: grayColor2, borderRadius: BorderRadius.circular(12)),
+                  border: Border.all(color: blackColor),
+                  color: backgroundColor1,
+                  borderRadius: BorderRadius.circular(5)),
               child: Center(
                 child: Row(
                   children: [
-                    Image.asset('assets/images/icon_password.png', width: 17),
-                    SizedBox(
-                      width: 16,
-                    ),
                     Expanded(
                         child: TextFormField(
                       obscureText: true,
@@ -184,55 +204,60 @@ class _SignInPageState extends State<SignInPage> {
 
     Widget signInButton() {
       return Container(
-        height: 50,
         width: double.infinity,
-        margin: EdgeInsets.only(top: 30),
-        child: TextButton(
+        margin: EdgeInsets.only(top: 20),
+        alignment: Alignment.center,
+        child: ClickyButton(
             onPressed: handleSignIn,
-            style: TextButton.styleFrom(
-                backgroundColor: primaryColor,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12))),
+            color: backgroundColor1,
+            shadowColor: backgroundColor2,
+            margin: EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
+            width: 245,
+            height: 60,
             child: Text(
-              'Sign In',
-              style: whiteTextStyle.copyWith(fontSize: 16, fontWeight: medium),
+              'SIGN IN',
+              style: primaryTextStyle.copyWith(fontSize: 16, fontWeight: bold),
             )),
       );
     }
 
-    Widget offlineModeBtn() {
+    Widget body() {
       return Container(
-        height: 50,
-        width: double.infinity,
-        margin: EdgeInsets.only(top: 30),
-        child: TextButton(
-            onPressed: handleOfflineMode,
-            style: TextButton.styleFrom(
-                backgroundColor: backgroundColor1,
-                side: BorderSide(width: 1, color: primaryColor),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12))),
-            child: Text(
-              'Offline Mode',
-              style:
-                  primaryTextStyle.copyWith(fontSize: 16, fontWeight: medium),
-            )),
+        margin: const EdgeInsets.only(left: 20, right: 20, top: 50),
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+        decoration: BoxDecoration(
+            color: whiteColor, borderRadius: BorderRadius.circular(5)),
+        child: Center(
+            child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            emailInput(),
+            passwordInput(),
+            signInButton(),
+            // offlineModeBtn(),
+          ],
+        )),
       );
     }
 
     Widget footer() {
       return Container(
-        margin: EdgeInsets.only(bottom: 30),
+        margin: EdgeInsets.only(bottom: 30, top: 50),
+        alignment: Alignment.bottomCenter,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               'Don \'t have an account? ',
-              style: subtitleTextStyle.copyWith(fontSize: 12),
+              style: whiteTextStyle.copyWith(fontSize: 12, fontWeight: bold),
             ),
             GestureDetector(
               onTap: () {
-                Navigator.push(context, CustomPageRoute(SignUpPage()));
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  CustomPageRoute(SignUpPage()),
+                  (route) => false,
+                );
               },
               child: Text(
                 'Sign Up',
@@ -246,22 +271,13 @@ class _SignInPageState extends State<SignInPage> {
     }
 
     return Scaffold(
-      backgroundColor: backgroundColor1,
+      backgroundColor: backgroundColor2,
       resizeToAvoidBottomInset: false,
       body: SafeArea(
-        child: Container(
-          margin: EdgeInsets.symmetric(horizontal: defaultMargin),
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            header(),
-            emailInput(),
-            passwordInput(),
-            signInButton(),
-            offlineModeBtn(),
-            Spacer(),
-            footer()
-          ]),
-        ),
+        child: SingleChildScrollView(
+            child: Column(
+          children: [header(), body(), footer()],
+        )),
       ),
     );
   }

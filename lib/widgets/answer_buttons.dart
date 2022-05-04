@@ -1,5 +1,4 @@
-import 'package:acakkata/callbacks/CheckingWordCallback.dart';
-import 'package:acakkata/widgets/answer_input_buttons.dart';
+import 'package:acakkata/callbacks/checking_word_callback.dart';
 import 'package:flutter/material.dart';
 
 class AnswerButtons extends StatelessWidget {

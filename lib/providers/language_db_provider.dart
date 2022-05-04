@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/models/level_model.dart';
+import 'package:acakkata/models/range_result_txt_model.dart';
 import 'package:acakkata/models/word_language_model.dart';
 import 'package:acakkata/models/word_language_model.dart';
 import 'package:flutter/material.dart';
@@ -28,12 +29,36 @@ class LanguageDBProvider with ChangeNotifier {
   List<int>? _queueQuestion;
   List<int>? get queueQuestion => _queueQuestion;
 
+  List<RangeResultTxtModel>? _dataRangeTextList;
+  List<RangeResultTxtModel>? get rangeTextList => _dataRangeTextList;
+
   int get numberCountDown => _numberCountDown;
   int get totalQuestion => _totalQuestion;
 
   setRuleGame(int? numberCountDown, int? totalQuestion) {
     _numberCountDown = numberCountDown ?? 15;
     _totalQuestion = totalQuestion ?? 15;
+  }
+
+  Future onConfigure(Database db) async {
+    await db.execute('PRAGMA foreign_keys = ON');
+  }
+
+  void _createTableResultRangeV2(Batch batch) {
+    batch.execute('DROP TABLE IF EXISTS tb_result_range');
+    batch.execute('''CREATE TABLE tb_result_range (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name_range_id TEXT,
+    name_range_en TEXT,
+    range_min INTEGER,
+    range_max INTEGER
+)''');
+    batch.execute(''' 
+      INSERT INTO "tb_result_range" ("id","name_range_id","name_range_en","range_min","range_max") VALUES (1,'Super','Super',90,100),
+ (2,'Bagus','Good',70,89),
+ (3,'Cukup','Enough',60,69),
+ (4,'Kurang','Not Enough',0,56)
+    ''');
   }
 
   Future<void> init() async {
@@ -51,7 +76,12 @@ class LanguageDBProvider with ChangeNotifier {
         await io.File(dbDictionaryPath).writeAsBytes(bytes, flush: true);
       }
 
-      _db = await openDatabase(dbDictionaryPath);
+      _db = await openDatabase(dbDictionaryPath,
+          version: 1, onConfigure: onConfigure, onCreate: (db, version) async {
+        var batch = db.batch();
+        _createTableResultRangeV2(batch);
+        await batch.commit();
+      });
     } catch (e) {
       print(e);
     }
@@ -123,8 +153,9 @@ class LanguageDBProvider with ChangeNotifier {
           "id",
           "language_name",
           "language_icon",
-          "language_collection",
-          "language_code"
+          "language_code",
+          "language_name_en",
+          "language_name_id"
         ]);
       });
 
@@ -137,7 +168,7 @@ class LanguageDBProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> getLevel() async {
+  Future<bool> getLevel(String? language_code) async {
     try {
       if (_db == null) {
         throw Exception("local data not found");
@@ -145,13 +176,22 @@ class LanguageDBProvider with ChangeNotifier {
       late List<Map<String, dynamic>> levels;
 
       await _db.transaction((txn) async {
-        levels = await txn.query("tb_level", columns: [
-          "id",
-          "level_name",
-          "level_words",
-          "level_time",
-          "level_question_count"
-        ]);
+        levels = await txn.query("tb_level",
+            columns: [
+              "id",
+              "level_name",
+              "level_words",
+              "level_time",
+              "level_question_count",
+              "level_lang_id",
+              "level_lang_code",
+              "is_unlock",
+              "current_score",
+              "target_score",
+              "sorting_level"
+            ],
+            where: "level_lang_code = ?",
+            whereArgs: [language_code]);
       });
 
       _levelList = levels.map((e) => LevelModel.fromJson(e)).toList();
@@ -159,6 +199,96 @@ class LanguageDBProvider with ChangeNotifier {
     } catch (e) {
       throw Exception(e);
       return false;
+    }
+  }
+
+  Future<bool> getRangeText() async {
+    try {
+      if (_db == null) {
+        throw Exception("local data not found");
+      }
+      late List<Map<String, dynamic>> rangeText;
+
+      await _db.transaction((txn) async {
+        rangeText = await txn.query('tb_result_range', columns: [
+          "id",
+          "name_range_id",
+          "name_range_en",
+          "range_min",
+          "range_max"
+        ]);
+
+        _dataRangeTextList =
+            rangeText.map((e) => RangeResultTxtModel.fromJson(e)).toList();
+      });
+      return true;
+    } catch (e) {
+      throw Exception(e);
+      return false;
+    }
+  }
+
+  Future<bool> setUpdateLevelProgress(int newScore, int? level_id) async {
+    try {
+      if (_db == null) {
+        throw Exception("local data not found");
+      }
+
+      Map<String, dynamic> row = {"current_score": newScore};
+
+      await _db.transaction((txn) async {
+        int updateCount = await txn
+            .update("tb_level", row, where: "id = ?", whereArgs: [level_id]);
+        // print("update tb_level ${updateCount}");
+      });
+
+      return true;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<bool> updateNextLevel(LevelModel? levelModel) async {
+    try {
+      if (_db == null) {
+        throw Exception("local data not found");
+      }
+      late List<Map<String, dynamic>> levels;
+      Map<String, dynamic> row = {"is_unlock": 1};
+
+      int nextLevel = (levelModel!.sorting_level ?? 0) + 1;
+
+      await _db.transaction((txn) async {
+        levels = await txn.query("tb_level",
+            columns: [
+              "id",
+              "level_name",
+              "level_words",
+              "level_time",
+              "level_question_count",
+              "level_lang_id",
+              "level_lang_code",
+              "is_unlock",
+              "current_score",
+              "target_score",
+              "sorting_level"
+            ],
+            where: "level_lang_code = ? AND sorting_level = ?",
+            limit: 1,
+            orderBy: "sorting_level DESC",
+            whereArgs: [levelModel.level_lang_code, nextLevel]);
+        // print("length ${levels.length}");
+
+        if (levels.isNotEmpty) {
+          await txn.update("tb_level", row,
+              where: "level_lang_code = ? AND sorting_level = ?",
+              whereArgs: [levelModel.level_lang_code, nextLevel]);
+        }
+      });
+
+      return true;
+    } catch (e) {
+      throw Exception(e);
     }
   }
 }

@@ -41,7 +41,7 @@ class _NewPlayerJoinRoomPageState extends State<NewPlayerJoinRoomPage> {
         ));
       }
     } catch (e, stacktrace) {
-      print(e);
+      // print(e);
       String error = e.toString().replaceAll('Exception:', '');
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(

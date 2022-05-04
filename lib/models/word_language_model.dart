@@ -30,7 +30,7 @@ class WordLanguageModel {
   Map<String, dynamic> toJson() => {
         "id": id,
         "word": word,
-        "word_hint": word_hint,
+        "meaning": word_hint,
         "length_word": length_word
       };
 }
