@@ -7,9 +7,9 @@ import 'package:acakkata/generated/l10n.dart';
 import 'package:acakkata/models/level_model.dart';
 import 'package:acakkata/models/word_language_model.dart';
 import 'package:acakkata/models/language_model.dart';
-import 'package:acakkata/pages/result_game/result_game_page.dart';
-import 'package:acakkata/providers/language_db_provider.dart';
+import 'package:acakkata/pages/result_game/result_online_game_page.dart';
 import 'package:acakkata/providers/room_provider.dart';
+import 'package:acakkata/providers/socket_provider.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/answer_input_buttons.dart';
 import 'package:acakkata/widgets/clicky_button.dart';
@@ -24,7 +24,6 @@ import 'package:animate_do/animate_do.dart';
 
 class OnlineGamePlayPage extends StatefulWidget {
   // const GamePlayPage({Key? key}) : super(key: key);
-  late final LanguageDBProvider _langProvider;
   late final LanguageModel? languageModel;
   late final int? selectedQuestion;
   late final int? selectedTime;
@@ -46,10 +45,10 @@ class OnlineGamePlayPage extends StatefulWidget {
       this.isCustom});
 
   @override
-  _OfflineGamePlayPageState createState() => _OfflineGamePlayPageState();
+  _OnlineGamePlayPageState createState() => _OnlineGamePlayPageState();
 }
 
-class _OfflineGamePlayPageState extends State<OnlineGamePlayPage>
+class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
     with SingleTickerProviderStateMixin {
   late final _animationRotateController =
       AnimationController(vsync: this, duration: Duration(milliseconds: 1000));
@@ -58,6 +57,8 @@ class _OfflineGamePlayPageState extends State<OnlineGamePlayPage>
   Logger logger = Logger(
     printer: PrettyPrinter(methodCount: 0),
   );
+  RoomProvider? roomProvider;
+  SocketProvider? socketProvider;
   String textAnswer = '';
   List<WordLanguageModel>? dataWordList;
   bool _isButtonDisabled = false;
@@ -87,32 +88,39 @@ class _OfflineGamePlayPageState extends State<OnlineGamePlayPage>
   List<int> scoreTime = [];
 
   Future<bool> getInit() async {
-    LanguageDBProvider langProvider =
-        Provider.of<LanguageDBProvider>(context, listen: false);
-    langProvider.setRuleGame(widget.selectedTime, widget.selectedQuestion);
+    // LanguageDBProvider langProvider =
+    //     Provider.of<LanguageDBProvider>(context, listen: false);
+    socketProvider = Provider.of<SocketProvider>(context, listen: false);
+    roomProvider = Provider.of<RoomProvider>(context, listen: false);
+    roomProvider!.setRuleGame(widget.selectedTime, widget.selectedQuestion);
     // langProvider.init();
-    String language = widget.languageModel?.language_code ?? "indonesia";
 
     setState(() {
       _isLoading = true;
-      numberCountDown = langProvider.numberCountDown;
+      numberCountDown = roomProvider!.roomMatch!.time_match ?? 15;
       countDownAnswer = numberCountDown;
-      totalQuestion = langProvider.totalQuestion;
+      totalQuestion = roomProvider!.totalQuestion;
     });
+    // logger.d(roomProvider!.roomMatch!.toJson());
+    // logger.d('number count down ${widget.selectedTime}');
 
-    widget._langProvider = langProvider;
     try {
-      if (await langProvider.getWords(
-          widget.languageModel!.language_code, widget.levelWords)) {
-        dataWordList =
-            langProvider.dataWordList!.getRange(0, totalQuestion).toList();
-        await setUpListQuestionQueue(dataWordList);
-        // setup antrian pertanyaan, gunanya untuk mekanisme skip pertanyaan
-        setState(() {
-          _isLoading = false;
-        });
-        // print("in loading");
-      }
+      // if (await langProvider.getWords(
+      //     widget.languageModel!.language_code, widget.levelWords)) {
+      //   dataWordList =
+      //       langProvider.dataWordList!.getRange(0, totalQuestion).toList();
+
+      //   // print("in loading");
+      // }
+      setState(() {
+        dataWordList = roomProvider!.listQuestion;
+      });
+      logger.d(dataWordList!.length);
+      await setUpListQuestionQueue(dataWordList);
+      // setup antrian pertanyaan, gunanya untuk mekanisme skip pertanyaan
+      setState(() {
+        _isLoading = false;
+      });
       return true;
     } catch (e) {
       logger.e(e);
@@ -147,17 +155,27 @@ class _OfflineGamePlayPageState extends State<OnlineGamePlayPage>
     // const duration = Duration(seconds: 1);
     _timer = Timer.periodic(Duration(seconds: 1), (Timer timer) {
       if (startCountDown > 0) {
-        setState(() {
-          startCountDown--;
-          _animationRotateController.forward(from: 0.0);
-        });
+        if (mounted) {
+          setState(() {
+            startCountDown--;
+            _animationRotateController.forward(from: 0.0);
+          });
+        }
       } else {
         timer.cancel();
-        setState(() {
-          isCountDown = false;
-        });
-        getTimeScore();
-        onCoreCountTimeInGame(numberCountDown);
+        try {
+          if (mounted) {
+            setState(() {
+              isCountDown = false;
+              afterAnswer = false;
+            });
+          }
+          getTimeScore();
+          onCoreCountTimeInGame(numberCountDown);
+        } catch (e, trace) {
+          logger.e(e);
+          logger.e(trace);
+        }
       }
     });
     // getTimeScore();
@@ -167,9 +185,14 @@ class _OfflineGamePlayPageState extends State<OnlineGamePlayPage>
   @override
   void dispose() {
     // TODO: implement dispose
+    _animationRotateController.dispose();
+    if (_timerInGame != null) {
+      _timerInGame!.cancel();
+    }
     super.dispose();
-    _timerInGame!.cancel();
-    _timerScore!.cancel();
+    if (_timerScore != null) {
+      _timerScore!.cancel();
+    }
     if (_timeInRes != null) {
       _timeInRes!.cancel();
     }
@@ -290,10 +313,20 @@ class _OfflineGamePlayPageState extends State<OnlineGamePlayPage>
             newScoreCount = ((scoreCount / totalQuestion) * 0.6);
           }
 
+          // Navigator.pushAndRemoveUntil(
+          //     context,
+          //     CustomPageRoute(ResultGamePage(widget.languageModel, newScoreTime,
+          //         newScoreCount, widget.levelModel, widget.isCustom)),
+          //     (route) => false);
           Navigator.pushAndRemoveUntil(
               context,
-              CustomPageRoute(ResultGamePage(widget.languageModel, newScoreTime,
-                  newScoreCount, widget.levelModel, widget.isCustom)),
+              CustomPageRoute(ResultOnlineGamePage(
+                finalScoreRate: newScoreCount,
+                finalTimeRate: newScoreTime,
+                languageModel: widget.languageModel,
+                isCustom: widget.isCustom,
+                level: widget.levelModel,
+              )),
               (route) => false);
         } else {
           /**

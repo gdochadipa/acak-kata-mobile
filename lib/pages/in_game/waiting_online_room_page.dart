@@ -1,10 +1,13 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:acakkata/generated/l10n.dart';
 import 'package:acakkata/models/language_model.dart';
+import 'package:acakkata/models/level_model.dart';
 import 'package:acakkata/models/room_match_detail_model.dart';
 import 'package:acakkata/models/room_match_model.dart';
 import 'package:acakkata/models/user_model.dart';
+import 'package:acakkata/pages/in_game/online_game_play_page.dart';
 import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/providers/room_provider.dart';
 import 'package:acakkata/providers/socket_provider.dart';
@@ -45,6 +48,7 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
   }
 
   connectSocket() async {
+    socketProvider!.restartStream();
     socketProvider!.socketJoinRoom(
         channelCode: '${roomProvider!.roomMatch!.channel_code}',
         playerCode: '${authProvider!.user!.userCode}');
@@ -65,6 +69,7 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
+    socketProvider!.pausedStream();
   }
 
   @override
@@ -83,24 +88,24 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
     /// !baru update status game mulai dan share lewat socket
     handleStartGame() async {
       try {
-        logger.d("Start Game");
         if (await roomProvider!.getPackageQuestion(
             roomMatch.language!.language_code, roomMatch.channel_code)) {
-          socketProvider!.socketSendQuestion(
+          await socketProvider!.socketSendQuestion(
               channelCode: roomMatch.channel_code!,
               languageCode: roomMatch.language!.language_code!,
               playerId: user!.id!,
               question: json.encode(roomProvider!.listQuestion));
-
-          /// send status
-          RoomMatchDetailModel matchDetail = roomProvider!
-              .getRoomMatchDetailByUser(userID: user.id, statusPlayer: 2);
-          socketProvider!.socketSendStatusPlayer(
-              channelCode: roomMatch.channel_code!,
-              roomMatchDetailModel: matchDetail);
         } else {
           logger.e("gagal");
         }
+
+        // send status
+        RoomMatchDetailModel matchDetail = roomProvider!
+            .getRoomMatchDetailByUser(userID: user!.id, statusPlayer: 2);
+
+        // await socketProvider!.socketSendStatusPlayer(
+        //     channelCode: roomMatch.channel_code!,
+        //     roomMatchDetailModel: matchDetail);
       } catch (e, trace) {
         logger.e(e);
         logger.e(trace);
@@ -142,7 +147,7 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
               Text(
                 "${information}",
                 style:
-                    whiteTextStyle.copyWith(fontSize: 22, fontWeight: semiBold),
+                    whiteTextStyle.copyWith(fontSize: 15, fontWeight: semiBold),
               )
             ],
           ),
@@ -289,12 +294,38 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
                         roomDetailId: data['room_detail_id'],
                         status: data['status_player'],
                         isReady: data['is_ready']);
+
                     if (roomProvider!.checkAllAreReceiveQuestion()) {
                       roomProvider!.updateStatusGame(roomMatch.id, 1);
                       socketProvider!.socketSendStatusGame(
                           channelCode: roomMatch.channel_code ?? '',
                           roomMatch: roomProvider!.roomMatch);
                       logger.d("Game Start ");
+                      socketProvider!.pausedStream();
+                      Timer(Duration(milliseconds: 1000), () {
+                        LevelModel levelModel = LevelModel(
+                            id: 77,
+                            level_name: setLanguage.custom_level,
+                            level_words: roomMatch.length_word,
+                            level_time: roomMatch.time_match,
+                            level_lang_code: setLanguage.code,
+                            level_lang_id: setLanguage.code,
+                            current_score: 0,
+                            target_score: 0);
+                        Navigator.push(
+                            context,
+                            CustomPageRoute(OnlineGamePlayPage(
+                              languageModel: widget.languageModel,
+                              selectedQuestion: roomMatch.totalQuestion,
+                              selectedTime: roomMatch.time_match,
+                              isHost: 1,
+                              levelWords: roomMatch.length_word,
+                              isOnline: true,
+                              Stage: setLanguage.custom_level,
+                              levelModel: levelModel,
+                              isCustom: false,
+                            )));
+                      });
                     }
                   }
                 } catch (e) {
@@ -366,7 +397,7 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
                                           width: 26,
                                         )),
                                     settingCard(
-                                        DateFormat('dd MMMMM yyyy').format(
+                                        DateFormat('dd MMMM yyyy').format(
                                             roomMatch.datetime_match ??
                                                 DateTime.now()),
                                         Image.asset(

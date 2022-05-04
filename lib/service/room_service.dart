@@ -13,7 +13,7 @@ class RoomService {
   );
   Future<RoomMatchModel> createRoom(
       String language_code,
-      int time_watch,
+      int time_match,
       int max_player,
       int total_question,
       String token,
@@ -25,7 +25,7 @@ class RoomService {
     var headers = {'Content-Type': 'application/json', 'Authorization': token};
     var body = jsonEncode({
       'language_code': language_code,
-      'time_watch': time_watch,
+      'time_match': time_match,
       'max_player': max_player,
       'total_question': total_question,
       'datetime_match': datetime_match.toString(),
@@ -34,10 +34,12 @@ class RoomService {
     });
 
     var response = await http.post(url, headers: headers, body: body);
-    print(response.body);
+    // logger.d(response.body);
+    // print(response.body);
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body)['data'];
+      logger.d(data);
       RoomMatchModel roomMatch = RoomMatchModel.fromJson(data);
       return roomMatch;
     } else {

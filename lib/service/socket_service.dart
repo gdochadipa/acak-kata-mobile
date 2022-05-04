@@ -12,12 +12,17 @@ const String SOCKET_URL = 'http://10.0.2.2:3000';
 class SocketService {
   late IO.Socket socket;
 
-  StreamController<String> _eventData = StreamController<String>();
+  StreamController<String> _eventData = StreamController<String>.broadcast();
   Sink get _inEventData => _eventData.sink;
   Stream get eventStream => _eventData.stream;
 
-  stopStream() {
-    _eventData.close();
+  pausedStream() {
+    // _eventData.onPause;
+  }
+
+  onResumeStream() {
+    // _eventData = StreamController<String>.broadcast();
+    // _eventData.onResume!;
   }
 
   Future<void> bindEvent(String eventName) async {
@@ -43,6 +48,7 @@ class SocketService {
  */
   Future<void> bindReceiveQuestion() async {
     socket.on('broadcast-question', (last) {
+      print("soal diterima");
       final String? data = last.toString();
       _inEventData.add(data);
     });
@@ -113,6 +119,7 @@ class SocketService {
 
   Future<void> emitSendQuestion(String channelCode, String languageCode,
       String playerId, String question) async {
+    print("Kirim soal ke pemain lain");
     socket.emit(
         'send-question',
         json.encode({
@@ -139,12 +146,11 @@ class SocketService {
     if (socket.connected) {
       socket.disconnect();
       socket.onDisconnect((data) => print("Disconnect"));
-      _eventData.close();
     }
   }
 
   disconnectCloseStream() {
-    _eventData.close();
+    // _eventData.close();
   }
 
   Future<void> onTest() async {

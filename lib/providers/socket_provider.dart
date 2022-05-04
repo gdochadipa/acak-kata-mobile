@@ -12,6 +12,20 @@ class SocketProvider with ChangeNotifier {
     _socketService.fireSocket();
   }
 
+  restartStream() {
+    // _socketService.onResumeStream();
+    _socketService = SocketService();
+    _socketService.fireSocket();
+  }
+
+  pausedStream() {
+    // _socketService.pausedStream();
+  }
+
+  resumeStream() {
+    _socketService.onResumeStream();
+  }
+
   Future<void> socketReceiveFindRoom() async {
     await _socketService.bindEventSearchRoom();
   }

@@ -1,19 +1,24 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:acakkata/generated/l10n.dart';
 import 'package:acakkata/models/language_model.dart';
+import 'package:acakkata/models/level_model.dart';
 import 'package:acakkata/models/room_match_detail_model.dart';
 import 'package:acakkata/models/room_match_model.dart';
 import 'package:acakkata/models/user_model.dart';
 import 'package:acakkata/models/word_language_model.dart';
+import 'package:acakkata/pages/in_game/online_game_play_page.dart';
 import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/providers/room_provider.dart';
 import 'package:acakkata/providers/socket_provider.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/clicky_button.dart';
+import 'package:acakkata/widgets/custom_page_route.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
@@ -46,13 +51,22 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
   }
 
   connectSocket() async {
+    socketProvider!.restartStream();
     socketProvider!.socketReceiveFindRoom();
+    socketProvider!.socketReceiveQuestion();
     socketProvider!.socketReceiveStatusPlayer();
     socketProvider!.socketReceiveStatusGame();
-    socketProvider!.socketReceiveQuestion();
+
     // await socketService.fireSocket();
     // await socketService.bindEventSearchRoom();
     // await socketService.bindReceiveStatusPlayer();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    socketProvider!.pausedStream();
   }
 
   @override
@@ -120,7 +134,7 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
               Text(
                 "${information}",
                 style:
-                    whiteTextStyle.copyWith(fontSize: 22, fontWeight: semiBold),
+                    whiteTextStyle.copyWith(fontSize: 15, fontWeight: semiBold),
               )
             ],
           ),
@@ -167,57 +181,86 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
     }
 
     Widget body() {
+      String status = "Waiting Host";
       return SingleChildScrollView(
         child: StreamBuilder(
             stream: socketProvider!.streamDataSocket,
             builder: (context, snapshot) {
               logger.d(snapshot.data);
-              String status = "Waiting Host";
+
               List<WordLanguageModel>? questionList = [];
               if (snapshot.hasData) {
                 try {
                   var data = json.decode(snapshot.data.toString());
 
                   ///! menerima soal dari socket
+                  logger.d("data => ${data}");
                   if (data['target'] == 'receive_question') {
-                    logger.d(data['question']);
-                    // if (!roomProvider!.isGetQuestion) {
-
-                    // }
                     var questions = json.decode(data['question'].toString());
-                    for (var itemQuestion in questions) {
-                      WordLanguageModel questi =
-                          WordLanguageModel.fromJson(itemQuestion);
-                      questionList.add(questi);
+                    logger.d("data => ${questions != null}");
+                    if (questions != null) {
+                      for (var itemQuestion in questions) {
+                        WordLanguageModel questi =
+                            WordLanguageModel.fromJson(itemQuestion);
+                        logger.d(questi.word_hint);
+                        questionList.add(questi);
+                      }
+                      roomProvider!.setQuestionList(questionList);
+                      socketProvider!.socketSendStatusPlayer(
+                          channelCode:
+                              roomProvider!.roomMatch!.channel_code ?? '',
+                          roomMatchDetailModel: roomProvider!
+                              .getRoomMatchDetailByUser(
+                                  userID: user!.id, statusPlayer: 2));
                     }
-                    roomProvider!.setQuestionList(questionList);
-                    socketProvider!.socketSendStatusPlayer(
-                        channelCode:
-                            roomProvider!.roomMatch!.channel_code ?? '',
-                        roomMatchDetailModel: roomProvider!
-                            .getRoomMatchDetailByUser(
-                                userID: user!.id, statusPlayer: 2));
                     // roomProvider!.isGetQuestion = true;
                     status = "Berhasil menerima Pengaturan";
                   }
 
                   ///! menerima status permainan
                   if (data['target'] == 'update-status-game') {
-                    if (int.parse(data['status_game']) == 1) {
+                    if (data['status_game'] == 1) {
                       roomProvider!.updateStatusGame(
-                          data['room_id'], int.parse(data['status_game']));
+                          data['room_id'], data['status_game']);
                       logger.d("Game Start ");
                       status = "Permainan Segera Dimulai";
+                      Timer(Duration(milliseconds: 1000), () {
+                        socketProvider!.pausedStream();
+                        LevelModel levelModel = LevelModel(
+                            id: 77,
+                            level_name: setLanguage.custom_level,
+                            level_words: roomMatch.length_word,
+                            level_time: roomMatch.time_match,
+                            level_lang_code: setLanguage.code,
+                            level_lang_id: setLanguage.code,
+                            current_score: 0,
+                            target_score: 0);
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            CustomPageRoute(OnlineGamePlayPage(
+                              languageModel: widget.languageModel,
+                              selectedQuestion: roomMatch.totalQuestion,
+                              selectedTime: roomMatch.time_match,
+                              isHost: 0,
+                              levelWords: roomMatch.length_word,
+                              isOnline: true,
+                              Stage: setLanguage.custom_level,
+                              levelModel: levelModel,
+                              isCustom: false,
+                            )),
+                            (route) => false);
+                      });
                     }
                   }
 
                   ///! menerima status pemain lain
                   if (data['target'] == 'update-status-player') {
-                    if (int.parse(data['status_player']) == 2) {
+                    if (data['status_player'] == 2) {
                       roomProvider!.updateStatusPlayer(
                           roomDetailId: data['room_detail_id'],
                           status: data['status_player'],
                           isReady: data['is_ready']);
+                      status = "Menerima status dari pemain lain";
                       logger.d("Menerima status permainan");
                     }
                   }
@@ -233,16 +276,16 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ElasticIn(
-                      child: Container(
-                        alignment: Alignment.topCenter,
-                        child: Image.asset(
-                          'assets/images/logo_putih.png',
-                          height: 111.87,
-                          width: 84.33,
-                        ),
-                      ),
-                    ),
+                    // ElasticIn(
+                    //   child: Container(
+                    //     alignment: Alignment.topCenter,
+                    //     child: Image.asset(
+                    //       'assets/images/logo_putih.png',
+                    //       height: 111.87,
+                    //       width: 84.33,
+                    //     ),
+                    //   ),
+                    // ),
 
                     ///* setting up match
                     ElasticIn(
@@ -258,7 +301,8 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
                                   width: 26,
                                 )),
                             settingCard(
-                                "13:15",
+                                DateFormat('dd MMMM yyyy').format(
+                                    roomMatch.datetime_match ?? DateTime.now()),
                                 Image.asset(
                                   'assets/images/white_clock_icon.png',
                                   height: 26,
@@ -290,8 +334,8 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
                         height: 100,
                         width: 100,
                         alignment: Alignment.topCenter,
-                        child: LoadingIndicator(
-                            indicatorType: Indicator.lineScalePulseOut,
+                        child: const LoadingIndicator(
+                            indicatorType: Indicator.circleStrokeSpin,
                             colors: [Colors.white],
                             strokeWidth: 2),
                       )),

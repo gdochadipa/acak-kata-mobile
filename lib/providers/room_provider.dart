@@ -41,6 +41,11 @@ class RoomProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  setRuleGame(int? numberCountDown, int? totalQuestion) {
+    _numberCountDown = numberCountDown ?? 15;
+    _totalQuestion = totalQuestion ?? 15;
+  }
+
   Future<void> setQuestionList(List<WordLanguageModel>? question) async {
     _listQuestion = question;
     if (_listQuestion != null) {
@@ -215,6 +220,11 @@ class RoomProvider with ChangeNotifier {
         .first
         .status_player = statusPlayer;
 
+    roomMatch!.room_match_detail!
+        .where((roomMatchDetail) => roomMatchDetail.player_id == userID)
+        .first
+        .is_ready = 1;
+
     return roomMatch!.room_match_detail!
         .where((roomMatchDetail) => roomMatchDetail.player_id == userID)
         .first;
@@ -234,14 +244,17 @@ class RoomProvider with ChangeNotifier {
   }
 
   bool checkAllAreReceiveQuestion() {
-    if (_roomMatch!.max_player! == _roomMatch!.room_match_detail!.length) {
-      List<RoomMatchDetailModel> detail = roomMatch!.room_match_detail!
-          .where((detail) => detail.status_player == 2)
-          .toList();
-      if (detail.length == roomMatch!.room_match_detail!.length) {
-        return true;
-      }
-      return false;
+    // if (_roomMatch!.max_player! == _roomMatch!.room_match_detail!.length) {
+
+    // }
+    // return false;
+    List<RoomMatchDetailModel> detail = roomMatch!.room_match_detail!
+        .where((detail) => detail.status_player == 2)
+        .toList();
+    print(
+        "is all have receive status ${detail.length == roomMatch!.room_match_detail!.length}");
+    if (detail.length == roomMatch!.room_match_detail!.length) {
+      return true;
     }
     return false;
   }
