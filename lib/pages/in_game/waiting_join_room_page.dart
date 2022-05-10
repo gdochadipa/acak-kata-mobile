@@ -186,15 +186,22 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
         child: StreamBuilder(
             stream: socketProvider!.streamDataSocket,
             builder: (context, snapshot) {
-              logger.d(snapshot.data);
+              // logger.d(snapshot.data);
 
               List<WordLanguageModel>? questionList = [];
               if (snapshot.hasData) {
                 try {
                   var data = json.decode(snapshot.data.toString());
 
+                  ///! mengecek pemain baru
+                  if (data['target'] == 'update-player') {
+                    RoomMatchDetailModel matchDetailModel =
+                        RoomMatchDetailModel.fromJson(data['room_detail']);
+                    roomProvider!.updateRoomDetail(matchDetailModel);
+                  }
+
                   ///! menerima soal dari socket
-                  logger.d("data => ${data}");
+                  // logger.d("data => ${data}");
                   if (data['target'] == 'receive_question') {
                     var questions = json.decode(data['question'].toString());
                     logger.d("data => ${questions != null}");
@@ -202,7 +209,6 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
                       for (var itemQuestion in questions) {
                         WordLanguageModel questi =
                             WordLanguageModel.fromJson(itemQuestion);
-                        logger.d(questi.word_hint);
                         questionList.add(questi);
                       }
                       roomProvider!.setQuestionList(questionList);
@@ -255,6 +261,7 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
 
                   ///! menerima status pemain lain
                   if (data['target'] == 'update-status-player') {
+                    logger.d("data update-status-player => ${data}");
                     if (data['status_player'] == 2) {
                       roomProvider!.updateStatusPlayer(
                           roomDetailId: data['room_detail_id'],

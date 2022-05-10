@@ -294,7 +294,10 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
                         roomDetailId: data['room_detail_id'],
                         status: data['status_player'],
                         isReady: data['is_ready']);
-
+                    logger.d(roomProvider!.roomMatch!.room_match_detail!
+                        .where((element) => element.status_player == 2)
+                        .length);
+                    logger.d(roomProvider!.roomMatch!.room_match_detail);
                     if (roomProvider!.checkAllAreReceiveQuestion()) {
                       roomProvider!.updateStatusGame(roomMatch.id, 1);
                       socketProvider!.socketSendStatusGame(

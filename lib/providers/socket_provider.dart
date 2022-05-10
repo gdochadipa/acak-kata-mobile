@@ -63,8 +63,12 @@ class SocketProvider with ChangeNotifier {
   Future<void> socketSendStatusPlayer(
       {required String channelCode,
       required RoomMatchDetailModel roomMatchDetailModel}) async {
-    await _socketService.emitStatusPlayer(channelCode, roomMatchDetailModel.id,
-        roomMatchDetailModel.is_ready, roomMatchDetailModel.status_player);
+    await _socketService.emitStatusPlayer(
+        channelCode,
+        roomMatchDetailModel.id,
+        roomMatchDetailModel.is_ready,
+        roomMatchDetailModel.status_player,
+        roomMatchDetailModel.player!.username);
   }
 
   Future<void> socketSendStatusGame(

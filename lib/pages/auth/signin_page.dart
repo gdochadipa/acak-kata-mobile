@@ -270,15 +270,17 @@ class _SignInPageState extends State<SignInPage> {
       );
     }
 
-    return Scaffold(
-      backgroundColor: backgroundColor2,
-      resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: SingleChildScrollView(
-            child: Column(
-          children: [header(), body(), footer()],
-        )),
-      ),
-    );
+    return WillPopScope(
+        child: Scaffold(
+          backgroundColor: backgroundColor2,
+          resizeToAvoidBottomInset: false,
+          body: SafeArea(
+            child: SingleChildScrollView(
+                child: Column(
+              children: [header(), body(), footer()],
+            )),
+          ),
+        ),
+        onWillPop: () async => false);
   }
 }

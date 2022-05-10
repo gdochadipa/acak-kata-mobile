@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:math' hide log;
 
 import 'package:acakkata/models/room_match_detail_model.dart';
 import 'package:flutter/services.dart';
+import 'package:logger/logger.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 const String SOCKET_KEY = '';
@@ -15,6 +17,9 @@ class SocketService {
   StreamController<String> _eventData = StreamController<String>.broadcast();
   Sink get _inEventData => _eventData.sink;
   Stream get eventStream => _eventData.stream;
+  Logger logger = Logger(
+    printer: PrettyPrinter(methodCount: 0),
+  );
 
   pausedStream() {
     // _eventData.onPause;
@@ -23,6 +28,10 @@ class SocketService {
   onResumeStream() {
     // _eventData = StreamController<String>.broadcast();
     // _eventData.onResume!;
+  }
+
+  int random(int min, int max) {
+    return min + Random().nextInt(max - min);
   }
 
   Future<void> bindEvent(String eventName) async {
@@ -61,21 +70,24 @@ class SocketService {
     });
   }
 
-  emitSearchRoom(String channelCode, String languageCode,
+  Future<void> emitSearchRoom(String channelCode, String languageCode,
       RoomMatchDetailModel roomMatchDet) async {
-    socket.emit(
-        'search-room',
-        json.encode({
-          'channel_code': channelCode,
-          'language_code': languageCode,
-          'room_detail': roomMatchDet.toJson()
-        }));
+    Future.delayed(Duration(milliseconds: random(500, 1000)), () {
+      socket.emit(
+          'search-room',
+          json.encode({
+            'channel_code': channelCode,
+            'language_code': languageCode,
+            'room_detail': roomMatchDet.toJson()
+          }));
+    });
   }
 
   Future<void> bindReceiveStatusPlayer() async {
+    List<String>? testData = [];
     socket.on('broadcast-status-player', (last) {
-      final String? data = last.toString();
-      _inEventData.add(data);
+      logger.d("on socket service ${last.toString()}");
+      _inEventData.add(last.toString());
     });
   }
 
@@ -93,17 +105,20 @@ class SocketService {
             {'channel_code': channelCode, 'player_id': 'flutter ${player}'}));
   }
 
-  emitStatusPlayer(
-      String channelCode, String? roomDetID, int? isReady, int? statusPlayer) {
+  Future<void> emitStatusPlayer(String channelCode, String? roomDetID,
+      int? isReady, int? statusPlayer, String? username) async {
     log('on status player ${roomDetID} ${isReady}, ${statusPlayer}');
-    socket.emit(
-        'status-player',
-        json.encode({
-          'channel_code': channelCode,
-          'room_detail_id': roomDetID,
-          'is_ready': isReady,
-          'status_player': statusPlayer
-        }));
+    Future.delayed(Duration(milliseconds: random(500, 1000)), () {
+      socket.emit(
+          'status-player',
+          json.encode({
+            'channel_code': channelCode,
+            'room_detail_id': roomDetID,
+            'is_ready': isReady,
+            'status_player': statusPlayer,
+            'username': username
+          }));
+    });
   }
 
   emitStatusGame(String channelCode, String? roomID, int? statusGame) {
