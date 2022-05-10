@@ -103,9 +103,10 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
         RoomMatchDetailModel matchDetail = roomProvider!
             .getRoomMatchDetailByUser(userID: user!.id, statusPlayer: 2);
 
-        // await socketProvider!.socketSendStatusPlayer(
-        //     channelCode: roomMatch.channel_code!,
-        //     roomMatchDetailModel: matchDetail);
+        await socketProvider!.socketSendStatusPlayer(
+            channelCode: roomMatch.channel_code!,
+            roomMatchDetailModel: matchDetail,
+            score: 0);
       } catch (e, trace) {
         logger.e(e);
         logger.e(trace);

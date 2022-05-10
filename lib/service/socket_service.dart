@@ -106,7 +106,7 @@ class SocketService {
   }
 
   Future<void> emitStatusPlayer(String channelCode, String? roomDetID,
-      int? isReady, int? statusPlayer, String? username) async {
+      int? isReady, int? statusPlayer, String? username, int? score) async {
     log('on status player ${roomDetID} ${isReady}, ${statusPlayer}');
     Future.delayed(Duration(milliseconds: random(500, 1000)), () {
       socket.emit(
@@ -116,7 +116,8 @@ class SocketService {
             'room_detail_id': roomDetID,
             'is_ready': isReady,
             'status_player': statusPlayer,
-            'username': username
+            'username': username,
+            'score': score
           }));
     });
   }

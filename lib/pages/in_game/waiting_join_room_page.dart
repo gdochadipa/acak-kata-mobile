@@ -217,7 +217,8 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
                               roomProvider!.roomMatch!.channel_code ?? '',
                           roomMatchDetailModel: roomProvider!
                               .getRoomMatchDetailByUser(
-                                  userID: user!.id, statusPlayer: 2));
+                                  userID: user!.id, statusPlayer: 2),
+                          score: 0);
                     }
                     // roomProvider!.isGetQuestion = true;
                     status = "Berhasil menerima Pengaturan";
