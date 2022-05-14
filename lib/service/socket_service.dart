@@ -72,7 +72,7 @@ class SocketService {
 
   Future<void> emitSearchRoom(String channelCode, String languageCode,
       RoomMatchDetailModel roomMatchDet) async {
-    Future.delayed(Duration(milliseconds: random(500, 1000)), () {
+    Future.delayed(Duration(milliseconds: random(500, 1500)), () {
       socket.emit(
           'search-room',
           json.encode({
@@ -86,7 +86,6 @@ class SocketService {
   Future<void> bindReceiveStatusPlayer() async {
     List<String>? testData = [];
     socket.on('broadcast-status-player', (last) {
-      logger.d("on socket service ${last.toString()}");
       _inEventData.add(last.toString());
     });
   }
@@ -171,7 +170,8 @@ class SocketService {
 
   Future<void> onTest() async {
     socket.on('eventName', (data) {
-      // print(data.toString());
+      _eventData.add(data);
+      print(" data => ${data.toString()}");
     });
   }
 

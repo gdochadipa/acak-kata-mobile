@@ -18,6 +18,15 @@ class SocketProvider with ChangeNotifier {
     _socketService.fireSocket();
   }
 
+  fireStream() {
+    _socketService.fireSocket();
+  }
+
+  Future<void> socketEmitJoinRoom(
+      {required String channelCode, required String playerCode}) async {
+    await _socketService.emitJoinRoom(channelCode, playerCode);
+  }
+
   pausedStream() {
     // _socketService.pausedStream();
   }
@@ -87,5 +96,9 @@ class SocketProvider with ChangeNotifier {
   Future<void> disconnectService() async {
     await _socketService.disconnect();
     _socketService.disconnectCloseStream();
+  }
+
+  Future<void> onTest() async {
+    await _socketService.onTest();
   }
 }

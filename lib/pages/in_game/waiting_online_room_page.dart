@@ -295,10 +295,10 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
                         roomDetailId: data['room_detail_id'],
                         status: data['status_player'],
                         isReady: data['is_ready']);
-                    logger.d(roomProvider!.roomMatch!.room_match_detail!
-                        .where((element) => element.status_player == 2)
-                        .length);
-                    logger.d(roomProvider!.roomMatch!.room_match_detail);
+                    // logger.d(roomProvider!.roomMatch!.room_match_detail!
+                    //     .where((element) => element.status_player == 2)
+                    //     .length);
+                    // logger.d(roomProvider!.roomMatch!.room_match_detail);
                     if (roomProvider!.checkAllAreReceiveQuestion()) {
                       roomProvider!.updateStatusGame(roomMatch.id, 1);
                       socketProvider!.socketSendStatusGame(
@@ -316,19 +316,21 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
                             level_lang_id: setLanguage.code,
                             current_score: 0,
                             target_score: 0);
-                        Navigator.push(
-                            context,
-                            CustomPageRoute(OnlineGamePlayPage(
-                              languageModel: widget.languageModel,
-                              selectedQuestion: roomMatch.totalQuestion,
-                              selectedTime: roomMatch.time_match,
-                              isHost: 1,
-                              levelWords: roomMatch.length_word,
-                              isOnline: true,
-                              Stage: setLanguage.custom_level,
-                              levelModel: levelModel,
-                              isCustom: false,
-                            )));
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          CustomPageRoute(OnlineGamePlayPage(
+                            languageModel: widget.languageModel,
+                            selectedQuestion: roomMatch.totalQuestion,
+                            selectedTime: roomMatch.time_match,
+                            isHost: 1,
+                            levelWords: roomMatch.length_word,
+                            isOnline: true,
+                            Stage: setLanguage.custom_level,
+                            levelModel: levelModel,
+                            isCustom: false,
+                          )),
+                          (route) => false,
+                        );
                       });
                     }
                   }

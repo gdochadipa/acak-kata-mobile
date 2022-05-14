@@ -129,6 +129,20 @@ class RoomProvider with ChangeNotifier {
     }
   }
 
+  Future<bool> findRoomMatchID({required String? id}) async {
+    try {
+      SharedPreferences pref = await SharedPreferences.getInstance();
+      String? token = pref.getString('token');
+      RoomMatchModel roomMatchModel =
+          await RoomService().findRoomMatchByID(id: id!, token: token!);
+      _roomMatch = roomMatchModel;
+      return true;
+    } catch (e) {
+      throw Exception(e);
+      return false;
+    }
+  }
+
   Future<bool> confirmGame(String? room_id) async {
     try {
       SharedPreferences pref = await SharedPreferences.getInstance();
@@ -195,16 +209,28 @@ class RoomProvider with ChangeNotifier {
   updateStatusPlayer(
       {required String? roomDetailId,
       required int? status,
-      required int? isReady}) async {
-    roomMatch!.room_match_detail!
+      required int? isReady,
+      int? score}) async {
+    RoomMatchDetailModel detailModel = roomMatch!.room_match_detail!
         .where((detail) => detail.id!.contains(roomDetailId ?? ''))
-        .first
-        .is_ready = 1;
+        .first;
+    detailModel.status_player = status;
+    detailModel.is_ready = 1;
+    detailModel.score = score;
 
-    roomMatch!.room_match_detail!
-        .where((detail) => detail.id!.contains(roomDetailId ?? ''))
-        .first
-        .status_player = status;
+    roomMatch!.room_match_detail![roomMatch!.room_match_detail!
+            .indexWhere((detail) => detail.id!.contains(roomDetailId ?? ''))] =
+        detailModel;
+
+    // roomMatch!.room_match_detail!
+    //     .where((detail) => detail.id!.contains(roomDetailId ?? ''))
+    //     .first
+    //     .is_ready = 1;
+
+    // roomMatch!.room_match_detail!
+    //     .where((detail) => detail.id!.contains(roomDetailId ?? ''))
+    //     .first
+    //     .status_player = status;
   }
 
   updateStatusGame(String? roomId, int? statusGame) async {
@@ -215,15 +241,25 @@ class RoomProvider with ChangeNotifier {
 
   RoomMatchDetailModel getRoomMatchDetailByUser(
       {required String? userID, required int? statusPlayer}) {
-    roomMatch!.room_match_detail!
+    RoomMatchDetailModel detailModel = roomMatch!.room_match_detail!
         .where((roomMatchDetail) => roomMatchDetail.player_id == userID)
-        .first
-        .status_player = statusPlayer;
+        .first;
 
-    roomMatch!.room_match_detail!
-        .where((roomMatchDetail) => roomMatchDetail.player_id == userID)
-        .first
-        .is_ready = 1;
+    detailModel.status_player = statusPlayer;
+    detailModel.is_ready = 1;
+
+    roomMatch!.room_match_detail![roomMatch!.room_match_detail!.indexWhere(
+            (roomMatchDetail) => roomMatchDetail.player_id == userID)] =
+        detailModel;
+    // roomMatch!.room_match_detail!
+    //     .where((roomMatchDetail) => roomMatchDetail.player_id == userID)
+    //     .first
+    //     .status_player = statusPlayer;
+
+    // roomMatch!.room_match_detail!
+    //     .where((roomMatchDetail) => roomMatchDetail.player_id == userID)
+    //     .first
+    //     .is_ready = 1;
 
     return roomMatch!.room_match_detail!
         .where((roomMatchDetail) => roomMatchDetail.player_id == userID)
@@ -257,5 +293,23 @@ class RoomProvider with ChangeNotifier {
       return true;
     }
     return false;
+  }
+
+  bool checkAllAreGameDone() {
+    List<RoomMatchDetailModel> detail = roomMatch!.room_match_detail!
+        .where((detail) => detail.status_player == 3)
+        .toList();
+    if (detail.length == roomMatch!.room_match_detail!.length) {
+      return true;
+    }
+    return false;
+  }
+
+  int checkIsHost({required String? userID}) {
+    return roomMatch!.room_match_detail!
+            .where((roomMatchDetail) => roomMatchDetail.player_id == userID)
+            .first
+            .is_host ??
+        0;
   }
 }

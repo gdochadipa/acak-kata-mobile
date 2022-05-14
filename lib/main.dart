@@ -1,7 +1,6 @@
 import 'package:acakkata/generated/l10n.dart';
 import 'package:acakkata/pages/auth/signin_page.dart';
 import 'package:acakkata/pages/auth/signup_page.dart';
-import 'package:acakkata/pages/home_page/main.dart';
 import 'package:acakkata/pages/home_page/new_home_page.dart';
 import 'package:acakkata/pages/splash_page.dart';
 import 'package:acakkata/providers/auth_provider.dart';

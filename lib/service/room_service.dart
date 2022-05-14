@@ -61,7 +61,7 @@ class RoomService {
         jsonEncode({'language_code': language_code, 'room_code': room_code});
 
     var response = await http.post(url, headers: headers, body: body);
-    print(response.body);
+    logger.d(response.body);
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body)['data'];
@@ -159,6 +159,36 @@ class RoomService {
         return listWord;
       } else {
         throw Exception('Gagal panggil pertanyaan');
+      }
+    } catch (e, trace) {
+      throw Exception(e);
+    }
+  }
+
+  Future<RoomMatchModel> findRoomMatchByID(
+      {required String id, required String token}) async {
+    try {
+      var headers = {
+        'Content-Type': 'application/json',
+        'Authorization': token
+      };
+
+      final url = Uri.parse('$baseUrl/find-room-by-id?id=${id}');
+      var response = await http.get(url, headers: headers);
+
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body)['data'];
+        logger.d(data);
+        RoomMatchModel roomMatch = RoomMatchModel.fromJson(data);
+
+        return roomMatch;
+      } else {
+        if (response.statusCode == 403) {
+          var data = jsonDecode(response.body);
+          throw Exception(data['message']);
+        } else {
+          throw Exception("Gagal Mencari Room");
+        }
       }
     } catch (e, trace) {
       throw Exception(e);

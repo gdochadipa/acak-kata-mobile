@@ -24,6 +24,7 @@ Color backgroundColor7 = Color(0xffA7A7A7);
 Color backgroundColor8 = Color(0xff773ECF);
 Color backgroundColorAccent8 = Color(0xff46178F);
 Color backgroundColor9 = Color(0xff230B47);
+Color barColor = Color(0xff662EBD);
 Color primaryTextColor = Color(0xff46178F);
 Color secondaryTextColor = Color(0xff000000);
 Color thirdTextColor = Color(0xff2B2937);

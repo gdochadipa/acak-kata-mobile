@@ -128,7 +128,7 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
           child: Row(
             children: [
               iconInfo,
-              SizedBox(
+              const SizedBox(
                 width: 7,
               ),
               Text(
@@ -298,7 +298,7 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
                     ///* setting up match
                     ElasticIn(
                       child: Container(
-                        margin: EdgeInsets.only(top: 20),
+                        margin: const EdgeInsets.only(top: 20),
                         child: Row(
                           children: [
                             settingCard(
