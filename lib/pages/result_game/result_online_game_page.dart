@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:math';
 
 import 'package:acakkata/generated/l10n.dart';
@@ -48,6 +49,8 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
   AuthProvider? authProvider;
   RoomProvider? roomProvider;
   bool isLoading = true;
+  bool onLoading = true;
+  RoomMatchModel? roomMatch;
   Logger logger = Logger(
     printer: PrettyPrinter(methodCount: 0),
   );
@@ -61,6 +64,7 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
     socketProvider = Provider.of<SocketProvider>(context, listen: false);
     connectSocket();
     handleFinishGame();
+    handleRefreshRoom();
     _confettiController =
         ConfettiController(duration: const Duration(seconds: 5));
     Logger logger = Logger(
@@ -91,14 +95,84 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
           ((widget.finalScoreRate + widget.finalTimeRate) * 100).round();
 
       await roomProvider!.findRoomMatchID(id: roomProvider!.roomMatch!.id);
+      setState(() {
+        roomMatch = roomProvider!.roomMatch;
+      });
+
       await socketProvider!.socketSendStatusPlayer(
           channelCode: roomProvider!.roomMatch!.channel_code!,
-          roomMatchDetailModel: roomProvider!.getRoomMatchDetailByUser(
-              userID: authProvider!.user!.id, statusPlayer: 3),
+          roomMatchDetailModel: roomProvider!.getAndUpdateStatusPlayerByID(
+              userID: authProvider!.user!.id,
+              statusPlayer: 3,
+              score: finalScore),
           score: finalScore);
     } catch (e, t) {
       logger.e(e);
       logger.e(t);
+    }
+  }
+
+  handleRefreshRoom() async {
+    if (roomProvider!.checkIsHost(userID: authProvider!.user!.id) == 1) {
+      Timer.periodic(const Duration(milliseconds: 8000), (timer) async {
+        try {
+          /**
+           *  ngecek apakah setelah kedua permainan berakhir, 
+           *  namun masih belum menerima status permainan dari permainan lain
+           * jadi harus request update dari server
+           */
+
+          if (!roomProvider!.checkAllAreGameDone() &&
+              roomProvider!.roomMatch!.status_game == 1) {
+            await roomProvider!
+                .findRoomMatchID(id: roomProvider!.roomMatch!.id);
+            /**
+             * jika semua permainan selesai maka status game diubah dan disebar
+             */
+            if (roomProvider!.checkAllAreGameDone() &&
+                roomProvider!.roomMatch!.status_game == 1) {
+              roomProvider!.updateStatusGame(roomProvider!.roomMatch!.id, 2);
+
+              socketProvider!.socketSendStatusGame(
+                  channelCode: roomProvider!.roomMatch!.channel_code!,
+                  roomMatch: roomProvider!.roomMatch);
+              roomProvider!.roomMatch!.room_match_detail!
+                  .sort((now, next) => -now.score!.compareTo(next.score ?? 0));
+
+              setState(() {
+                roomMatch = roomProvider!.roomMatch;
+                onLoading = false;
+              });
+              _confettiController.play();
+              timer.cancel();
+            }
+          } else {
+            /**
+             * jika semua permainan selesai maka status game diubah dan disebar
+             */
+            if (roomProvider!.checkAllAreGameDone() &&
+                roomProvider!.roomMatch!.status_game == 1) {
+              roomProvider!.updateStatusGame(roomProvider!.roomMatch!.id, 2);
+              socketProvider!.socketSendStatusGame(
+                  channelCode: roomProvider!.roomMatch!.channel_code!,
+                  roomMatch: roomProvider!.roomMatch);
+              roomProvider!.roomMatch!.room_match_detail!
+                  .sort((now, next) => -now.score!.compareTo(next.score ?? 0));
+
+              setState(() {
+                roomMatch = roomProvider!.roomMatch;
+                onLoading = false;
+              });
+
+              _confettiController.play();
+              timer.cancel();
+            }
+          }
+        } catch (e) {
+          logger.e(e);
+          timer.cancel();
+        }
+      });
     }
   }
 
@@ -114,8 +188,8 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
   Widget build(BuildContext context) {
     S? setLanguage = S.of(context);
     UserModel? user = authProvider!.user;
-    RoomMatchModel? roomMatch = roomProvider!.roomMatch!;
-    bool onLoading = true;
+    // RoomMatchModel? roomMatch = roomProvider!.roomMatch!;
+    // bool onLoading = true;
 
     Widget textHeader() {
       return Container(
@@ -151,13 +225,11 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
         margin: EdgeInsets.only(top: 20),
         alignment: Alignment.center,
         child: ClickyButton(
-            onPressed: isLoading
-                ? () {}
-                : () {
-                    socketProvider!.disconnectService();
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, '/home', (route) => false);
-                  },
+            onPressed: () {
+              socketProvider!.disconnectService();
+              Navigator.pushNamedAndRemoveUntil(
+                  context, '/home', (route) => false);
+            },
             color: alertColor,
             shadowColor: alertAccentColor,
             margin: EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
@@ -193,9 +265,9 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
       return path;
     }
 
-    Widget barRank(int number_rank, RoomMatchDetailModel roomMatchDetail) {
+    Widget barRank(int numberRank) {
       double heightBar = 0;
-      switch (number_rank) {
+      switch (numberRank) {
         case 1:
           heightBar = 10;
           break;
@@ -220,7 +292,7 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
             child: Container(
               margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               child: Text(
-                "${number_rank}",
+                "${numberRank}",
                 style: whiteTextStyle.copyWith(fontSize: 36, fontWeight: bold),
               ),
             ),
@@ -229,7 +301,7 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
       );
     }
 
-    Widget platePlayer(int rank) {
+    Widget platePlayer(int rank, RoomMatchDetailModel roomMatchDetail) {
       return Expanded(
         child: Container(
           margin: EdgeInsets.symmetric(horizontal: 5),
@@ -243,7 +315,7 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
                 child: Container(
                     margin: EdgeInsets.all(10),
                     child: Text(
-                      "Text",
+                      "${roomMatchDetail.player!.username}",
                       maxLines: 1,
                       softWrap: false,
                       overflow: TextOverflow.ellipsis,
@@ -262,7 +334,7 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
                 child: Container(
                   margin: EdgeInsets.all(10),
                   child: Text(
-                    "70",
+                    "${roomMatchDetail.score}",
                     textAlign: TextAlign.center,
                     style:
                         whiteTextStyle.copyWith(fontSize: 14, fontWeight: bold),
@@ -283,15 +355,12 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
         height: heightRanks,
         margin: const EdgeInsets.only(top: 5),
         child: Row(
-          children: roomMatch!.room_match_detail!.length >= 3
-              ? [
-                  barRank(2, roomMatch!.room_match_detail![1]),
-                  barRank(1, roomMatch!.room_match_detail![0]),
-                  barRank(3, roomMatch!.room_match_detail![2])
-                ]
-              : roomMatch!.room_match_detail!
-                  .map((e) =>
-                      barRank(roomMatch!.room_match_detail!.indexOf(e) + 1, e))
+          children: roomProvider!.roomMatch!.room_match_detail!.length >= 3
+              ? [barRank(2), barRank(1), barRank(3)]
+              : roomProvider!.roomMatch!.room_match_detail!
+                  .map((e) => barRank(
+                      roomProvider!.roomMatch!.room_match_detail!.indexOf(e) +
+                          1))
                   .toList(),
         ),
       );
@@ -300,12 +369,27 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
     Widget rankPlayers() {
       return Container(
         child: Row(
-          children: [platePlayer(2), platePlayer(1), platePlayer(3)],
+          children: roomProvider!.roomMatch!.room_match_detail!.length >= 3
+              ? [
+                  platePlayer(
+                      0, roomProvider!.roomMatch!.room_match_detail![1]),
+                  platePlayer(
+                      1, roomProvider!.roomMatch!.room_match_detail![0]),
+                  platePlayer(2, roomProvider!.roomMatch!.room_match_detail![2])
+                ]
+              : roomProvider!.roomMatch!.room_match_detail!
+                  .map((e) => platePlayer(
+                      roomProvider!.roomMatch!.room_match_detail!.indexOf(e) +
+                          1,
+                      e))
+                  .toList(),
         ),
       );
     }
 
     Widget yourRank() {
+      RoomMatchDetailModel? roomUser = roomProvider!.roomMatchDetailUser;
+      int rank = roomProvider!.roomMatch!.room_match_detail!.indexOf(roomUser!);
       return Container(
           margin: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
           padding: EdgeInsets.symmetric(vertical: 10),
@@ -322,7 +406,7 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
                 child: Container(
                   margin: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
                   child: Text(
-                    "4",
+                    "${rank + 1}",
                     style:
                         whiteTextStyle.copyWith(fontSize: 18, fontWeight: bold),
                   ),
@@ -334,7 +418,7 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
               Container(
                 child: Container(
                   child: Text(
-                    "Nama",
+                    "${roomUser.player!.username}",
                     style:
                         blackTextStyle.copyWith(fontSize: 16, fontWeight: bold),
                   ),
@@ -344,7 +428,7 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
               Container(
                 margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                 child: Text(
-                  "70",
+                  "${roomUser.score}",
                   style:
                       blackTextStyle.copyWith(fontSize: 18, fontWeight: bold),
                 ),
@@ -449,7 +533,7 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
                         channelCode: roomMatch!.channel_code!,
                         roomMatch: roomProvider!.roomMatch);
                     roomProvider!.roomMatch!.room_match_detail!.sort(
-                        (now, next) => now.score!.compareTo(next.score ?? 0));
+                        (now, next) => -now.score!.compareTo(next.score ?? 0));
                     roomMatch = roomProvider!.roomMatch;
                     onLoading = false;
                     _confettiController.play();
@@ -458,13 +542,14 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
 
                 if (data['target'] == 'update-status-game') {
                   if (roomProvider!.checkIsHost(userID: user.id) == 0 &&
-                      roomProvider!.roomMatch!.status_game == 0) {
+                      roomProvider!.roomMatch!.status_game == 1) {
                     if (data['status_game'] == 2) {
                       roomProvider!.updateStatusGame(
                           data['room_id'], data['status_game']);
                       onLoading = false;
                       roomProvider!.roomMatch!.room_match_detail!.sort(
-                          (now, next) => now.score!.compareTo(next.score ?? 0));
+                          (now, next) =>
+                              -now.score!.compareTo(next.score ?? 0));
                       roomMatch = roomProvider!.roomMatch;
                       _confettiController.play();
                     }
@@ -475,7 +560,7 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
               }
               return onLoading ? cardBodyOnLoad() : cardBody();
             } else {
-              return cardBodyOnLoad();
+              return onLoading ? cardBodyOnLoad() : cardBody();
             }
           });
     }

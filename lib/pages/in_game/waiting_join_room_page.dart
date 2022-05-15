@@ -216,7 +216,7 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
                           channelCode:
                               roomProvider!.roomMatch!.channel_code ?? '',
                           roomMatchDetailModel: roomProvider!
-                              .getRoomMatchDetailByUser(
+                              .getAndUpdateStatusPlayerByID(
                                   userID: user!.id, statusPlayer: 2),
                           score: 0);
                     }

@@ -12,6 +12,9 @@ class RoomProvider with ChangeNotifier {
   RoomMatchModel? _roomMatch;
   RoomMatchModel? get roomMatch => _roomMatch;
 
+  RoomMatchDetailModel? _roomMatchDetailUser;
+  RoomMatchDetailModel? get roomMatchDetailUser => _roomMatchDetailUser;
+
   List<RoomMatchDetailModel>? get listRoommatchDet =>
       _roomMatch!.room_match_detail;
 
@@ -239,14 +242,15 @@ class RoomProvider with ChangeNotifier {
     }
   }
 
-  RoomMatchDetailModel getRoomMatchDetailByUser(
-      {required String? userID, required int? statusPlayer}) {
+  RoomMatchDetailModel getAndUpdateStatusPlayerByID(
+      {required String? userID, required int? statusPlayer, int? score}) {
     RoomMatchDetailModel detailModel = roomMatch!.room_match_detail!
         .where((roomMatchDetail) => roomMatchDetail.player_id == userID)
         .first;
 
     detailModel.status_player = statusPlayer;
     detailModel.is_ready = 1;
+    detailModel.score = score ?? 0;
 
     roomMatch!.room_match_detail![roomMatch!.room_match_detail!.indexWhere(
             (roomMatchDetail) => roomMatchDetail.player_id == userID)] =
@@ -260,10 +264,21 @@ class RoomProvider with ChangeNotifier {
     //     .where((roomMatchDetail) => roomMatchDetail.player_id == userID)
     //     .first
     //     .is_ready = 1;
-
+    _roomMatchDetailUser = roomMatch!.room_match_detail!
+        .where((roomMatchDetail) => roomMatchDetail.player_id == userID)
+        .first;
     return roomMatch!.room_match_detail!
         .where((roomMatchDetail) => roomMatchDetail.player_id == userID)
         .first;
+  }
+
+  RoomMatchDetailModel? getDetailRoomByID({
+    required String? userID,
+  }) {
+    _roomMatchDetailUser = roomMatch!.room_match_detail!
+        .where((roomMatchDetail) => roomMatchDetail.player_id == userID)
+        .first;
+    return _roomMatchDetailUser;
   }
 
   bool checkAllAreReady() {

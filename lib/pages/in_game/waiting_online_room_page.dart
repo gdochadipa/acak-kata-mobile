@@ -101,7 +101,7 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
 
         // send status
         RoomMatchDetailModel matchDetail = roomProvider!
-            .getRoomMatchDetailByUser(userID: user!.id, statusPlayer: 2);
+            .getAndUpdateStatusPlayerByID(userID: user!.id, statusPlayer: 2);
 
         await socketProvider!.socketSendStatusPlayer(
             channelCode: roomMatch.channel_code!,
@@ -436,7 +436,7 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
                       ),
                     ),
 
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     btnCreateRoom()
@@ -464,13 +464,6 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
               ],
             ),
           ),
-          backgroundColor: backgroundColor2,
-          bottomNavigationBar: Container(
-              height: 90,
-              padding: EdgeInsets.all(5),
-              child: Column(
-                children: [],
-              )),
         ),
         onWillPop: () async => false);
   }
