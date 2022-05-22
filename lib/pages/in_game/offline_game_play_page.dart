@@ -9,7 +9,6 @@ import 'package:acakkata/models/word_language_model.dart';
 import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/pages/result_game/result_game_page.dart';
 import 'package:acakkata/providers/language_db_provider.dart';
-import 'package:acakkata/providers/room_provider.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/answer_input_buttons.dart';
 import 'package:acakkata/widgets/clicky_button.dart';
@@ -122,6 +121,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
     return false;
   }
 
+  /// digunakan untuk mendaftarkan antrian ke variabel state
   setUpListQuestionQueue(List<WordLanguageModel>? wordList) async {
     if (wordList!.length > 0) {
       for (var i = 0; i < wordList.length; i++) {
@@ -146,17 +146,25 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
 
     // const duration = Duration(seconds: 1);
     _timer = Timer.periodic(Duration(seconds: 1), (Timer timer) {
+      /// bagian ini untuk menghitung mundur sebelum memulai menjawab pertanyaan
       if (startCountDown > 0) {
         setState(() {
           startCountDown--;
           _animationRotateController.forward(from: 0.0);
         });
-      } else {
+      }
+
+      /// bagian untuk memulai menjawab soal ketika hitung mundur habis
+      else {
         timer.cancel();
         setState(() {
           isCountDown = false;
         });
+
+        /// perhitungan waktu tampilan
         getTimeScore();
+
+        /// merupakan perhitungan waktu utama, waktu ditentukan sesuai level atau custom
         onCoreCountTimeInGame(numberCountDown);
       }
     });
@@ -201,24 +209,37 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
   /// digunakan untuk menentukan apakah question akan lanjut atau tidak
   onSkipQueueQuestion(bool isAnswer) async {
     setState(() {
+      ///mengecek apkaah pentanyaan sekarang masuk antrian
+      ///jika ia maka proses akan dilanjutkan
       if (listQuestionQueue!.asMap().containsKey(queueNow)) {
+        ///jika proses skip adalah ketika menjawab pertanyaan
+        ///maka akan menghapus dari proses antrian dan tidak dapat diakses lagi
         if (isAnswer) {
           int removeQueue = queueNow;
           listQuestionQueue!.removeAt(removeQueue);
           if (listQuestionQueue!.length <= queueNow) {
             queueNow--;
           }
-        } else {
+        }
+
+        /// jika tidak dalam proses menjawab maka dapat ke soal selanjutnya pada antrian listQuestionQueue
+        else {
           if (listQuestionQueue!.asMap().containsKey(queueNow + 1)) {
             queueNow++;
           } else {
             queueNow = 0;
           }
         }
-      } else {
+      }
+
+      /// jika tidak maka antrian ke 0 dari listQuestionQueue
+      else {
         queueNow = 0;
       }
 
+      /// mengecek apakah urutan antrian sekarang itu masuk ke antrian sekarang
+      /// jika masih ada sisa maka proses akan berlanjut ke soal selanjutnya
+      /// jika tidak maka permainan selesai
       if (listQuestionQueue!.asMap().containsKey(queueNow)) {
         currentArrayQuestion = listQuestionQueue![queueNow];
       } else {
