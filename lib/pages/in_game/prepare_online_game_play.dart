@@ -136,7 +136,9 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
             max_player: int.parse(countPlayer.text),
             time_watch: widget.selectedTime,
             total_question: widget.selectedQuestion,
-            datetime_match: DateFormat('yyyy-MM-dd hh:mm').parse(dateTime.text),
+            datetime_match: DateFormat('yyyy-MM-dd hh:mm')
+                .parseUTC(dateTime.text)
+                .toLocal(),
             level: widget.levelModel!.id,
             length_word: widget.levelWords)) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(

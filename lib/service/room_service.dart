@@ -32,6 +32,7 @@ class RoomService {
       'level': level,
       'length_word': length_word
     });
+    logger.d(body);
 
     var response = await http.post(url, headers: headers, body: body);
     // logger.d(response.body);

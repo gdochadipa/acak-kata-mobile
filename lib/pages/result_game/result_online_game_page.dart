@@ -85,6 +85,9 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
     await socketProvider!.socketEmitJoinRoom(
         channelCode: roomProvider!.roomMatch!.channel_code!,
         playerCode: authProvider!.user!.userCode!);
+  }
+
+  getDataSocket() async {
     await socketProvider!.socketReceiveStatusPlayer();
     await socketProvider!.socketReceiveStatusGame();
   }
@@ -98,7 +101,7 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
       setState(() {
         roomMatch = roomProvider!.roomMatch;
       });
-
+      await getDataSocket();
       await socketProvider!.socketSendStatusPlayer(
           channelCode: roomProvider!.roomMatch!.channel_code!,
           roomMatchDetailModel: roomProvider!.getAndUpdateStatusPlayerByID(
@@ -390,6 +393,7 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
     Widget yourRank() {
       RoomMatchDetailModel? roomUser = roomProvider!.roomMatchDetailUser;
       int rank = roomProvider!.roomMatch!.room_match_detail!.indexOf(roomUser!);
+      rank = rank < 0 ? (rank * -1) : rank;
       return Container(
           margin: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
           padding: EdgeInsets.symmetric(vertical: 10),
@@ -406,7 +410,7 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
                 child: Container(
                   margin: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
                   child: Text(
-                    "${rank + 1}",
+                    "${rank}",
                     style:
                         whiteTextStyle.copyWith(fontSize: 18, fontWeight: bold),
                   ),
