@@ -3,6 +3,8 @@ import 'dart:collection';
 import 'dart:developer';
 import 'dart:math';
 
+import 'package:acakkata/enum/animations.dart';
+import 'package:acakkata/enum/field_border_style.dart';
 import 'package:acakkata/generated/l10n.dart';
 import 'package:acakkata/models/level_model.dart';
 import 'package:acakkata/models/word_language_model.dart';
@@ -14,6 +16,7 @@ import 'package:acakkata/widgets/answer_input_buttons.dart';
 import 'package:acakkata/widgets/clicky_button.dart';
 import 'package:acakkata/widgets/custom_page_route.dart';
 import 'package:acakkata/widgets/gameplay/footer_gameplay_page.dart';
+import 'package:acakkata/widgets/gameplay/pin_code_fields.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

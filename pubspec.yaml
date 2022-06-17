@@ -62,7 +62,6 @@ dependencies:
   flutter_switch: ^0.3.2
   loader_overlay: ^2.0.6
   loading_indicator: ^3.0.3
-  flutter_pin_code_fields: ^1.1.0
 
 dev_dependencies:
   flutter_test:
