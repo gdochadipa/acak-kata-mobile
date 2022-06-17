@@ -6,14 +6,10 @@ import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/models/user_model.dart';
 import 'package:acakkata/pages/auth/modal/show_login_modal.dart';
 import 'package:acakkata/pages/auth/modal/show_profile_modal.dart';
-import 'package:acakkata/pages/auth/signin_page.dart';
-import 'package:acakkata/pages/auth/signup_page.dart';
 import 'package:acakkata/pages/in_game/modal/join_room_modal.dart';
 import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/providers/change_language_provider.dart';
 import 'package:acakkata/providers/language_db_provider.dart';
-import 'package:acakkata/providers/language_provider.dart';
-import 'package:acakkata/service/coba_echo_socket.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/language_card.dart';
 import 'package:acakkata/widgets/popover/language_app_modal.dart';
@@ -23,8 +19,6 @@ import 'package:animations/animations.dart';
 import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -54,7 +48,7 @@ class _NewHomePageState extends State<NewHomePage> {
   }
 
   void onChangeLanguage(String flag) {
-    Timer(Duration(milliseconds: 50), () {
+    Timer(const Duration(milliseconds: 50), () {
       setState(() {
         _changeLanguageProvider!.changeLocale(flag);
         wasSelectedLanguage = true;
@@ -87,7 +81,7 @@ class _NewHomePageState extends State<NewHomePage> {
     Future<void> showCancelGame() async {
       return showDialog(
           context: context,
-          builder: (BuildContext context) => Container(
+          builder: (BuildContext context) => SizedBox(
                 width: MediaQuery.of(context).size.width - (2 * defaultMargin),
                 child: AlertDialog(
                   backgroundColor: backgroundColor1,
@@ -113,7 +107,7 @@ class _NewHomePageState extends State<NewHomePage> {
                         height: 12,
                       ),
                       Text(
-                        '${S.of(context).exit_game_menu}',
+                        S.of(context).exit_game_menu,
                         style: headerText2.copyWith(
                           fontSize: 18,
                           fontWeight: semiBold,
@@ -123,11 +117,11 @@ class _NewHomePageState extends State<NewHomePage> {
                         height: 12,
                       ),
                       Container(
-                        margin: EdgeInsets.only(top: 15, right: 5),
+                        margin: const EdgeInsets.only(top: 15, right: 5),
                         child: Row(
                           children: [
                             Container(
-                              margin: EdgeInsets.all(2),
+                              margin: const EdgeInsets.all(2),
                               height: 44,
                               child: TextButton(
                                 onPressed: () {
@@ -141,7 +135,7 @@ class _NewHomePageState extends State<NewHomePage> {
                                   ),
                                 ),
                                 child: Text(
-                                  '${S.of(context).exit_game_yes}',
+                                  S.of(context).exit_game_yes,
                                   style: whiteTextStyle.copyWith(
                                     fontSize: 12,
                                     fontWeight: medium,
@@ -151,7 +145,7 @@ class _NewHomePageState extends State<NewHomePage> {
                             ),
                             Container(
                                 child: Container(
-                              margin: EdgeInsets.all(5),
+                              margin: const EdgeInsets.all(5),
                               height: 44,
                               child: TextButton(
                                 onPressed: () {
@@ -166,7 +160,7 @@ class _NewHomePageState extends State<NewHomePage> {
                                   ),
                                 ),
                                 child: Text(
-                                  '${S.of(context).exit_game_no}',
+                                  S.of(context).exit_game_no,
                                   style: primaryTextStyle.copyWith(
                                     fontSize: 12,
                                     fontWeight: medium,
@@ -186,7 +180,7 @@ class _NewHomePageState extends State<NewHomePage> {
     Future<void> showAuthModal() async {
       return showModalBottomSheet(
           context: context,
-          builder: (BuildContext context) => ShowLoginModal());
+          builder: (BuildContext context) => const ShowLoginModal());
     }
 
     Future<void> showProfileModal() async {
@@ -200,7 +194,7 @@ class _NewHomePageState extends State<NewHomePage> {
 
     Future<void> showJoinRoomModal() async {
       return showModal(
-          context: context, builder: (BuildContext context) => JoinRoomModal());
+          context: context, builder: (BuildContext context) => const JoinRoomModal());
     }
 
     showListLanguagePop() async {
@@ -208,7 +202,7 @@ class _NewHomePageState extends State<NewHomePage> {
         context: context,
         builder: (BuildContext context) {
           final theme = Theme.of(context);
-          return Container(
+          return SizedBox(
             width: MediaQuery.of(context).size.width,
             child: Dialog(
               insetAnimationCurve: Curves.easeInOut,
@@ -219,18 +213,18 @@ class _NewHomePageState extends State<NewHomePage> {
                 children: [
                   Container(
                     padding:
-                        EdgeInsets.only(left: 8, right: 8, top: 15, bottom: 15),
+                        const EdgeInsets.only(left: 8, right: 8, top: 15, bottom: 15),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "${setLanguage.listLanguage}",
+                          setLanguage.listLanguage,
                           style: headerText2.copyWith(
                               fontWeight: medium,
                               fontSize: 20,
                               color: blackColor),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         Container(
@@ -258,7 +252,7 @@ class _NewHomePageState extends State<NewHomePage> {
       return showModal(
           context: context,
           builder: (BuildContext context) {
-            return LanguageAppSettingModal();
+            return const LanguageAppSettingModal();
           });
     }
 
@@ -266,7 +260,7 @@ class _NewHomePageState extends State<NewHomePage> {
       return ElasticIn(
         child: Container(
           child: Image.asset(
-            'assets/images/logo_putih.png',
+            'assets/images/logo_baru_no.png',
             height: 200,
             width: 170,
           ),
@@ -282,9 +276,9 @@ class _NewHomePageState extends State<NewHomePage> {
         child: Container(
           width: 148,
           height: 148,
-          margin: EdgeInsets.all(11),
+          margin: const EdgeInsets.all(11),
           decoration: BoxDecoration(color: whiteColor, shape: BoxShape.circle),
-          padding: EdgeInsets.all(43),
+          padding: const EdgeInsets.all(43),
           child: Center(
             child: Image.asset('assets/images/icon_play.png'),
           ),
@@ -304,9 +298,9 @@ class _NewHomePageState extends State<NewHomePage> {
         child: Container(
           width: 64,
           height: 64,
-          margin: EdgeInsets.all(11),
+          margin: const EdgeInsets.all(11),
           decoration: BoxDecoration(color: whiteColor, shape: BoxShape.circle),
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           child: Center(
             child: Image.asset('assets/images/icon_profile.png'),
           ),
@@ -326,9 +320,9 @@ class _NewHomePageState extends State<NewHomePage> {
         child: Container(
           width: 64,
           height: 64,
-          margin: EdgeInsets.all(11),
+          margin: const EdgeInsets.all(11),
           decoration: BoxDecoration(color: whiteColor, shape: BoxShape.circle),
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           child: Center(
             child: Image.asset('assets/images/icon_black_game.png'),
           ),
@@ -344,9 +338,9 @@ class _NewHomePageState extends State<NewHomePage> {
         child: Container(
           width: 39,
           height: 39,
-          margin: EdgeInsets.all(11),
+          margin: const EdgeInsets.all(11),
           decoration: BoxDecoration(color: whiteColor, shape: BoxShape.circle),
-          padding: EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10),
           child: Center(
             child: Image.asset('assets/images/icon_exit.png'),
           ),
@@ -362,9 +356,9 @@ class _NewHomePageState extends State<NewHomePage> {
         child: Container(
           width: 39,
           height: 39,
-          margin: EdgeInsets.all(11),
+          margin: const EdgeInsets.all(11),
           decoration: BoxDecoration(color: whiteColor, shape: BoxShape.circle),
-          padding: EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10),
           child: Center(
             child: Image.asset('assets/images/icon_setting.png'),
           ),
@@ -391,8 +385,8 @@ class _NewHomePageState extends State<NewHomePage> {
             filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
             child: Container(
               width: 150,
-              margin: EdgeInsets.all(11),
-              padding: EdgeInsets.all(15),
+              margin: const EdgeInsets.all(11),
+              padding: const EdgeInsets.all(15),
               decoration: BoxDecoration(
                   color: Colors.grey.shade200.withOpacity(0.5),
                   borderRadius: BorderRadius.circular(10)),
@@ -404,7 +398,7 @@ class _NewHomePageState extends State<NewHomePage> {
                         ? Image.asset('assets/images/en_flag.png')
                         : Image.asset('assets/images/id_flag.png'),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   Center(
@@ -440,7 +434,7 @@ class _NewHomePageState extends State<NewHomePage> {
 
     Widget body() {
       return Container(
-          margin: EdgeInsets.all(20),
+          margin: const EdgeInsets.all(20),
           child: SingleChildScrollView(
             child: Container(
               child: Column(
@@ -459,10 +453,11 @@ class _NewHomePageState extends State<NewHomePage> {
             child: Stack(
               children: [
                 Container(
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     image: DecorationImage(
-                        image: AssetImage("assets/images/background_512w.png"),
-                        fit: BoxFit.cover),
+                      repeat: ImageRepeat.repeat,
+                      image: AssetImage("assets/images/background.png"),
+                    ),
                   ),
                 ),
                 Container(
@@ -472,12 +467,12 @@ class _NewHomePageState extends State<NewHomePage> {
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.only(left: 10, top: 10),
+                  margin: const EdgeInsets.only(left: 10, top: 10),
                   alignment: Alignment.topLeft,
                   child: btnExits(),
                 ),
                 Container(
-                  margin: EdgeInsets.only(left: 10, top: 10),
+                  margin: const EdgeInsets.only(left: 10, top: 10),
                   alignment: Alignment.topRight,
                   child: btnSetting(),
                 )

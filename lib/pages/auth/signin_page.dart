@@ -1,6 +1,5 @@
 import 'package:acakkata/pages/auth/signup_page.dart';
 import 'package:acakkata/providers/auth_provider.dart';
-import 'package:acakkata/widgets/btn_raised.dart';
 import 'package:acakkata/service/socket_service.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/clicky_button.dart';
@@ -89,10 +88,10 @@ class _SignInPageState extends State<SignInPage> {
         child: Container(
           width: 39,
           height: 39,
-          margin: EdgeInsets.all(11),
+          margin: const EdgeInsets.all(11),
           decoration: BoxDecoration(color: whiteColor, shape: BoxShape.circle),
-          padding: EdgeInsets.all(10),
-          child: Center(
+          padding: const EdgeInsets.all(10),
+          child: const Center(
             child: Icon(Icons.arrow_back_ios_new, size: 20),
           ),
         ),
@@ -103,12 +102,12 @@ class _SignInPageState extends State<SignInPage> {
       return Container(
         child: Stack(children: [
           Container(
-            margin: EdgeInsets.only(left: 10, top: 10),
+            margin: const EdgeInsets.only(left: 10, top: 10),
             alignment: Alignment.topLeft,
             child: btnBack(),
           ),
           Container(
-            margin: EdgeInsets.only(left: 10, top: 80),
+            margin: const EdgeInsets.only(left: 10, top: 80),
             alignment: Alignment.center,
             child: Image.asset(
               'assets/images/logo_putih.png',
@@ -122,7 +121,7 @@ class _SignInPageState extends State<SignInPage> {
 
     Widget emailInput() {
       return Container(
-        margin: EdgeInsets.only(top: 10),
+        margin: const EdgeInsets.only(top: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -131,12 +130,12 @@ class _SignInPageState extends State<SignInPage> {
               style:
                   blackTextStyle.copyWith(fontSize: 17, fontWeight: semiBold),
             ),
-            SizedBox(
+            const SizedBox(
               height: 5,
             ),
             Container(
               height: 50,
-              padding: EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
                   border: Border.all(color: blackColor),
                   color: whiteColor,
@@ -162,7 +161,7 @@ class _SignInPageState extends State<SignInPage> {
 
     Widget passwordInput() {
       return Container(
-        margin: EdgeInsets.only(top: 20),
+        margin: const EdgeInsets.only(top: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -171,12 +170,12 @@ class _SignInPageState extends State<SignInPage> {
               style:
                   blackTextStyle.copyWith(fontSize: 17, fontWeight: semiBold),
             ),
-            SizedBox(
+            const SizedBox(
               height: 5,
             ),
             Container(
               height: 50,
-              padding: EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
                   border: Border.all(color: blackColor),
                   color: backgroundColor1,
@@ -205,13 +204,14 @@ class _SignInPageState extends State<SignInPage> {
     Widget signInButton() {
       return Container(
         width: double.infinity,
-        margin: EdgeInsets.only(top: 20),
+        margin: const EdgeInsets.only(top: 20),
         alignment: Alignment.center,
         child: ClickyButton(
             onPressed: handleSignIn,
             color: backgroundColor1,
             shadowColor: backgroundColor2,
-            margin: EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
+            margin:
+                const EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
             width: 245,
             height: 60,
             child: Text(
@@ -242,7 +242,7 @@ class _SignInPageState extends State<SignInPage> {
 
     Widget footer() {
       return Container(
-        margin: EdgeInsets.only(bottom: 30, top: 50),
+        margin: const EdgeInsets.only(bottom: 30, top: 50),
         alignment: Alignment.bottomCenter,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

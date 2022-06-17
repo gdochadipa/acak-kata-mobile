@@ -10,7 +10,7 @@ class AnswerButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: 20, left: 5, right: 5),
+      margin: const EdgeInsets.only(top: 20, left: 5, right: 5),
       child: Align(
         alignment: Alignment.center,
         child: Wrap(

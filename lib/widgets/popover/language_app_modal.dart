@@ -40,7 +40,7 @@ class _LanguageAppSettingModalState extends State<LanguageAppSettingModal> {
       wasSelectedLanguage = prefs!.getBool("wasSelectedLanguage") ?? false;
     });
     print(
-        "${listLanguage.values.toList().indexOf(languageChoice!)} ${languageChoice} selected index");
+        "${listLanguage.values.toList().indexOf(languageChoice!)} $languageChoice selected index");
     _groupButtonController = GroupButtonController(
       selectedIndex: listLanguage.values.toList().indexOf(languageChoice!),
       onDisablePressed: (i) => print('Button #$i is disabled'),
@@ -69,7 +69,7 @@ class _LanguageAppSettingModalState extends State<LanguageAppSettingModal> {
   @override
   Widget build(BuildContext context) {
     S? setLang = S.of(context);
-    return Container(
+    return SizedBox(
       width: MediaQuery.of(context).size.width,
       child: Dialog(
         insetAnimationCurve: Curves.easeInOut,
@@ -82,7 +82,7 @@ class _LanguageAppSettingModalState extends State<LanguageAppSettingModal> {
               Container(
                 alignment: Alignment.center,
                 child: Text(
-                  "${setLang.setting}",
+                  setLang.setting,
                   style:
                       blackTextStyle.copyWith(fontSize: 20, fontWeight: bold),
                 ),
@@ -116,8 +116,8 @@ class _LanguageAppSettingModalState extends State<LanguageAppSettingModal> {
                         filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
                         child: Container(
                           width: 110,
-                          margin: EdgeInsets.all(11),
-                          padding: EdgeInsets.all(15),
+                          margin: const EdgeInsets.all(11),
+                          padding: const EdgeInsets.all(15),
                           decoration: BoxDecoration(
                               color: selected
                                   ? backgroundColor8
@@ -132,7 +132,7 @@ class _LanguageAppSettingModalState extends State<LanguageAppSettingModal> {
                                     ? Image.asset('assets/images/en_flag.png')
                                     : Image.asset('assets/images/id_flag.png'),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 5,
                               ),
                               Center(
@@ -172,13 +172,13 @@ class _LanguageAppSettingModalState extends State<LanguageAppSettingModal> {
                       width: 180,
                       height: 60,
                       child: Text(
-                        "${setLang.save_setting}",
+                        setLang.save_setting,
                         style: whiteTextStyle.copyWith(
                             fontSize: 14, fontWeight: bold),
                       ),
                       onPressed: () {
                         // print("selected lang ${languageSelected}");
-                        Timer(Duration(milliseconds: 50), () {
+                        Timer(const Duration(milliseconds: 50), () {
                           onChangeLanguage(languageSelected!);
                         });
                       })),

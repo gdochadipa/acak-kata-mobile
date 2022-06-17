@@ -4,7 +4,6 @@ import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/clicky_button.dart';
 import 'package:acakkata/widgets/popover/popover_listview.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ShowProfileModal extends StatefulWidget {
   final UserModel? userModel;
@@ -27,7 +26,7 @@ class _ShowProfileModalState extends State<ShowProfileModal> {
   @override
   Widget build(BuildContext context) {
     S? setLanguage = S.of(context);
-    return Container(
+    return SizedBox(
       width: MediaQuery.of(context).size.width,
       child: Dialog(
         insetAnimationCurve: Curves.easeInOut,
@@ -35,19 +34,19 @@ class _ShowProfileModalState extends State<ShowProfileModal> {
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
         child: PopoverListView(
           child: Container(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  margin: EdgeInsets.only(bottom: 10),
+                  margin: const EdgeInsets.only(bottom: 10),
                   height: 100,
                   width: 100,
                   decoration:
                       BoxDecoration(color: grayColor2, shape: BoxShape.circle),
                 ),
                 Container(
-                  margin: EdgeInsets.only(top: 20, left: 5, right: 5),
+                  margin: const EdgeInsets.only(top: 20, left: 5, right: 5),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -61,7 +60,7 @@ class _ShowProfileModalState extends State<ShowProfileModal> {
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.only(top: 20, left: 5, right: 5),
+                  margin: const EdgeInsets.only(top: 20, left: 5, right: 5),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -75,7 +74,7 @@ class _ShowProfileModalState extends State<ShowProfileModal> {
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.only(top: 20, left: 5, right: 5),
+                  margin: const EdgeInsets.only(top: 20, left: 5, right: 5),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -89,7 +88,7 @@ class _ShowProfileModalState extends State<ShowProfileModal> {
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.only(top: 20, left: 5, right: 5),
+                  margin: const EdgeInsets.only(top: 20, left: 5, right: 5),
                   child: ClickyButton(
                       color: purpleColor,
                       shadowColor: purpleAccentColor,

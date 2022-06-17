@@ -9,7 +9,7 @@ class ButtonLoading extends StatelessWidget {
     return Container(
       height: 50,
       width: double.infinity,
-      margin: EdgeInsets.only(top: 30),
+      margin: const EdgeInsets.only(top: 30),
       child: TextButton(
           onPressed: () {},
           style: TextButton.styleFrom(
@@ -20,7 +20,7 @@ class ButtonLoading extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
+              SizedBox(
                 width: 16,
                 height: 16,
                 child: CircularProgressIndicator(
@@ -30,7 +30,7 @@ class ButtonLoading extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 4,
               ),
               Text(

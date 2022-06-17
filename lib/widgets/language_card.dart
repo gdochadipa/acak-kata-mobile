@@ -1,11 +1,7 @@
 import 'package:acakkata/generated/l10n.dart';
 import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/pages/level/level_list_page.dart';
-import 'package:acakkata/pages/result_game/result_game_page.dart';
 import 'package:acakkata/theme.dart';
-import 'package:acakkata/widgets/custom_page_route_bounce.dart';
-import 'package:acakkata/widgets/popover.dart';
-import 'package:acakkata/widgets/widget_popover/list_item_pop_over.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
@@ -57,14 +53,14 @@ class _LanguageCardState extends State<LanguageCard> {
                     spreadRadius: 1,
                     blurRadius: 0,
                     blurStyle: BlurStyle.solid,
-                    offset: Offset(-4, 4))
+                    offset: const Offset(-4, 4))
               ]),
           child: Row(
             children: [
               Container(
                 height: 61,
                 width: 63.44,
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   color: whiteColor,
                   borderRadius: BorderRadius.circular(15),
@@ -88,7 +84,7 @@ class _LanguageCardState extends State<LanguageCard> {
                           ? '${widget.language.language_name_en}'
                           : '${widget.language.language_name_id}'),
                       style: whiteTextStyle.copyWith(fontWeight: bold),
-                      presetFontSizes: [18, 16],
+                      presetFontSizes: const [18, 16],
                       maxLines: 2,
                     ),
                   ),

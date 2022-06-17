@@ -9,7 +9,7 @@ class PlayerProfileSkeleton extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: Container(
         width: (MediaQuery.of(context).size.width - 82) / 2,
-        margin: EdgeInsets.only(top: 10, left: 5, right: 5),
+        margin: const EdgeInsets.only(top: 10, left: 5, right: 5),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -17,7 +17,7 @@ class PlayerProfileSkeleton extends StatelessWidget {
               width: 98,
               height: 98,
               decoration:
-                  ShapeDecoration(color: kLineDarkColor, shape: CircleBorder()),
+                  ShapeDecoration(color: kLineDarkColor, shape: const CircleBorder()),
             ),
             const SizedBox(
               height: 15,
@@ -43,7 +43,7 @@ class PlayerProfileSkeleton extends StatelessWidget {
               baseColor: kLineDarkColor,
               highlightColor: kWhiteGreyColor,
             ),
-            SizedBox(
+            const SizedBox(
               height: 5,
             ),
           ],

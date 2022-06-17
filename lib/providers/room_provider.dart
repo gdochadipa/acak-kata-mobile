@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:math';
 
 import 'package:acakkata/models/room_match_detail_model.dart';
@@ -103,12 +102,12 @@ class RoomProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> findRoomWithCode(String? language_id, String? room_code) async {
+  Future<bool> findRoomWithCode(String? languageId, String? roomCode) async {
     try {
       SharedPreferences pref = await SharedPreferences.getInstance();
       String? token = pref.getString('token');
       RoomMatchModel roomMatchModel = await RoomService()
-          .findRoomWithCode(language_id!, token!, room_code!);
+          .findRoomWithCode(languageId!, token!, roomCode!);
       _roomMatch = roomMatchModel;
       return true;
     } catch (e) {
@@ -118,12 +117,12 @@ class RoomProvider with ChangeNotifier {
   }
 
   Future<bool> checkingRoomWithCode(
-      String? language_id, String? room_code) async {
+      String? languageId, String? roomCode) async {
     try {
       SharedPreferences pref = await SharedPreferences.getInstance();
       String? token = pref.getString('token');
       RoomMatchModel roomMatchModel = await RoomService()
-          .findRoomWithCode(language_id!, token!, room_code!);
+          .findRoomWithCode(languageId!, token!, roomCode!);
       _roomMatch = roomMatchModel;
       return true;
     } catch (e) {
@@ -146,11 +145,11 @@ class RoomProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> confirmGame(String? room_id) async {
+  Future<bool> confirmGame(String? roomId) async {
     try {
       SharedPreferences pref = await SharedPreferences.getInstance();
       String? token = pref.getString('token');
-      bool isConfirm = await RoomService().confirmGame(token!, room_id!);
+      bool isConfirm = await RoomService().confirmGame(token!, roomId!);
 
       return isConfirm;
     } catch (e) {
@@ -159,11 +158,11 @@ class RoomProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> cancelGameFromRoom(String? room_id) async {
+  Future<bool> cancelGameFromRoom(String? roomId) async {
     try {
       SharedPreferences pref = await SharedPreferences.getInstance();
       String? token = pref.getString('token');
-      bool isCancel = await RoomService().cancelGameFromRoom(token!, room_id!);
+      bool isCancel = await RoomService().cancelGameFromRoom(token!, roomId!);
 
       return isCancel;
     } catch (e) {
@@ -173,17 +172,17 @@ class RoomProvider with ChangeNotifier {
   }
 
   Future<bool> getPackageQuestion(
-      String? language_code, String? channel_code) async {
+      String? languageCode, String? channelCode) async {
     try {
       SharedPreferences pref = await SharedPreferences.getInstance();
       String? token = pref.getString('token');
 
       List<WordLanguageModel> listQuestion = await RoomService()
-          .getPackageQuestion(token!, language_code!, roomMatch!.totalQuestion!,
-              channel_code!, roomMatch!.length_word!);
+          .getPackageQuestion(token!, languageCode!, roomMatch!.totalQuestion!,
+              channelCode!, roomMatch!.length_word!);
       _listQuestion = listQuestion;
       return true;
-    } catch (e, trace) {
+    } catch (e) {
       throw Exception(e);
       return false;
     }
@@ -196,7 +195,7 @@ class RoomProvider with ChangeNotifier {
           .where(
               (detail) => detail.id!.contains(roomMatchDetailModel!.id ?? ''))
           .toList();
-      if (detail.length == 0) {
+      if (detail.isEmpty) {
         _roomMatch!.room_match_detail!.add(roomMatchDetailModel!);
         return true;
       } else {
@@ -286,7 +285,7 @@ class RoomProvider with ChangeNotifier {
       List<RoomMatchDetailModel> detail = roomMatch!.room_match_detail!
           .where((detail) => detail.is_ready == 0)
           .toList();
-      if (detail.length == 0) {
+      if (detail.isEmpty) {
         return true;
       }
       return false;

@@ -48,7 +48,7 @@ class _ResultGamePageState extends State<ResultGamePage> {
     try {
       /// !bug
       if (widget.isCustom == false) {
-        if (finalScore > widget.level!.current_score!.toDouble()) {
+        if (finalScore > widget.level!.current_score!.toInt()) {
           if (await _languageDBProvider!
               .setUpdateLevelProgress(finalScore, widget.level!.id)) {
             logger.d(" berhasil update xp level, cek db ");
@@ -75,8 +75,9 @@ class _ResultGamePageState extends State<ResultGamePage> {
     // TODO: implement initState
     super.initState();
     updateLevel();
-    _confettiController = ConfettiController(duration: Duration(seconds: 5));
-    Timer(Duration(milliseconds: 800), () {
+    _confettiController =
+        ConfettiController(duration: const Duration(seconds: 5));
+    Timer(const Duration(milliseconds: 800), () {
       _confettiController.play();
     });
   }
@@ -93,8 +94,8 @@ class _ResultGamePageState extends State<ResultGamePage> {
     S? setLanguage = S.of(context);
     Widget textHeader() {
       return Container(
-          margin: EdgeInsets.only(top: 10, left: 10, right: 10),
-          padding: EdgeInsets.symmetric(vertical: 10),
+          margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
+          padding: const EdgeInsets.symmetric(vertical: 10),
           child: Center(
             child: Column(
               children: [
@@ -106,7 +107,7 @@ class _ResultGamePageState extends State<ResultGamePage> {
                   style:
                       whiteTextStyle.copyWith(fontSize: 32, fontWeight: bold),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 6,
                 ),
                 Text(
@@ -122,7 +123,7 @@ class _ResultGamePageState extends State<ResultGamePage> {
     Widget BacktoMenu() {
       return Container(
         width: double.infinity,
-        margin: EdgeInsets.only(top: 20),
+        margin: const EdgeInsets.only(top: 20),
         alignment: Alignment.center,
         child: ClickyButton(
             onPressed: isLoading
@@ -133,11 +134,12 @@ class _ResultGamePageState extends State<ResultGamePage> {
                   },
             color: alertColor,
             shadowColor: alertAccentColor,
-            margin: EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
+            margin:
+                const EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
             width: 245,
             height: 60,
             child: Text(
-              "${setLanguage.back_to_menu}",
+              setLanguage.back_to_menu,
               style: whiteTextStyle.copyWith(fontSize: 16, fontWeight: bold),
             )),
       );
@@ -159,15 +161,15 @@ class _ResultGamePageState extends State<ResultGamePage> {
       }
 
       return Container(
-        margin: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-        padding: EdgeInsets.symmetric(vertical: 10),
+        margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+        padding: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
           color: backgroundColor9,
           borderRadius: BorderRadius.circular(5),
         ),
         child: Center(
           child: Text(
-            " ${resultText}",
+            " $resultText",
             style: whiteTextStyle.copyWith(fontSize: 32, fontWeight: bold),
           ),
         ),
@@ -200,12 +202,12 @@ class _ResultGamePageState extends State<ResultGamePage> {
     Widget cardBody() {
       return Container(
         alignment: Alignment.center,
-        margin: EdgeInsets.only(top: 80, left: 10, right: 10),
-        padding: EdgeInsets.all(5),
+        margin: const EdgeInsets.only(top: 80, left: 10, right: 10),
+        padding: const EdgeInsets.all(5),
         child: Column(
           children: [
             ElasticIn(child: textHeader()),
-            SizedBox(
+            const SizedBox(
               height: 8,
             ),
             ElasticIn(
@@ -216,7 +218,7 @@ class _ResultGamePageState extends State<ResultGamePage> {
               ),
             ),
             ElasticIn(child: scoreMatch()),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
             BacktoMenu()
@@ -248,7 +250,7 @@ class _ResultGamePageState extends State<ResultGamePage> {
         fit: StackFit.expand,
         children: [
           Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
                 image: DecorationImage(
                     image: AssetImage("assets/images/background_512w.png"),
                     fit: BoxFit.cover)),

@@ -113,17 +113,17 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
       }
     }
 
-    Widget joinPlayerCard(String username_player) {
+    Widget joinPlayerCard(String usernamePlayer) {
       return ElasticIn(
         child: Container(
-          padding: EdgeInsets.all(7),
-          margin: EdgeInsets.only(right: 10, bottom: 10),
+          padding: const EdgeInsets.all(7),
+          margin: const EdgeInsets.only(right: 10, bottom: 10),
           decoration: BoxDecoration(
               color: purpleCard, borderRadius: BorderRadius.circular(5)),
           child: Container(
-              margin: EdgeInsets.all(5),
+              margin: const EdgeInsets.all(5),
               child: Text(
-                "${username_player}",
+                usernamePlayer,
                 style:
                     whiteTextStyle.copyWith(fontSize: 20, fontWeight: semiBold),
               )),
@@ -133,20 +133,20 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
 
     Widget settingCard(String information, Image iconInfo) {
       return Container(
-        padding: EdgeInsets.all(7),
-        margin: EdgeInsets.only(right: 10, bottom: 10),
+        padding: const EdgeInsets.all(7),
+        margin: const EdgeInsets.only(right: 10, bottom: 10),
         decoration: BoxDecoration(
             color: purpleCard, borderRadius: BorderRadius.circular(5)),
         child: Container(
-          margin: EdgeInsets.all(5),
+          margin: const EdgeInsets.all(5),
           child: Row(
             children: [
               iconInfo,
-              SizedBox(
+              const SizedBox(
                 width: 7,
               ),
               Text(
-                "${information}",
+                information,
                 style:
                     whiteTextStyle.copyWith(fontSize: 15, fontWeight: semiBold),
               )
@@ -163,7 +163,8 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
         child: ClickyButton(
             color: whitePurpleColor,
             shadowColor: whiteAccentPurpleColor,
-            margin: EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
+            margin:
+                const EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
             width: 245,
             height: 60,
             child: Wrap(
@@ -173,7 +174,7 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
                   style:
                       primaryTextStyle.copyWith(fontSize: 14, fontWeight: bold),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 5,
                 ),
                 Image.asset(
@@ -202,7 +203,8 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
         child: ClickyButton(
             color: alertColor,
             shadowColor: alertAccentColor,
-            margin: EdgeInsets.only(top: 5, bottom: 5, left: 15, right: 15),
+            margin:
+                const EdgeInsets.only(top: 5, bottom: 5, left: 15, right: 15),
             width: 245,
             height: 60,
             child: Wrap(
@@ -212,7 +214,7 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
                   style:
                       primaryTextStyle.copyWith(fontSize: 14, fontWeight: bold),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 5,
                 ),
                 Icon(
@@ -251,7 +253,7 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
         centerTitle: true,
         title: Column(
           children: [
-            SizedBox(
+            const SizedBox(
               height: 8,
             ),
             Text(
@@ -263,8 +265,8 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
             ),
             Text(
               widget.isOnline == true
-                  ? '${setLanguage.multi_player}'
-                  : '${setLanguage.single_player}',
+                  ? setLanguage.multi_player
+                  : setLanguage.single_player,
               style:
                   primaryTextStyle.copyWith(fontSize: 14, fontWeight: medium),
             )
@@ -306,7 +308,7 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
                           roomMatch: roomProvider!.roomMatch);
                       logger.d("Game Start ");
                       socketProvider!.pausedStream();
-                      Timer(Duration(milliseconds: 1000), () {
+                      Timer(const Duration(milliseconds: 1000), () {
                         LevelModel levelModel = LevelModel(
                             id: 77,
                             level_name: setLanguage.custom_level,
@@ -342,7 +344,7 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
               return Container(
                 margin:
                     const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -360,8 +362,8 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
                     /// * room code  match
                     ElasticIn(
                       child: Container(
-                          margin: EdgeInsets.symmetric(vertical: 14),
-                          padding: EdgeInsets.all(18),
+                          margin: const EdgeInsets.symmetric(vertical: 14),
+                          padding: const EdgeInsets.all(18),
                           decoration: BoxDecoration(
                             color: whiteColor,
                             borderRadius: BorderRadius.circular(5),
@@ -378,7 +380,7 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
                                       style: blackTextStyle.copyWith(
                                           fontSize: 13, fontWeight: bold),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 5,
                                     ),
                                     Text(
@@ -392,7 +394,7 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
 
                               ///* setting up match
                               Container(
-                                margin: EdgeInsets.only(top: 20),
+                                margin: const EdgeInsets.only(top: 20),
                                 child: Row(
                                   children: [
                                     settingCard(
@@ -421,7 +423,7 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
                     /// * name player has join
                     ElasticIn(
                       child: Container(
-                        margin: EdgeInsets.symmetric(vertical: 14),
+                        margin: const EdgeInsets.symmetric(vertical: 14),
                         child: Wrap(
                           // children: [
                           //   joinPlayerCard("Giga"),
@@ -454,7 +456,7 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
             child: Stack(
               children: [
                 Container(
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     image: DecorationImage(
                         image: AssetImage("assets/images/background_512w.png"),
                         fit: BoxFit.cover),

@@ -1,9 +1,7 @@
-import 'dart:developer';
 
 import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/models/level_model.dart';
 import 'package:acakkata/models/range_result_txt_model.dart';
-import 'package:acakkata/models/word_language_model.dart';
 import 'package:acakkata/models/word_language_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -87,47 +85,47 @@ class LanguageDBProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> getWords(String? language_code, int? length_word) async {
+  Future<bool> getWords(String? languageCode, int? lengthWord) async {
     try {
       if (_db == null) {
         throw "bd is not initiated, initiate using [init(db)] function";
       }
       late List<Map<String, dynamic>> words;
 
-      if (language_code == "english") {
+      if (languageCode == "english") {
         await _db.transaction((txn) async {
           words = await txn.query("tb_word_eng",
               columns: ["id", "word", "meaning", "length_word"],
               orderBy: "word",
               where: "length_word = ?",
-              whereArgs: [length_word],
+              whereArgs: [lengthWord],
               limit: 4000);
         });
-      } else if (language_code == "indonesia") {
+      } else if (languageCode == "indonesia") {
         await _db.transaction((txn) async {
           words = await txn.query("tb_word_indo",
               columns: ["id", "word", "meaning", "length_word"],
               orderBy: "word",
               where: "length_word = ?",
-              whereArgs: [length_word],
+              whereArgs: [lengthWord],
               limit: 4000);
         });
-      } else if (language_code == "bali") {
+      } else if (languageCode == "bali") {
         await _db.transaction((txn) async {
           words = await txn.query("tb_word_bali",
               columns: ["id", "word", "meaning", "length_word"],
               orderBy: "word",
               where: "length_word = ?",
-              whereArgs: [length_word],
+              whereArgs: [lengthWord],
               limit: 4000);
         });
-      } else if (language_code == "java") {
+      } else if (languageCode == "java") {
         await _db.transaction((txn) async {
           words = await txn.query("tb_word_jawa",
               columns: ["id", "word", "meaning", "length_word"],
               orderBy: "word",
               where: "length_word = ?",
-              whereArgs: [length_word],
+              whereArgs: [lengthWord],
               limit: 4000);
         });
       }
@@ -168,7 +166,7 @@ class LanguageDBProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> getLevel(String? language_code) async {
+  Future<bool> getLevel(String? languageCode) async {
     try {
       if (_db == null) {
         throw Exception("local data not found");
@@ -191,7 +189,7 @@ class LanguageDBProvider with ChangeNotifier {
               "sorting_level"
             ],
             where: "level_lang_code = ?",
-            whereArgs: [language_code]);
+            whereArgs: [languageCode]);
       });
 
       _levelList = levels.map((e) => LevelModel.fromJson(e)).toList();
@@ -228,7 +226,7 @@ class LanguageDBProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> setUpdateLevelProgress(int newScore, int? level_id) async {
+  Future<bool> setUpdateLevelProgress(int newScore, int? levelId) async {
     try {
       if (_db == null) {
         throw Exception("local data not found");
@@ -238,7 +236,7 @@ class LanguageDBProvider with ChangeNotifier {
 
       await _db.transaction((txn) async {
         int updateCount = await txn
-            .update("tb_level", row, where: "id = ?", whereArgs: [level_id]);
+            .update("tb_level", row, where: "id = ?", whereArgs: [levelId]);
         // print("update tb_level ${updateCount}");
       });
 

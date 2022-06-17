@@ -22,7 +22,6 @@ import 'package:intl/intl.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
-import 'package:socket_io_client/socket_io_client.dart';
 
 class WaitingJoinRoomPage extends StatefulWidget {
   late final LanguageModel? languageModel;
@@ -95,7 +94,7 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
         centerTitle: true,
         title: Column(
           children: [
-            SizedBox(
+            const SizedBox(
               height: 8,
             ),
             Text(
@@ -107,8 +106,8 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
             ),
             Text(
               widget.isOnline == true
-                  ? '${setLanguage.multi_player}'
-                  : '${setLanguage.single_player}',
+                  ? setLanguage.multi_player
+                  : setLanguage.single_player,
               style:
                   primaryTextStyle.copyWith(fontSize: 14, fontWeight: medium),
             )
@@ -119,12 +118,12 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
 
     Widget settingCard(String information, Image iconInfo) {
       return Container(
-        padding: EdgeInsets.all(7),
-        margin: EdgeInsets.only(right: 10, bottom: 10),
+        padding: const EdgeInsets.all(7),
+        margin: const EdgeInsets.only(right: 10, bottom: 10),
         decoration: BoxDecoration(
             color: purpleCard, borderRadius: BorderRadius.circular(5)),
         child: Container(
-          margin: EdgeInsets.all(5),
+          margin: const EdgeInsets.all(5),
           child: Row(
             children: [
               iconInfo,
@@ -132,7 +131,7 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
                 width: 7,
               ),
               Text(
-                "${information}",
+                information,
                 style:
                     whiteTextStyle.copyWith(fontSize: 15, fontWeight: semiBold),
               )
@@ -149,7 +148,8 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
         child: ClickyButton(
             color: alertColor,
             shadowColor: alertAccentColor,
-            margin: EdgeInsets.only(top: 5, bottom: 5, left: 15, right: 15),
+            margin:
+                const EdgeInsets.only(top: 5, bottom: 5, left: 15, right: 15),
             width: 245,
             height: 60,
             child: Wrap(
@@ -159,7 +159,7 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
                   style:
                       whiteTextStyle.copyWith(fontSize: 14, fontWeight: bold),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 5,
                 ),
                 Icon(
@@ -231,7 +231,7 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
                           data['room_id'], data['status_game']);
                       logger.d("Game Start ");
                       status = "Permainan Segera Dimulai";
-                      Timer(Duration(milliseconds: 1000), () {
+                      Timer(const Duration(milliseconds: 1000), () {
                         socketProvider!.pausedStream();
                         LevelModel levelModel = LevelModel(
                             id: 77,
@@ -262,7 +262,7 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
 
                   ///! menerima status pemain lain
                   if (data['target'] == 'update-status-player') {
-                    logger.d("data update-status-player => ${data}");
+                    logger.d("data update-status-player => $data");
                     if (data['status_player'] == 2) {
                       roomProvider!.updateStatusPlayer(
                           roomDetailId: data['room_detail_id'],
@@ -280,7 +280,7 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
               return Container(
                 margin:
                     const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -327,7 +327,7 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
                       child: Container(
                         alignment: Alignment.topCenter,
                         child: Text(
-                          "${status}",
+                          status,
                           style: whiteTextStyle.copyWith(
                               fontWeight: extraBold, fontSize: 25),
                         ),
@@ -362,7 +362,7 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
             child: Stack(
               children: [
                 Container(
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     image: DecorationImage(
                         image: AssetImage("assets/images/background_512w.png"),
                         fit: BoxFit.cover),
@@ -375,7 +375,7 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
           backgroundColor: backgroundColor2,
           bottomNavigationBar: Container(
               height: 90,
-              padding: EdgeInsets.all(5),
+              padding: const EdgeInsets.all(5),
               child: Column(
                 children: [ButtonCancelRoom()],
               )),

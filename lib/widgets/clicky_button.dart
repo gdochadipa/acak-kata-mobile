@@ -1,12 +1,9 @@
 import 'dart:async';
-import 'package:acakkata/theme.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
-/** 
- * Issue:
- * width masih mentok di 200, coba di set agar lebih dari 200
- */
+/// Issue:
+/// width masih mentok di 200, coba di set agar lebih dari 200
 class ClickyButton extends StatefulWidget {
   final Duration _duration = const Duration(milliseconds: 70);
   final Widget child;
@@ -26,9 +23,7 @@ class ClickyButton extends StatefulWidget {
     this.width = 200.0,
     this.height = 70.0,
     required this.onPressed,
-  })  : assert(onPressed != null),
-        assert(child != null),
-        super(key: key);
+  })  : super(key: key);
 
   @override
   State<ClickyButton> createState() => _ClickyButtonState();
@@ -37,11 +32,11 @@ class ClickyButton extends StatefulWidget {
 class _ClickyButtonState extends State<ClickyButton> {
   double _faceLeft = 5.0; //perubahan jarak shadow
   double _faceTop = 0.0;
-  double _faceRight = 5.0;
-  double _faceBottom = 0.0;
+  final double _faceRight = 5.0;
+  final double _faceBottom = 0.0;
   double _sideWidth = 5.0; //perubahan jarak shadow
   double _bottomHeight = 5.0; //perubahan jarak shadow
-  Curve _curve = Curves.ease;
+  final Curve _curve = Curves.ease;
   double shadowRangeHeight = 70;
 
   @override
@@ -57,7 +52,7 @@ class _ClickyButtonState extends State<ClickyButton> {
             // on left
             Positioned(
               child: Transform(
-                origin: Offset(5, 0), //perubahan jarak shadow
+                origin: const Offset(5, 0), //perubahan jarak shadow
                 transform: Matrix4.skewY(-0.79),
                 child: AnimatedContainer(
                   duration: widget._duration,
@@ -120,7 +115,7 @@ class _ClickyButtonState extends State<ClickyButton> {
       _sideWidth = 0.0;
       _bottomHeight = 0.0;
     });
-    Timer timer = new Timer(Duration(milliseconds: 90), () {
+    Timer timer = Timer(const Duration(milliseconds: 90), () {
       widget.onPressed();
     });
   }

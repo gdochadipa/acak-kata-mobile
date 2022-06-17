@@ -33,7 +33,7 @@ class PopoverListView extends StatelessWidget {
               height: 5,
               decoration: BoxDecoration(
                   color: theme.dividerColor,
-                  borderRadius: BorderRadius.all(Radius.circular(2.5))),
+                  borderRadius: const BorderRadius.all(Radius.circular(2.5))),
             )
           ],
         ),
@@ -42,10 +42,10 @@ class PopoverListView extends StatelessWidget {
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 16, horizontal: 0),
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
           color: theme.cardColor,
-          borderRadius: BorderRadius.all(Radius.circular(16))),
+          borderRadius: const BorderRadius.all(Radius.circular(16))),
       child: SingleChildScrollView(
           child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

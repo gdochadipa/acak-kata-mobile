@@ -1,11 +1,9 @@
-import 'dart:ui';
 
 import 'package:acakkata/generated/l10n.dart';
 import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/models/level_model.dart';
 import 'package:acakkata/providers/language_db_provider.dart';
 import 'package:acakkata/theme.dart';
-import 'package:acakkata/widgets/custom_level_card.dart';
 import 'package:acakkata/widgets/level_card.dart';
 import 'package:acakkata/widgets/popover/custom_match_form.dart';
 import 'package:acakkata/widgets/skeleton/level_card_skeleton.dart';
@@ -91,7 +89,7 @@ class _LevelListPageState extends State<LevelListPage> {
         centerTitle: true,
         title: Column(
           children: [
-            SizedBox(
+            const SizedBox(
               height: 8,
             ),
             Text(
@@ -103,8 +101,8 @@ class _LevelListPageState extends State<LevelListPage> {
             ),
             Text(
               widget.isOnline == true
-                  ? '${setLanguage.multi_player}'
-                  : '${setLanguage.single_player}',
+                  ? setLanguage.multi_player
+                  : setLanguage.single_player,
               style:
                   primaryTextStyle.copyWith(fontSize: 14, fontWeight: medium),
             )
@@ -118,7 +116,7 @@ class _LevelListPageState extends State<LevelListPage> {
             child: Container(
                 width: 30,
                 height: 30,
-                padding: EdgeInsets.only(right: 10),
+                padding: const EdgeInsets.only(right: 10),
                 child: Image.asset('assets/images/icon_setting.png')),
           )
         ],
@@ -127,8 +125,8 @@ class _LevelListPageState extends State<LevelListPage> {
 
     Widget body() {
       return Container(
-        margin: EdgeInsets.only(top: 20, left: 15, right: 15),
-        padding: EdgeInsets.only(left: 8, right: 8, top: 15, bottom: 15),
+        margin: const EdgeInsets.only(top: 20, left: 15, right: 15),
+        padding: const EdgeInsets.only(left: 8, right: 8, top: 15, bottom: 15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -136,7 +134,7 @@ class _LevelListPageState extends State<LevelListPage> {
             //   "List Level",
             //   style: headerText2.copyWith(fontWeight: regular, fontSize: 28),
             // ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Container(
@@ -152,7 +150,7 @@ class _LevelListPageState extends State<LevelListPage> {
                         .map(
                           (e) => AnimationConfiguration.staggeredList(
                               position: levelList!.indexOf(e),
-                              duration: Duration(milliseconds: 1000),
+                              duration: const Duration(milliseconds: 1000),
                               child: SlideAnimation(
                                 horizontalOffset: 50.0,
                                 child: FadeInAnimation(

@@ -94,7 +94,7 @@ class PinCodeFields extends StatefulWidget {
 
   // PinCodeFields({Key? key}) : super(key: key);
 
-  PinCodeFields({
+  const PinCodeFields({
     /// Default length is 4.
     this.length = 4,
     this.controller,
@@ -219,7 +219,7 @@ class _PinCodeFieldsState extends State<PinCodeFields> {
           if (widget.autoHideKeyboard) {
             _focusNode!.unfocus();
           }
-        } else if (currentText.length == 0) {
+        } else if (currentText.isEmpty) {
           if (widget.autoHideKeyboard) {
             _focusNode!.unfocus();
           }
@@ -429,7 +429,7 @@ class _PinCodeFieldsState extends State<PinCodeFields> {
   Widget _generateTextField(int index) {
     return !widget.responsive
         ? Container(
-            margin: EdgeInsets.symmetric(horizontal: 5.0, vertical: 0.0),
+            margin: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 0.0),
             child: AnimatedContainer(
               margin: widget.margin,
               padding: widget.padding,
@@ -533,11 +533,11 @@ class _PinCodeFieldsState extends State<PinCodeFields> {
                 showCursor: false,
                 cursorColor: Colors.blue,
                 cursorWidth: 0.01,
-                decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.all(0),
+                decoration: const InputDecoration(
+                  contentPadding: EdgeInsets.all(0),
                   border: InputBorder.none,
                 ),
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.red,
                   height: 0.01,
                   fontSize: 0.01,

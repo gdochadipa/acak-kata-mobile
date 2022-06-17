@@ -38,12 +38,12 @@ class ItemLevelCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        margin: EdgeInsets.only(left: 8, right: 8),
+                        margin: const EdgeInsets.only(left: 8, right: 8),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
-                                margin: EdgeInsets.all(5),
+                                margin: const EdgeInsets.all(5),
                                 child: Stack(
                                   children: [
                                     Align(
@@ -79,7 +79,7 @@ class ItemLevelCard extends StatelessWidget {
                                   ],
                                 )),
                             Container(
-                              margin: EdgeInsets.all(5),
+                              margin: const EdgeInsets.all(5),
                               decoration: BoxDecoration(
                                   // border: Border.all(color: blackColor),
                                   color: backgroundColor8,
@@ -101,7 +101,7 @@ class ItemLevelCard extends StatelessWidget {
                       Container(
                         margin:
                             const EdgeInsets.only(left: 8, right: 8, top: 25),
-                        padding: EdgeInsets.all(11),
+                        padding: const EdgeInsets.all(11),
                         decoration: BoxDecoration(
                           color: grayColor2,
                           borderRadius: BorderRadius.circular(10),
@@ -116,8 +116,8 @@ class ItemLevelCard extends StatelessWidget {
                                   decoration: BoxDecoration(
                                       color: whiteColor,
                                       borderRadius: BorderRadius.circular(10)),
-                                  padding: EdgeInsets.all(7),
-                                  margin: EdgeInsets.only(left: 5),
+                                  padding: const EdgeInsets.all(7),
+                                  margin: const EdgeInsets.only(left: 5),
                                   child: Wrap(
                                     children: [
                                       Container(
@@ -128,8 +128,8 @@ class ItemLevelCard extends StatelessWidget {
                                         ),
                                       ),
                                       Container(
-                                        margin:
-                                            EdgeInsets.only(left: 5, bottom: 5),
+                                        margin: const EdgeInsets.only(
+                                            left: 5, bottom: 5),
                                         child: Text(
                                           "${levelModel!.level_words}",
                                           style: blackTextStyle.copyWith(
@@ -137,10 +137,10 @@ class ItemLevelCard extends StatelessWidget {
                                         ),
                                       ),
                                       Container(
-                                        margin: EdgeInsets.only(
+                                        margin: const EdgeInsets.only(
                                             left: 5, top: 5, right: 5),
                                         child: Text(
-                                          "${setLanguage.letter}",
+                                          setLanguage.letter,
                                           style: blackTextStyle.copyWith(
                                               fontSize: 12, fontWeight: medium),
                                         ),
@@ -152,12 +152,12 @@ class ItemLevelCard extends StatelessWidget {
                                 flex: 1,
                                 fit: FlexFit.tight,
                                 child: Container(
-                                  margin: EdgeInsets.symmetric(
+                                  margin: const EdgeInsets.symmetric(
                                       horizontal: 5, vertical: 5),
                                   decoration: BoxDecoration(
                                       color: whiteColor,
                                       borderRadius: BorderRadius.circular(10)),
-                                  padding: EdgeInsets.symmetric(
+                                  padding: const EdgeInsets.symmetric(
                                       horizontal: 7, vertical: 10),
                                   child: Wrap(
                                     children: [
@@ -169,8 +169,8 @@ class ItemLevelCard extends StatelessWidget {
                                         ),
                                       ),
                                       Container(
-                                        margin:
-                                            EdgeInsets.only(left: 5, bottom: 2),
+                                        margin: const EdgeInsets.only(
+                                            left: 5, bottom: 2),
                                         child: Text(
                                           "${levelModel!.level_time}",
                                           style: blackTextStyle.copyWith(
@@ -178,10 +178,10 @@ class ItemLevelCard extends StatelessWidget {
                                         ),
                                       ),
                                       Container(
-                                        margin: EdgeInsets.only(
+                                        margin: const EdgeInsets.only(
                                             left: 5, top: 0, right: 5),
                                         child: Text(
-                                          "${setLanguage.second_question}",
+                                          setLanguage.second_question,
                                           style: blackTextStyle.copyWith(
                                               fontSize: 10, fontWeight: medium),
                                         ),
@@ -196,7 +196,7 @@ class ItemLevelCard extends StatelessWidget {
                                   decoration: BoxDecoration(
                                       color: whiteColor,
                                       borderRadius: BorderRadius.circular(10)),
-                                  padding: EdgeInsets.all(7),
+                                  padding: const EdgeInsets.all(7),
                                   child: Wrap(
                                     children: [
                                       Container(
@@ -207,8 +207,8 @@ class ItemLevelCard extends StatelessWidget {
                                         ),
                                       ),
                                       Container(
-                                        margin:
-                                            EdgeInsets.only(left: 5, bottom: 5),
+                                        margin: const EdgeInsets.only(
+                                            left: 5, bottom: 5),
                                         child: Text(
                                           "${levelModel!.level_question_count}",
                                           style: blackTextStyle.copyWith(
@@ -216,10 +216,10 @@ class ItemLevelCard extends StatelessWidget {
                                         ),
                                       ),
                                       Container(
-                                        margin: EdgeInsets.only(
+                                        margin: const EdgeInsets.only(
                                             left: 5, top: 5, right: 5),
                                         child: Text(
-                                          "${setLanguage.question}",
+                                          setLanguage.question,
                                           style: blackTextStyle.copyWith(
                                               fontSize: 13, fontWeight: medium),
                                         ),
@@ -246,11 +246,11 @@ class ItemLevelCard extends StatelessWidget {
                                   child: Wrap(
                                     children: [
                                       Text(
-                                        '${setLanguage.play}',
+                                        setLanguage.play,
                                         style: whiteTextStyle.copyWith(
                                             fontSize: 14, fontWeight: bold),
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         width: 5,
                                       ),
                                       Image.asset(
@@ -261,7 +261,8 @@ class ItemLevelCard extends StatelessWidget {
                                     ],
                                   ),
                                   onPressed: () {
-                                    Timer(Duration(milliseconds: 500), () {
+                                    Timer(const Duration(milliseconds: 500),
+                                        () {
                                       Navigator.push(
                                           context,
                                           CustomPageRoute(OfflineGamePlayPage(
@@ -280,7 +281,7 @@ class ItemLevelCard extends StatelessWidget {
                                     });
                                   }),
                             )),
-                            SizedBox(
+                            const SizedBox(
                               width: 5,
                             ),
                             Flexible(
@@ -293,11 +294,11 @@ class ItemLevelCard extends StatelessWidget {
                                   child: Wrap(
                                     children: [
                                       Text(
-                                        '${setLanguage.challenge}',
+                                        setLanguage.challenge,
                                         style: whiteTextStyle.copyWith(
                                             fontSize: 14, fontWeight: bold),
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         width: 5,
                                       ),
                                       Image.asset(
@@ -308,7 +309,8 @@ class ItemLevelCard extends StatelessWidget {
                                     ],
                                   ),
                                   onPressed: () {
-                                    Timer(Duration(milliseconds: 500), () {
+                                    Timer(const Duration(milliseconds: 500),
+                                        () {
                                       Navigator.push(
                                           context,
                                           CustomPageRoute(PrepareOnlineGamePlay(
@@ -358,8 +360,9 @@ class ItemLevelCard extends StatelessWidget {
             }
           : null,
       child: Container(
-        margin: EdgeInsets.only(bottom: 20),
-        padding: EdgeInsets.only(top: 13, bottom: 13, left: 10, right: 10),
+        margin: const EdgeInsets.only(bottom: 20),
+        padding:
+            const EdgeInsets.only(top: 13, bottom: 13, left: 10, right: 10),
         decoration: BoxDecoration(
             // border: Border.all(color: blackColor),
             boxShadow: [
@@ -370,7 +373,7 @@ class ItemLevelCard extends StatelessWidget {
                   spreadRadius: 1,
                   blurRadius: 0,
                   blurStyle: BlurStyle.solid,
-                  offset: Offset(-4, 4))
+                  offset: const Offset(-4, 4))
             ],
             color: levelModel!.is_unlock == 0
                 ? disablePurpleColor
@@ -379,7 +382,7 @@ class ItemLevelCard extends StatelessWidget {
         child: Column(
           children: [
             Container(
-                margin: EdgeInsets.all(5),
+                margin: const EdgeInsets.all(5),
                 child: Stack(
                   children: [
                     Align(
@@ -393,7 +396,7 @@ class ItemLevelCard extends StatelessWidget {
                                 height: 18,
                               ),
                             ),
-                          SizedBox(
+                          const SizedBox(
                             width: 5,
                           ),
                           Text(
@@ -416,7 +419,7 @@ class ItemLevelCard extends StatelessWidget {
                   ],
                 )),
             Container(
-              margin: EdgeInsets.all(5),
+              margin: const EdgeInsets.all(5),
               decoration: BoxDecoration(
                   // border: Border.all(color: blackColor),
                   color: backgroundColor8,

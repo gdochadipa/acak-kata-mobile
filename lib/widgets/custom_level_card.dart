@@ -55,7 +55,7 @@ class CustomLevelCard extends StatelessWidget {
                       isHost: 0,
                       levelWords: int.parse(lengthWord.text),
                       isOnline: false,
-                      Stage: "${setLanguage.custom_level}",
+                      Stage: setLanguage.custom_level,
                       levelModel: levelModel,
                       isCustom: true,
                     )));
@@ -85,7 +85,7 @@ class CustomLevelCard extends StatelessWidget {
                       isHost: 0,
                       levelWords: int.parse(lengthWord.text),
                       isOnline: true,
-                      Stage: "${setLanguage.custom_level}",
+                      Stage: setLanguage.custom_level,
                       levelModel: levelModel,
                       isCustom: true,
                     )));
@@ -105,11 +105,12 @@ class CustomLevelCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            margin: EdgeInsets.only(left: 8, right: 8, top: 15),
+                            margin: const EdgeInsets.only(
+                                left: 8, right: 8, top: 15),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("${setLanguage.custom_level}",
+                                Text(setLanguage.custom_level,
                                     textAlign: TextAlign.left,
                                     style: blackTextStyle.copyWith(
                                       fontSize: 24,
@@ -134,17 +135,18 @@ class CustomLevelCard extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '${setLanguage.question_count}',
+                                  setLanguage.question_count,
                                   textAlign: TextAlign.left,
                                   style: blackTextStyle.copyWith(
                                       fontSize: 17, fontWeight: semiBold),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 5,
                                 ),
                                 Container(
                                   height: 50,
-                                  padding: EdgeInsets.symmetric(horizontal: 16),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16),
                                   decoration: BoxDecoration(
                                       border: Border.all(color: blackColor),
                                       color: whiteColor,
@@ -154,26 +156,28 @@ class CustomLevelCard extends StatelessWidget {
                                       children: [
                                         Expanded(
                                             child: TextFormField(
-                                          keyboardType:
-                                              TextInputType.numberWithOptions(
-                                                  decimal: false,
-                                                  signed: false),
+                                          keyboardType: const TextInputType
+                                                  .numberWithOptions(
+                                              decimal: false, signed: false),
                                           controller: questionNumber,
                                           validator: (text) {
                                             if (text!.isEmpty) {
-                                              return "${setLanguage.question_number}";
+                                              return setLanguage
+                                                  .question_number;
                                             }
                                             if (!(double.parse(text) >= 5)) {
-                                              return "${setLanguage.question_number_error_min}";
+                                              return setLanguage
+                                                  .question_number_error_min;
                                             }
                                             if (!(double.parse(text) <= 25)) {
-                                              return "${setLanguage.question_number_error_max}";
+                                              return setLanguage
+                                                  .question_number_error_max;
                                             }
                                             return null;
                                           },
                                           decoration: InputDecoration.collapsed(
                                               hintText:
-                                                  '${setLanguage.question_count}',
+                                                  setLanguage.question_count,
                                               hintStyle: subtitleTextStyle),
                                         ))
                                       ],
@@ -190,16 +194,17 @@ class CustomLevelCard extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '${setLanguage.word_length}',
+                                  setLanguage.word_length,
                                   style: blackTextStyle.copyWith(
                                       fontSize: 17, fontWeight: semiBold),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 5,
                                 ),
                                 Container(
                                   height: 50,
-                                  padding: EdgeInsets.symmetric(horizontal: 16),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16),
                                   decoration: BoxDecoration(
                                       border: Border.all(color: blackColor),
                                       color: whiteColor,
@@ -209,24 +214,25 @@ class CustomLevelCard extends StatelessWidget {
                                       Expanded(
                                           child: TextFormField(
                                         controller: lengthWord,
-                                        keyboardType:
-                                            TextInputType.numberWithOptions(
-                                                decimal: false, signed: false),
+                                        keyboardType: const TextInputType
+                                                .numberWithOptions(
+                                            decimal: false, signed: false),
                                         validator: (text) {
                                           if (text!.isEmpty) {
                                             return setLanguage.word_length_form;
                                           }
                                           if (!(double.parse(text) >= 3)) {
-                                            return "${setLanguage.word_length_form_error_min}";
+                                            return setLanguage
+                                                .word_length_form_error_min;
                                           }
                                           if (!(double.parse(text) <= 10)) {
-                                            return "${setLanguage.word_length_form_error_max}";
+                                            return setLanguage
+                                                .word_length_form_error_max;
                                           }
                                           return null;
                                         },
                                         decoration: InputDecoration.collapsed(
-                                            hintText:
-                                                '${setLanguage.word_length}',
+                                            hintText: setLanguage.word_length,
                                             hintStyle: subtitleTextStyle),
                                       ))
                                     ],
@@ -247,12 +253,13 @@ class CustomLevelCard extends StatelessWidget {
                                   style: blackTextStyle.copyWith(
                                       fontSize: 17, fontWeight: semiBold),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 5,
                                 ),
                                 Container(
                                   height: 50,
-                                  padding: EdgeInsets.symmetric(horizontal: 16),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16),
                                   decoration: BoxDecoration(
                                       border: Border.all(color: blackColor),
                                       color: whiteColor,
@@ -263,19 +270,20 @@ class CustomLevelCard extends StatelessWidget {
                                         Expanded(
                                             child: TextFormField(
                                           controller: questionTime,
-                                          keyboardType:
-                                              TextInputType.numberWithOptions(
-                                                  decimal: false,
-                                                  signed: false),
+                                          keyboardType: const TextInputType
+                                                  .numberWithOptions(
+                                              decimal: false, signed: false),
                                           validator: (text) {
                                             if (text!.isEmpty) {
-                                              return "${setLanguage.question_time}";
+                                              return setLanguage.question_time;
                                             }
                                             if (!(double.parse(text) >= 7)) {
-                                              return "${setLanguage.question_time_error_min}";
+                                              return setLanguage
+                                                  .question_time_error_min;
                                             }
                                             if (!(double.parse(text) <= 30)) {
-                                              return "${setLanguage.question_time_error_max}";
+                                              return setLanguage
+                                                  .question_time_error_max;
                                             }
                                             return null;
                                           },
@@ -307,11 +315,11 @@ class CustomLevelCard extends StatelessWidget {
                                       child: Wrap(
                                         children: [
                                           Text(
-                                            '${setLanguage.play}',
+                                            setLanguage.play,
                                             style: whiteTextStyle.copyWith(
                                                 fontSize: 14, fontWeight: bold),
                                           ),
-                                          SizedBox(
+                                          const SizedBox(
                                             width: 5,
                                           ),
                                           Image.asset(
@@ -322,12 +330,13 @@ class CustomLevelCard extends StatelessWidget {
                                         ],
                                       ),
                                       onPressed: () {
-                                        Timer(Duration(milliseconds: 500), () {
+                                        Timer(const Duration(milliseconds: 500),
+                                            () {
                                           _saveForm();
                                         });
                                       }),
                                 )),
-                                SizedBox(
+                                const SizedBox(
                                   width: 5,
                                 ),
                                 Flexible(
@@ -340,11 +349,11 @@ class CustomLevelCard extends StatelessWidget {
                                       child: Wrap(
                                         children: [
                                           Text(
-                                            '${setLanguage.challenge}',
+                                            setLanguage.challenge,
                                             style: whiteTextStyle.copyWith(
                                                 fontSize: 14, fontWeight: bold),
                                           ),
-                                          SizedBox(
+                                          const SizedBox(
                                             width: 5,
                                           ),
                                           Image.asset(
@@ -376,8 +385,9 @@ class CustomLevelCard extends StatelessWidget {
         showCustomFormLevelPop();
       },
       child: Container(
-        margin: EdgeInsets.only(bottom: 20),
-        padding: EdgeInsets.only(top: 13, bottom: 13, left: 10, right: 10),
+        margin: const EdgeInsets.only(bottom: 20),
+        padding:
+            const EdgeInsets.only(top: 13, bottom: 13, left: 10, right: 10),
         decoration: BoxDecoration(
             // border: Border.all(color: blackColor),
             boxShadow: [
@@ -386,22 +396,22 @@ class CustomLevelCard extends StatelessWidget {
                   spreadRadius: 1,
                   blurRadius: 0,
                   blurStyle: BlurStyle.solid,
-                  offset: Offset(-4, 4))
+                  offset: const Offset(-4, 4))
             ], color: backgroundColor8, borderRadius: BorderRadius.circular(5)),
         child: Column(
           children: [
             Container(
-                margin: EdgeInsets.all(5),
+                margin: const EdgeInsets.all(5),
                 child: Stack(
                   children: [
                     Align(
                       child: Row(
                         children: [
-                          SizedBox(
+                          const SizedBox(
                             width: 5,
                           ),
                           Text(
-                            '${setLanguage.custom_level}',
+                            setLanguage.custom_level,
                             style: whiteTextStyle.copyWith(
                                 fontSize: 21, fontWeight: bold),
                           )

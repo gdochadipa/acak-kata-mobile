@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:acakkata/models/room_match_model.dart';
 import 'package:acakkata/models/word_language_model.dart';
@@ -12,25 +11,25 @@ class RoomService {
     printer: PrettyPrinter(methodCount: 0),
   );
   Future<RoomMatchModel> createRoom(
-      String language_code,
-      int time_match,
-      int max_player,
-      int total_question,
+      String languageCode,
+      int timeMatch,
+      int maxPlayer,
+      int totalQuestion,
       String token,
-      DateTime datetime_match,
+      DateTime datetimeMatch,
       int level,
-      int length_word) async {
+      int lengthWord) async {
     var url = Uri.parse('$baseUrl/create-room');
     print(url);
     var headers = {'Content-Type': 'application/json', 'Authorization': token};
     var body = jsonEncode({
-      'language_code': language_code,
-      'time_match': time_match,
-      'max_player': max_player,
-      'total_question': total_question,
-      'datetime_match': datetime_match.toString(),
+      'language_code': languageCode,
+      'time_match': timeMatch,
+      'max_player': maxPlayer,
+      'total_question': totalQuestion,
+      'datetime_match': datetimeMatch.toString(),
       'level': level,
-      'length_word': length_word
+      'length_word': lengthWord
     });
     logger.d(body);
 
@@ -54,12 +53,12 @@ class RoomService {
   }
 
   Future<RoomMatchModel> findRoomWithCode(
-      String language_code, String token, String room_code) async {
+      String languageCode, String token, String roomCode) async {
     var url = Uri.parse('$baseUrl/search-code-room');
     print(url);
     var headers = {'Content-Type': 'application/json', 'Authorization': token};
     var body =
-        jsonEncode({'language_code': language_code, 'room_code': room_code});
+        jsonEncode({'language_code': languageCode, 'room_code': roomCode});
 
     var response = await http.post(url, headers: headers, body: body);
     logger.d(response.body);
@@ -80,10 +79,10 @@ class RoomService {
   }
 
   Future<RoomMatchModel> checkingRoomWithRoomCode(
-      String language_id, String token, String room_code) async {
+      String languageId, String token, String roomCode) async {
     var headers = {'Content-Type': 'application/json', 'Authorization': token};
-    var query_parameter = {'language_id': language_id, 'room_code': room_code};
-    final url = Uri.http('$baseUrl', '/find-room', query_parameter);
+    var queryParameter = {'language_id': languageId, 'room_code': roomCode};
+    final url = Uri.http(baseUrl, '/find-room', queryParameter);
     print(url);
 
     var response = await http.get(url, headers: headers);
@@ -104,10 +103,10 @@ class RoomService {
     }
   }
 
-  Future<bool> confirmGame(String token, String room_id) async {
+  Future<bool> confirmGame(String token, String roomId) async {
     var url = Uri.parse('$baseUrl/confirm-game');
     var headers = {'Content-Type': 'application/json', 'Authorization': token};
-    var body = jsonEncode({'room_id': room_id});
+    var body = jsonEncode({'room_id': roomId});
     var response = await http.post(url, headers: headers, body: body);
     print(response.body);
 
@@ -118,10 +117,10 @@ class RoomService {
     }
   }
 
-  Future<bool> cancelGameFromRoom(String token, String room_id) async {
+  Future<bool> cancelGameFromRoom(String token, String roomId) async {
     var url = Uri.parse('$baseUrl/cancel-room');
     var headers = {'Content-Type': 'application/json', 'Authorization': token};
-    var body = jsonEncode({'room_id': room_id});
+    var body = jsonEncode({'room_id': roomId});
     var response = await http.post(url, headers: headers, body: body);
     print(response.body);
 
@@ -134,10 +133,10 @@ class RoomService {
 
   Future<List<WordLanguageModel>> getPackageQuestion(
       String token,
-      String language_code,
-      int question_num,
-      String channel_code,
-      int length_word) async {
+      String languageCode,
+      int questionNum,
+      String channelCode,
+      int lengthWord) async {
     try {
       var headers = {
         'Content-Type': 'application/json',
@@ -145,7 +144,7 @@ class RoomService {
       };
 
       final url = Uri.parse(
-          '$baseUrl/package-question?language_code=${language_code}&question_num=${question_num}&channel_code=${channel_code}&length_word=${length_word}');
+          '$baseUrl/package-question?language_code=$languageCode&question_num=$questionNum&channel_code=$channelCode&length_word=$lengthWord');
       // final url = Uri.http('$baseUrl', '/package-question', query_parameter);
       var response = await http.get(url, headers: headers);
       logger.d(response.body);
@@ -161,7 +160,7 @@ class RoomService {
       } else {
         throw Exception('Gagal panggil pertanyaan');
       }
-    } catch (e, trace) {
+    } catch (e) {
       throw Exception(e);
     }
   }
@@ -174,7 +173,7 @@ class RoomService {
         'Authorization': token
       };
 
-      final url = Uri.parse('$baseUrl/find-room-by-id?id=${id}');
+      final url = Uri.parse('$baseUrl/find-room-by-id?id=$id');
       var response = await http.get(url, headers: headers);
 
       if (response.statusCode == 200) {
@@ -191,7 +190,7 @@ class RoomService {
           throw Exception("Gagal Mencari Room");
         }
       }
-    } catch (e, trace) {
+    } catch (e) {
       throw Exception(e);
     }
   }

@@ -56,7 +56,6 @@ dependencies:
   bouncing_widget: ^2.0.0
   auto_size_text: ^3.0.0
   intl: ^0.17.0
-  workmanager: ^0.4.1
   group_button: ^5.0.0
   datetime_picker_formfield: ^2.0.0
   flutter_switch: ^0.3.2
@@ -91,7 +90,6 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/images/data_kosong.svg
     - assets/images/icon_email.png
     - assets/images/icon_flag_id.png
     - assets/images/icon_game.jpg
@@ -103,7 +101,6 @@ flutter:
     - assets/images/icon_time.jpg
     - assets/images/icon_username.png
     - assets/images/photo_profile.png
-    - assets/images/icon_success.png
     - assets/images/trophy.png
     - assets/images/bali_lang.png
     - assets/images/en_lang.png
@@ -112,11 +109,8 @@ flutter:
     - assets/images/arrow.png
     - assets/images/icon_logout.png
     - assets/db/mydb.db
-    - assets/images/Heart.png
-    - assets/images/kahoot_lit.png
     - assets/images/Lightbulb.png
     - assets/images/logo_biru.png
-    - assets/images/logo_one_line.png
     - assets/images/logo_putih.png
     - assets/images/multi_player.png
     - assets/images/single_player.png
@@ -139,6 +133,12 @@ flutter:
     - assets/images/white_clock_icon.png
     - assets/images/arrow_blue.png
     - assets/images/icon_black_game.png
+    - assets/images/logo_baru_bg.png
+    - assets/images/logo_baru_no.png
+    - assets/images/question.png
+    - assets/images/star.png
+    - assets/images/great_job.png
+    - assets/images/light_bulb.png
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg

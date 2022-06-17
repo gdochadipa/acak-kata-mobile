@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:acakkata/models/user_model.dart';
 

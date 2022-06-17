@@ -17,8 +17,8 @@ class LevelCardSkeleton extends StatelessWidget {
           Container(
             height: 61,
             width: 63.44,
-            margin: EdgeInsets.only(top: 10, left: 5, right: 5),
-            padding: EdgeInsets.all(10),
+            margin: const EdgeInsets.only(top: 10, left: 5, right: 5),
+            padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: whiteColor,
               borderRadius: BorderRadius.circular(15),

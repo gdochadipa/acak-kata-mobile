@@ -1,5 +1,3 @@
-import 'package:acakkata/models/user_model.dart';
-import 'package:logger/logger.dart';
 
 class LevelModel {
   int? id;

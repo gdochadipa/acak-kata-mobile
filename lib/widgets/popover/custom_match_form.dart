@@ -39,7 +39,7 @@ class _CustomMatchFormState extends State<CustomMatchForm> {
       } else {
         LevelModel levelModel = LevelModel(
             id: 77,
-            level_name: "${setLanguage.custom_level}",
+            level_name: setLanguage.custom_level,
             level_words: int.parse(lengthWord.text),
             level_time: int.parse(questionTime.text),
             level_lang_code: setLanguage.code,
@@ -55,7 +55,7 @@ class _CustomMatchFormState extends State<CustomMatchForm> {
               isHost: 0,
               levelWords: int.parse(lengthWord.text),
               isOnline: false,
-              Stage: "${setLanguage.custom_level}",
+              Stage: setLanguage.custom_level,
               levelModel: levelModel,
               isCustom: true,
             )));
@@ -75,11 +75,11 @@ class _CustomMatchFormState extends State<CustomMatchForm> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    margin: EdgeInsets.only(left: 8, right: 8, top: 15),
+                    margin: const EdgeInsets.only(left: 8, right: 8, top: 15),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("${setLanguage.custom_level}",
+                        Text(setLanguage.custom_level,
                             textAlign: TextAlign.left,
                             style: blackTextStyle.copyWith(
                               fontSize: 24,
@@ -103,17 +103,17 @@ class _CustomMatchFormState extends State<CustomMatchForm> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '${setLanguage.question_count}',
+                          setLanguage.question_count,
                           textAlign: TextAlign.left,
                           style: blackTextStyle.copyWith(
                               fontSize: 17, fontWeight: semiBold),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 5,
                         ),
                         Container(
                           height: 50,
-                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
                           decoration: BoxDecoration(
                               border: Border.all(color: blackColor),
                               color: whiteColor,
@@ -123,23 +123,23 @@ class _CustomMatchFormState extends State<CustomMatchForm> {
                               children: [
                                 Expanded(
                                     child: TextFormField(
-                                  keyboardType: TextInputType.numberWithOptions(
+                                  keyboardType: const TextInputType.numberWithOptions(
                                       decimal: false, signed: false),
                                   controller: questionNumber,
                                   validator: (text) {
                                     if (text!.isEmpty) {
-                                      return "${setLanguage.question_number}";
+                                      return setLanguage.question_number;
                                     }
                                     if (!(double.parse(text) >= 5)) {
-                                      return "${setLanguage.question_number_error_min}";
+                                      return setLanguage.question_number_error_min;
                                     }
                                     if (!(double.parse(text) <= 25)) {
-                                      return "${setLanguage.question_number_error_max}";
+                                      return setLanguage.question_number_error_max;
                                     }
                                     return null;
                                   },
                                   decoration: InputDecoration.collapsed(
-                                      hintText: '${setLanguage.question_count}',
+                                      hintText: setLanguage.question_count,
                                       hintStyle: subtitleTextStyle),
                                 ))
                               ],
@@ -155,16 +155,16 @@ class _CustomMatchFormState extends State<CustomMatchForm> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '${setLanguage.word_length}',
+                          setLanguage.word_length,
                           style: blackTextStyle.copyWith(
                               fontSize: 17, fontWeight: semiBold),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 5,
                         ),
                         Container(
                           height: 50,
-                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
                           decoration: BoxDecoration(
                               border: Border.all(color: blackColor),
                               color: whiteColor,
@@ -174,22 +174,22 @@ class _CustomMatchFormState extends State<CustomMatchForm> {
                               Expanded(
                                   child: TextFormField(
                                 controller: lengthWord,
-                                keyboardType: TextInputType.numberWithOptions(
+                                keyboardType: const TextInputType.numberWithOptions(
                                     decimal: false, signed: false),
                                 validator: (text) {
                                   if (text!.isEmpty) {
                                     return setLanguage.word_length_form;
                                   }
                                   if (!(double.parse(text) >= 3)) {
-                                    return "${setLanguage.word_length_form_error_min}";
+                                    return setLanguage.word_length_form_error_min;
                                   }
                                   if (!(double.parse(text) <= 10)) {
-                                    return "${setLanguage.word_length_form_error_max}";
+                                    return setLanguage.word_length_form_error_max;
                                   }
                                   return null;
                                 },
                                 decoration: InputDecoration.collapsed(
-                                    hintText: '${setLanguage.word_length}',
+                                    hintText: setLanguage.word_length,
                                     hintStyle: subtitleTextStyle),
                               ))
                             ],
@@ -209,12 +209,12 @@ class _CustomMatchFormState extends State<CustomMatchForm> {
                           style: blackTextStyle.copyWith(
                               fontSize: 17, fontWeight: semiBold),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 5,
                         ),
                         Container(
                           height: 50,
-                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
                           decoration: BoxDecoration(
                               border: Border.all(color: blackColor),
                               color: whiteColor,
@@ -225,17 +225,17 @@ class _CustomMatchFormState extends State<CustomMatchForm> {
                                 Expanded(
                                     child: TextFormField(
                                   controller: questionTime,
-                                  keyboardType: TextInputType.numberWithOptions(
+                                  keyboardType: const TextInputType.numberWithOptions(
                                       decimal: false, signed: false),
                                   validator: (text) {
                                     if (text!.isEmpty) {
-                                      return "${setLanguage.question_time}";
+                                      return setLanguage.question_time;
                                     }
                                     if (!(double.parse(text) >= 7)) {
-                                      return "${setLanguage.question_time_error_min}";
+                                      return setLanguage.question_time_error_min;
                                     }
                                     if (!(double.parse(text) <= 30)) {
-                                      return "${setLanguage.question_time_error_max}";
+                                      return setLanguage.question_time_error_max;
                                     }
                                     return null;
                                   },
@@ -266,11 +266,11 @@ class _CustomMatchFormState extends State<CustomMatchForm> {
                               child: Wrap(
                                 children: [
                                   Text(
-                                    '${setLanguage.play}',
+                                    setLanguage.play,
                                     style: whiteTextStyle.copyWith(
                                         fontSize: 14, fontWeight: bold),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 5,
                                   ),
                                   Image.asset(
@@ -281,12 +281,12 @@ class _CustomMatchFormState extends State<CustomMatchForm> {
                                 ],
                               ),
                               onPressed: () {
-                                Timer(Duration(milliseconds: 500), () {
+                                Timer(const Duration(milliseconds: 500), () {
                                   _saveForm();
                                 });
                               }),
                         )),
-                        SizedBox(
+                        const SizedBox(
                           width: 5,
                         ),
                         Flexible(
@@ -299,11 +299,11 @@ class _CustomMatchFormState extends State<CustomMatchForm> {
                               child: Wrap(
                                 children: [
                                   Text(
-                                    '${setLanguage.challenge}',
+                                    setLanguage.challenge,
                                     style: whiteTextStyle.copyWith(
                                         fontSize: 14, fontWeight: bold),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 5,
                                   ),
                                   Image.asset(

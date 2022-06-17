@@ -22,13 +22,13 @@ class _ShowLoginModalState extends State<ShowLoginModal> {
     return Container(
       child: LoginPopUp(
           child: Container(
-        decoration: new BoxDecoration(
+        decoration: const BoxDecoration(
             color: Colors.white,
-            borderRadius: new BorderRadius.only(
-                topLeft: const Radius.circular(10.0),
-                topRight: const Radius.circular(10.0))),
-        margin: EdgeInsets.all(5),
-        padding: EdgeInsets.all(15),
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(10.0),
+                topRight: Radius.circular(10.0))),
+        margin: const EdgeInsets.all(5),
+        padding: const EdgeInsets.all(15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -39,7 +39,7 @@ class _ShowLoginModalState extends State<ShowLoginModal> {
                     blackTextStyle.copyWith(fontSize: 15, fontWeight: semiBold),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 5,
             ),
             Container(
@@ -64,13 +64,13 @@ class _ShowLoginModalState extends State<ShowLoginModal> {
                           ],
                         ),
                         onPressed: () {
-                          Timer(Duration(milliseconds: 50), () {
+                          Timer(const Duration(milliseconds: 50), () {
                             Navigator.push(
                                 context, CustomPageRoute(SignInPage()));
                           });
                         }),
                   )),
-                  SizedBox(
+                  const SizedBox(
                     width: 5,
                   ),
                   Flexible(
@@ -90,7 +90,7 @@ class _ShowLoginModalState extends State<ShowLoginModal> {
                           ],
                         ),
                         onPressed: () {
-                          Timer(Duration(milliseconds: 50), () {
+                          Timer(const Duration(milliseconds: 50), () {
                             Navigator.pushAndRemoveUntil(
                               context,
                               CustomPageRoute(SignUpPage()),
@@ -132,7 +132,7 @@ class LoginPopUp extends StatelessWidget {
                     height: 10,
                     decoration: BoxDecoration(
                         color: grayColor2,
-                        borderRadius: BorderRadius.all(Radius.circular(2.5))),
+                        borderRadius: const BorderRadius.all(Radius.circular(2.5))),
                   )),
             ),
           ],
@@ -142,7 +142,7 @@ class LoginPopUp extends StatelessWidget {
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 16, horizontal: 0),
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: SingleChildScrollView(
           child: Column(
         children: [_buildHandle(context), child],

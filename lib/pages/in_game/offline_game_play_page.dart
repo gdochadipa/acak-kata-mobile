@@ -1,10 +1,6 @@
 import 'dart:async';
-import 'dart:collection';
-import 'dart:developer';
 import 'dart:math';
 
-import 'package:acakkata/enum/animations.dart';
-import 'package:acakkata/enum/field_border_style.dart';
 import 'package:acakkata/generated/l10n.dart';
 import 'package:acakkata/models/level_model.dart';
 import 'package:acakkata/models/word_language_model.dart';
@@ -16,7 +12,6 @@ import 'package:acakkata/widgets/answer_input_buttons.dart';
 import 'package:acakkata/widgets/clicky_button.dart';
 import 'package:acakkata/widgets/custom_page_route.dart';
 import 'package:acakkata/widgets/gameplay/footer_gameplay_page.dart';
-import 'package:acakkata/widgets/gameplay/pin_code_fields.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -53,8 +48,8 @@ class OfflineGamePlayPage extends StatefulWidget {
 
 class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
     with SingleTickerProviderStateMixin {
-  late final _animationRotateController =
-      AnimationController(vsync: this, duration: Duration(milliseconds: 1000));
+  late final _animationRotateController = AnimationController(
+      vsync: this, duration: const Duration(milliseconds: 1000));
   late Animation animationRotate;
   TextEditingController answerController = TextEditingController(text: '');
   Logger logger = Logger(
@@ -62,7 +57,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
   );
   String textAnswer = '';
   List<WordLanguageModel>? dataWordList;
-  bool _isButtonDisabled = false;
+  final bool _isButtonDisabled = false;
   int totalQuestion = 10;
   int currentArrayQuestion = 0;
   int currentQuestion = 1;
@@ -71,7 +66,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
   int scoreCount = 0;
   int score = 0;
   bool _isLoading = false;
-  int _start = 5;
+  final int _start = 5;
   int startCountDown = 3;
   int answerCountDown = 5;
   Timer? _timerScore;
@@ -126,7 +121,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
 
   /// digunakan untuk mendaftarkan antrian ke variabel state
   setUpListQuestionQueue(List<WordLanguageModel>? wordList) async {
-    if (wordList!.length > 0) {
+    if (wordList!.isNotEmpty) {
       for (var i = 0; i < wordList.length; i++) {
         setState(() {
           listQuestionQueue!.add(i);
@@ -148,7 +143,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
     Timer _timer;
 
     // const duration = Duration(seconds: 1);
-    _timer = Timer.periodic(Duration(seconds: 1), (Timer timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       /// bagian ini untuk menghitung mundur sebelum memulai menjawab pertanyaan
       if (startCountDown > 0) {
         setState(() {
@@ -279,7 +274,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
     setState(() {
       _isLoading = true;
     });
-    Timer(Duration(milliseconds: 50), () {
+    Timer(const Duration(milliseconds: 50), () {
       setState(() {
         _isLoading = false;
       });
@@ -292,7 +287,8 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
   /// runTime Result merupakan mekanisme perhitungan timer untuk melihat
   /// hasil jawaban. batas waktu yang ditentukan  adalah 5 detik setelah pertanyaan
   onRunTimeResult(bool endGame) async {
-    _timeInRes = Timer.periodic(Duration(seconds: 1), (Timer timer) async {
+    _timeInRes =
+        Timer.periodic(const Duration(seconds: 1), (Timer timer) async {
       if (answerCountDown > 0) {
         setState(() {
           answerCountDown--;
@@ -306,7 +302,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
               0, (previousValue, element) => previousValue + element);
           double newScoreTime = 0;
           double newScoreCount = 0;
-          if (allScoreTime > 0 && scoreTime.length > 0) {
+          if (allScoreTime > 0 && scoreTime.isNotEmpty) {
             newScoreTime =
                 (((allScoreTime / scoreTime.length) / (numberCountDown)) * 0.4);
           }
@@ -406,7 +402,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
   /// fungsi untuk mereset jawaban dan juga tombol
   onResetAnswerField() {
     resetAnswer();
-    if (textAnswer != '' && textAnswer.length > 0) {
+    if (textAnswer != '' && textAnswer.isNotEmpty) {
       textAnswer = '';
       answerController.text = textAnswer;
     }
@@ -416,7 +412,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
   Future<void> showCancelGame() async {
     return showDialog(
         context: context,
-        builder: (BuildContext context) => Container(
+        builder: (BuildContext context) => SizedBox(
               width: MediaQuery.of(context).size.width - (2 * defaultMargin),
               child: AlertDialog(
                 backgroundColor: backgroundColor1,
@@ -442,7 +438,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
                       height: 12,
                     ),
                     Text(
-                      '${S.of(context).exit_game}',
+                      S.of(context).exit_game,
                       style: headerText2.copyWith(
                         fontSize: 18,
                         fontWeight: semiBold,
@@ -452,11 +448,11 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
                       height: 12,
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: 15, right: 5),
+                      margin: const EdgeInsets.only(top: 15, right: 5),
                       child: Row(
                         children: [
                           Container(
-                            margin: EdgeInsets.all(2),
+                            margin: const EdgeInsets.all(2),
                             height: 44,
                             child: TextButton(
                               onPressed: () {
@@ -470,7 +466,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
                                 ),
                               ),
                               child: Text(
-                                '${S.of(context).exit_game_yes}',
+                                S.of(context).exit_game_yes,
                                 style: whiteTextStyle.copyWith(
                                   fontSize: 12,
                                   fontWeight: medium,
@@ -480,7 +476,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
                           ),
                           Container(
                               child: Container(
-                            margin: EdgeInsets.all(5),
+                            margin: const EdgeInsets.all(5),
                             height: 44,
                             child: TextButton(
                               onPressed: () {
@@ -495,7 +491,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
                                 ),
                               ),
                               child: Text(
-                                '${S.of(context).exit_game_no}',
+                                S.of(context).exit_game_no,
                                 style: primaryTextStyle.copyWith(
                                   fontSize: 12,
                                   fontWeight: medium,
@@ -515,7 +511,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
   /// fungsi untuk memberikan input jawaban setelah menekan tombol huruf
   /// fungsi ini akan mengecek jawaban ketika pemain menekan tombol terakhir jawaban
   answerQuestion(
-      String letter, int e, List<String>? suffle_question, String? question) {
+      String letter, int e, List<String>? suffleQuestion, String? question) {
     /**
          * menginputkan huruf ke kolom jawaban 
          * sekaligus juga menginputkan ke sequenceAnswer (urutan huruf jawaban)
@@ -530,7 +526,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
     /**
      * mengecek apakah panjang kata jawaban sesuai dengan panjang kata soal
      */
-    if (textAnswer.length == suffle_question!.length) {
+    if (textAnswer.length == suffleQuestion!.length) {
       logger.d(
           "${answerController.text.toUpperCase()} == ${question!.toUpperCase()} => ${answerController.text.toUpperCase() == question.toUpperCase()}");
       /**
@@ -600,7 +596,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
          * * munculin status jawaban benar
          */
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          duration: Duration(milliseconds: 700),
+          duration: const Duration(milliseconds: 700),
           content: Text(
             "${S.of(context).true_string} !",
             textAlign: TextAlign.center,
@@ -612,7 +608,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
          ** reset jawaban 
          */
         resetAnswer();
-        if (textAnswer != '' && textAnswer.length > 0) {
+        if (textAnswer != '' && textAnswer.isNotEmpty) {
           textAnswer = '';
           answerController.text = textAnswer;
         }
@@ -621,7 +617,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
          * * munculin status jawaban salah
          */
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            duration: Duration(milliseconds: 700),
+            duration: const Duration(milliseconds: 700),
             backgroundColor: alertColor,
             content: Text(
               "${S.of(context).false_string} !",
@@ -629,7 +625,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
               style: whiteTextStyle.copyWith(fontWeight: bold, fontSize: 20),
             )));
         resetAnswer();
-        if (textAnswer != '' && textAnswer.length > 0) {
+        if (textAnswer != '' && textAnswer.isNotEmpty) {
           textAnswer = '';
           answerController.text = textAnswer;
         }
@@ -662,12 +658,12 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
             Container(
               width: 60,
               height: 60,
-              margin: EdgeInsets.all(15),
+              margin: const EdgeInsets.all(15),
               alignment: Alignment.center,
               decoration: BoxDecoration(
                   shape: BoxShape.circle, color: backgroundColorAccent2),
               child: Text(
-                "${countDownAnswer}",
+                "$countDownAnswer",
                 style: whiteTextStyle.copyWith(fontSize: 24, fontWeight: bold),
               ),
             ),
@@ -679,13 +675,13 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
     /// form jawaban input huruf
     Widget answerInput() {
       return Container(
-        margin: EdgeInsets.only(top: 10),
+        margin: const EdgeInsets.only(top: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               height: 50,
-              padding: EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
                   color: backgroundColor9,
                   borderRadius: BorderRadius.circular(5)),
@@ -696,7 +692,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
                 controller: answerController,
                 style: whiteTextStyle.copyWith(fontSize: 18, fontWeight: bold),
                 decoration: InputDecoration.collapsed(
-                    hintText: '${setLanguage.answer}',
+                    hintText: setLanguage.answer,
                     hintStyle: whiteTextStyle.copyWith(
                         fontSize: 18,
                         fontWeight: medium,
@@ -713,12 +709,12 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
       return Container(
         height: 45,
         width: double.infinity,
-        margin: EdgeInsets.all(5),
+        margin: const EdgeInsets.all(5),
         child: TextButton(
           onPressed: () {
             //reset jawaban ke null
             resetAnswer();
-            if (textAnswer != '' && textAnswer.length > 0) {
+            if (textAnswer != '' && textAnswer.isNotEmpty) {
               textAnswer = '';
               answerController.text = textAnswer;
             }
@@ -735,11 +731,11 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
                 semanticLabel: 'Add',
                 color: blackColor,
               ),
-              SizedBox(
+              const SizedBox(
                 width: 1,
               ),
               Text(
-                '${setLanguage.reset}',
+                setLanguage.reset,
                 style: blackTextStyle.copyWith(fontSize: 13, fontWeight: bold),
               )
             ],
@@ -753,12 +749,12 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
       return Container(
         height: 45,
         width: double.infinity,
-        margin: EdgeInsets.all(5),
+        margin: const EdgeInsets.all(5),
         child: TextButton(
           onPressed: () {
             //hapus kata per kata
             // print(sequenceAnswer);
-            if (textAnswer != '' && textAnswer.length > 0) {
+            if (textAnswer != '' && textAnswer.isNotEmpty) {
               int lett = sequenceAnswer![textAnswer.length - 1];
               // print(lett);
               textAnswer = textAnswer.substring(0, textAnswer.length - 1);
@@ -781,11 +777,11 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
                 semanticLabel: 'Add',
                 color: blackColor,
               ),
-              SizedBox(
+              const SizedBox(
                 width: 5,
               ),
               Text(
-                '${setLanguage.delete}',
+                setLanguage.delete,
                 style: blackTextStyle.copyWith(fontSize: 14, fontWeight: bold),
               ),
             ],
@@ -796,16 +792,16 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
 
     Widget btnExit() {
       return Container(
-        margin: EdgeInsets.only(
+        margin: const EdgeInsets.only(
           top: 15,
         ),
         child: Container(
-          margin: EdgeInsets.all(5),
+          margin: const EdgeInsets.all(5),
           alignment: Alignment.center,
           child: ClickyButton(
             onPressed: () {
               //hapus kata per kata
-              Timer(Duration(milliseconds: 500), () {
+              Timer(const Duration(milliseconds: 500), () {
                 showCancelGame();
               });
             },
@@ -820,11 +816,11 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
                   semanticLabel: 'Add',
                   color: whiteColor,
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 5,
                 ),
                 Text(
-                  '${setLanguage.exit}',
+                  setLanguage.exit,
                   style:
                       whiteTextStyle.copyWith(fontSize: 14, fontWeight: bold),
                 ),
@@ -837,16 +833,16 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
 
     Widget btnSkipQuestion() {
       return Container(
-        margin: EdgeInsets.only(
+        margin: const EdgeInsets.only(
           top: 15,
         ),
         child: Container(
-          margin: EdgeInsets.all(5),
+          margin: const EdgeInsets.all(5),
           alignment: Alignment.center,
           child: ClickyButton(
             onPressed: () {
               //hapus kata per kata
-              Timer(Duration(milliseconds: 500), () {
+              Timer(const Duration(milliseconds: 500), () {
                 onSkipedAnswer();
               });
             },
@@ -861,11 +857,11 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
                   semanticLabel: 'Add',
                   color: primaryColor,
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 5,
                 ),
                 Text(
-                  '${setLanguage.next}',
+                  setLanguage.next,
                   style:
                       primaryTextStyle.copyWith(fontSize: 14, fontWeight: bold),
                 ),
@@ -878,7 +874,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
 
     Widget anotherActionAnswer() {
       return Container(
-        margin: EdgeInsets.only(top: 15),
+        margin: const EdgeInsets.only(top: 15),
         child: Row(
           children: [
             Flexible(child: btnResetAnswer()),
@@ -890,7 +886,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
 
     Widget anotherActionQuestion() {
       return Container(
-        margin: EdgeInsets.only(top: 15),
+        margin: const EdgeInsets.only(top: 15),
         child: Row(
           children: [
             Flexible(child: btnExit()),
@@ -901,10 +897,10 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
     }
 
     /// list tombol jawaban [list per huruf]
-    Widget AnswerButtons(List<String>? suffle_question, String? question) {
-      List fixedList = Iterable.generate(suffle_question!.length).toList();
+    Widget AnswerButtons(List<String>? suffleQuestion, String? question) {
+      List fixedList = Iterable.generate(suffleQuestion!.length).toList();
       return Container(
-        margin: EdgeInsets.only(top: 20, left: 5, right: 5),
+        margin: const EdgeInsets.only(top: 20, left: 5, right: 5),
         alignment: Alignment.center,
         child: ListView(
           shrinkWrap: true,
@@ -913,15 +909,15 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
               alignment: WrapAlignment.center,
               children: fixedList
                   .map((e) => InputAnswerButton(
-                      letter: suffle_question[e],
+                      letter: suffleQuestion[e],
                       isBtnSelected: isSelected![e] ?? false,
                       onSelectButtonLetter: (String letter, bool isUnSet) {
-                        answerQuestion(letter, e, suffle_question, question);
+                        answerQuestion(letter, e, suffleQuestion, question);
                         // onCheckingAnswer(answer);
                       }))
                   .toList(),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             anotherActionAnswer(),
@@ -949,14 +945,14 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
             child: Container(
               margin:
                   EdgeInsets.only(left: defaultMargin, right: defaultMargin),
-              padding: EdgeInsets.only(left: 15, right: 15, bottom: 16),
+              padding: const EdgeInsets.only(left: 15, right: 15, bottom: 16),
               child: Column(
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   TextTime(),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   answerInput(),
                 ],
               ),
@@ -966,27 +962,28 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
       );
     }
 
-    Widget cardBodyBottom(String? question, String? hint_question,
-        List<String>? suffle_question) {
+    Widget cardBodyBottom(
+        String? question, String? hintQuestion, List<String>? suffleQuestion) {
       return Container(
         margin:
             EdgeInsets.only(top: 50, left: defaultMargin, right: defaultMargin),
-        padding: EdgeInsets.only(top: 10, left: 15, right: 16, bottom: 16),
+        padding:
+            const EdgeInsets.only(top: 10, left: 15, right: 16, bottom: 16),
         decoration: BoxDecoration(
             color: backgroundColor1, borderRadius: BorderRadius.circular(15)),
         child: Column(
-          children: [AnswerButtons(suffle_question, question)],
+          children: [AnswerButtons(suffleQuestion, question)],
         ),
       );
     }
 
     Widget countStart() {
       return ElasticIn(
-        delay: Duration(milliseconds: 50),
+        delay: const Duration(milliseconds: 50),
         child: Container(
           child: Center(
             child: AnimatedContainer(
-              duration: Duration(milliseconds: 1000),
+              duration: const Duration(milliseconds: 1000),
               curve: Curves.elasticInOut,
               width: _widthRotate,
               height: _heightRotate,
@@ -1005,7 +1002,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
                       }),
                   Center(
                     child: Text(
-                      "${startCountDown}",
+                      "$startCountDown",
                       style: whiteTextStyle.copyWith(
                           fontSize: 55, fontWeight: bold),
                     ),
@@ -1025,9 +1022,9 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
       return AppBar(
         leading: Container(
           alignment: Alignment.centerLeft,
-          margin: EdgeInsets.only(left: 5),
+          margin: const EdgeInsets.only(left: 5),
           child: Text(
-            "${currentQuestion} ${setLanguage.of_string} ${totalQuestion}",
+            "$currentQuestion ${setLanguage.of_string} $totalQuestion",
             style: blackTextStyle.copyWith(fontWeight: bold, fontSize: 14),
           ),
         ),
@@ -1036,7 +1033,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
         centerTitle: true,
         title: Column(
           children: [
-            SizedBox(
+            const SizedBox(
               height: 8,
             ),
             Text(
@@ -1048,17 +1045,17 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
             ),
             Text(
               widget.isOnline == true
-                  ? '${setLanguage.multi_player}'
-                  : '${setLanguage.single_player}',
+                  ? setLanguage.multi_player
+                  : setLanguage.single_player,
               style:
                   primaryTextStyle.copyWith(fontSize: 14, fontWeight: medium),
             ),
-            SizedBox(
+            const SizedBox(
               height: 8,
             ),
           ],
         ),
-        actions: [],
+        actions: const [],
       );
     }
 
@@ -1080,26 +1077,26 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               ElasticIn(
-                delay: Duration(milliseconds: 50),
+                delay: const Duration(milliseconds: 50),
                 child: Container(
-                  margin: EdgeInsets.symmetric(vertical: 10),
+                  margin: const EdgeInsets.symmetric(vertical: 10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Container(
                         width: 50,
                         height: 50,
-                        margin: EdgeInsets.all(15),
+                        margin: const EdgeInsets.all(15),
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: backgroundColorAccent2),
                         child: Text(
-                          "${answerCountDown}",
+                          "$answerCountDown",
                           style: whiteTextStyle.copyWith(
                               fontSize: 24, fontWeight: bold),
                         ),
@@ -1109,23 +1106,25 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
                 ),
               ),
               ElasticIn(
-                delay: Duration(milliseconds: 50),
+                delay: const Duration(milliseconds: 50),
                 child: Container(
-                    margin: EdgeInsets.only(bottom: 30, left: 15, right: 15),
+                    margin:
+                        const EdgeInsets.only(bottom: 30, left: 15, right: 15),
                     child: Center(
                       child: Text(
                         resultAnswerStatus
-                            ? "${setLanguage.true_string}"
-                            : "${setLanguage.false_string}",
+                            ? setLanguage.true_string
+                            : setLanguage.false_string,
                         style: whiteTextStyle.copyWith(
                             fontSize: 32, fontWeight: bold),
                       ),
                     )),
               ),
               ElasticIn(
-                delay: Duration(milliseconds: 50),
+                delay: const Duration(milliseconds: 50),
                 child: Container(
-                  margin: EdgeInsets.only(bottom: 32, left: 15, right: 15),
+                  margin:
+                      const EdgeInsets.only(bottom: 32, left: 15, right: 15),
                   child: Center(
                     child: resultAnswerStatus
                         ? Image.asset(
@@ -1160,10 +1159,11 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
               //   ),
               // ),
               ElasticIn(
-                delay: Duration(milliseconds: 50),
+                delay: const Duration(milliseconds: 50),
                 child: Container(
-                  margin: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-                  padding: EdgeInsets.all(10),
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                  padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     color: backgroundColor1,
                     borderRadius: BorderRadius.circular(5),
@@ -1172,16 +1172,16 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
                     child: Column(
                       children: [
                         Container(
-                          margin: EdgeInsets.symmetric(vertical: 5),
+                          margin: const EdgeInsets.symmetric(vertical: 5),
                           child: Text(
-                            " ${word}",
+                            " $word",
                             style: blackTextStyle.copyWith(
                                 fontSize: 23, fontWeight: bold),
                           ),
                         ),
                         Container(
                           child: AutoSizeText(
-                            "${meaning}",
+                            "$meaning",
                             textAlign: TextAlign.center,
                             style: blackTextStyle.copyWith(
                                 fontSize: 18, fontWeight: semiBold),
@@ -1232,7 +1232,8 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
         child: Scaffold(
           appBar: header(),
           bottomNavigationBar: Container(
-              constraints: BoxConstraints(maxHeight: 84), child: footer()),
+              constraints: const BoxConstraints(maxHeight: 84),
+              child: footer()),
           backgroundColor: backgroundColor2,
           body: isCountDown
               ? countStart()

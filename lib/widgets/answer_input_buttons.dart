@@ -13,9 +13,9 @@ class InputAnswerButton extends StatefulWidget {
   late CheckingLetterCallback onSelectButtonLetter;
   // InputAnswerButton(this.letter, this.onSelectButtonLetter);
   InputAnswerButton(
-      {required String this.letter,
-      required bool this.isBtnSelected,
-      required CheckingLetterCallback this.onSelectButtonLetter});
+      {required this.letter,
+      required this.isBtnSelected,
+      required this.onSelectButtonLetter});
 
   @override
   State<InputAnswerButton> createState() => _InputAnswerButtonState();
@@ -31,7 +31,7 @@ class _InputAnswerButtonState extends State<InputAnswerButton>
   void initState() {
     // TODO: implement initState
     _animationController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 500))
+        AnimationController(vsync: this, duration: const Duration(milliseconds: 500))
           ..addListener(() {
             setState(() {});
           });
@@ -51,7 +51,7 @@ class _InputAnswerButtonState extends State<InputAnswerButton>
   void didUpdateWidget(covariant InputAnswerButton oldWidget) {
     // TODO: implement didUpdateWidget
     super.didUpdateWidget(oldWidget);
-    _animationController.duration = Duration(milliseconds: 50);
+    _animationController.duration = const Duration(milliseconds: 50);
   }
 
   animateColor(bool isSelected) {
@@ -76,11 +76,11 @@ class _InputAnswerButtonState extends State<InputAnswerButton>
             }
           : () {},
       child: Container(
-        margin: EdgeInsets.all(2),
+        margin: const EdgeInsets.all(2),
         child: Container(
           width: 50,
           height: 50,
-          margin: EdgeInsets.all(8),
+          margin: const EdgeInsets.all(8),
           decoration: BoxDecoration(
               border: Border.all(
                   width: 1,
@@ -89,7 +89,7 @@ class _InputAnswerButtonState extends State<InputAnswerButton>
               borderRadius: BorderRadius.circular(12)),
           child: Center(
             child: Text(
-              "${widget.letter}",
+              widget.letter,
               style: widget.isBtnSelected
                   ? whiteTextStyle.copyWith(fontSize: 20, fontWeight: bold)
                   : blackTextStyle.copyWith(fontSize: 20, fontWeight: bold),

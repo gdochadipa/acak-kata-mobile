@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:math';
 
 import 'package:acakkata/generated/l10n.dart';
@@ -27,7 +26,7 @@ class ResultOnlineGamePage extends StatefulWidget {
   final double finalScoreRate;
   final LevelModel? level;
   final bool? isCustom;
-  ResultOnlineGamePage(
+  const ResultOnlineGamePage(
       {Key? key,
       this.languageModel,
       required this.finalTimeRate,
@@ -196,8 +195,8 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
 
     Widget textHeader() {
       return Container(
-          margin: EdgeInsets.only(top: 10, left: 10, right: 10),
-          padding: EdgeInsets.symmetric(vertical: 10),
+          margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
+          padding: const EdgeInsets.symmetric(vertical: 10),
           child: Center(
             child: Column(
               children: [
@@ -209,7 +208,7 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
                   style:
                       whiteTextStyle.copyWith(fontSize: 32, fontWeight: bold),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 6,
                 ),
                 Text(
@@ -225,7 +224,7 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
     Widget BacktoMenu() {
       return Container(
         width: double.infinity,
-        margin: EdgeInsets.only(top: 20),
+        margin: const EdgeInsets.only(top: 20),
         alignment: Alignment.center,
         child: ClickyButton(
             onPressed: () {
@@ -235,11 +234,11 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
             },
             color: alertColor,
             shadowColor: alertAccentColor,
-            margin: EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
+            margin: const EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
             width: 245,
             height: 60,
             child: Text(
-              "${setLanguage.back_to_menu}",
+              setLanguage.back_to_menu,
               style: whiteTextStyle.copyWith(fontSize: 16, fontWeight: bold),
             )),
       );
@@ -287,15 +286,15 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
       return Expanded(
         child: Container(
           margin: EdgeInsets.only(left: 5, right: 5, top: heightBar, bottom: 5),
-          padding: EdgeInsets.only(top: 5),
+          padding: const EdgeInsets.only(top: 5),
           width: 50,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(5), color: barColor),
           child: Center(
             child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               child: Text(
-                "${numberRank}",
+                "$numberRank",
                 style: whiteTextStyle.copyWith(fontSize: 36, fontWeight: bold),
               ),
             ),
@@ -307,7 +306,7 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
     Widget platePlayer(int rank, RoomMatchDetailModel roomMatchDetail) {
       return Expanded(
         child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 5),
+          margin: const EdgeInsets.symmetric(horizontal: 5),
           child: Column(
             children: [
               Container(
@@ -316,7 +315,7 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
                   borderRadius: BorderRadius.circular(5),
                 ),
                 child: Container(
-                    margin: EdgeInsets.all(10),
+                    margin: const EdgeInsets.all(10),
                     child: Text(
                       "${roomMatchDetail.player!.username}",
                       maxLines: 1,
@@ -335,7 +334,7 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
                   borderRadius: BorderRadius.circular(5),
                 ),
                 child: Container(
-                  margin: EdgeInsets.all(10),
+                  margin: const EdgeInsets.all(10),
                   child: Text(
                     "${roomMatchDetail.score}",
                     textAlign: TextAlign.center,
@@ -354,7 +353,7 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
       return AnimatedContainer(
         transform:
             _isInitialValue ? Matrix4.identity() : Matrix4.rotationX(100),
-        duration: Duration(milliseconds: 800),
+        duration: const Duration(milliseconds: 800),
         height: heightRanks,
         margin: const EdgeInsets.only(top: 5),
         child: Row(
@@ -395,8 +394,8 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
       int rank = roomProvider!.roomMatch!.room_match_detail!.indexOf(roomUser!);
       rank = rank < 0 ? (rank * -1) : rank;
       return Container(
-          margin: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-          padding: EdgeInsets.symmetric(vertical: 10),
+          margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+          padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
             color: whiteColor,
             borderRadius: BorderRadius.circular(5),
@@ -404,13 +403,13 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
           child: Row(
             children: [
               Container(
-                margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                 decoration: BoxDecoration(
                     color: blackColor, borderRadius: BorderRadius.circular(5)),
                 child: Container(
-                  margin: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+                  margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
                   child: Text(
-                    "${rank}",
+                    "$rank",
                     style:
                         whiteTextStyle.copyWith(fontSize: 18, fontWeight: bold),
                   ),
@@ -430,7 +429,7 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
               ),
               const Spacer(),
               Container(
-                margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                 child: Text(
                   "${roomUser.score}",
                   style:
@@ -444,8 +443,8 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
     Widget cardBody() {
       return Container(
         alignment: Alignment.center,
-        margin: EdgeInsets.only(top: 80, left: 10, right: 10),
-        padding: EdgeInsets.all(5),
+        margin: const EdgeInsets.only(top: 80, left: 10, right: 10),
+        padding: const EdgeInsets.all(5),
         child: Column(
           children: [
             ElasticIn(child: textHeader()),
@@ -472,8 +471,8 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
     Widget cardBodyOnLoad() {
       return Container(
           alignment: Alignment.center,
-          margin: EdgeInsets.only(top: 80, left: 10, right: 10),
-          padding: EdgeInsets.all(5),
+          margin: const EdgeInsets.only(top: 80, left: 10, right: 10),
+          padding: const EdgeInsets.all(5),
           child: Column(
             children: [
               ElasticIn(child: textHeader()),
@@ -592,7 +591,7 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
         fit: StackFit.expand,
         children: [
           Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
                 image: DecorationImage(
                     image: AssetImage("assets/images/background_512w.png"),
                     fit: BoxFit.cover)),

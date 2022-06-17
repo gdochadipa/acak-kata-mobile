@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:acakkata/generated/l10n.dart';
 import 'package:acakkata/models/room_match_detail_model.dart';
@@ -6,7 +5,6 @@ import 'package:acakkata/pages/in_game/waiting_join_room_page.dart';
 import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/providers/room_provider.dart';
 import 'package:acakkata/providers/socket_provider.dart';
-import 'package:acakkata/service/socket_service.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/clicky_button.dart';
 import 'package:acakkata/widgets/custom_page_route.dart';
@@ -78,7 +76,7 @@ class _JoinRoomModalState extends State<JoinRoomModal> {
         if (await roomProvider!
             .checkingRoomWithCode("1", roomCodeController.text)) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(
+            content: const Text(
               "Berhasil menemukan Room",
               textAlign: TextAlign.center,
             ),
@@ -128,7 +126,7 @@ class _JoinRoomModalState extends State<JoinRoomModal> {
       }
     }
 
-    return Container(
+    return SizedBox(
       width: MediaQuery.of(context).size.width,
       child: Dialog(
         insetAnimationCurve: Curves.easeInOut,
@@ -136,7 +134,7 @@ class _JoinRoomModalState extends State<JoinRoomModal> {
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
         child: PopoverListView(
             child: Container(
-          padding: EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -145,12 +143,12 @@ class _JoinRoomModalState extends State<JoinRoomModal> {
                 style:
                     blackTextStyle.copyWith(fontSize: 18, fontWeight: semiBold),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
               Container(
                 height: 50,
-                padding: EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 decoration: BoxDecoration(
                     border: Border.all(color: blackColor),
                     color: backgroundColor1,
@@ -170,7 +168,7 @@ class _JoinRoomModalState extends State<JoinRoomModal> {
                   ],
                 )),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 5,
               ),
               if (_validation)
@@ -180,7 +178,7 @@ class _JoinRoomModalState extends State<JoinRoomModal> {
                   style: alertTextStyle.copyWith(fontSize: 11),
                 ),
               Container(
-                margin: EdgeInsets.only(top: 20, left: 5, right: 5),
+                margin: const EdgeInsets.only(top: 20, left: 5, right: 5),
                 child: ClickyButton(
                     color: purpleColor,
                     shadowColor: purpleAccentColor,

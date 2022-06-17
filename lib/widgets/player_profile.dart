@@ -1,5 +1,4 @@
 import 'package:acakkata/models/room_match_detail_model.dart';
-import 'package:acakkata/models/room_match_model.dart';
 import 'package:acakkata/theme.dart';
 import 'package:flutter/material.dart';
 
@@ -10,7 +9,7 @@ class PlayerProfile extends StatelessWidget {
   //   required this.isReadyPlayer,
   // }) : super(key: key);
 
-  PlayerProfile(this.matchDetail, this.isReady);
+  const PlayerProfile(this.matchDetail, this.isReady);
 
   final RoomMatchDetailModel? matchDetail;
   final bool isReady;
@@ -21,7 +20,7 @@ class PlayerProfile extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: Container(
         width: (MediaQuery.of(context).size.width - 82) / 2,
-        margin: EdgeInsets.only(top: 10, left: 5, right: 5),
+        margin: const EdgeInsets.only(top: 10, left: 5, right: 5),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -37,7 +36,7 @@ class PlayerProfile extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 12,
             ),
             Text(
@@ -49,7 +48,7 @@ class PlayerProfile extends StatelessWidget {
               '#${matchDetail!.player!.userCode}',
               style: thirdTextStyle.copyWith(fontSize: 14, fontWeight: regular),
             ),
-            SizedBox(
+            const SizedBox(
               height: 12,
             ),
             Text(
@@ -57,7 +56,7 @@ class PlayerProfile extends StatelessWidget {
               style:
                   thirdTextStyle.copyWith(fontSize: 16, fontWeight: semiBold),
             ),
-            SizedBox(
+            const SizedBox(
               height: 5,
             ),
           ],

@@ -13,14 +13,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
-import 'package:workmanager/workmanager.dart';
 
-void callbackDispatcher() {
-  Workmanager().executeTask((taskName, inputData) {
-    print("Native called background task: $taskName");
-    return Future.value(true);
-  });
-}
+void callbackDispatcher() {}
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -51,7 +45,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => SocketProvider())
       ],
       child: MaterialApp(
-        localizationsDelegates: [
+        localizationsDelegates: const [
           S.delegate,
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
@@ -65,7 +59,7 @@ class MyApp extends StatelessWidget {
           '/sign-in': (context) => SignInPage(),
           '/sign-up': (context) => SignUpPage(),
           // '/home': (context) => MainPage(),
-          '/home': (context) => NewHomePage(),
+          '/home': (context) => const NewHomePage(),
         },
         // onGenerateRoute: (setting) {
 

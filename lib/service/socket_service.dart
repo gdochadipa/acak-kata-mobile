@@ -4,7 +4,6 @@ import 'dart:developer';
 import 'dart:math' hide log;
 
 import 'package:acakkata/models/room_match_detail_model.dart';
-import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
@@ -14,7 +13,7 @@ const String SOCKET_URL = 'http://10.0.2.2:3000';
 class SocketService {
   late IO.Socket socket;
 
-  StreamController<String> _eventData = StreamController<String>.broadcast();
+  final StreamController<String> _eventData = StreamController<String>.broadcast();
   Sink get _inEventData => _eventData.sink;
   Stream get eventStream => _eventData.stream;
   Logger logger = Logger(
@@ -48,13 +47,11 @@ class SocketService {
     });
   }
 
-/**
- * question => json
- * language_name => string
- * player_id=>  string
- * 
- * check room to 
- */
+/// question => json
+/// language_name => string
+/// player_id=>  string
+/// 
+/// check room to 
   Future<void> bindReceiveQuestion() async {
     socket.on('broadcast-question', (last) {
       print("soal diterima");
@@ -101,12 +98,12 @@ class SocketService {
     socket.emit(
         'join-room',
         json.encode(
-            {'channel_code': channelCode, 'player_id': 'flutter ${player}'}));
+            {'channel_code': channelCode, 'player_id': 'flutter $player'}));
   }
 
   Future<void> emitStatusPlayer(String channelCode, String? roomDetID,
       int? isReady, int? statusPlayer, String? username, int? score) async {
-    log('on status player ${roomDetID} ${isReady}, ${statusPlayer}');
+    log('on status player $roomDetID $isReady, $statusPlayer');
     Future.delayed(Duration(milliseconds: random(500, 1000)), () {
       socket.emit(
           'status-player',
@@ -122,7 +119,7 @@ class SocketService {
   }
 
   emitStatusGame(String channelCode, String? roomID, int? statusGame) {
-    log('on status Game  ${roomID} ${statusGame}');
+    log('on status Game  $roomID $statusGame');
     socket.emit(
         'status-game',
         json.encode({

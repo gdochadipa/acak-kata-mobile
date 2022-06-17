@@ -3,101 +3,104 @@ import 'package:google_fonts/google_fonts.dart';
 
 double defaultMargin = 30.0;
 
-Color primaryColor = Color(0xff46178F);
-Color secondaryColor = Color(0xff5FDCF0);
-Color secondaryDisabled = Color(0xff97dde8);
-Color thirdColor = Color(0xff2B2937);
-Color alertColor = Color(0xffED6363);
-Color alertAccentColor = Color(0xFFE33434);
-Color successColor = Color(0xff22bb33);
-Color grayColor1 = Color(0xffEFEFEF);
-Color grayColor2 = Color(0xffC4C4C4);
-Color grayColor3 = Color(0xff979797);
-Color backgroundColor1 = Color(0xffFFFFFF);
-Color backgroundColor2 = Color(0xff46178F);
-Color backgroundColorAccent2 = Color(0xff773ECF);
-Color backgroundColor3 = Color(0xffEFEFEF);
-Color backgroundColor4 = Color(0xffF1E9FA);
-Color backgroundColor5 = Color(0xffD5B8FA);
-Color backgroundColor6 = Color(0xffF1E9FA);
-Color backgroundColor7 = Color(0xffA7A7A7);
-Color backgroundColor8 = Color(0xff773ECF);
-Color backgroundColorAccent8 = Color(0xff46178F);
-Color backgroundColor9 = Color(0xff230B47);
-Color barColor = Color(0xff662EBD);
-Color primaryTextColor = Color(0xff46178F);
-Color secondaryTextColor = Color(0xff000000);
-Color thirdTextColor = Color(0xff2B2937);
-Color whiteColor = Color(0xffFFFFFF);
-Color primaryBeningColor = Color.fromRGBO(185, 131, 255, 0.5);
-Color kLineDarkColor = Color(0xffEAEAEA);
-Color kWhiteGreyColor = Color(0xffF1F1F5);
+Color primaryColor = const Color(0xff8B62FF);
+Color primaryColor2 = const Color(0xff5833BF);
+Color primaryColor3 = const Color(0xff4F349E);
 
-Color purpleColor = Color(0xffA076CC);
-Color purpleAccentColor = Color(0xff6C4298);
+Color redColor = const Color(0xffF66062);
+Color redColor2 = const Color(0xffAB4447);
+Color redColor3 = const Color(0xff872D30);
 
-Color purpleCard = Color(0xff381272);
+Color greenColor = const Color(0xff69D081);
+Color greenColor2 = const Color(0xff238556);
+Color greenColor3 = const Color(0xff0E693E);
 
-Color whitePurpleColor = Color(0xffffffff);
-Color whiteAccentPurpleColor = Color(0xFF6C4298);
+Color orangeColor = const Color(0xffF77A5E);
+Color orangeColor2 = const Color(0xffCE685C);
+Color orangeColor3 = const Color(0xffBC4B3D);
 
-Color disablePurpleColor = Color(0xff9970D9);
-Color disablePurpleAccentColor = Color(0xff775F9D);
+Color blueColor = const Color(0xff4DBEFF);
+Color blueColor2 = const Color(0xff469EDD);
+Color blueColor3 = const Color(0xff388AC5);
 
-Color greenColor = Color(0xff34D49D);
-Color greenAccentColor = Color(0xff00A06A);
+Color alertColor = const Color(0xffED6363);
+Color alertAccentColor = const Color(0xFFE33434);
+Color successColor = const Color(0xff22bb33);
+Color grayColor2 = const Color(0xffC4C4C4);
+Color grayColor3 = const Color(0xff979797);
+Color backgroundColor1 = const Color(0xffFFFFFF);
+Color backgroundColor2 = const Color(0xff46178F);
+Color backgroundColorAccent2 = const Color(0xff773ECF);
+Color backgroundColor6 = const Color(0xffF1E9FA);
+Color backgroundColor7 = const Color(0xffA7A7A7);
+Color backgroundColor8 = const Color(0xff773ECF);
+Color backgroundColorAccent8 = const Color(0xff46178F);
+Color backgroundColor9 = const Color(0xff230B47);
+Color barColor = const Color(0xff662EBD);
+Color primaryTextColor = const Color(0xff46178F);
+Color secondaryTextColor = const Color(0xff000000);
+Color thirdTextColor = const Color(0xff2B2937);
+Color whiteColor = const Color(0xffFFFFFF);
+Color primaryBeningColor = const Color.fromRGBO(185, 131, 255, 0.5);
+Color kLineDarkColor = const Color(0xffEAEAEA);
+Color kWhiteGreyColor = const Color(0xffF1F1F5);
 
-Color progressGreen = Color(0xff1AAA79);
-Color progressOrange = Color(0xffFF931A);
+Color purpleColor = const Color(0xffA076CC);
+Color purpleAccentColor = const Color(0xff6C4298);
 
-Color firstLinierColor = Color(0xff5FDCF0);
-Color secondLinierColor = Color(0xff05BEF8);
-Color thirdLinierColor = Color(0xff5FF0D6);
+Color purpleCard = const Color(0xff381272);
 
-Color shadowBackgroundColor2 = Color(0xffD5B8FA);
+Color whitePurpleColor = const Color(0xffffffff);
+Color whiteAccentPurpleColor = const Color(0xFF6C4298);
 
-Color subtitleColor = Color(0xff504F5E);
+Color disablePurpleColor = const Color(0xff9970D9);
+Color disablePurpleAccentColor = const Color(0xff775F9D);
+
+Color greenAccentColor = const Color(0xff00A06A);
+
+Color thirdLinierColor = const Color(0xff5FF0D6);
+
+Color shadowBackgroundColor2 = const Color(0xffD5B8FA);
+
+Color subtitleColor = const Color(0xff504F5E);
 Color transparentColor = Colors.transparent;
-Color blackColor = Color(0xff2E2E2E);
+Color blackColor = const Color(0xff2E2E2E);
 
-Color accentColor = Color(0xffFF32F7);
+Color accentColor = const Color(0xffFF32F7);
 
-TextStyle primaryTextStyle = GoogleFonts.montserrat(
+TextStyle primaryTextStyle = GoogleFonts.nunito(
   color: primaryTextColor,
 );
 
-TextStyle secondaryTextStyle = GoogleFonts.montserrat(
+TextStyle secondaryTextStyle = GoogleFonts.nunito(
   color: secondaryTextColor,
 );
 
-TextStyle thirdTextStyle = GoogleFonts.montserrat(color: thirdTextColor);
+TextStyle thirdTextStyle = GoogleFonts.nunito(color: thirdTextColor);
 
-TextStyle subtitleTextStyle = GoogleFonts.montserrat(
+TextStyle subtitleTextStyle = GoogleFonts.nunito(
   color: subtitleColor,
 );
 
-TextStyle purpleTextStyle = GoogleFonts.montserrat(
+TextStyle purpleTextStyle = GoogleFonts.nunito(
   color: disablePurpleColor,
 );
 
-TextStyle blackTextStyle = GoogleFonts.montserrat(
+TextStyle blackTextStyle = GoogleFonts.nunito(
   color: thirdTextColor,
 );
 
-TextStyle whiteTextStyle = GoogleFonts.montserrat(
+TextStyle whiteTextStyle = GoogleFonts.nunito(
   color: whiteColor,
 );
 
-TextStyle alertTextStyle = GoogleFonts.montserrat(
+TextStyle alertTextStyle = GoogleFonts.nunito(
   color: alertColor,
 );
 
-TextStyle headerText1 =
-    GoogleFonts.montserrat(fontSize: 24, fontWeight: semiBold);
-TextStyle headerText2 =
-    GoogleFonts.montserrat(fontSize: 28, fontWeight: regular);
-TextStyle headerText3 =
-    GoogleFonts.montserrat(fontSize: 16, fontWeight: regular);
+TextStyle headerText1 = GoogleFonts.nunito(fontSize: 24, fontWeight: semiBold);
+TextStyle headerText2 = GoogleFonts.nunito(fontSize: 28, fontWeight: regular);
+TextStyle headerText3 = GoogleFonts.nunito(fontSize: 16, fontWeight: regular);
 FontWeight light = FontWeight.w300;
 FontWeight regular = FontWeight.w400;
 FontWeight medium = FontWeight.w500;
