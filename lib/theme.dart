@@ -23,6 +23,10 @@ Color blueColor = const Color(0xff4DBEFF);
 Color blueColor2 = const Color(0xff469EDD);
 Color blueColor3 = const Color(0xff388AC5);
 
+Color whiteColor = const Color(0xffFFFFFF);
+Color whiteColor2 = const Color(0xffDFDFDF);
+Color whiteColor3 = const Color(0xffC8C8C8);
+
 Color alertColor = const Color(0xffED6363);
 Color alertAccentColor = const Color(0xFFE33434);
 Color successColor = const Color(0xff22bb33);
@@ -40,7 +44,6 @@ Color barColor = const Color(0xff662EBD);
 Color primaryTextColor = const Color(0xff46178F);
 Color secondaryTextColor = const Color(0xff000000);
 Color thirdTextColor = const Color(0xff2B2937);
-Color whiteColor = const Color(0xffFFFFFF);
 Color primaryBeningColor = const Color.fromRGBO(185, 131, 255, 0.5);
 Color kLineDarkColor = const Color(0xffEAEAEA);
 Color kWhiteGreyColor = const Color(0xffF1F1F5);

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class ButtonBounce extends StatefulWidget {
+class CircleBounceButton extends StatefulWidget {
   final Widget child;
   final double heightShadow;
   final double borderThick;
@@ -12,8 +12,9 @@ class ButtonBounce extends StatefulWidget {
   final Color color;
   final Color borderColor;
   final Color shadowColor;
+  final EdgeInsetsGeometry? margin;
 
-  const ButtonBounce(
+  const CircleBounceButton(
       {Key? key,
       this.heightShadow = 6.0,
       this.borderThick = 2.5,
@@ -21,6 +22,7 @@ class ButtonBounce extends StatefulWidget {
       this.widthButton = 50,
       this.paddingVerticalButton = 5,
       this.paddingHorizontalButton = 5,
+      required this.margin,
       required this.onClick,
       required this.child,
       this.color = const Color(0xff8B62FF),
@@ -29,10 +31,10 @@ class ButtonBounce extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<ButtonBounce> createState() => _ButtonBounceState();
+  State<CircleBounceButton> createState() => _CircleBounceButtonState();
 }
 
-class _ButtonBounceState extends State<ButtonBounce> {
+class _CircleBounceButtonState extends State<CircleBounceButton> {
   double _padding = 6;
   double _reversePadding = 0;
 
@@ -47,9 +49,9 @@ class _ButtonBounceState extends State<ButtonBounce> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: widget.margin,
       child: SizedBox(
         height: widget.heightButton,
-        width: widget.widthButton,
         child: GestureDetector(
           onTap: widget.onClick,
           onTapDown: (_) => setState(() {
@@ -64,16 +66,15 @@ class _ButtonBounceState extends State<ButtonBounce> {
             padding: EdgeInsets.only(bottom: _padding),
             margin: EdgeInsets.only(top: _reversePadding),
             decoration: BoxDecoration(
-                color: widget.shadowColor,
-                borderRadius: BorderRadius.circular(15)),
+                shape: BoxShape.circle, color: widget.shadowColor),
             duration: const Duration(milliseconds: 100),
             child: Container(
               padding: EdgeInsets.symmetric(
                   vertical: widget.paddingVerticalButton,
                   horizontal: widget.paddingHorizontalButton),
               decoration: BoxDecoration(
+                  shape: BoxShape.circle,
                   color: widget.color,
-                  borderRadius: BorderRadius.circular(15),
                   border: Border.all(
                       width: widget.borderThick, color: widget.borderColor)),
               child: widget.child,

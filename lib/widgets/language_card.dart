@@ -88,44 +88,6 @@ class _LanguageCardState extends State<LanguageCard> {
                       maxLines: 2,
                     ),
                   ),
-
-                  // Text(
-                  //   '${language.language_collection}',
-                  //   style: thirdTextStyle.copyWith(
-                  //       fontSize: 12, color: grayColor3, fontWeight: light),
-                  // ),
-                  // Container(
-                  //   height: 17.7,
-                  //   margin: EdgeInsets.only(top: 5),
-                  //   width: 49,
-                  //   decoration: BoxDecoration(
-                  //       gradient: LinearGradient(
-                  //         colors: [firstLinierColor, thirdLinierColor],
-                  //         begin: Alignment.bottomLeft,
-                  //         end: Alignment.bottomRight,
-                  //         stops: [0.0, 1.0],
-                  //       ),
-                  //       borderRadius: BorderRadius.circular(5)),
-                  //   child: Row(
-                  //     children: [
-                  //       Image.asset(
-                  //         'assets/images/arrow.png',
-                  //         width: 15,
-                  //         height: 15,
-                  //       ),
-                  //       const SizedBox(
-                  //         width: 5,
-                  //       ),
-                  //       Text(
-                  //         'Play',
-                  //         style: thirdTextStyle.copyWith(
-                  //             fontSize: 9,
-                  //             color: whiteColor,
-                  //             fontWeight: light),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // )
                 ],
               )
             ],

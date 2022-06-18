@@ -11,6 +11,8 @@ import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/providers/change_language_provider.dart';
 import 'package:acakkata/providers/language_db_provider.dart';
 import 'package:acakkata/theme.dart';
+import 'package:acakkata/widgets/button/button_bounce.dart';
+import 'package:acakkata/widgets/button/circle_bounce_button.dart';
 import 'package:acakkata/widgets/language_card.dart';
 import 'package:acakkata/widgets/popover/language_app_modal.dart';
 import 'package:acakkata/widgets/popover/popover_listview.dart';
@@ -194,7 +196,8 @@ class _NewHomePageState extends State<NewHomePage> {
 
     Future<void> showJoinRoomModal() async {
       return showModal(
-          context: context, builder: (BuildContext context) => const JoinRoomModal());
+          context: context,
+          builder: (BuildContext context) => const JoinRoomModal());
     }
 
     showListLanguagePop() async {
@@ -212,8 +215,8 @@ class _NewHomePageState extends State<NewHomePage> {
                   child: Column(
                 children: [
                   Container(
-                    padding:
-                        const EdgeInsets.only(left: 8, right: 8, top: 15, bottom: 15),
+                    padding: const EdgeInsets.only(
+                        left: 8, right: 8, top: 15, bottom: 15),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -261,106 +264,126 @@ class _NewHomePageState extends State<NewHomePage> {
         child: Container(
           child: Image.asset(
             'assets/images/logo_baru_no.png',
-            height: 200,
-            width: 170,
+            height: 396.58,
+            width: 231.46,
           ),
         ),
       );
     }
 
     Widget btnPlayGame() {
-      return BouncingWidget(
-        onPressed: () {
+      return CircleBounceButton(
+        color: whiteColor,
+        borderColor: whiteColor2,
+        shadowColor: whiteColor3,
+        margin: const EdgeInsets.symmetric(horizontal: 5.0),
+        onClick: () {
           showListLanguagePop();
         },
+        paddingHorizontalButton: 10,
+        paddingVerticalButton: 10,
+        heightButton: 180,
+        widthButton: 180,
         child: Container(
-          width: 148,
-          height: 148,
-          margin: const EdgeInsets.all(11),
-          decoration: BoxDecoration(color: whiteColor, shape: BoxShape.circle),
-          padding: const EdgeInsets.all(43),
+          width: 110,
+          height: 110,
           child: Center(
-            child: Image.asset('assets/images/icon_play.png'),
+            child: Image.asset('assets/images/arrow_shadow_black.png'),
           ),
         ),
       );
     }
 
     Widget btnProfile() {
-      return BouncingWidget(
-        onPressed: () {
+      return CircleBounceButton(
+        color: blueColor,
+        borderColor: blueColor2,
+        shadowColor: blueColor3,
+        margin: const EdgeInsets.symmetric(horizontal: 10.0),
+        onClick: () {
           if (!(login)) {
             showAuthModal();
           } else {
             showProfileModal();
           }
         },
-        child: Container(
-          width: 64,
-          height: 64,
-          margin: const EdgeInsets.all(11),
-          decoration: BoxDecoration(color: whiteColor, shape: BoxShape.circle),
-          padding: const EdgeInsets.all(16),
+        paddingHorizontalButton: 10,
+        paddingVerticalButton: 10,
+        heightButton: 75,
+        widthButton: 75,
+        child: SizedBox(
+          width: 55,
+          height: 55,
           child: Center(
-            child: Image.asset('assets/images/icon_profile.png'),
+            child: Image.asset('assets/images/profil.png'),
           ),
         ),
       );
     }
 
     Widget btnFindRoom() {
-      return BouncingWidget(
-        onPressed: () {
+      return CircleBounceButton(
+        color: greenColor,
+        borderColor: greenColor2,
+        shadowColor: greenColor3,
+        margin: const EdgeInsets.symmetric(horizontal: 10.0),
+        onClick: () {
           if (!login) {
             showAuthModal();
           } else {
             showJoinRoomModal();
           }
         },
+        paddingHorizontalButton: 10,
+        paddingVerticalButton: 10,
+        heightButton: 75,
+        widthButton: 75,
         child: Container(
-          width: 64,
-          height: 64,
-          margin: const EdgeInsets.all(11),
-          decoration: BoxDecoration(color: whiteColor, shape: BoxShape.circle),
-          padding: const EdgeInsets.all(16),
+          width: 55,
+          height: 55,
           child: Center(
-            child: Image.asset('assets/images/icon_black_game.png'),
+            child: Image.asset('assets/images/game.png'),
           ),
         ),
       );
     }
 
     Widget btnExits() {
-      return BouncingWidget(
-        onPressed: () {
+      return ButtonBounce(
+        color: redColor,
+        borderColor: redColor2,
+        shadowColor: redColor3,
+        onClick: () {
           showCancelGame();
         },
+        paddingHorizontalButton: 8,
+        paddingVerticalButton: 8,
+        heightButton: 62.92,
+        widthButton: 62.92,
         child: Container(
-          width: 39,
-          height: 39,
-          margin: const EdgeInsets.all(11),
-          decoration: BoxDecoration(color: whiteColor, shape: BoxShape.circle),
-          padding: const EdgeInsets.all(10),
+          width: 50,
+          height: 50,
           child: Center(
-            child: Image.asset('assets/images/icon_exit.png'),
+            child: Image.asset('assets/images/logout.png'),
           ),
         ),
       );
     }
 
     Widget btnSetting() {
-      return BouncingWidget(
-        onPressed: () {
+      return ButtonBounce(
+        onClick: () {
           showLanguageAppSetting();
         },
+        paddingHorizontalButton: 8,
+        paddingVerticalButton: 8,
+        heightButton: 62.92,
+        widthButton: 62.92,
         child: Container(
-          width: 39,
-          height: 39,
-          margin: const EdgeInsets.all(11),
-          decoration: BoxDecoration(color: whiteColor, shape: BoxShape.circle),
-          padding: const EdgeInsets.all(10),
+          width: 50,
+          height: 50,
           child: Center(
-            child: Image.asset('assets/images/icon_setting.png'),
+            child: Image.asset('assets/images/setting.png'),
           ),
         ),
       );
@@ -434,15 +457,14 @@ class _NewHomePageState extends State<NewHomePage> {
 
     Widget body() {
       return Container(
-          margin: const EdgeInsets.all(20),
+          margin: const EdgeInsets.only(
+              left: 20.0, right: 20.0, bottom: 10.0, top: 0.0),
           child: SingleChildScrollView(
-            child: Container(
-              child: Column(
-                children: [
-                  logoHeader(),
-                  (wasSelectedLanguage ? middleMenu() : languageChoice())
-                ],
-              ),
+            child: Column(
+              children: [
+                logoHeader(),
+                (wasSelectedLanguage ? middleMenu() : languageChoice())
+              ],
             ),
           ));
     }
@@ -472,7 +494,7 @@ class _NewHomePageState extends State<NewHomePage> {
                   child: btnExits(),
                 ),
                 Container(
-                  margin: const EdgeInsets.only(left: 10, top: 10),
+                  margin: const EdgeInsets.only(right: 10, top: 10),
                   alignment: Alignment.topRight,
                   child: btnSetting(),
                 )
