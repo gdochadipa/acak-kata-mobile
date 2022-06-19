@@ -19,7 +19,7 @@ class PopoverListView extends StatelessWidget {
               alignment: Alignment.center,
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                  color: primaryColor,
+                  color: primaryColor5,
                   borderRadius: const BorderRadius.all(Radius.circular(16)),
                   border: Border.all(width: 5, color: primaryColor2)),
               child: child,

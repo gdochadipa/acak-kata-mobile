@@ -73,13 +73,26 @@ class _ItemLevelCardState extends State<ItemLevelCard> {
                                           style: whiteTextStyle.copyWith(
                                               fontSize: 21, fontWeight: bold),
                                         ),
-                                        Text(
-                                          (setLanguage.code == 'en'
-                                              ? '${widget.languageModel!.language_name_en}'
-                                              : '${widget.languageModel!.language_name_id}'),
-                                          style: whiteTextStyle.copyWith(
-                                              fontSize: 14, fontWeight: bold),
-                                        )
+                                        Row(
+                                          children: [
+                                            Image.asset(
+                                              'assets/images/${widget.languageModel!.language_icon}',
+                                              width: 30,
+                                              height: 30,
+                                            ),
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
+                                            Text(
+                                              (setLanguage.code == 'en'
+                                                  ? '${widget.languageModel!.language_name_en}'
+                                                  : '${widget.languageModel!.language_name_id}'),
+                                              style: whiteTextStyle.copyWith(
+                                                  fontSize: 14,
+                                                  fontWeight: bold),
+                                            )
+                                          ],
+                                        ),
                                       ],
                                     ),
                                     alignment: Alignment.topLeft,
