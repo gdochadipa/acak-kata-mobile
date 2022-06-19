@@ -17,81 +17,87 @@ class LanguageCard extends StatefulWidget {
 }
 
 class _LanguageCardState extends State<LanguageCard> {
+  double _padding = 10;
+  double _reversePadding = 0;
+  double _heightShadow = 10;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    _padding = _heightShadow;
+    _reversePadding = 0.0;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     S? setLanguage = S.of(context);
 
-    return GestureDetector(
-        onTap: () {
-          // Navigator.push(context, CustomPageRoute(PrepareGamePage(language)));
-          // handlePopUpPress();
-          // Navigator.push(
-          //     context,
-          //     CustomPageRoute(LevelListPage(
-          //       languageModel: language,
-          //     )));
-
-          Navigator.pushAndRemoveUntil(
-              context,
-              CustomPageRoute(
-                LevelListPage(
-                  isOnline: false,
-                  languageModel: widget.language,
-                ),
-              ),
-              (route) => false);
-        },
-        child: Container(
-          margin: const EdgeInsets.only(bottom: 20),
-          padding: const EdgeInsets.only(top: 13, bottom: 13, left: 10),
-          decoration: BoxDecoration(
-              color: backgroundColor8,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                    color: backgroundColorAccent8,
-                    spreadRadius: 1,
-                    blurRadius: 0,
-                    blurStyle: BlurStyle.solid,
-                    offset: const Offset(-4, 4))
-              ]),
-          child: Row(
-            children: [
-              Container(
-                height: 61,
-                width: 63.44,
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: whiteColor,
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Image.asset(
-                  'assets/images/${widget.language.language_icon}',
-                  width: 36,
-                  height: 18,
-                ),
-              ),
-              const SizedBox(
-                width: 16,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  FittedBox(
-                    fit: BoxFit.contain,
-                    child: AutoSizeText(
-                      (setLanguage.code == 'en'
-                          ? '${widget.language.language_name_en}'
-                          : '${widget.language.language_name_id}'),
-                      style: whiteTextStyle.copyWith(fontWeight: bold),
-                      presetFontSizes: const [18, 16],
-                      maxLines: 2,
-                    ),
+    return Container(
+      margin: EdgeInsets.only(bottom: 10),
+      child: GestureDetector(
+          onTap: () {
+            Navigator.pushAndRemoveUntil(
+                context,
+                CustomPageRoute(
+                  LevelListPage(
+                    isOnline: false,
+                    languageModel: widget.language,
                   ),
+                ),
+                (route) => false);
+          },
+          onTapDown: (_) => setState(() {
+                _padding = 0.0;
+                _reversePadding = _heightShadow;
+              }),
+          onTapUp: (_) => setState(() {
+                _padding = _heightShadow;
+                _reversePadding = 0.0;
+              }),
+          child: AnimatedContainer(
+            padding: EdgeInsets.only(bottom: _padding),
+            margin: EdgeInsets.only(top: _reversePadding),
+            decoration: BoxDecoration(
+                color: primaryColor3, borderRadius: BorderRadius.circular(15)),
+            duration: const Duration(milliseconds: 100),
+            child: Container(
+              padding: const EdgeInsets.only(top: 13, bottom: 13, left: 10),
+              decoration: BoxDecoration(
+                  color: primaryColor,
+                  borderRadius: BorderRadius.circular(15),
+                  border: Border.all(width: 5, color: primaryColor2)),
+              child: Row(
+                children: [
+                  Image.asset(
+                    'assets/images/${widget.language.language_icon}',
+                    width: 30,
+                    height: 30,
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      FittedBox(
+                        fit: BoxFit.contain,
+                        child: AutoSizeText(
+                          (setLanguage.code == 'en'
+                              ? '${widget.language.language_name_en}'
+                              : '${widget.language.language_name_id}'),
+                          style: whiteTextStyle.copyWith(
+                              fontWeight: bold, fontSize: 16),
+                          presetFontSizes: const [18, 16],
+                          maxLines: 2,
+                        ),
+                      ),
+                    ],
+                  )
                 ],
-              )
-            ],
-          ),
-        ));
+              ),
+            ),
+          )),
+    );
   }
 }

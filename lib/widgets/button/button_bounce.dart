@@ -12,6 +12,7 @@ class ButtonBounce extends StatefulWidget {
   final Color color;
   final Color borderColor;
   final Color shadowColor;
+  final double borderRadius;
 
   const ButtonBounce(
       {Key? key,
@@ -21,6 +22,7 @@ class ButtonBounce extends StatefulWidget {
       this.widthButton = 50,
       this.paddingVerticalButton = 5,
       this.paddingHorizontalButton = 5,
+      this.borderRadius = 15,
       required this.onClick,
       required this.child,
       this.color = const Color(0xff8B62FF),
@@ -65,7 +67,7 @@ class _ButtonBounceState extends State<ButtonBounce> {
             margin: EdgeInsets.only(top: _reversePadding),
             decoration: BoxDecoration(
                 color: widget.shadowColor,
-                borderRadius: BorderRadius.circular(15)),
+                borderRadius: BorderRadius.circular(widget.borderRadius)),
             duration: const Duration(milliseconds: 100),
             child: Container(
               padding: EdgeInsets.symmetric(
@@ -73,7 +75,7 @@ class _ButtonBounceState extends State<ButtonBounce> {
                   horizontal: widget.paddingHorizontalButton),
               decoration: BoxDecoration(
                   color: widget.color,
-                  borderRadius: BorderRadius.circular(15),
+                  borderRadius: BorderRadius.circular(widget.borderRadius),
                   border: Border.all(
                       width: widget.borderThick, color: widget.borderColor)),
               child: widget.child,

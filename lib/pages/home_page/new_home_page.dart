@@ -180,9 +180,17 @@ class _NewHomePageState extends State<NewHomePage> {
     }
 
     Future<void> showAuthModal() async {
-      return showModalBottomSheet(
+      return showModal(
           context: context,
-          builder: (BuildContext context) => const ShowLoginModal());
+          builder: (BuildContext context) {
+            final theme = Theme.of(context);
+            return const Dialog(
+              insetAnimationCurve: Curves.easeInOut,
+              backgroundColor: Colors.transparent,
+              shape: RoundedRectangleBorder(),
+              child: ShowLoginModal(),
+            );
+          });
     }
 
     Future<void> showProfileModal() async {
@@ -205,47 +213,43 @@ class _NewHomePageState extends State<NewHomePage> {
         context: context,
         builder: (BuildContext context) {
           final theme = Theme.of(context);
-          return SizedBox(
-            width: MediaQuery.of(context).size.width,
-            child: Dialog(
-              insetAnimationCurve: Curves.easeInOut,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.0)),
-              child: PopoverListView(
+          return Dialog(
+            backgroundColor: Colors.transparent,
+            insetAnimationCurve: Curves.easeInOut,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16.0)),
+            child: PopoverListView(
+                child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.only(
+                      left: 8, right: 8, top: 15, bottom: 15),
                   child: Column(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.only(
-                        left: 8, right: 8, top: 15, bottom: 15),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          setLanguage.listLanguage,
-                          style: headerText2.copyWith(
-                              fontWeight: medium,
-                              fontSize: 20,
-                              color: blackColor),
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        setLanguage.listLanguage,
+                        style: whiteTextStyle.copyWith(
+                            fontWeight: bold, fontSize: 20),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        child: Column(
+                          children: listLanguageModel!
+                              .map((e) => LanguageCard(e))
+                              .toList(),
+                          // children: [
+                          //   for (var e in listLanguageModel!) LanguageCard(e)
+                          // ],
                         ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Container(
-                          child: Column(
-                            children: listLanguageModel!
-                                .map((e) => LanguageCard(e))
-                                .toList(),
-                            // children: [
-                            //   for (var e in listLanguageModel!) LanguageCard(e)
-                            // ],
-                          ),
-                        )
-                      ],
-                    ),
-                  )
-                ],
-              )),
-            ),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            )),
           );
         },
       );

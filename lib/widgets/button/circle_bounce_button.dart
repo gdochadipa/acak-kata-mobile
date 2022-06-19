@@ -12,17 +12,17 @@ class CircleBounceButton extends StatefulWidget {
   final Color color;
   final Color borderColor;
   final Color shadowColor;
-  final EdgeInsetsGeometry? margin;
+  final EdgeInsetsGeometry margin;
 
   const CircleBounceButton(
       {Key? key,
       this.heightShadow = 6.0,
-      this.borderThick = 2.5,
+      this.borderThick = 4,
       this.heightButton = 50,
       this.widthButton = 50,
       this.paddingVerticalButton = 5,
       this.paddingHorizontalButton = 5,
-      required this.margin,
+      this.margin = const EdgeInsets.all(0),
       required this.onClick,
       required this.child,
       this.color = const Color(0xff8B62FF),
