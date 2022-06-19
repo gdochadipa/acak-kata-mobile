@@ -139,6 +139,10 @@ flutter:
     - assets/images/arrow_shadow.png
     - assets/images/profil.png
     - assets/images/arrow_shadow_black.png
+    - assets/images/icon_lock.png
+    - assets/images/icon_pencil.png
+    - assets/images/icon_time.png
+    - assets/images/icon_kata.png
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg

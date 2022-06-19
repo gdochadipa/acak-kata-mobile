@@ -6,6 +6,8 @@ double defaultMargin = 30.0;
 Color primaryColor = const Color(0xff8B62FF);
 Color primaryColor2 = const Color(0xff5833BF);
 Color primaryColor3 = const Color(0xff4F349E);
+Color primaryColor4 = const Color(0xff5C33CF);
+Color primaryColor5 = const Color(0xff643FCA);
 
 Color redColor = const Color(0xffF66062);
 Color redColor2 = const Color(0xffAB4447);
@@ -32,6 +34,7 @@ Color alertAccentColor = const Color(0xFFE33434);
 Color successColor = const Color(0xff22bb33);
 Color grayColor2 = const Color(0xffC4C4C4);
 Color grayColor3 = const Color(0xff979797);
+Color grayColor4 = const Color(0xffD9D9D9);
 Color backgroundColor1 = const Color(0xffFFFFFF);
 Color backgroundColor2 = const Color(0xff46178F);
 Color backgroundColorAccent2 = const Color(0xff773ECF);
