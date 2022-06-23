@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:acakkata/generated/l10n.dart';
+import 'package:acakkata/helper/style_helper.dart';
 import 'package:acakkata/models/level_model.dart';
 import 'package:acakkata/models/word_language_model.dart';
 import 'package:acakkata/models/language_model.dart';
@@ -10,7 +11,10 @@ import 'package:acakkata/providers/room_provider.dart';
 import 'package:acakkata/providers/socket_provider.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/answer_input_buttons.dart';
+import 'package:acakkata/widgets/button/button_bounce.dart';
+import 'package:acakkata/widgets/button/circle_bounce_button.dart';
 import 'package:acakkata/widgets/clicky_button.dart';
+import 'package:acakkata/widgets/component/result_answer_component.dart';
 import 'package:acakkata/widgets/custom_page_route.dart';
 import 'package:acakkata/widgets/gameplay/footer_gameplay_page.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -379,29 +383,24 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
       });
       /** untuk merestart perhitungan permainan, nilai per 1 detik */
       getTimeScore();
+
+      timer.cancel();
+      _timerScore!.cancel();
+      setState(() {
+        afterAnswer = true;
+        answerCountDown = 5;
+        resultAnswerStatus = false;
+      });
+
       /** mengecek apakah pertanyaan sudah memasuki pertanyaan terakhir */
       ///currentArrayQuestion == (totalQuestion - 1)
       if (!((listQuestionQueue!.length - 1) > 0)) {
-        timer.cancel();
-        _timerScore!.cancel();
-        setState(() {
-          afterAnswer = true;
-          answerCountDown = 5;
-          resultAnswerStatus = false;
-        });
         /** 
          * *masuk ke hasil permainan
          *  *nextQuestion
          *  */
         onRunTimeResult(true);
       } else {
-        timer.cancel();
-        _timerScore!.cancel();
-        setState(() {
-          afterAnswer = true;
-          answerCountDown = 5;
-          resultAnswerStatus = false;
-        });
         /** ke soal selanjutnya 
          * 
          * *nextQuestion
@@ -565,12 +564,10 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
             /**
            * ketika tidak ada soal yang tersisa
            */
-            setState(() {
-              afterAnswer = true;
-              answerCountDown = 5;
-              countDownAnswer = numberCountDown;
-              resultAnswerStatus = true;
-            });
+            afterAnswer = true;
+            answerCountDown = 5;
+            countDownAnswer = numberCountDown;
+            resultAnswerStatus = true;
             /**
              * *nextQuestion
              */
@@ -590,12 +587,10 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
             /**
              ** ketika soal masih tersisa
              */
-            setState(() {
-              afterAnswer = true;
-              answerCountDown = 5;
-              countDownAnswer = numberCountDown;
-              resultAnswerStatus = true;
-            });
+            afterAnswer = true;
+            answerCountDown = 5;
+            countDownAnswer = numberCountDown;
+            resultAnswerStatus = true;
 
             /**
              * *nextQuestion
@@ -662,7 +657,7 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
     S? setLanguage = S.of(context);
 
     /// perhitungan waktu permainan saat menjawab soal
-    Widget TextTime() {
+    Widget textTime() {
       return Container(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -670,13 +665,14 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
             Container(
               width: 60,
               height: 60,
-              margin: const EdgeInsets.all(15),
+              margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
               alignment: Alignment.center,
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle, color: backgroundColorAccent2),
+              decoration:
+                  BoxDecoration(shape: BoxShape.circle, color: whiteColor),
               child: Text(
                 "$countDownAnswer",
-                style: whiteTextStyle.copyWith(fontSize: 24, fontWeight: bold),
+                style: primaryTextStyle.copyWith(
+                    fontSize: 24, fontWeight: black, color: primaryColor6),
               ),
             ),
           ],
@@ -687,16 +683,22 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
     /// form jawaban input huruf
     Widget answerInput() {
       return Container(
-        margin: const EdgeInsets.only(top: 10),
+        margin: const EdgeInsets.only(top: 5),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              height: 50,
+              height: 40,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
-                  color: backgroundColor9,
-                  borderRadius: BorderRadius.circular(5)),
+                  color: primaryColor,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color(0xff4B2F97),
+                      offset: Offset(0, 4),
+                    )
+                  ]),
               child: Center(
                   child: TextFormField(
                 textAlign: TextAlign.center,
@@ -706,9 +708,7 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
                 decoration: InputDecoration.collapsed(
                     hintText: setLanguage.answer,
                     hintStyle: whiteTextStyle.copyWith(
-                        fontSize: 18,
-                        fontWeight: medium,
-                        color: backgroundColor7)),
+                        fontSize: 18, fontWeight: bold)),
               )),
             )
           ],
@@ -719,168 +719,90 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
     ///  implementasi tombol reset jawaban
     Widget btnResetAnswer() {
       return Container(
-        height: 45,
-        width: double.infinity,
         margin: const EdgeInsets.all(5),
-        child: TextButton(
-          onPressed: () {
-            //reset jawaban ke null
-            resetAnswer();
-            if (textAnswer != '' && textAnswer.isNotEmpty) {
-              textAnswer = '';
-              answerController.text = textAnswer;
-            }
-          },
-          style: TextButton.styleFrom(
-              side: BorderSide(width: 1, color: blackColor),
-              backgroundColor: backgroundColor1,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12))),
-          child: Wrap(
-            children: [
-              Icon(
+        alignment: Alignment.center,
+        child: ButtonBounce(
+            onClick: () {
+              //reset jawaban ke null
+              resetAnswer();
+              if (textAnswer != '' && textAnswer.isNotEmpty) {
+                textAnswer = '';
+                answerController.text = textAnswer;
+              }
+            },
+            widthButton: 120,
+            heightButton: 60,
+            borderThick: 5,
+            color: primaryColor,
+            borderColor: primaryColor2,
+            shadowColor: primaryColor3,
+            child: Center(
+              child: Icon(
                 CupertinoIcons.refresh_thick,
                 semanticLabel: 'Add',
-                color: blackColor,
+                color: whiteColor,
               ),
-              const SizedBox(
-                width: 1,
-              ),
-              Text(
-                setLanguage.reset,
-                style: blackTextStyle.copyWith(fontSize: 13, fontWeight: bold),
-              )
-            ],
-          ),
-        ),
+            )),
       );
     }
 
     /// tombol hapus kata pada jawaban
     Widget btnDeleteLetterAnswer() {
       return Container(
-        height: 45,
-        width: double.infinity,
         margin: const EdgeInsets.all(5),
-        child: TextButton(
-          onPressed: () {
-            //hapus kata per kata
-            // print(sequenceAnswer);
-            if (textAnswer != '' && textAnswer.isNotEmpty) {
-              int lett = sequenceAnswer![textAnswer.length - 1];
-              // print(lett);
-              textAnswer = textAnswer.substring(0, textAnswer.length - 1);
-              answerController.text = textAnswer;
-              setState(() {
-                isSelected!.update(lett, (value) => false);
-                sequenceAnswer!.removeLast();
-              });
-            }
-          },
-          style: TextButton.styleFrom(
-              side: BorderSide(width: 1, color: blackColor),
-              backgroundColor: backgroundColor1,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12))),
-          child: Wrap(
-            children: [
-              Icon(
+        child: ButtonBounce(
+            onClick: () {
+              //hapus kata per kata
+              // print(sequenceAnswer);
+              if (textAnswer != '' && textAnswer.isNotEmpty) {
+                int lett = sequenceAnswer![textAnswer.length - 1];
+                // print(lett);
+                textAnswer = textAnswer.substring(0, textAnswer.length - 1);
+                answerController.text = textAnswer;
+                setState(() {
+                  isSelected!.update(lett, (value) => false);
+                  sequenceAnswer!.removeLast();
+                });
+              }
+            },
+            widthButton: 120,
+            heightButton: 60,
+            color: redColor,
+            borderColor: redColor2,
+            shadowColor: redColor3,
+            borderThick: 5,
+            child: Center(
+              child: Icon(
                 CupertinoIcons.delete_left,
                 semanticLabel: 'Add',
-                color: blackColor,
+                color: whiteColor,
               ),
-              const SizedBox(
-                width: 5,
-              ),
-              Text(
-                setLanguage.delete,
-                style: blackTextStyle.copyWith(fontSize: 14, fontWeight: bold),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-
-    Widget btnExit() {
-      return Container(
-        margin: const EdgeInsets.only(
-          top: 15,
-        ),
-        child: Container(
-          margin: const EdgeInsets.all(5),
-          alignment: Alignment.center,
-          child: ClickyButton(
-            onPressed: () {
-              //hapus kata per kata
-              Timer(const Duration(milliseconds: 500), () {
-                showCancelGame();
-              });
-            },
-            color: alertColor,
-            shadowColor: alertAccentColor,
-            width: 120,
-            height: 60,
-            child: Wrap(
-              children: [
-                Icon(
-                  CupertinoIcons.square_arrow_left,
-                  semanticLabel: 'Add',
-                  color: whiteColor,
-                ),
-                const SizedBox(
-                  width: 5,
-                ),
-                Text(
-                  setLanguage.exit,
-                  style:
-                      whiteTextStyle.copyWith(fontSize: 14, fontWeight: bold),
-                ),
-              ],
-            ),
-          ),
-        ),
+            )),
       );
     }
 
     Widget btnSkipQuestion() {
       return Container(
-        margin: const EdgeInsets.only(
-          top: 15,
-        ),
-        child: Container(
-          margin: const EdgeInsets.all(5),
-          alignment: Alignment.center,
-          child: ClickyButton(
-            onPressed: () {
+        margin: const EdgeInsets.all(5),
+        alignment: Alignment.center,
+        child: ButtonBounce(
+            onClick: () {
               //hapus kata per kata
-              Timer(const Duration(milliseconds: 500), () {
-                onSkipedAnswer();
-              });
+              onSkipedAnswer();
             },
-            color: whiteColor,
-            shadowColor: backgroundColorAccent8,
-            width: 120,
-            height: 60,
-            child: Wrap(
-              children: [
-                Icon(
-                  CupertinoIcons.forward_end_alt_fill,
-                  semanticLabel: 'Add',
-                  color: primaryColor,
-                ),
-                const SizedBox(
-                  width: 5,
-                ),
-                Text(
-                  setLanguage.next,
-                  style:
-                      primaryTextStyle.copyWith(fontSize: 14, fontWeight: bold),
-                ),
-              ],
-            ),
-          ),
-        ),
+            color: greenColor,
+            borderColor: greenColor2,
+            shadowColor: greenColor3,
+            widthButton: 120,
+            heightButton: 60,
+            borderThick: 5,
+            child: Center(
+              child: Icon(
+                CupertinoIcons.forward_end_alt_fill,
+                semanticLabel: 'Add',
+                color: whiteColor,
+              ),
+            )),
       );
     }
 
@@ -889,19 +811,8 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
         margin: const EdgeInsets.only(top: 15),
         child: Row(
           children: [
+            Flexible(child: btnDeleteLetterAnswer()),
             Flexible(child: btnResetAnswer()),
-            Flexible(child: btnDeleteLetterAnswer())
-          ],
-        ),
-      );
-    }
-
-    Widget anotherActionQuestion() {
-      return Container(
-        margin: const EdgeInsets.only(top: 15),
-        child: Row(
-          children: [
-            Flexible(child: btnExit()),
             Flexible(child: btnSkipQuestion())
           ],
         ),
@@ -909,33 +820,24 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
     }
 
     /// list tombol jawaban [list per huruf]
-    Widget AnswerButtons(List<String>? suffleQuestion, String? question) {
+    Widget answerButtons(List<String>? suffleQuestion, String? question) {
       List fixedList = Iterable.generate(suffleQuestion!.length).toList();
-      return Container(
-        margin: const EdgeInsets.only(top: 20, left: 5, right: 5),
-        alignment: Alignment.center,
-        child: ListView(
-          shrinkWrap: true,
-          children: [
-            Wrap(
-              alignment: WrapAlignment.center,
-              children: fixedList
-                  .map((e) => InputAnswerButton(
-                      letter: suffleQuestion[e],
-                      isBtnSelected: isSelected![e] ?? false,
-                      onSelectButtonLetter: (String letter, bool isUnSet) {
-                        answerQuestion(letter, e, suffleQuestion, question);
-                        // onCheckingAnswer(answer);
-                      }))
-                  .toList(),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            anotherActionAnswer(),
-            anotherActionQuestion()
-            // btnExit()
-          ],
+      return SizedBox(
+        height: 350,
+        child: Stack(
+          fit: StackFit.loose,
+          children: fixedList.map((e) {
+            return InputAnswerButton(
+                color: StyleHelper.getColorRandom('color', e % 4),
+                borderColor: StyleHelper.getColorRandom('borderColor', e % 4),
+                shadowColor: StyleHelper.getColorRandom('shadowColor', e % 4),
+                letter: suffleQuestion[e],
+                isBtnSelected: isSelected![e] ?? false,
+                onSelectButtonLetter: (String letter, bool isUnSet) {
+                  answerQuestion(letter, e, suffleQuestion, question);
+                  // onCheckingAnswer(answer);
+                });
+          }).toList(),
         ),
       );
     }
@@ -943,16 +845,6 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
     Widget cardBodyUp() {
       return Column(
         children: [
-          Container(
-            child: SizedBox(
-              height: 8,
-              child: LinearProgressIndicator(
-                value: countDownAnswer / numberCountDown,
-                backgroundColor: backgroundColor1,
-                valueColor: AlwaysStoppedAnimation<Color>(alertColor),
-              ),
-            ),
-          ),
           ElasticIn(
             child: Container(
               margin:
@@ -960,11 +852,7 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
               padding: const EdgeInsets.only(left: 15, right: 15, bottom: 16),
               child: Column(
                 children: [
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  TextTime(),
-                  const SizedBox(height: 20),
+                  textTime(),
                   answerInput(),
                 ],
               ),
@@ -978,13 +866,15 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
         String? question, String? hintQuestion, List<String>? suffleQuestion) {
       return Container(
         margin:
-            EdgeInsets.only(top: 50, left: defaultMargin, right: defaultMargin),
-        padding:
-            const EdgeInsets.only(top: 10, left: 15, right: 16, bottom: 16),
+            EdgeInsets.only(top: 10, left: defaultMargin, right: defaultMargin),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
         decoration: BoxDecoration(
-            color: backgroundColor1, borderRadius: BorderRadius.circular(15)),
+            color: primaryColor3, borderRadius: BorderRadius.circular(15)),
         child: Column(
-          children: [AnswerButtons(suffleQuestion, question)],
+          children: [
+            answerButtons(suffleQuestion, question),
+            anotherActionAnswer()
+          ],
         ),
       );
     }
@@ -993,6 +883,7 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
       return ElasticIn(
         delay: const Duration(milliseconds: 50),
         child: Container(
+          margin: const EdgeInsets.only(top: 150),
           child: Center(
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 1000),
@@ -1032,42 +923,48 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
     /// header soal
     AppBar header() {
       return AppBar(
-        leading: Container(
-          alignment: Alignment.centerLeft,
-          margin: const EdgeInsets.only(left: 5),
-          child: Text(
-            "$currentQuestion ${setLanguage.of_string} $totalQuestion",
-            style: blackTextStyle.copyWith(fontWeight: bold, fontSize: 14),
-          ),
-        ),
-        backgroundColor: backgroundColor1,
+        backgroundColor: transparentColor,
         elevation: 0,
         centerTitle: true,
-        title: Column(
+        leading: Container(
+          padding: const EdgeInsets.all(8),
+          child: Image.asset(
+            'assets/images/${widget.languageModel!.language_icon}',
+            width: 30,
+            height: 30,
+          ),
+        ),
+        title: Row(
           children: [
             const SizedBox(
-              height: 8,
+              width: 8,
             ),
             Text(
               (setLanguage.code == 'en'
                   ? '${widget.languageModel!.language_name_en}'
                   : '${widget.languageModel!.language_name_id}'),
-              style: headerText2.copyWith(
-                  fontWeight: extraBold, fontSize: 20, color: primaryTextColor),
-            ),
-            Text(
-              widget.isOnline == true
-                  ? setLanguage.multi_player
-                  : setLanguage.single_player,
-              style:
-                  primaryTextStyle.copyWith(fontSize: 14, fontWeight: medium),
-            ),
-            const SizedBox(
-              height: 8,
+              style: whiteTextShadowStyle.copyWith(
+                  fontWeight: black, fontSize: 24, color: whiteColor),
             ),
           ],
         ),
-        actions: const [],
+        actions: [
+          Container(
+              padding: const EdgeInsets.all(8),
+              child: CircleBounceButton(
+                color: whiteColor,
+                borderColor: whiteColor2,
+                shadowColor: whiteColor4,
+                onClick: () {
+                  showCancelGame();
+                },
+                paddingHorizontalButton: 1,
+                paddingVerticalButton: 1,
+                heightButton: 45,
+                widthButton: 45,
+                child: Icon(Icons.close, color: whiteColor4, size: 25),
+              )),
+        ],
       );
     }
 
@@ -1075,143 +972,12 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
     ///* akan muncul ketika soal berakhir dan jawaban benar
     Widget resultAnswer(
         bool resultAnswerStatus, int pointGet, String? meaning, String? word) {
-      return Container(
-        child: Center(
-          child: ListView(
-            children: [
-              Container(
-                child: SizedBox(
-                  height: 8,
-                  child: LinearProgressIndicator(
-                    value: answerCountDown / 5,
-                    backgroundColor: backgroundColor1,
-                    valueColor: AlwaysStoppedAnimation<Color>(alertColor),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              ElasticIn(
-                delay: const Duration(milliseconds: 50),
-                child: Container(
-                  margin: const EdgeInsets.symmetric(vertical: 10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 50,
-                        height: 50,
-                        margin: const EdgeInsets.all(15),
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: backgroundColorAccent2),
-                        child: Text(
-                          "$answerCountDown",
-                          style: whiteTextStyle.copyWith(
-                              fontSize: 24, fontWeight: bold),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              ElasticIn(
-                delay: const Duration(milliseconds: 50),
-                child: Container(
-                    margin:
-                        const EdgeInsets.only(bottom: 30, left: 15, right: 15),
-                    child: Center(
-                      child: Text(
-                        resultAnswerStatus
-                            ? setLanguage.true_string
-                            : setLanguage.false_string,
-                        style: whiteTextStyle.copyWith(
-                            fontSize: 32, fontWeight: bold),
-                      ),
-                    )),
-              ),
-              ElasticIn(
-                delay: const Duration(milliseconds: 50),
-                child: Container(
-                  margin:
-                      const EdgeInsets.only(bottom: 32, left: 15, right: 15),
-                  child: Center(
-                    child: resultAnswerStatus
-                        ? Image.asset(
-                            'assets/images/success_icon.png',
-                            width: 74.92,
-                            height: 74.92,
-                          )
-                        : Image.asset(
-                            'assets/images/fail_icon.png',
-                            width: 74.92,
-                            height: 74.92,
-                          ),
-                  ),
-                ),
-              ),
-              // ElasticIn(
-              //   delay: Duration(milliseconds: 50),
-              //   child: Container(
-              //     margin: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-              //     padding: EdgeInsets.all(10),
-              //     decoration: BoxDecoration(
-              //       color: backgroundColor9,
-              //       borderRadius: BorderRadius.circular(5),
-              //     ),
-              //     child: Center(
-              //       child: Text(
-              //         "+ ${pointGet}",
-              //         style: whiteTextStyle.copyWith(
-              //             fontSize: 32, fontWeight: bold),
-              //       ),
-              //     ),
-              //   ),
-              // ),
-              ElasticIn(
-                delay: const Duration(milliseconds: 50),
-                child: Container(
-                  margin:
-                      const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: backgroundColor1,
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: Center(
-                    child: Column(
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.symmetric(vertical: 5),
-                          child: Text(
-                            " $word",
-                            style: blackTextStyle.copyWith(
-                                fontSize: 23, fontWeight: bold),
-                          ),
-                        ),
-                        Container(
-                          child: AutoSizeText(
-                            "$meaning",
-                            textAlign: TextAlign.center,
-                            style: blackTextStyle.copyWith(
-                                fontSize: 18, fontWeight: semiBold),
-                            minFontSize: 14,
-                            maxFontSize: 18,
-                            maxLines: 8,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
-      );
+      return ResultAnswerComponent(
+          answerCountDown: answerCountDown,
+          setLanguage: setLanguage,
+          resultAnswerStatus: resultAnswerStatus,
+          word: word,
+          meaning: meaning);
     }
 
     ///*-------------------------footer-----------------------------------
@@ -1224,38 +990,39 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
     }
 
     Widget mainBody() {
-      return Container(
-        child: ListView(
-          children: [
-            cardBodyUp(),
-            ElasticIn(
-              child: cardBodyBottom(
-                  dataWordList![currentArrayQuestion].word,
-                  dataWordList![currentArrayQuestion].word,
-                  dataWordList![currentArrayQuestion].word_suffle),
-            ),
-          ],
-        ),
+      return Column(
+        children: [
+          cardBodyUp(),
+          ElasticIn(
+            child: cardBodyBottom(
+                dataWordList![currentArrayQuestion].word,
+                dataWordList![currentArrayQuestion].word,
+                dataWordList![currentArrayQuestion].word_suffle),
+          ),
+        ],
       );
     }
 
     return WillPopScope(
         onWillPop: () async => false,
         child: Scaffold(
-          appBar: header(),
-          bottomNavigationBar: Container(
-              constraints: const BoxConstraints(maxHeight: 84),
-              child: footer()),
-          backgroundColor: backgroundColor2,
-          body: isCountDown
-              ? countStart()
-              : (afterAnswer
-                  ? resultAnswer(
-                      resultAnswerStatus,
-                      score,
-                      dataWordList![currentArrayQuestion].word_hint,
-                      dataWordList![currentArrayQuestion].word)
-                  : (_isLoading ? Container() : mainBody())),
+          backgroundColor: primaryColor5,
+          body: SafeArea(
+              child: ListView(
+            shrinkWrap: true,
+            children: [
+              header(),
+              isCountDown
+                  ? countStart()
+                  : (afterAnswer
+                      ? resultAnswer(
+                          resultAnswerStatus,
+                          score,
+                          dataWordList![currentArrayQuestion].word_hint,
+                          dataWordList![currentArrayQuestion].word)
+                      : (_isLoading ? Container() : mainBody())),
+            ],
+          )),
         ));
   }
 }

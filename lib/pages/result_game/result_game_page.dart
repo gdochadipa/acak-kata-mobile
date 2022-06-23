@@ -7,6 +7,7 @@ import 'package:acakkata/models/level_model.dart';
 import 'package:acakkata/models/range_result_txt_model.dart';
 import 'package:acakkata/providers/language_db_provider.dart';
 import 'package:acakkata/theme.dart';
+import 'package:acakkata/widgets/button/button_bounce.dart';
 import 'package:acakkata/widgets/clicky_button.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:confetti/confetti.dart';
@@ -120,27 +121,28 @@ class _ResultGamePageState extends State<ResultGamePage> {
           ));
     }
 
-    Widget BacktoMenu() {
+    Widget backtoMenu() {
       return Container(
         width: double.infinity,
         margin: const EdgeInsets.only(top: 20),
         alignment: Alignment.center,
-        child: ClickyButton(
-            onPressed: isLoading
+        child: ButtonBounce(
+            onClick: isLoading
                 ? () {}
                 : () {
                     Navigator.pushNamedAndRemoveUntil(
                         context, '/home', (route) => false);
                   },
-            color: alertColor,
-            shadowColor: alertAccentColor,
-            margin:
-                const EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
-            width: 245,
-            height: 60,
-            child: Text(
-              setLanguage.back_to_menu,
-              style: whiteTextStyle.copyWith(fontSize: 16, fontWeight: bold),
+            color: redColor,
+            borderColor: redColor2,
+            shadowColor: redColor3,
+            widthButton: 245,
+            heightButton: 60,
+            child: Center(
+              child: Text(
+                setLanguage.back_to_menu,
+                style: whiteTextStyle.copyWith(fontSize: 18, fontWeight: black),
+              ),
             )),
       );
     }
@@ -164,13 +166,13 @@ class _ResultGamePageState extends State<ResultGamePage> {
         margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
         padding: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
-          color: backgroundColor9,
+          color: primaryColor3,
           borderRadius: BorderRadius.circular(5),
         ),
         child: Center(
           child: Text(
             " $resultText",
-            style: whiteTextStyle.copyWith(fontSize: 32, fontWeight: bold),
+            style: whiteTextStyle.copyWith(fontSize: 26, fontWeight: bold),
           ),
         ),
       );
@@ -221,7 +223,7 @@ class _ResultGamePageState extends State<ResultGamePage> {
             const SizedBox(
               height: 30,
             ),
-            BacktoMenu()
+            backtoMenu()
           ],
         ),
       );
@@ -234,38 +236,44 @@ class _ResultGamePageState extends State<ResultGamePage> {
             .explosive, // don't specify a direction, blast randomly
         shouldLoop: true, // start again as soon as the animation is finished
         colors: const [
-          Colors.green,
-          Colors.blue,
-          Colors.pink,
-          Colors.orange,
-          Colors.purple
+          Color(0xffFD47F6),
+          Color(0xffFF7CFA),
+          Color(0xffFF00F5),
+          Color(0xffBD00B6),
+          Color(0xffF5BCF3),
+          Color(0xffFF00F5)
         ], // manually specify the colors to be used
         createParticlePath: drawStar, // define a custom shape/path.
       );
     }
 
-    return Scaffold(
-      backgroundColor: backgroundColor2,
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          Container(
-            decoration: const BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage("assets/images/background_512w.png"),
-                    fit: BoxFit.cover)),
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        backgroundColor: primaryColor,
+        body: SafeArea(
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              Container(
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    repeat: ImageRepeat.repeat,
+                    image: AssetImage("assets/images/background.png"),
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.center,
+                child: cardBody(),
+              ),
+              Align(
+                alignment: Alignment.topCenter,
+                child: confettiStar(),
+              ),
+            ],
           ),
-          Container(
-            child: Align(
-              alignment: Alignment.center,
-              child: cardBody(),
-            ),
-          ),
-          Align(
-            alignment: Alignment.topCenter,
-            child: confettiStar(),
-          ),
-        ],
+        ),
       ),
     );
   }

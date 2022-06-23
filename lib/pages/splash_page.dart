@@ -22,8 +22,8 @@ class _SplashPageState extends State<SplashPage> {
     printer: PrettyPrinter(methodCount: 0),
   );
 
-  double _width = 80;
-  double _height = 60;
+  double _width = 120;
+  double _height = 90;
 
   @override
   void initState() {
@@ -32,8 +32,8 @@ class _SplashPageState extends State<SplashPage> {
     super.initState();
     Timer(const Duration(milliseconds: 500), () {
       setState(() {
-        _width = 200;
-        _height = 170;
+        _width = 280;
+        _height = 210;
       });
     });
     // Timer(Duration(seconds: 3), () => Navigator.pushNamed(context, '/home'));

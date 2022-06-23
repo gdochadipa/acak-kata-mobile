@@ -419,12 +419,16 @@ class _ItemLevelCardState extends State<ItemLevelCard> {
                 }
               : null,
           onTapDown: (_) => setState(() {
-                _padding = 0.0;
-                _reversePadding = _heightShadow;
+                if (widget.levelModel!.is_unlock == 1) {
+                  _padding = 0.0;
+                  _reversePadding = _heightShadow;
+                }
               }),
           onTapUp: (_) => setState(() {
-                _padding = _heightShadow;
-                _reversePadding = 0.0;
+                if (widget.levelModel!.is_unlock == 1) {
+                  _padding = _heightShadow;
+                  _reversePadding = 0.0;
+                }
               }),
           child: AnimatedContainer(
             padding: EdgeInsets.only(bottom: _padding),

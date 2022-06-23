@@ -8,6 +8,7 @@ Color primaryColor2 = const Color(0xff5833BF);
 Color primaryColor3 = const Color(0xff4F349E);
 Color primaryColor4 = const Color(0xff5C33CF);
 Color primaryColor5 = const Color(0xff643FCA);
+Color primaryColor6 = const Color(0xff4B2F97);
 
 Color redColor = const Color(0xffF66062);
 Color redColor2 = const Color(0xffAB4447);
@@ -28,6 +29,7 @@ Color blueColor3 = const Color(0xff388AC5);
 Color whiteColor = const Color(0xffFFFFFF);
 Color whiteColor2 = const Color(0xffDFDFDF);
 Color whiteColor3 = const Color(0xffC8C8C8);
+Color whiteColor4 = const Color(0xff828282);
 
 Color alertColor = const Color(0xffED6363);
 Color alertAccentColor = const Color(0xFFE33434);
@@ -98,6 +100,16 @@ TextStyle blackTextStyle = GoogleFonts.nunito(
 
 TextStyle whiteTextStyle = GoogleFonts.nunito(
   color: whiteColor,
+);
+
+TextStyle whiteTextShadowStyle = GoogleFonts.nunito(
+  color: whiteColor,
+  shadows: <Shadow>[
+    const Shadow(
+      offset: Offset(0.0, 4.0),
+      color: Color.fromARGB(255, 0, 0, 0),
+    ),
+  ],
 );
 
 TextStyle alertTextStyle = GoogleFonts.nunito(
