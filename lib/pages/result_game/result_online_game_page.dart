@@ -221,7 +221,7 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
           ));
     }
 
-    Widget BacktoMenu() {
+    Widget backtoMenu() {
       return Container(
         width: double.infinity,
         margin: const EdgeInsets.only(top: 20),
@@ -234,7 +234,8 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
             },
             color: alertColor,
             shadowColor: alertAccentColor,
-            margin: const EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
+            margin:
+                const EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
             width: 245,
             height: 60,
             child: Text(
@@ -389,10 +390,7 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
       );
     }
 
-    Widget yourRank() {
-      RoomMatchDetailModel? roomUser = roomProvider!.roomMatchDetailUser;
-      int rank = roomProvider!.roomMatch!.room_match_detail!.indexOf(roomUser!);
-      rank = rank < 0 ? (rank * -1) : rank;
+    Widget rankCard(RoomMatchDetailModel? roomUser, int? rank) {
       return Container(
           margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
           padding: const EdgeInsets.symmetric(vertical: 10),
@@ -407,7 +405,8 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
                 decoration: BoxDecoration(
                     color: blackColor, borderRadius: BorderRadius.circular(5)),
                 child: Container(
-                  margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
                   child: Text(
                     "$rank",
                     style:
@@ -421,7 +420,7 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
               Container(
                 child: Container(
                   child: Text(
-                    "${roomUser.player!.username}",
+                    "${roomUser!.player!.username}",
                     style:
                         blackTextStyle.copyWith(fontSize: 16, fontWeight: bold),
                   ),
@@ -451,18 +450,9 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
             const SizedBox(
               height: 8,
             ),
-            ElasticIn(
-              child: rankBars(),
-            ),
-            ElasticIn(
-                delay: const Duration(milliseconds: 1500),
-                child: rankPlayers()),
-            const SizedBox(
-              height: 10,
-            ),
-            ElasticIn(
-                delay: const Duration(milliseconds: 1500), child: yourRank()),
-            BacktoMenu()
+            // ),
+
+            backtoMenu()
           ],
         ),
       );
@@ -575,11 +565,12 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
             .explosive, // don't specify a direction, blast randomly
         shouldLoop: true, // start again as soon as the animation is finished
         colors: const [
-          Colors.green,
-          Colors.blue,
-          Colors.pink,
-          Colors.orange,
-          Colors.purple
+          Color(0xffFD47F6),
+          Color(0xffFF7CFA),
+          Color(0xffFF00F5),
+          Color(0xffBD00B6),
+          Color(0xffF5BCF3),
+          Color(0xffFF00F5)
         ], // manually specify the colors to be used
         createParticlePath: drawStar, // define a custom shape/path.
       );

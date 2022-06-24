@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:acakkata/generated/l10n.dart';
+import 'package:acakkata/helper/style_helper.dart';
 import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/models/level_model.dart';
 import 'package:acakkata/models/room_match_detail_model.dart';
@@ -12,6 +13,7 @@ import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/providers/room_provider.dart';
 import 'package:acakkata/providers/socket_provider.dart';
 import 'package:acakkata/theme.dart';
+import 'package:acakkata/widgets/button/button_bounce.dart';
 import 'package:acakkata/widgets/clicky_button.dart';
 import 'package:acakkata/widgets/custom_page_route.dart';
 import 'package:animate_do/animate_do.dart';
@@ -113,13 +115,20 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
       }
     }
 
-    Widget joinPlayerCard(String usernamePlayer) {
+    Widget joinPlayerCard(
+        {required String usernamePlayer,
+        required color,
+        required Color borderColor,
+        required Color shadowColor}) {
       return ElasticIn(
         child: Container(
           padding: const EdgeInsets.all(7),
           margin: const EdgeInsets.only(right: 10, bottom: 10),
           decoration: BoxDecoration(
-              color: purpleCard, borderRadius: BorderRadius.circular(5)),
+              color: color,
+              borderRadius: BorderRadius.circular(15),
+              border: Border.all(color: borderColor, width: 3),
+              boxShadow: [BoxShadow(color: shadowColor, offset: Offset(0, 3))]),
           child: Container(
               margin: const EdgeInsets.all(5),
               child: Text(
@@ -136,7 +145,12 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
         padding: const EdgeInsets.all(7),
         margin: const EdgeInsets.only(right: 10, bottom: 10),
         decoration: BoxDecoration(
-            color: purpleCard, borderRadius: BorderRadius.circular(5)),
+            color: primaryColor,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: primaryColor2, width: 4),
+            boxShadow: [
+              BoxShadow(color: primaryColor3, offset: const Offset(0, 4))
+            ]),
         child: Container(
           margin: const EdgeInsets.all(5),
           child: Row(
@@ -160,31 +174,32 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
       return Container(
         width: double.infinity,
         alignment: Alignment.center,
-        child: ClickyButton(
-            color: whitePurpleColor,
-            shadowColor: whiteAccentPurpleColor,
-            margin:
-                const EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
-            width: 245,
-            height: 60,
-            child: Wrap(
-              children: [
-                Text(
-                  'Bermain',
-                  style:
-                      primaryTextStyle.copyWith(fontSize: 14, fontWeight: bold),
-                ),
-                const SizedBox(
-                  width: 5,
-                ),
-                Image.asset(
-                  'assets/images/arrow_blue.png',
-                  height: 25,
-                  width: 25,
-                )
-              ],
+        child: ButtonBounce(
+            color: whiteColor,
+            borderColor: whiteColor2,
+            shadowColor: whiteColor3,
+            widthButton: 245,
+            heightButton: 60,
+            child: Center(
+              child: Wrap(
+                children: [
+                  Text(
+                    'Bermain',
+                    style: primaryTextStyle.copyWith(
+                        fontSize: 18, fontWeight: bold),
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  Image.asset(
+                    'assets/images/arrow_blue.png',
+                    height: 25,
+                    width: 25,
+                  )
+                ],
+              ),
             ),
-            onPressed: () {
+            onClick: () {
               handleStartGame();
               // Navigator.push(
               //     context,
@@ -237,38 +252,48 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
 
     AppBar header() {
       return AppBar(
-        // leading: IconButton(
-        //   icon: Icon(
-        //     Icons.arrow_back,
-        //     color: primaryColor,
-        //   ),
-        //   onPressed: () {
-        //     Navigator.pop(context);
-        //     // Navigator.pushNamedAndRemoveUntil(
-        //     //     context, '/home', (route) => false);
-        //   },
-        // ),
-        backgroundColor: backgroundColor1,
+        leading: Container(
+            padding: const EdgeInsets.all(8),
+            child: Center(
+              child: Image.asset(
+                'assets/images/${widget.languageModel!.language_icon}',
+                width: 30,
+                height: 30,
+              ),
+            )),
+        backgroundColor: transparentColor,
         elevation: 0,
         centerTitle: true,
-        title: Column(
+        title: Row(
           children: [
             const SizedBox(
               height: 8,
             ),
-            Text(
-              (setLanguage.code == 'en'
-                  ? '${widget.languageModel!.language_name_en}'
-                  : '${widget.languageModel!.language_name_id}'),
-              style: headerText2.copyWith(
-                  fontWeight: extraBold, fontSize: 20, color: primaryTextColor),
-            ),
-            Text(
-              widget.isOnline == true
-                  ? setLanguage.multi_player
-                  : setLanguage.single_player,
-              style:
-                  primaryTextStyle.copyWith(fontSize: 14, fontWeight: medium),
+            Column(
+              children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    (setLanguage.code == 'en'
+                        ? '${widget.languageModel!.language_name_en}'
+                        : '${widget.languageModel!.language_name_id}'),
+                    style: whiteTextStyle.copyWith(
+                      fontWeight: extraBold,
+                      fontSize: 22,
+                    ),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    widget.isOnline == true
+                        ? setLanguage.multi_player
+                        : setLanguage.single_player,
+                    style: whiteTextStyle.copyWith(
+                        fontSize: 14, fontWeight: medium),
+                  ),
+                )
+              ],
             )
           ],
         ),
@@ -349,75 +374,71 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     ElasticIn(
-                      child: Container(
-                        alignment: Alignment.topCenter,
-                        child: Image.asset(
-                          'assets/images/logo_putih.png',
-                          height: 111.87,
-                          width: 84.33,
+                      child:
+
+                          ///* setting up match
+                          Container(
+                        margin: const EdgeInsets.only(top: 20),
+                        child: Row(
+                          children: [
+                            settingCard(
+                                "${roomMatch.max_player}",
+                                Image.asset(
+                                  'assets/images/icon_username.png',
+                                  height: 26,
+                                  width: 26,
+                                )),
+                            settingCard(
+                                DateFormat('dd MMMM yyyy').format(
+                                    roomMatch.datetime_match ?? DateTime.now()),
+                                Image.asset(
+                                  'assets/images/white_clock_icon.png',
+                                  height: 26,
+                                  width: 26,
+                                ))
+                          ],
                         ),
                       ),
                     ),
 
                     /// * room code  match
                     ElasticIn(
-                      child: Container(
-                          margin: const EdgeInsets.symmetric(vertical: 14),
-                          padding: const EdgeInsets.all(18),
-                          decoration: BoxDecoration(
-                            color: whiteColor,
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Game Room",
-                                      style: blackTextStyle.copyWith(
-                                          fontSize: 13, fontWeight: bold),
-                                    ),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    Text(
-                                      "${roomMatch.room_code}",
-                                      style: blackTextStyle.copyWith(
-                                          fontSize: 50, fontWeight: extraBold),
-                                    ),
-                                  ],
+                      child: Center(
+                        child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            margin: const EdgeInsets.symmetric(vertical: 14),
+                            padding: const EdgeInsets.all(18),
+                            decoration: BoxDecoration(
+                              color: whiteColor,
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Game Room",
+                                        style: blackTextStyle.copyWith(
+                                            fontSize: 15, fontWeight: black),
+                                      ),
+                                      const SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text(
+                                        "${roomMatch.room_code}",
+                                        style: blackTextStyle.copyWith(
+                                            fontSize: 50, fontWeight: black),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-
-                              ///* setting up match
-                              Container(
-                                margin: const EdgeInsets.only(top: 20),
-                                child: Row(
-                                  children: [
-                                    settingCard(
-                                        "${roomMatch.max_player}",
-                                        Image.asset(
-                                          'assets/images/icon_username.png',
-                                          height: 26,
-                                          width: 26,
-                                        )),
-                                    settingCard(
-                                        DateFormat('dd MMMM yyyy').format(
-                                            roomMatch.datetime_match ??
-                                                DateTime.now()),
-                                        Image.asset(
-                                          'assets/images/white_clock_icon.png',
-                                          height: 26,
-                                          width: 26,
-                                        ))
-                                  ],
-                                ),
-                              ),
-                            ],
-                          )),
+                              ],
+                            )),
+                      ),
                     ),
 
                     /// * name player has join
@@ -430,10 +451,16 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
                           //   joinPlayerCard("Meta"),
                           //   joinPlayerCard("Lica")
                           // ],
-                          children: roomMatch.room_match_detail!
-                              .map((e) =>
-                                  joinPlayerCard('${e.player!.username}'))
-                              .toList(),
+                          children: roomMatch.room_match_detail!.map((e) {
+                            int num = StyleHelper.getRandomNumInt(0, 4);
+                            return joinPlayerCard(
+                                usernamePlayer: '${e.player!.username}',
+                                color: StyleHelper.getColorRandom('color', num),
+                                borderColor: StyleHelper.getColorRandom(
+                                    'borderColor', num),
+                                shadowColor: StyleHelper.getColorRandom(
+                                    'shadowColor', num));
+                          }).toList(),
                         ),
                       ),
                     ),
@@ -452,16 +479,10 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
     return WillPopScope(
         child: Scaffold(
           appBar: header(),
+          backgroundColor: primaryColor5,
           body: SafeArea(
             child: Stack(
               children: [
-                Container(
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage("assets/images/background_512w.png"),
-                        fit: BoxFit.cover),
-                  ),
-                ),
                 Container(child: body()),
               ],
             ),

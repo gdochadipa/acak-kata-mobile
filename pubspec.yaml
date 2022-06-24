@@ -143,6 +143,9 @@ flutter:
     - assets/images/icon_pencil.png
     - assets/images/icon_time.png
     - assets/images/icon_kata.png
+    - assets/images/first.png
+    - assets/images/second.png
+    - assets/images/third.png
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg

@@ -1,4 +1,3 @@
-
 import 'package:acakkata/generated/l10n.dart';
 import 'package:acakkata/models/room_match_detail_model.dart';
 import 'package:acakkata/pages/in_game/waiting_join_room_page.dart';
@@ -6,6 +5,7 @@ import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/providers/room_provider.dart';
 import 'package:acakkata/providers/socket_provider.dart';
 import 'package:acakkata/theme.dart';
+import 'package:acakkata/widgets/button/button_bounce.dart';
 import 'package:acakkata/widgets/clicky_button.dart';
 import 'package:acakkata/widgets/custom_page_route.dart';
 import 'package:acakkata/widgets/loading/LoadingOverlay.dart';
@@ -130,76 +130,82 @@ class _JoinRoomModalState extends State<JoinRoomModal> {
       width: MediaQuery.of(context).size.width,
       child: Dialog(
         insetAnimationCurve: Curves.easeInOut,
+        backgroundColor: Colors.transparent,
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-        child: PopoverListView(
-            child: Container(
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                "Masukan Kode Ruangan",
-                style:
-                    blackTextStyle.copyWith(fontSize: 18, fontWeight: semiBold),
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              Container(
-                height: 50,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                decoration: BoxDecoration(
-                    border: Border.all(color: blackColor),
-                    color: backgroundColor1,
-                    borderRadius: BorderRadius.circular(5)),
-                child: Center(
-                    child: Row(
-                  children: [
-                    Expanded(
-                        child: TextFormField(
-                      style: primaryTextStyle.copyWith(fontSize: 20),
-                      controller: roomCodeController,
-                      decoration: InputDecoration.collapsed(
-                        hintText: 'AXXXXX',
-                        hintStyle: subtitleTextStyle,
-                      ),
-                    )),
-                  ],
-                )),
-              ),
-              const SizedBox(
-                height: 5,
-              ),
-              if (_validation)
+        child: SizedBox(
+          height: 300,
+          child: PopoverListView(
+              child: Container(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
                 Text(
-                  _textValidation ?? 'Gagal membuat room',
-                  textAlign: TextAlign.left,
-                  style: alertTextStyle.copyWith(fontSize: 11),
+                  "Masukan Kode Ruangan",
+                  style: whiteTextStyle.copyWith(
+                      fontSize: 18, fontWeight: semiBold),
                 ),
-              Container(
-                margin: const EdgeInsets.only(top: 20, left: 5, right: 5),
-                child: ClickyButton(
-                    color: purpleColor,
-                    shadowColor: purpleAccentColor,
-                    width: 210,
-                    height: 60,
-                    child: Wrap(
-                      children: [
-                        Text(
-                          'Cari Room',
-                          style: whiteTextStyle.copyWith(
-                              fontSize: 14, fontWeight: bold),
+                const SizedBox(
+                  height: 15,
+                ),
+                Container(
+                  height: 40,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  decoration: BoxDecoration(
+                      color: primaryColor,
+                      borderRadius: BorderRadius.circular(15)),
+                  child: Center(
+                      child: Row(
+                    children: [
+                      Expanded(
+                          child: TextFormField(
+                        style: whiteTextStyle.copyWith(fontSize: 20),
+                        controller: roomCodeController,
+                        decoration: InputDecoration.collapsed(
+                          hintText: '5XXXXX',
+                          hintStyle: whiteTextStyle,
                         ),
-                      ],
-                    ),
-                    onPressed: () {
-                      handleSearchRoom();
-                    }),
-              )
-            ],
-          ),
-        )),
+                      )),
+                    ],
+                  )),
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                if (_validation)
+                  Text(
+                    _textValidation ?? 'Gagal membuat room',
+                    textAlign: TextAlign.left,
+                    style: alertTextStyle.copyWith(fontSize: 11),
+                  ),
+                Container(
+                  margin: const EdgeInsets.only(top: 20, left: 5, right: 5),
+                  child: ButtonBounce(
+                      color: primaryColor,
+                      borderColor: primaryColor2,
+                      shadowColor: primaryColor3,
+                      widthButton: 210,
+                      heightButton: 50,
+                      child: Center(
+                        child: Wrap(
+                          children: [
+                            Text(
+                              'Cari Room',
+                              style: whiteTextStyle.copyWith(
+                                  fontSize: 14, fontWeight: bold),
+                            ),
+                          ],
+                        ),
+                      ),
+                      onClick: () {
+                        handleSearchRoom();
+                      }),
+                )
+              ],
+            ),
+          )),
+        ),
       ),
     );
   }

@@ -34,7 +34,7 @@ class _LanguageCardState extends State<LanguageCard> {
     S? setLanguage = S.of(context);
 
     return Container(
-      margin: EdgeInsets.only(bottom: 10),
+      margin: const EdgeInsets.only(bottom: 10),
       child: GestureDetector(
           onTap: () {
             Navigator.pushAndRemoveUntil(

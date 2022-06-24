@@ -303,7 +303,7 @@ class _NewHomePageState extends State<NewHomePage> {
         color: blueColor,
         borderColor: blueColor2,
         shadowColor: blueColor3,
-        margin: const EdgeInsets.symmetric(horizontal: 10.0),
+        margin: const EdgeInsets.symmetric(horizontal: 5.0),
         onClick: () {
           if (!(login)) {
             showAuthModal();
@@ -330,7 +330,7 @@ class _NewHomePageState extends State<NewHomePage> {
         color: greenColor,
         borderColor: greenColor2,
         shadowColor: greenColor3,
-        margin: const EdgeInsets.symmetric(horizontal: 10.0),
+        margin: const EdgeInsets.symmetric(horizontal: 5.0),
         onClick: () {
           if (!login) {
             showAuthModal();
@@ -395,7 +395,7 @@ class _NewHomePageState extends State<NewHomePage> {
 
     Widget middleMenu() {
       return ElasticIn(
-        child: Container(
+        child: Center(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [btnProfile(), btnPlayGame(), btnFindRoom()],

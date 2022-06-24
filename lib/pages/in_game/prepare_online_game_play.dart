@@ -6,6 +6,7 @@ import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/providers/room_provider.dart';
 import 'package:acakkata/service/socket_service.dart';
 import 'package:acakkata/theme.dart';
+import 'package:acakkata/widgets/button/button_bounce.dart';
 import 'package:acakkata/widgets/clicky_button.dart';
 import 'package:acakkata/widgets/custom_page_route.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
@@ -87,38 +88,59 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
 
     AppBar header() {
       return AppBar(
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: primaryColor,
+        leading: GestureDetector(
+          child: SizedBox(
+            child: Image.asset(
+              'assets/images/arrow.png',
+              width: 5,
+              height: 5,
+            ),
           ),
-          onPressed: () {
-            // Navigator.pop(context);
+          onTap: () {
             Navigator.pushNamedAndRemoveUntil(
                 context, '/home', (route) => false);
           },
         ),
-        backgroundColor: backgroundColor1,
+        backgroundColor: transparentColor,
         elevation: 0,
         centerTitle: true,
-        title: Column(
+        title: Row(
           children: [
+            Container(
+                padding: const EdgeInsets.all(8),
+                child: Center(
+                  child: Image.asset(
+                    'assets/images/${widget.languageModel!.language_icon}',
+                    width: 30,
+                    height: 30,
+                  ),
+                )),
             const SizedBox(
               height: 8,
             ),
-            Text(
-              (setLanguage.code == 'en'
-                  ? '${widget.languageModel!.language_name_en}'
-                  : '${widget.languageModel!.language_name_id}'),
-              style: headerText2.copyWith(
-                  fontWeight: extraBold, fontSize: 20, color: primaryTextColor),
-            ),
-            Text(
-              widget.isOnline == true
-                  ? setLanguage.multi_player
-                  : setLanguage.single_player,
-              style:
-                  primaryTextStyle.copyWith(fontSize: 14, fontWeight: medium),
+            Column(
+              children: [
+                Center(
+                  child: Text(
+                    (setLanguage.code == 'en'
+                        ? '${widget.languageModel!.language_name_en}'
+                        : '${widget.languageModel!.language_name_id}'),
+                    style: whiteTextStyle.copyWith(
+                      fontWeight: extraBold,
+                      fontSize: 22,
+                    ),
+                  ),
+                ),
+                Center(
+                  child: Text(
+                    widget.isOnline == true
+                        ? setLanguage.multi_player
+                        : setLanguage.single_player,
+                    style: whiteTextStyle.copyWith(
+                        fontSize: 14, fontWeight: medium),
+                  ),
+                )
+              ],
             )
           ],
         ),
@@ -174,31 +196,32 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
         width: double.infinity,
         margin: const EdgeInsets.only(top: 20),
         alignment: Alignment.center,
-        child: ClickyButton(
-            color: whitePurpleColor,
-            shadowColor: whiteAccentPurpleColor,
-            margin:
-                const EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
-            width: 245,
-            height: 60,
-            child: Wrap(
-              children: [
-                Text(
-                  'Buat Room Match',
-                  style:
-                      primaryTextStyle.copyWith(fontSize: 14, fontWeight: bold),
-                ),
-                const SizedBox(
-                  width: 5,
-                ),
-                Image.asset(
-                  'assets/images/arrow_blue.png',
-                  height: 25,
-                  width: 25,
-                )
-              ],
+        child: ButtonBounce(
+            color: whiteColor,
+            borderColor: whiteColor2,
+            shadowColor: whiteColor3,
+            widthButton: 245,
+            heightButton: 50,
+            child: Center(
+              child: Wrap(
+                children: [
+                  Text(
+                    'Buat Room Match',
+                    style: primaryTextStyle.copyWith(
+                        fontSize: 14, fontWeight: bold),
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  Image.asset(
+                    'assets/images/arrow_blue.png',
+                    height: 25,
+                    width: 25,
+                  )
+                ],
+              ),
             ),
-            onPressed: () {
+            onClick: () {
               final isValid = _form.currentState!.validate();
               if (!isValid) {
                 return;
@@ -212,10 +235,10 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
     Widget DateTimePlay() {
       final format = DateFormat("yyyy-MM-dd HH:mm");
       return Container(
-        height: 80,
+        height: 40,
         padding: const EdgeInsets.symmetric(horizontal: 16),
         decoration: BoxDecoration(
-            color: backgroundColor9, borderRadius: BorderRadius.circular(5)),
+            color: primaryColor, borderRadius: BorderRadius.circular(15)),
         child: Center(
           child: Row(
             children: [
@@ -278,11 +301,11 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
                   height: 5,
                 ),
                 Container(
-                  height: 50,
+                  height: 40,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   decoration: BoxDecoration(
-                      color: backgroundColor9,
-                      borderRadius: BorderRadius.circular(5)),
+                      color: primaryColor,
+                      borderRadius: BorderRadius.circular(10)),
                   child: Center(
                     child: Row(
                       children: [
@@ -328,6 +351,9 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
                   height: 5,
                 ),
                 DateTimePlay(),
+                const SizedBox(
+                  height: 5,
+                ),
                 ButtonCreateRoom()
               ],
             ),
@@ -342,23 +368,14 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
           body: SafeArea(
             child: Stack(
               children: [
-                Container(
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage("assets/images/background_512w.png"),
-                        fit: BoxFit.cover),
-                  ),
-                ),
-                Container(
-                  child: Align(
-                    alignment: Alignment.topCenter,
-                    child: body(),
-                  ),
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: body(),
                 ),
               ],
             ),
           ),
-          backgroundColor: backgroundColor2,
+          backgroundColor: primaryColor5,
         ),
         onWillPop: () async => false);
   }

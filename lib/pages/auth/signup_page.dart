@@ -2,6 +2,8 @@ import 'package:acakkata/pages/auth/signin_page.dart';
 import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/btn_loading.dart';
+import 'package:acakkata/widgets/button/button_bounce.dart';
+import 'package:acakkata/widgets/button/circle_bounce_button.dart';
 import 'package:acakkata/widgets/clicky_button.dart';
 import 'package:acakkata/widgets/custom_page_route.dart';
 import 'package:bouncing_widget/bouncing_widget.dart';
@@ -61,20 +63,18 @@ class _SignUpPageState extends State<SignUpPage> {
     }
 
     Widget btnBack() {
-      return BouncingWidget(
-        onPressed: () {
+      return CircleBounceButton(
+        onClick: () {
           Navigator.of(context)
               .pushNamedAndRemoveUntil('/home', (route) => false);
         },
-        child: Container(
-          width: 39,
-          height: 39,
-          margin: const EdgeInsets.all(11),
-          decoration: BoxDecoration(color: whiteColor, shape: BoxShape.circle),
-          padding: const EdgeInsets.all(10),
-          child: const Center(
-            child: Icon(Icons.arrow_back_ios_new, size: 20),
-          ),
+        widthButton: 39,
+        heightButton: 39,
+        color: whiteColor,
+        borderColor: whiteColor2,
+        shadowColor: whiteColor3,
+        child: const Center(
+          child: Icon(Icons.arrow_back_ios_new, size: 20),
         ),
       );
     }
@@ -84,14 +84,14 @@ class _SignUpPageState extends State<SignUpPage> {
         child: Stack(children: [
           Container(
             margin: const EdgeInsets.only(left: 10, top: 10),
-            alignment: Alignment.topLeft,
+            alignment: Alignment.topRight,
             child: btnBack(),
           ),
           Container(
             margin: const EdgeInsets.only(left: 10, top: 80),
             alignment: Alignment.center,
             child: Image.asset(
-              'assets/images/logo_putih.png',
+              'assets/images/logo_baru_no.png',
               height: 132,
               width: 158,
             ),
@@ -108,29 +108,25 @@ class _SignUpPageState extends State<SignUpPage> {
           children: [
             Text(
               'Username',
-              style:
-                  blackTextStyle.copyWith(fontSize: 17, fontWeight: semiBold),
+              style: whiteTextStyle.copyWith(fontSize: 19, fontWeight: bold),
             ),
             const SizedBox(
-              height: 12,
+              height: 2,
             ),
             Container(
-              height: 50,
+              height: 40,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
-                  border: Border.all(color: blackColor),
-                  color: whiteColor,
-                  borderRadius: BorderRadius.circular(5)),
+                  color: primaryColor, borderRadius: BorderRadius.circular(10)),
               child: Center(
                 child: Row(
                   children: [
                     Expanded(
                         child: TextFormField(
-                      style: blackTextStyle,
+                      style: whiteTextStyle,
                       controller: nameController,
                       decoration: InputDecoration.collapsed(
-                          hintText: 'Your Username',
-                          hintStyle: subtitleTextStyle),
+                          hintText: 'Your Username', hintStyle: whiteTextStyle),
                     ))
                   ],
                 ),
@@ -149,28 +145,26 @@ class _SignUpPageState extends State<SignUpPage> {
           children: [
             Text(
               'Email',
-              style:
-                  blackTextStyle.copyWith(fontSize: 17, fontWeight: semiBold),
+              style: whiteTextStyle.copyWith(fontSize: 19, fontWeight: bold),
             ),
             const SizedBox(
-              height: 5,
+              height: 2,
             ),
             Container(
-              height: 50,
+              height: 40,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
-                  border: Border.all(color: blackColor),
-                  color: whiteColor,
-                  borderRadius: BorderRadius.circular(5)),
+                  color: primaryColor, borderRadius: BorderRadius.circular(10)),
               child: Center(
                 child: Row(
                   children: [
                     Expanded(
                         child: TextFormField(
                       controller: emailController,
+                      style: whiteTextStyle,
                       decoration: InputDecoration.collapsed(
                           hintText: 'Your Email Address',
-                          hintStyle: subtitleTextStyle),
+                          hintStyle: whiteTextStyle),
                     ))
                   ],
                 ),
@@ -189,30 +183,26 @@ class _SignUpPageState extends State<SignUpPage> {
           children: [
             Text(
               'Password',
-              style:
-                  blackTextStyle.copyWith(fontSize: 17, fontWeight: semiBold),
+              style: whiteTextStyle.copyWith(fontSize: 17, fontWeight: bold),
             ),
             const SizedBox(
-              height: 5,
+              height: 2,
             ),
             Container(
-              height: 50,
+              height: 40,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
-                  border: Border.all(color: blackColor),
-                  color: backgroundColor1,
-                  borderRadius: BorderRadius.circular(5)),
+                  color: primaryColor, borderRadius: BorderRadius.circular(10)),
               child: Center(
                 child: Row(
                   children: [
                     Expanded(
                         child: TextFormField(
                       obscureText: true,
-                      style: primaryTextStyle,
+                      style: whiteTextStyle,
                       controller: passwordController,
                       decoration: InputDecoration.collapsed(
-                          hintText: 'Your Password',
-                          hintStyle: subtitleTextStyle),
+                          hintText: 'Your Password', hintStyle: whiteTextStyle),
                     ))
                   ],
                 ),
@@ -228,27 +218,27 @@ class _SignUpPageState extends State<SignUpPage> {
         width: double.infinity,
         margin: const EdgeInsets.only(top: 30),
         alignment: Alignment.center,
-        child: ClickyButton(
-            onPressed: handleSignUp,
-            color: backgroundColor1,
-            shadowColor: backgroundColor2,
-            margin:
-                const EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
-            width: 245,
-            height: 60,
-            child: Text(
-              'SIGN UP',
-              style: primaryTextStyle.copyWith(fontSize: 16, fontWeight: bold),
+        child: ButtonBounce(
+            onClick: handleSignUp,
+            color: whiteColor,
+            borderColor: whiteColor2,
+            shadowColor: whiteColor3,
+            widthButton: 245,
+            heightButton: 50,
+            child: Center(
+              child: Text(
+                'SIGN UP',
+                style: primaryTextStyle.copyWith(
+                    fontSize: 16, fontWeight: extraBold),
+              ),
             )),
       );
     }
 
     Widget body() {
       return Container(
-        margin: const EdgeInsets.only(left: 20, right: 20, top: 50),
+        margin: const EdgeInsets.only(left: 20, right: 20, top: 10),
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-        decoration: BoxDecoration(
-            color: whiteColor, borderRadius: BorderRadius.circular(0)),
         child: Center(
             child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -270,7 +260,7 @@ class _SignUpPageState extends State<SignUpPage> {
           children: [
             Text(
               'Already have an account? ',
-              style: whiteTextStyle.copyWith(fontSize: 12, fontWeight: bold),
+              style: whiteTextStyle.copyWith(fontSize: 15, fontWeight: bold),
             ),
             GestureDetector(
               onTap: () {
@@ -279,7 +269,7 @@ class _SignUpPageState extends State<SignUpPage> {
               child: Text(
                 'Sign In',
                 style: purpleTextStyle.copyWith(
-                    fontSize: 12, fontWeight: semiBold),
+                    fontSize: 15, fontWeight: semiBold),
               ),
             )
           ],
@@ -288,7 +278,7 @@ class _SignUpPageState extends State<SignUpPage> {
     }
 
     return Scaffold(
-      backgroundColor: backgroundColor2,
+      backgroundColor: primaryColor5,
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: SingleChildScrollView(

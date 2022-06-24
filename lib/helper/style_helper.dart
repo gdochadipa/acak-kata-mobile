@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:acakkata/theme.dart';
 
@@ -70,5 +72,9 @@ class StyleHelper {
     }
 
     return primaryColor;
+  }
+
+  static int getRandomNumInt(int min, int max) {
+    return min + Random().nextInt(max - min);
   }
 }

@@ -74,7 +74,7 @@ Color subtitleColor = const Color(0xff504F5E);
 Color transparentColor = Colors.transparent;
 Color blackColor = const Color(0xff2E2E2E);
 
-Color accentColor = const Color(0xffFF32F7);
+Color accentColor = const Color(0xffFF7CFA);
 
 TextStyle primaryTextStyle = GoogleFonts.nunito(
   color: primaryTextColor,
@@ -91,7 +91,7 @@ TextStyle subtitleTextStyle = GoogleFonts.nunito(
 );
 
 TextStyle purpleTextStyle = GoogleFonts.nunito(
-  color: disablePurpleColor,
+  color: accentColor,
 );
 
 TextStyle blackTextStyle = GoogleFonts.nunito(

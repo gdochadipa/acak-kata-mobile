@@ -17,6 +17,7 @@ import 'package:acakkata/widgets/clicky_button.dart';
 import 'package:acakkata/widgets/component/result_answer_component.dart';
 import 'package:acakkata/widgets/custom_page_route.dart';
 import 'package:acakkata/widgets/gameplay/footer_gameplay_page.dart';
+import 'package:acakkata/widgets/popover/exit_dialog.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -423,100 +424,7 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
   Future<void> showCancelGame() async {
     return showDialog(
         context: context,
-        builder: (BuildContext context) => SizedBox(
-              width: MediaQuery.of(context).size.width - (2 * defaultMargin),
-              child: AlertDialog(
-                backgroundColor: backgroundColor1,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                content: SingleChildScrollView(
-                    child: Column(
-                  children: [
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Icon(
-                          Icons.close,
-                          color: primaryTextColor,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 12,
-                    ),
-                    Text(
-                      S.of(context).exit_game,
-                      style: headerText2.copyWith(
-                        fontSize: 18,
-                        fontWeight: semiBold,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 12,
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 15, right: 5),
-                      child: Row(
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.all(2),
-                            height: 44,
-                            child: TextButton(
-                              onPressed: () {
-                                Navigator.pushNamedAndRemoveUntil(
-                                    context, '/home', (route) => false);
-                              },
-                              style: TextButton.styleFrom(
-                                backgroundColor: primaryColor,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
-                              child: Text(
-                                S.of(context).exit_game_yes,
-                                style: whiteTextStyle.copyWith(
-                                  fontSize: 12,
-                                  fontWeight: medium,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Container(
-                              child: Container(
-                            margin: const EdgeInsets.all(5),
-                            height: 44,
-                            child: TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              style: TextButton.styleFrom(
-                                side: BorderSide(
-                                    width: 1, color: backgroundColor2),
-                                backgroundColor: backgroundColor1,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
-                              child: Text(
-                                S.of(context).exit_game_no,
-                                style: primaryTextStyle.copyWith(
-                                  fontSize: 12,
-                                  fontWeight: medium,
-                                ),
-                              ),
-                            ),
-                          ))
-                        ],
-                      ),
-                    )
-                  ],
-                )),
-              ),
-            ));
+        builder: (BuildContext context) => const ExitDialog());
   }
 
   /// fungsi untuk memberikan input jawaban setelah menekan tombol huruf

@@ -13,6 +13,7 @@ import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/providers/room_provider.dart';
 import 'package:acakkata/providers/socket_provider.dart';
 import 'package:acakkata/theme.dart';
+import 'package:acakkata/widgets/button/button_bounce.dart';
 import 'package:acakkata/widgets/clicky_button.dart';
 import 'package:acakkata/widgets/custom_page_route.dart';
 import 'package:animate_do/animate_do.dart';
@@ -78,18 +79,8 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
     );
     AppBar header() {
       return AppBar(
-        // leading: IconButton(
-        //   icon: Icon(
-        //     Icons.arrow_back,
-        //     color: primaryColor,
-        //   ),
-        //   onPressed: () {
-        //     Navigator.pop(context);
-        //     // Navigator.pushNamedAndRemoveUntil(
-        //     //     context, '/home', (route) => false);
-        //   },
-        // ),
-        backgroundColor: backgroundColor1,
+        leading: Container(),
+        backgroundColor: transparentColor,
         elevation: 0,
         centerTitle: true,
         title: Column(
@@ -102,14 +93,14 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
                   ? '${widget.languageModel!.language_name_en}'
                   : '${widget.languageModel!.language_name_id}'),
               style: headerText2.copyWith(
-                  fontWeight: extraBold, fontSize: 20, color: primaryTextColor),
+                  fontWeight: black, fontSize: 20, color: whiteColor),
             ),
             Text(
               widget.isOnline == true
                   ? setLanguage.multi_player
                   : setLanguage.single_player,
               style:
-                  primaryTextStyle.copyWith(fontSize: 14, fontWeight: medium),
+                  whiteTextStyle.copyWith(fontSize: 16, fontWeight: semiBold),
             )
           ],
         ),
@@ -121,7 +112,12 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
         padding: const EdgeInsets.all(7),
         margin: const EdgeInsets.only(right: 10, bottom: 10),
         decoration: BoxDecoration(
-            color: purpleCard, borderRadius: BorderRadius.circular(5)),
+            color: primaryColor,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: primaryColor2, width: 4),
+            boxShadow: [
+              BoxShadow(color: primaryColor3, offset: const Offset(0, 4))
+            ]),
         child: Container(
           margin: const EdgeInsets.all(5),
           child: Row(
@@ -141,35 +137,36 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
       );
     }
 
-    Widget ButtonCancelRoom() {
+    Widget buttonCancelRoom() {
       return Container(
         width: double.infinity,
         alignment: Alignment.center,
-        child: ClickyButton(
-            color: alertColor,
-            shadowColor: alertAccentColor,
-            margin:
-                const EdgeInsets.only(top: 5, bottom: 5, left: 15, right: 15),
-            width: 245,
-            height: 60,
-            child: Wrap(
-              children: [
-                Text(
-                  setLanguage.exit,
-                  style:
-                      whiteTextStyle.copyWith(fontSize: 14, fontWeight: bold),
-                ),
-                const SizedBox(
-                  width: 5,
-                ),
-                Icon(
-                  CupertinoIcons.square_arrow_left,
-                  semanticLabel: 'Add',
-                  color: whiteColor,
-                ),
-              ],
+        child: ButtonBounce(
+            color: redColor,
+            borderColor: redColor2,
+            shadowColor: redColor3,
+            widthButton: 245,
+            heightButton: 50,
+            child: Center(
+              child: Wrap(
+                children: [
+                  Text(
+                    setLanguage.exit,
+                    style:
+                        whiteTextStyle.copyWith(fontSize: 18, fontWeight: bold),
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  Icon(
+                    CupertinoIcons.square_arrow_left,
+                    semanticLabel: 'Add',
+                    color: whiteColor,
+                  ),
+                ],
+              ),
             ),
-            onPressed: () {
+            onClick: () {
               // Navigator.push(
               //     context,
               //     CustomPageRoute(WaitingOnlineRoomPage(
@@ -361,23 +358,16 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
           body: SafeArea(
             child: Stack(
               children: [
-                Container(
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage("assets/images/background_512w.png"),
-                        fit: BoxFit.cover),
-                  ),
-                ),
                 Container(child: body()),
               ],
             ),
           ),
-          backgroundColor: backgroundColor2,
+          backgroundColor: primaryColor5,
           bottomNavigationBar: Container(
               height: 90,
               padding: const EdgeInsets.all(5),
               child: Column(
-                children: [ButtonCancelRoom()],
+                children: [buttonCancelRoom()],
               )),
         ),
         onWillPop: () async => false);

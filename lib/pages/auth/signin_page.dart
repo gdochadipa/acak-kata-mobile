@@ -2,7 +2,7 @@ import 'package:acakkata/pages/auth/signup_page.dart';
 import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/service/socket_service.dart';
 import 'package:acakkata/theme.dart';
-import 'package:acakkata/widgets/clicky_button.dart';
+import 'package:acakkata/widgets/button/button_bounce.dart';
 import 'package:acakkata/widgets/custom_page_route.dart';
 import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:flutter/material.dart';
@@ -110,7 +110,7 @@ class _SignInPageState extends State<SignInPage> {
             margin: const EdgeInsets.only(left: 10, top: 80),
             alignment: Alignment.center,
             child: Image.asset(
-              'assets/images/logo_putih.png',
+              'assets/images/logo_baru_no.png',
               height: 132,
               width: 158,
             ),
@@ -127,19 +127,16 @@ class _SignInPageState extends State<SignInPage> {
           children: [
             Text(
               'Email',
-              style:
-                  blackTextStyle.copyWith(fontSize: 17, fontWeight: semiBold),
+              style: whiteTextStyle.copyWith(fontSize: 18, fontWeight: bold),
             ),
             const SizedBox(
               height: 5,
             ),
             Container(
-              height: 50,
+              height: 40,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
-                  border: Border.all(color: blackColor),
-                  color: whiteColor,
-                  borderRadius: BorderRadius.circular(5)),
+                  color: primaryColor, borderRadius: BorderRadius.circular(10)),
               child: Center(
                 child: Row(
                   children: [
@@ -148,7 +145,7 @@ class _SignInPageState extends State<SignInPage> {
                       controller: emailController,
                       decoration: InputDecoration.collapsed(
                           hintText: 'Your Email Address',
-                          hintStyle: subtitleTextStyle),
+                          hintStyle: whiteTextStyle),
                     ))
                   ],
                 ),
@@ -167,30 +164,26 @@ class _SignInPageState extends State<SignInPage> {
           children: [
             Text(
               'Password',
-              style:
-                  blackTextStyle.copyWith(fontSize: 17, fontWeight: semiBold),
+              style: whiteTextStyle.copyWith(fontSize: 17, fontWeight: bold),
             ),
             const SizedBox(
               height: 5,
             ),
             Container(
-              height: 50,
+              height: 40,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
-                  border: Border.all(color: blackColor),
-                  color: backgroundColor1,
-                  borderRadius: BorderRadius.circular(5)),
+                  color: primaryColor, borderRadius: BorderRadius.circular(10)),
               child: Center(
                 child: Row(
                   children: [
                     Expanded(
                         child: TextFormField(
                       obscureText: true,
-                      style: primaryTextStyle,
+                      style: whiteTextStyle,
                       controller: passwordController,
                       decoration: InputDecoration.collapsed(
-                          hintText: 'Your Password',
-                          hintStyle: subtitleTextStyle),
+                          hintText: 'Your Password', hintStyle: whiteTextStyle),
                     ))
                   ],
                 ),
@@ -204,19 +197,21 @@ class _SignInPageState extends State<SignInPage> {
     Widget signInButton() {
       return Container(
         width: double.infinity,
-        margin: const EdgeInsets.only(top: 20),
+        margin: const EdgeInsets.only(top: 25),
         alignment: Alignment.center,
-        child: ClickyButton(
-            onPressed: handleSignIn,
-            color: backgroundColor1,
-            shadowColor: backgroundColor2,
-            margin:
-                const EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
-            width: 245,
-            height: 60,
-            child: Text(
-              'SIGN IN',
-              style: primaryTextStyle.copyWith(fontSize: 16, fontWeight: bold),
+        child: ButtonBounce(
+            onClick: handleSignIn,
+            color: whiteColor,
+            borderColor: whiteColor2,
+            shadowColor: whiteColor3,
+            widthButton: 245,
+            heightButton: 50,
+            child: Center(
+              child: Text(
+                'SIGN IN',
+                style:
+                    primaryTextStyle.copyWith(fontSize: 16, fontWeight: bold),
+              ),
             )),
       );
     }
@@ -225,8 +220,6 @@ class _SignInPageState extends State<SignInPage> {
       return Container(
         margin: const EdgeInsets.only(left: 20, right: 20, top: 50),
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-        decoration: BoxDecoration(
-            color: whiteColor, borderRadius: BorderRadius.circular(5)),
         child: Center(
             child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -242,14 +235,14 @@ class _SignInPageState extends State<SignInPage> {
 
     Widget footer() {
       return Container(
-        margin: const EdgeInsets.only(bottom: 30, top: 50),
+        margin: const EdgeInsets.only(bottom: 30, top: 20),
         alignment: Alignment.bottomCenter,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               'Don \'t have an account? ',
-              style: whiteTextStyle.copyWith(fontSize: 12, fontWeight: bold),
+              style: whiteTextStyle.copyWith(fontSize: 14, fontWeight: bold),
             ),
             GestureDetector(
               onTap: () {
@@ -261,8 +254,7 @@ class _SignInPageState extends State<SignInPage> {
               },
               child: Text(
                 'Sign Up',
-                style: purpleTextStyle.copyWith(
-                    fontSize: 12, fontWeight: semiBold),
+                style: purpleTextStyle.copyWith(fontSize: 14, fontWeight: bold),
               ),
             )
           ],
@@ -272,7 +264,7 @@ class _SignInPageState extends State<SignInPage> {
 
     return WillPopScope(
         child: Scaffold(
-          backgroundColor: backgroundColor2,
+          backgroundColor: primaryColor5,
           resizeToAvoidBottomInset: false,
           body: SafeArea(
             child: SingleChildScrollView(
