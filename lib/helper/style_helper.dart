@@ -77,4 +77,23 @@ class StyleHelper {
   static int getRandomNumInt(int min, int max) {
     return min + Random().nextInt(max - min);
   }
+
+  static String getImageRank(int? rank) {
+    switch (rank) {
+      case 1:
+        return 'first.png';
+        break;
+
+      case 2:
+        return 'second.png';
+        break;
+
+      case 3:
+        return 'third.png';
+        break;
+
+      default:
+        return 'first.png';
+    }
+  }
 }

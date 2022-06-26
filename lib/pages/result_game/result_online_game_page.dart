@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:acakkata/generated/l10n.dart';
+import 'package:acakkata/helper/style_helper.dart';
 import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/models/level_model.dart';
 import 'package:acakkata/models/room_match_detail_model.dart';
@@ -12,10 +13,12 @@ import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/providers/room_provider.dart';
 import 'package:acakkata/providers/socket_provider.dart';
 import 'package:acakkata/theme.dart';
+import 'package:acakkata/widgets/button/button_bounce.dart';
 import 'package:acakkata/widgets/clicky_button.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
@@ -116,7 +119,7 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
 
   handleRefreshRoom() async {
     if (roomProvider!.checkIsHost(userID: authProvider!.user!.id) == 1) {
-      Timer.periodic(const Duration(milliseconds: 8000), (timer) async {
+      Timer.periodic(const Duration(seconds: 10), (timer) async {
         try {
           /**
            *  ngecek apakah setelah kedua permainan berakhir, 
@@ -139,7 +142,7 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
                   channelCode: roomProvider!.roomMatch!.channel_code!,
                   roomMatch: roomProvider!.roomMatch);
               roomProvider!.roomMatch!.room_match_detail!
-                  .sort((now, next) => -now.score!.compareTo(next.score ?? 0));
+                  .sort((now, next) => now.score!.compareTo(next.score ?? 0));
 
               setState(() {
                 roomMatch = roomProvider!.roomMatch;
@@ -159,7 +162,7 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
                   channelCode: roomProvider!.roomMatch!.channel_code!,
                   roomMatch: roomProvider!.roomMatch);
               roomProvider!.roomMatch!.room_match_detail!
-                  .sort((now, next) => -now.score!.compareTo(next.score ?? 0));
+                  .sort((now, next) => now.score!.compareTo(next.score ?? 0));
 
               setState(() {
                 roomMatch = roomProvider!.roomMatch;
@@ -224,23 +227,23 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
     Widget backtoMenu() {
       return Container(
         width: double.infinity,
-        margin: const EdgeInsets.only(top: 20),
         alignment: Alignment.center,
-        child: ClickyButton(
-            onPressed: () {
+        child: ButtonBounce(
+            onClick: () {
               socketProvider!.disconnectService();
               Navigator.pushNamedAndRemoveUntil(
                   context, '/home', (route) => false);
             },
-            color: alertColor,
-            shadowColor: alertAccentColor,
-            margin:
-                const EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
-            width: 245,
-            height: 60,
-            child: Text(
-              setLanguage.back_to_menu,
-              style: whiteTextStyle.copyWith(fontSize: 16, fontWeight: bold),
+            color: redColor,
+            borderColor: redColor2,
+            shadowColor: redColor3,
+            widthButton: 245,
+            heightButton: 60,
+            child: Center(
+              child: Text(
+                setLanguage.back_to_menu,
+                style: whiteTextStyle.copyWith(fontSize: 16, fontWeight: bold),
+              ),
             )),
       );
     }
@@ -390,27 +393,33 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
       );
     }
 
-    Widget rankCard(RoomMatchDetailModel? roomUser, int? rank) {
+    Widget rankCard(RoomMatchDetailModel? roomDetail, int? rank) {
+      RoomMatchDetailModel? roomUser = roomProvider!.roomMatchDetailUser;
+      bool isRoomUser = (roomDetail!.id == roomUser!.id) ? true : false;
+      String rankImage = StyleHelper.getImageRank(rank);
       return Container(
           margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-          padding: const EdgeInsets.symmetric(vertical: 10),
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
           decoration: BoxDecoration(
-            color: whiteColor,
-            borderRadius: BorderRadius.circular(5),
+            color: isRoomUser ? whiteColor : primaryColor,
+            borderRadius: BorderRadius.circular(15),
           ),
           child: Row(
             children: [
               Container(
                 margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                 decoration: BoxDecoration(
-                    color: blackColor, borderRadius: BorderRadius.circular(5)),
+                    color: isRoomUser ? backgroundColor2 : whiteColor,
+                    borderRadius: BorderRadius.circular(10)),
                 child: Container(
                   margin:
-                      const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                   child: Text(
                     "$rank",
-                    style:
-                        whiteTextStyle.copyWith(fontSize: 18, fontWeight: bold),
+                    style: whiteTextStyle.copyWith(
+                        fontSize: 18,
+                        fontWeight: bold,
+                        color: isRoomUser ? whiteColor : blackColor),
                   ),
                 ),
               ),
@@ -418,21 +427,40 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
                 width: 5,
               ),
               Container(
+                padding: const EdgeInsets.symmetric(vertical: 5),
                 child: Container(
                   child: Text(
-                    "${roomUser!.player!.username}",
-                    style:
-                        blackTextStyle.copyWith(fontSize: 16, fontWeight: bold),
+                    "${roomDetail.player!.username}",
+                    style: blackTextStyle.copyWith(
+                        fontSize: 16,
+                        fontWeight: bold,
+                        color: isRoomUser ? blackColor : whiteColor),
                   ),
                 ),
               ),
               const Spacer(),
               Container(
-                margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                  margin: const EdgeInsets.symmetric(vertical: 5),
+                  child: (rank! < 3 && rank > 0)
+                      ? Image.asset(
+                          'assets/images/$rankImage',
+                          height: 30,
+                          width: 30,
+                        )
+                      : Container()),
+              const SizedBox(
+                width: 5,
+              ),
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+                width: 60,
                 child: Text(
-                  "${roomUser.score}",
-                  style:
-                      blackTextStyle.copyWith(fontSize: 18, fontWeight: bold),
+                  "${roomDetail.score}",
+                  textAlign: TextAlign.right,
+                  style: blackTextStyle.copyWith(
+                      fontSize: 18,
+                      fontWeight: bold,
+                      color: isRoomUser ? blackColor : whiteColor),
                 ),
               ),
             ],
@@ -440,9 +468,13 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
     }
 
     Widget cardBody() {
+      roomProvider!.roomMatch!.room_match_detail!
+          .sort((now, next) => -now.score!.compareTo(next.score ?? 0));
+      List<RoomMatchDetailModel>? listDetail =
+          roomProvider!.roomMatch!.room_match_detail;
       return Container(
         alignment: Alignment.center,
-        margin: const EdgeInsets.only(top: 80, left: 10, right: 10),
+        margin: const EdgeInsets.only(top: 80, left: 5, right: 5),
         padding: const EdgeInsets.all(5),
         child: Column(
           children: [
@@ -450,9 +482,19 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
             const SizedBox(
               height: 8,
             ),
+            ListView(
+              shrinkWrap: true,
+              children: listDetail!.map((e) {
+                return AnimationConfiguration.staggeredList(
+                    position: listDetail.indexOf(e),
+                    child: SlideAnimation(
+                      horizontalOffset: 50,
+                      child: FadeInAnimation(
+                          child: rankCard(e, listDetail.indexOf(e) + 1)),
+                    ));
+              }).toList(),
+            ),
             // ),
-
-            backtoMenu()
           ],
         ),
       );
@@ -526,7 +568,7 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
                         channelCode: roomMatch!.channel_code!,
                         roomMatch: roomProvider!.roomMatch);
                     roomProvider!.roomMatch!.room_match_detail!.sort(
-                        (now, next) => -now.score!.compareTo(next.score ?? 0));
+                        (now, next) => now.score!.compareTo(next.score ?? 0));
                     roomMatch = roomProvider!.roomMatch;
                     onLoading = false;
                     _confettiController.play();
@@ -541,8 +583,7 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
                           data['room_id'], data['status_game']);
                       onLoading = false;
                       roomProvider!.roomMatch!.room_match_detail!.sort(
-                          (now, next) =>
-                              -now.score!.compareTo(next.score ?? 0));
+                          (now, next) => now.score!.compareTo(next.score ?? 0));
                       roomMatch = roomProvider!.roomMatch;
                       _confettiController.play();
                     }
@@ -577,21 +618,13 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
     }
 
     return Scaffold(
-      backgroundColor: backgroundColor2,
+      backgroundColor: primaryColor5,
       body: Stack(
         fit: StackFit.expand,
         children: [
-          Container(
-            decoration: const BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage("assets/images/background_512w.png"),
-                    fit: BoxFit.cover)),
-          ),
-          SingleChildScrollView(
-            child: Align(
-              alignment: Alignment.center,
-              child: body(),
-            ),
+          Align(
+            alignment: Alignment.center,
+            child: body(),
           ),
           Align(
             alignment: Alignment.topCenter,
@@ -599,6 +632,10 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
           ),
         ],
       ),
+      bottomNavigationBar: Container(
+          decoration: BoxDecoration(color: whiteColor),
+          height: 90,
+          child: backtoMenu()),
     );
   }
 }
