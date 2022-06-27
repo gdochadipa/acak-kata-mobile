@@ -70,4 +70,23 @@ class AuthService {
       }
     }
   }
+
+  Future<UserModel> editProfile(
+      {required String email,
+      required String username,
+      required String name,
+      required String token}) async {
+    var headers = {'Content-Type': 'application/json', 'Authorization': token};
+    var body = jsonEncode({'username': username, 'email': email, 'name': name});
+    var url = Uri.parse('$baseUrl/confirm-game');
+    var response = await http.post(url, headers: headers, body: body);
+
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body)['data'];
+      UserModel user = UserModel.fromJson(data);
+      return user;
+    } else {
+      throw Exception('Failed Update Profile');
+    }
+  }
 }

@@ -39,5 +39,7 @@
     "custom_level": "Kustom Level",
     "back_to_menu": "KEMBALI KE MENU",
     "setting":"Pengaturan",
-    "save_setting" : "Simpan Pengaturan"
+    "save_setting" : "Simpan Pengaturan",
+    "about" : "Tentang",
+    "about_cite": ""
 }

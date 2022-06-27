@@ -1,4 +1,5 @@
 import 'package:acakkata/generated/l10n.dart';
+import 'package:acakkata/pages/auth/profile_edit_page.dart';
 import 'package:acakkata/pages/auth/signin_page.dart';
 import 'package:acakkata/pages/auth/signup_page.dart';
 import 'package:acakkata/pages/home_page/new_home_page.dart';
@@ -58,6 +59,7 @@ class MyApp extends StatelessWidget {
           '/': (context) => SplashPage(),
           '/sign-in': (context) => SignInPage(),
           '/sign-up': (context) => SignUpPage(),
+          '/update-profile': (context) => ProfileEditPage(),
           // '/home': (context) => MainPage(),
           '/home': (context) => const NewHomePage(),
         },

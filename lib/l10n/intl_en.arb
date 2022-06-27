@@ -39,5 +39,7 @@
     "custom_level": "Custom Level",
     "back_to_menu":"BACK TO MENU",
     "setting": "Setting",
-    "save_setting" : "Save Setting"
+    "save_setting" : "Save Setting",
+    "about": "About",
+    "about_cite" : ""
 }

@@ -1,4 +1,3 @@
-
 import 'package:acakkata/models/user_model.dart';
 import 'package:acakkata/service/auth_service.dart';
 import 'package:flutter/cupertino.dart';
@@ -50,6 +49,39 @@ class AuthProvider with ChangeNotifier {
       pref.setString('username', '${user.username}');
       pref.setString('userCode', '${user.userCode}');
       pref.setString('token', '${user.token}');
+      return true;
+    } catch (e) {
+      // print(e);
+      throw Exception(e);
+      return false;
+    }
+  }
+
+  Future<bool> logout() async {
+    try {
+      SharedPreferences pref = await SharedPreferences.getInstance();
+      pref.setBool('login', false);
+      return true;
+    } catch (e) {
+      // print(e);
+      throw Exception(e);
+    }
+  }
+
+  Future<bool> updateProfile(
+      {required String? email,
+      required String? username,
+      required String? name}) async {
+    try {
+      SharedPreferences pref = await SharedPreferences.getInstance();
+      String? token = pref.getString('token');
+      UserModel user = await AuthService().editProfile(
+          email: email!, username: username!, name: name!, token: token!);
+
+      pref.setString('name', user.name ?? '');
+      pref.setString('email', '${user.email}');
+      pref.setString('username', '${user.username}');
+
       return true;
     } catch (e) {
       // print(e);

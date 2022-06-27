@@ -1,10 +1,12 @@
 import 'package:acakkata/generated/l10n.dart';
 import 'package:acakkata/models/user_model.dart';
+import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/button/button_bounce.dart';
 import 'package:acakkata/widgets/clicky_button.dart';
 import 'package:acakkata/widgets/popover/popover_listview.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ShowProfileModal extends StatefulWidget {
   final UserModel? userModel;
@@ -15,18 +17,37 @@ class ShowProfileModal extends StatefulWidget {
 }
 
 class _ShowProfileModalState extends State<ShowProfileModal> {
-  init() async {}
-
   @override
   void initState() {
     // TODO: implement initState
-    init();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     S? setLanguage = S.of(context);
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+
+    handleLogOut() async {
+      try {
+        if (await authProvider.logout()) {
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            '/home',
+            (route) => false,
+          );
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+            e.toString().replaceAll('Exception:', ''),
+            textAlign: TextAlign.center,
+          ),
+          backgroundColor: alertColor,
+        ));
+      }
+    }
+
     return SizedBox(
       width: MediaQuery.of(context).size.width,
       child: Dialog(
@@ -107,7 +128,28 @@ class _ShowProfileModalState extends State<ShowProfileModal> {
                                 fontSize: 14, fontWeight: bold),
                           ),
                         ),
-                        onClick: () {}),
+                        onClick: () {
+                          Navigator.pushNamed(context, '/home');
+                        }),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(top: 20, left: 5, right: 5),
+                    child: ButtonBounce(
+                        color: redColor,
+                        borderColor: redColor2,
+                        shadowColor: redColor3,
+                        widthButton: 210,
+                        heightButton: 50,
+                        child: Center(
+                          child: Text(
+                            'Log Out',
+                            style: whiteTextStyle.copyWith(
+                                fontSize: 14, fontWeight: bold),
+                          ),
+                        ),
+                        onClick: () {
+                          handleLogOut();
+                        }),
                   )
                 ],
               ),
