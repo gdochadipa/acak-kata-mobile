@@ -76,7 +76,7 @@ class _LanguageAppSettingModalState extends State<LanguageAppSettingModal> {
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
         child: SizedBox(
-          height: 270,
+          height: 350,
           child: PopoverListView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -187,6 +187,26 @@ class _LanguageAppSettingModalState extends State<LanguageAppSettingModal> {
                         onChangeLanguage(languageSelected!);
                       });
                     }),
+                const SizedBox(
+                  height: 10,
+                ),
+                ButtonBounce(
+                  color: whiteColor,
+                  borderColor: whiteColor2,
+                  shadowColor: whiteColor3,
+                  widthButton: 180,
+                  heightButton: 60,
+                  onClick: () {
+                    Navigator.pushNamed(context, '/about');
+                  },
+                  child: Center(
+                    child: Text(
+                      setLang.about,
+                      style: primaryTextStyle.copyWith(
+                          fontSize: 16, fontWeight: bold),
+                    ),
+                  ),
+                )
               ],
             ),
           ),

@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 
 class AuthService {
   String baseUrl = 'http://10.0.2.2:3000/api/v1/auth';
+  String baseUrlUser = 'http://10.0.2.2:3000/api/v1/user';
 
   Future<UserModel> register(
       {required String name,
@@ -72,13 +73,14 @@ class AuthService {
   }
 
   Future<UserModel> editProfile(
-      {required String email,
+      {required String id,
+      required String email,
       required String username,
       required String name,
       required String token}) async {
     var headers = {'Content-Type': 'application/json', 'Authorization': token};
     var body = jsonEncode({'username': username, 'email': email, 'name': name});
-    var url = Uri.parse('$baseUrl/confirm-game');
+    var url = Uri.parse('$baseUrlUser/$id');
     var response = await http.post(url, headers: headers, body: body);
 
     if (response.statusCode == 200) {
@@ -86,7 +88,12 @@ class AuthService {
       UserModel user = UserModel.fromJson(data);
       return user;
     } else {
-      throw Exception('Failed Update Profile');
+      if (response.statusCode == 403) {
+        var data = jsonDecode(response.body);
+        throw Exception(data['message']);
+      } else {
+        throw Exception("Failed Update Profile");
+      }
     }
   }
 }

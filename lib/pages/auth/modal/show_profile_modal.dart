@@ -129,7 +129,7 @@ class _ShowProfileModalState extends State<ShowProfileModal> {
                           ),
                         ),
                         onClick: () {
-                          Navigator.pushNamed(context, '/home');
+                          Navigator.pushNamed(context, '/update-profile');
                         }),
                   ),
                   Container(

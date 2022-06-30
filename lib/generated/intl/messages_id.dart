@@ -22,8 +22,9 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
-        "about": MessageLookupByLibrary.simpleMessage("Tentang"),
-        "about_cite": MessageLookupByLibrary.simpleMessage(""),
+        "about": MessageLookupByLibrary.simpleMessage("Tentang Aplikasi"),
+        "about_cite": MessageLookupByLibrary.simpleMessage(
+            "Sumber Basis Pengetahuan : \n - dictionary.basabali.org \n - Faisal Amir, Dictionary Box\n - Muhammad Irfan Luthfi, Kamus-Jawa-Indonesia\n - Sahri Riza Umami, Kamus Besar Bahasa Indonesia Edisi IV"),
         "answer": MessageLookupByLibrary.simpleMessage("Jawaban"),
         "back": MessageLookupByLibrary.simpleMessage("Kembali"),
         "back_to_menu": MessageLookupByLibrary.simpleMessage("KEMBALI KE MENU"),

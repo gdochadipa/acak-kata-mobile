@@ -1,10 +1,13 @@
 import 'package:acakkata/providers/auth_provider.dart';
+import 'package:acakkata/providers/language_db_provider.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/btn_loading.dart';
 import 'package:acakkata/widgets/button/button_bounce.dart';
 import 'package:acakkata/widgets/button/circle_bounce_button.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileEditPage extends StatefulWidget {
   const ProfileEditPage({Key? key}) : super(key: key);
@@ -21,10 +24,31 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   TextEditingController usernameController = TextEditingController(text: '');
 
   bool isLoading = false;
+  late AuthProvider authProvider =
+      Provider.of<AuthProvider>(context, listen: false);
+
+  Logger logger = Logger(
+    printer: PrettyPrinter(methodCount: 0),
+  );
+
+  getInit() async {
+    setState(() {
+      nameController.text = authProvider.user!.name ?? '';
+      emailController.text = authProvider.user!.email ?? '';
+      usernameController.text = authProvider.user!.email ?? '';
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    getInit();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    authProvider = Provider.of<AuthProvider>(context);
 
     handleUpdateProfile() async {
       setState(() {
@@ -58,6 +82,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
           ),
           backgroundColor: alertColor,
         ));
+        logger.e(error);
       }
     }
 
@@ -79,14 +104,13 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
     }
 
     Widget header() {
-      return Container(
-        child: Stack(children: [
-          Container(
-            margin: const EdgeInsets.only(left: 10, top: 10),
-            alignment: Alignment.topRight,
-            child: btnBack(),
-          ),
-        ]),
+      return SizedBox(
+        height: 50,
+        child: Container(
+          margin: const EdgeInsets.only(left: 10, top: 10),
+          alignment: Alignment.topLeft,
+          child: btnBack(),
+        ),
       );
     }
 
@@ -232,6 +256,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
             child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            nameInput(),
             usernameInput(),
             emailInput(),
             isLoading ? ButtonLoading() : updateButton(),

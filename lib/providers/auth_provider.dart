@@ -75,10 +75,15 @@ class AuthProvider with ChangeNotifier {
     try {
       SharedPreferences pref = await SharedPreferences.getInstance();
       String? token = pref.getString('token');
+      String? id = pref.getString('id');
       UserModel user = await AuthService().editProfile(
-          email: email!, username: username!, name: name!, token: token!);
+          id: id!,
+          email: email!,
+          username: username!,
+          name: name!,
+          token: token!);
 
-      pref.setString('name', user.name ?? '');
+      pref.setString('name', '${user.name}');
       pref.setString('email', '${user.email}');
       pref.setString('username', '${user.username}');
 

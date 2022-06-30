@@ -54,12 +54,15 @@ class _AbountPageState extends State<AbountPage> {
                       whiteTextStyle.copyWith(fontSize: 22, fontWeight: black),
                 ),
               ),
+              const SizedBox(
+                height: 15,
+              ),
               Container(
-                margin: const EdgeInsets.only(top: 20),
+                margin: const EdgeInsets.all(5),
                 child: Text(
-                  "Text",
+                  setLanguage.about_cite,
                   style:
-                      whiteTextStyle.copyWith(fontSize: 22, fontWeight: black),
+                      whiteTextStyle.copyWith(fontSize: 18, fontWeight: medium),
                 ),
               )
             ],
@@ -70,6 +73,7 @@ class _AbountPageState extends State<AbountPage> {
 
     return WillPopScope(
         child: Scaffold(
+          backgroundColor: primaryColor5,
           body: SafeArea(
               child: Stack(
             children: [

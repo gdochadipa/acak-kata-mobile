@@ -470,10 +470,10 @@ class S {
     );
   }
 
-  /// ``
+  /// `Source Dictionary : \n - dictionary.basabali.org \n - Faisal Amir, Dictionary Box\n - Muhammad Irfan Luthfi, Kamus-Jawa-Indonesia\n - Sahri Riza Umami, Kamus Besar Bahasa Indonesia Edisi IV`
   String get about_cite {
     return Intl.message(
-      '',
+      'Source Dictionary : \n - dictionary.basabali.org \n - Faisal Amir, Dictionary Box\n - Muhammad Irfan Luthfi, Kamus-Jawa-Indonesia\n - Sahri Riza Umami, Kamus Besar Bahasa Indonesia Edisi IV',
       name: 'about_cite',
       desc: '',
       args: [],
