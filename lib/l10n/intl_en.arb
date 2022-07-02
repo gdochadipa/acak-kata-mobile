@@ -41,5 +41,6 @@
     "setting": "Setting",
     "save_setting" : "Save Setting",
     "about": "About",
-    "about_cite": "Source Dictionary : \n - dictionary.basabali.org \n - Faisal Amir, Dictionary Box\n - Muhammad Irfan Luthfi, Kamus-Jawa-Indonesia\n - Sahri Riza Umami, Kamus Besar Bahasa Indonesia Edisi IV"
+    "about_cite": "Source Dictionary : \n - dictionary.basabali.org \n - Faisal Amir, Dictionary Box\n - Muhammad Irfan Luthfi, Kamus-Jawa-Indonesia\n - Sahri Riza Umami, Kamus Besar Bahasa Indonesia Edisi IV",
+    "login_first" : "Login first !"
 }

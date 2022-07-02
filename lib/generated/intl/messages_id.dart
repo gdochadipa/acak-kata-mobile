@@ -45,6 +45,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "letter": MessageLookupByLibrary.simpleMessage("Huruf"),
         "listLanguage": MessageLookupByLibrary.simpleMessage(
             "Pilih Bahasa untuk Permainan"),
+        "login_first":
+            MessageLookupByLibrary.simpleMessage("Login terlebih dahulu !"),
         "multi_player": MessageLookupByLibrary.simpleMessage("Pemain Ganda"),
         "next": MessageLookupByLibrary.simpleMessage("Selanjutnya"),
         "of_string": MessageLookupByLibrary.simpleMessage("dari"),

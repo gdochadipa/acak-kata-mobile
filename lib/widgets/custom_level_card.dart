@@ -13,8 +13,10 @@ import 'package:flutter/material.dart';
 
 class CustomLevelCard extends StatelessWidget {
   late final LanguageModel? languageModel;
-
-  CustomLevelCard({Key? key, required this.languageModel}) : super(key: key);
+  final bool isLogin;
+  CustomLevelCard(
+      {Key? key, required this.languageModel, required this.isLogin})
+      : super(key: key);
 
   // CustomLevelCard({required this.languageModel});
 
@@ -67,28 +69,38 @@ class CustomLevelCard extends StatelessWidget {
               if (!isValid) {
                 return;
               } else {
-                LevelModel levelModel = LevelModel(
-                    id: 77,
-                    level_name: setLanguage.custom_level,
-                    level_words: int.parse(lengthWord.text),
-                    level_time: int.parse(questionTime.text),
-                    level_lang_code: setLanguage.code,
-                    level_lang_id: setLanguage.code,
-                    current_score: 0,
-                    target_score: 0);
-                Navigator.push(
-                    context,
-                    CustomPageRoute(OfflineGamePlayPage(
-                      languageModel: languageModel,
-                      selectedQuestion: int.parse(questionNumber.text),
-                      selectedTime: int.parse(questionTime.text),
-                      isHost: 0,
-                      levelWords: int.parse(lengthWord.text),
-                      isOnline: true,
-                      Stage: setLanguage.custom_level,
-                      levelModel: levelModel,
-                      isCustom: true,
-                    )));
+                if (!isLogin) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(
+                      setLanguage.login_first,
+                      textAlign: TextAlign.center,
+                    ),
+                    backgroundColor: alertColor,
+                  ));
+                } else {
+                  LevelModel levelModel = LevelModel(
+                      id: 77,
+                      level_name: setLanguage.custom_level,
+                      level_words: int.parse(lengthWord.text),
+                      level_time: int.parse(questionTime.text),
+                      level_lang_code: setLanguage.code,
+                      level_lang_id: setLanguage.code,
+                      current_score: 0,
+                      target_score: 0);
+                  Navigator.push(
+                      context,
+                      CustomPageRoute(OfflineGamePlayPage(
+                        languageModel: languageModel,
+                        selectedQuestion: int.parse(questionNumber.text),
+                        selectedTime: int.parse(questionTime.text),
+                        isHost: 0,
+                        levelWords: int.parse(lengthWord.text),
+                        isOnline: true,
+                        Stage: setLanguage.custom_level,
+                        levelModel: levelModel,
+                        isCustom: true,
+                      )));
+                }
               }
             }
 
@@ -364,7 +376,10 @@ class CustomLevelCard extends StatelessWidget {
                                         ],
                                       ),
                                       onPressed: () {
-                                        _saveFormOnlineMode();
+                                        Timer(const Duration(milliseconds: 500),
+                                            () {
+                                          _saveFormOnlineMode();
+                                        });
                                       }),
                                 ))
                               ],

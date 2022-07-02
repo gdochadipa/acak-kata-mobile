@@ -200,7 +200,16 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
                   ///! menerima soal dari socket
                   // logger.d("data => ${data}");
                   if (data['target'] == 'receive_question') {
-                    var questions = json.decode(data['question'].toString());
+                    // var questions = null;
+                    // if (data['encyrpt'] == false) {
+                    //   questions = json.decode(data['question'].toString());
+                    // } else {
+
+                    // }
+                    var questionUtf =
+                        utf8.decode(base64.decode(data['question']));
+                    var questions = json.decode(questionUtf);
+
                     logger.d("data => ${questions != null}");
                     if (questions != null) {
                       for (var itemQuestion in questions) {

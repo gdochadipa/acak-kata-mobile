@@ -479,6 +479,16 @@ class S {
       args: [],
     );
   }
+
+  /// `Login first !`
+  String get login_first {
+    return Intl.message(
+      'Login first !',
+      name: 'login_first',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

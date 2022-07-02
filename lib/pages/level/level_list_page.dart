@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LevelListPage extends StatefulWidget {
   // const LevelListPage({Key? key}) : super(key: key);
@@ -31,6 +32,8 @@ class _LevelListPageState extends State<LevelListPage> {
   late LanguageDBProvider? languageDBProvider =
       Provider.of<LanguageDBProvider>(context, listen: false);
   late List<LevelModel>? levelList;
+  SharedPreferences? prefs;
+  bool login = false;
   Logger logger = Logger(
     printer: PrettyPrinter(methodCount: 0),
   );
@@ -47,6 +50,10 @@ class _LevelListPageState extends State<LevelListPage> {
           isLoading = false;
         });
       }
+      prefs = await SharedPreferences.getInstance();
+      setState(() {
+        login = prefs!.getBool('login') ?? false;
+      });
     } catch (e) {
       logger.e(e);
     }
@@ -67,7 +74,10 @@ class _LevelListPageState extends State<LevelListPage> {
       return showModal(
           context: context,
           builder: (BuildContext context) {
-            return CustomMatchForm(languageModel: widget.languageModel);
+            return CustomMatchForm(
+              languageModel: widget.languageModel,
+              isLogin: login,
+            );
           });
     }
 
@@ -151,8 +161,10 @@ class _LevelListPageState extends State<LevelListPage> {
                             child: SlideAnimation(
                               child: FadeInAnimation(
                                   child: ItemLevelCard(
-                                      levelModel: e,
-                                      languageModel: widget.languageModel)),
+                                levelModel: e,
+                                languageModel: widget.languageModel,
+                                login: login,
+                              )),
                             )),
                       )
                       .toList(),

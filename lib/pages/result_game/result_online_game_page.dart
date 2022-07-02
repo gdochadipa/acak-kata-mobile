@@ -554,12 +554,12 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
                   //! jika host maka akan update status game
                   roomMatch = roomProvider!.roomMatch;
                 }
-                logger.d(
-                    "is host=> ${roomProvider!.checkIsHost(userID: user!.id)}");
+                // logger.d(
+                //     "is host=> ${roomProvider!.checkIsHost(userID: user!.id)}");
                 logger.d(
                     "check all are game done => ${roomProvider!.checkAllAreGameDone()}");
 
-                if (roomProvider!.checkIsHost(userID: user.id) == 1) {
+                if (roomProvider!.checkIsHost(userID: user!.id) == 1) {
                   if (roomProvider!.checkAllAreGameDone() &&
                       roomProvider!.roomMatch!.status_game == 1) {
                     roomProvider!.updateStatusGame(roomMatch!.id, 2);

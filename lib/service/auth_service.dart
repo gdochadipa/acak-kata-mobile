@@ -34,7 +34,15 @@ class AuthService {
         var data = jsonDecode(response.body);
         throw Exception(data['message']);
       } else {
-        throw Exception("Gagal Login");
+        var data = jsonDecode(response.body);
+        if (data['validation'] == true) {
+          throw Exception("Gagal Sign Up");
+        } else {
+          String res = data['message']
+              .toString()
+              .replaceAll('Users validation failed:', '');
+          throw Exception("Validasi Salah : $res");
+        }
       }
     }
   }

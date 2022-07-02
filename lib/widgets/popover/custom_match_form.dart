@@ -4,6 +4,7 @@ import 'package:acakkata/generated/l10n.dart';
 import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/models/level_model.dart';
 import 'package:acakkata/pages/in_game/offline_game_play_page.dart';
+import 'package:acakkata/pages/in_game/prepare_online_game_play.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/button/button_bounce.dart';
 import 'package:acakkata/widgets/clicky_button.dart';
@@ -13,7 +14,9 @@ import 'package:flutter/material.dart';
 
 class CustomMatchForm extends StatefulWidget {
   LanguageModel? languageModel;
-  CustomMatchForm({Key? key, this.languageModel}) : super(key: key);
+  final bool isLogin;
+  CustomMatchForm({Key? key, this.languageModel, required this.isLogin})
+      : super(key: key);
 
   @override
   State<CustomMatchForm> createState() => _CustomMatchFormState();
@@ -59,6 +62,37 @@ class _CustomMatchFormState extends State<CustomMatchForm> {
               Stage: setLanguage.custom_level,
               levelModel: levelModel,
               isCustom: true,
+            )));
+      }
+    }
+
+    _saveFormOnline() {
+      final isValid = _form.currentState!.validate();
+      if (!isValid) {
+        return;
+      } else {
+        LevelModel levelModel = LevelModel(
+            id: 77,
+            level_name: setLanguage.custom_level,
+            level_words: int.parse(lengthWord.text),
+            level_time: int.parse(questionTime.text),
+            level_lang_code: setLanguage.code,
+            level_lang_id: setLanguage.code,
+            current_score: 0,
+            target_score: 0);
+
+        Navigator.push(
+            context,
+            CustomPageRoute(PrepareOnlineGamePlay(
+              languageModel: widget.languageModel,
+              selectedQuestion: levelModel.level_question_count,
+              selectedTime: levelModel.level_time,
+              isHost: 0,
+              levelWords: levelModel.level_words,
+              isOnline: true,
+              Stage: levelModel.level_name,
+              levelModel: levelModel,
+              isCustom: false,
             )));
       }
     }
@@ -333,7 +367,9 @@ class _CustomMatchFormState extends State<CustomMatchForm> {
                                   )
                                 ],
                               ),
-                              onClick: () {}))
+                              onClick: () {
+                                if (!widget.isLogin) {}
+                              }))
                     ],
                   ),
                 ),

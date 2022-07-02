@@ -44,6 +44,8 @@ class _SignInPageState extends State<SignInPage> {
   @override
   Widget build(BuildContext context) {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    final bottom = MediaQuery.of(context).viewInsets.bottom;
+
     handleSignIn() async {
       setState(() {
         isLoading = true;
@@ -220,7 +222,7 @@ class _SignInPageState extends State<SignInPage> {
     Widget body() {
       return Container(
         margin: const EdgeInsets.only(left: 20, right: 20, top: 50),
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+        padding: EdgeInsets.only(left: 15, right: 15, top: 20, bottom: bottom),
         child: Center(
             child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -269,9 +271,10 @@ class _SignInPageState extends State<SignInPage> {
           resizeToAvoidBottomInset: false,
           body: SafeArea(
             child: SingleChildScrollView(
+                reverse: true,
                 child: Column(
-              children: [header(), body(), footer()],
-            )),
+                  children: [header(), body(), footer()],
+                )),
           ),
         ),
         onWillPop: () async => false);

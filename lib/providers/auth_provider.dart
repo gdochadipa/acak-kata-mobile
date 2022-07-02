@@ -82,7 +82,7 @@ class AuthProvider with ChangeNotifier {
           username: username!,
           name: name!,
           token: token!);
-
+      _user = user;
       pref.setString('name', '${user.name}');
       pref.setString('email', '${user.email}');
       pref.setString('username', '${user.username}');

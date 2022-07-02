@@ -1,3 +1,4 @@
+import 'package:acakkata/helper/validation_helper.dart';
 import 'package:acakkata/pages/auth/signin_page.dart';
 import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/theme.dart';
@@ -25,10 +26,12 @@ class _SignUpPageState extends State<SignUpPage> {
   TextEditingController passwordController = TextEditingController(text: '');
 
   bool isLoading = false;
+  final _form = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    final bottom = MediaQuery.of(context).viewInsets.bottom;
 
     handleSignUp() async {
       setState(() {
@@ -114,7 +117,7 @@ class _SignUpPageState extends State<SignUpPage> {
               height: 2,
             ),
             Container(
-              height: 40,
+              height: 55,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
                   color: primaryColor, borderRadius: BorderRadius.circular(10)),
@@ -124,6 +127,8 @@ class _SignUpPageState extends State<SignUpPage> {
                     Expanded(
                         child: TextFormField(
                       style: whiteTextStyle,
+                      validator: (valid) =>
+                          ValidationHelper.validateUsername(valid),
                       controller: nameController,
                       decoration: InputDecoration.collapsed(
                           hintText: 'Your Username', hintStyle: whiteTextStyle),
@@ -151,7 +156,7 @@ class _SignUpPageState extends State<SignUpPage> {
               height: 2,
             ),
             Container(
-              height: 40,
+              height: 55,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
                   color: primaryColor, borderRadius: BorderRadius.circular(10)),
@@ -161,6 +166,8 @@ class _SignUpPageState extends State<SignUpPage> {
                     Expanded(
                         child: TextFormField(
                       controller: emailController,
+                      validator: (validate) =>
+                          ValidationHelper.validateEmail(validate),
                       style: whiteTextStyle,
                       decoration: InputDecoration.collapsed(
                           hintText: 'Your Email Address',
@@ -189,7 +196,7 @@ class _SignUpPageState extends State<SignUpPage> {
               height: 2,
             ),
             Container(
-              height: 40,
+              height: 55,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
                   color: primaryColor, borderRadius: BorderRadius.circular(10)),
@@ -200,6 +207,8 @@ class _SignUpPageState extends State<SignUpPage> {
                         child: TextFormField(
                       obscureText: true,
                       style: whiteTextStyle,
+                      validator: (valid) =>
+                          ValidationHelper.validatePassowrd(valid),
                       controller: passwordController,
                       decoration: InputDecoration.collapsed(
                           hintText: 'Your Password', hintStyle: whiteTextStyle),
@@ -219,7 +228,14 @@ class _SignUpPageState extends State<SignUpPage> {
         margin: const EdgeInsets.only(top: 30),
         alignment: Alignment.center,
         child: ButtonBounce(
-            onClick: handleSignUp,
+            onClick: () {
+              final isValid = _form.currentState!.validate();
+              if (!isValid) {
+                return;
+              } else {
+                handleSignUp();
+              }
+            },
             color: whiteColor,
             borderColor: whiteColor2,
             shadowColor: whiteColor3,
@@ -238,17 +254,20 @@ class _SignUpPageState extends State<SignUpPage> {
     Widget body() {
       return Container(
         margin: const EdgeInsets.only(left: 20, right: 20, top: 10),
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-        child: Center(
-            child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            usernameInput(),
-            emailInput(),
-            passwordInput(),
-            isLoading ? ButtonLoading() : signUpButton(),
-          ],
-        )),
+        padding: EdgeInsets.only(left: 15, right: 15, top: 20, bottom: bottom),
+        child: Form(
+          key: _form,
+          child: Center(
+              child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              usernameInput(),
+              emailInput(),
+              passwordInput(),
+              isLoading ? ButtonLoading() : signUpButton(),
+            ],
+          )),
+        ),
       );
     }
 
@@ -282,9 +301,10 @@ class _SignUpPageState extends State<SignUpPage> {
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: SingleChildScrollView(
+            reverse: true,
             child: Column(
-          children: [header(), body(), footer()],
-        )),
+              children: [header(), body(), footer()],
+            )),
       ),
     );
   }

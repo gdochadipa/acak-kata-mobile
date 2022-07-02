@@ -43,6 +43,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "false_string": MessageLookupByLibrary.simpleMessage("Wrong"),
         "letter": MessageLookupByLibrary.simpleMessage("Letter"),
         "listLanguage": MessageLookupByLibrary.simpleMessage("List Language"),
+        "login_first": MessageLookupByLibrary.simpleMessage("Login first !"),
         "multi_player": MessageLookupByLibrary.simpleMessage("Multi Player"),
         "next": MessageLookupByLibrary.simpleMessage("Next"),
         "of_string": MessageLookupByLibrary.simpleMessage("of"),

@@ -19,7 +19,11 @@ class ItemLevelCard extends StatefulWidget {
   // }) : super(key: key);
   late final LevelModel? levelModel;
   late final LanguageModel? languageModel;
-  ItemLevelCard({required this.levelModel, required this.languageModel});
+  final bool login;
+  ItemLevelCard(
+      {required this.levelModel,
+      required this.languageModel,
+      required this.login});
 
   @override
   State<ItemLevelCard> createState() => _ItemLevelCardState();
@@ -97,14 +101,6 @@ class _ItemLevelCardState extends State<ItemLevelCard> {
                                     ),
                                     alignment: Alignment.topLeft,
                                   ),
-                                  // Align(
-                                  //   child: Text(
-                                  //     '${widget.levelModel!.current_score}/${widget.levelModel!.target_score}',
-                                  //     style: blackTextStyle.copyWith(
-                                  //         fontSize: 16, fontWeight: semiBold),
-                                  //   ),
-                                  //   alignment: Alignment.bottomRight,
-                                  // ),
                                 ],
                               )),
                           Container(
@@ -382,23 +378,37 @@ class _ItemLevelCardState extends State<ItemLevelCard> {
                                   onClick: () {
                                     Timer(const Duration(milliseconds: 500),
                                         () {
-                                      Navigator.push(
-                                          context,
-                                          CustomPageRoute(PrepareOnlineGamePlay(
-                                            languageModel: widget.languageModel,
-                                            selectedQuestion: widget.levelModel!
-                                                .level_question_count,
-                                            selectedTime:
-                                                widget.levelModel!.level_time,
-                                            isHost: 0,
-                                            levelWords:
-                                                widget.levelModel!.level_words,
-                                            isOnline: true,
-                                            Stage:
-                                                widget.levelModel!.level_name,
-                                            levelModel: widget.levelModel,
-                                            isCustom: false,
-                                          )));
+                                      if (!(widget.login)) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                          content: Text(
+                                            setLanguage.login_first,
+                                            textAlign: TextAlign.center,
+                                          ),
+                                          backgroundColor: alertColor,
+                                        ));
+                                      } else {
+                                        Navigator.push(
+                                            context,
+                                            CustomPageRoute(
+                                                PrepareOnlineGamePlay(
+                                              languageModel:
+                                                  widget.languageModel,
+                                              selectedQuestion: widget
+                                                  .levelModel!
+                                                  .level_question_count,
+                                              selectedTime:
+                                                  widget.levelModel!.level_time,
+                                              isHost: 0,
+                                              levelWords: widget
+                                                  .levelModel!.level_words,
+                                              isOnline: true,
+                                              Stage:
+                                                  widget.levelModel!.level_name,
+                                              levelModel: widget.levelModel,
+                                              isCustom: false,
+                                            )));
+                                      }
                                     });
                                   }))
                         ],

@@ -92,11 +92,13 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
       try {
         if (await roomProvider!.getPackageQuestion(
             roomMatch.language!.language_code, roomMatch.channel_code)) {
+          var questions = base64
+              .encode(utf8.encode(json.encode(roomProvider!.listQuestion)));
           await socketProvider!.socketSendQuestion(
               channelCode: roomMatch.channel_code!,
               languageCode: roomMatch.language!.language_code!,
               playerId: user!.id!,
-              question: json.encode(roomProvider!.listQuestion));
+              question: questions);
         } else {
           logger.e("gagal");
         }

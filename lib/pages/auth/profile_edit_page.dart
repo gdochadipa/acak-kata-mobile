@@ -1,5 +1,5 @@
+import 'package:acakkata/helper/validation_helper.dart';
 import 'package:acakkata/providers/auth_provider.dart';
-import 'package:acakkata/providers/language_db_provider.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/btn_loading.dart';
 import 'package:acakkata/widgets/button/button_bounce.dart';
@@ -7,7 +7,6 @@ import 'package:acakkata/widgets/button/circle_bounce_button.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileEditPage extends StatefulWidget {
   const ProfileEditPage({Key? key}) : super(key: key);
@@ -26,6 +25,8 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   bool isLoading = false;
   late AuthProvider authProvider =
       Provider.of<AuthProvider>(context, listen: false);
+
+  final _form = GlobalKey<FormState>();
 
   Logger logger = Logger(
     printer: PrettyPrinter(methodCount: 0),
@@ -49,6 +50,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   @override
   Widget build(BuildContext context) {
     authProvider = Provider.of<AuthProvider>(context);
+    final bottom = MediaQuery.of(context).viewInsets.bottom;
 
     handleUpdateProfile() async {
       setState(() {
@@ -128,7 +130,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
               height: 2,
             ),
             Container(
-              height: 40,
+              height: 50,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
                   color: primaryColor, borderRadius: BorderRadius.circular(10)),
@@ -138,6 +140,8 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                     Expanded(
                         child: TextFormField(
                       style: whiteTextStyle,
+                      validator: (value) =>
+                          ValidationHelper.validateUsername(value),
                       controller: usernameController,
                       decoration: InputDecoration.collapsed(
                           hintText: 'Your Username', hintStyle: whiteTextStyle),
@@ -165,7 +169,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
               height: 2,
             ),
             Container(
-              height: 40,
+              height: 50,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
                   color: primaryColor, borderRadius: BorderRadius.circular(10)),
@@ -176,6 +180,8 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                         child: TextFormField(
                       style: whiteTextStyle,
                       controller: nameController,
+                      validator: (value) =>
+                          ValidationHelper.validateUsername(value),
                       decoration: InputDecoration.collapsed(
                           hintText: 'Nama', hintStyle: whiteTextStyle),
                     ))
@@ -202,7 +208,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
               height: 2,
             ),
             Container(
-              height: 40,
+              height: 50,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
                   color: primaryColor, borderRadius: BorderRadius.circular(10)),
@@ -213,6 +219,8 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                         child: TextFormField(
                       controller: emailController,
                       style: whiteTextStyle,
+                      validator: (value) =>
+                          ValidationHelper.validateEmail(value),
                       decoration: InputDecoration.collapsed(
                           hintText: 'Your Email Address',
                           hintStyle: whiteTextStyle),
@@ -232,7 +240,14 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
         margin: const EdgeInsets.only(top: 30),
         alignment: Alignment.center,
         child: ButtonBounce(
-            onClick: handleUpdateProfile,
+            onClick: () {
+              final validate = _form.currentState!.validate();
+              if (!validate) {
+                return;
+              }
+
+              handleUpdateProfile();
+            },
             color: whiteColor,
             borderColor: whiteColor2,
             shadowColor: whiteColor3,
@@ -251,17 +266,23 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
     Widget body() {
       return Container(
         margin: const EdgeInsets.only(left: 20, right: 20, top: 10),
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-        child: Center(
-            child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            nameInput(),
-            usernameInput(),
-            emailInput(),
-            isLoading ? ButtonLoading() : updateButton(),
-          ],
-        )),
+        padding: EdgeInsets.only(right: 15, left: 15, top: 20, bottom: bottom),
+        child: Form(
+          key: _form,
+          child: Center(
+              child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(
+                height: 80,
+              ),
+              nameInput(),
+              usernameInput(),
+              emailInput(),
+              isLoading ? ButtonLoading() : updateButton(),
+            ],
+          )),
+        ),
       );
     }
 
@@ -270,9 +291,10 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: SingleChildScrollView(
+            reverse: true,
             child: Column(
-          children: [header(), body()],
-        )),
+              children: [header(), body()],
+            )),
       ),
     );
   }

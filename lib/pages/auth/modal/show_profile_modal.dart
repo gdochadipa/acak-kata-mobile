@@ -64,13 +64,13 @@ class _ShowProfileModalState extends State<ShowProfileModal> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 10),
-                    height: 100,
-                    width: 100,
-                    decoration: BoxDecoration(
-                        color: grayColor2, shape: BoxShape.circle),
-                  ),
+                  // Container(
+                  //   margin: const EdgeInsets.only(bottom: 10),
+                  //   height: 100,
+                  //   width: 100,
+                  //   decoration: BoxDecoration(
+                  //       color: grayColor2, shape: BoxShape.circle),
+                  // ),
                   Container(
                     margin: const EdgeInsets.only(top: 20, left: 5, right: 5),
                     child: Column(
