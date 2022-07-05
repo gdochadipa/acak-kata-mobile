@@ -57,7 +57,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "question_number":
             MessageLookupByLibrary.simpleMessage("Isi Jumlah Soal !"),
         "question_number_error_max":
-            MessageLookupByLibrary.simpleMessage("Minimal 25 soal !"),
+            MessageLookupByLibrary.simpleMessage("Minimal 15 soal !"),
         "question_number_error_min":
             MessageLookupByLibrary.simpleMessage("Minimal lima soal !"),
         "question_time":

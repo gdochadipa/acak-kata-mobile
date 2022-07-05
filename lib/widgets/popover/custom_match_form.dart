@@ -56,7 +56,7 @@ class _CustomMatchFormState extends State<CustomMatchForm> {
               languageModel: widget.languageModel,
               selectedQuestion: int.parse(questionNumber.text),
               selectedTime: int.parse(questionTime.text),
-              isHost: 0,
+              isHost: 1,
               levelWords: int.parse(lengthWord.text),
               isOnline: false,
               Stage: setLanguage.custom_level,
@@ -85,10 +85,10 @@ class _CustomMatchFormState extends State<CustomMatchForm> {
             context,
             CustomPageRoute(PrepareOnlineGamePlay(
               languageModel: widget.languageModel,
-              selectedQuestion: levelModel.level_question_count,
-              selectedTime: levelModel.level_time,
-              isHost: 0,
-              levelWords: levelModel.level_words,
+              selectedQuestion: int.parse(questionNumber.text),
+              selectedTime: int.parse(questionTime.text),
+              isHost: 1,
+              levelWords: int.parse(lengthWord.text),
               isOnline: true,
               Stage: levelModel.level_name,
               levelModel: levelModel,
@@ -158,7 +158,7 @@ class _CustomMatchFormState extends State<CustomMatchForm> {
                         height: 5,
                       ),
                       Container(
-                        height: 40,
+                        height: 50,
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         decoration: BoxDecoration(
                             color: primaryColor,
@@ -168,6 +168,7 @@ class _CustomMatchFormState extends State<CustomMatchForm> {
                             children: [
                               Expanded(
                                   child: TextFormField(
+                                style: whiteTextStyle,
                                 keyboardType:
                                     const TextInputType.numberWithOptions(
                                         decimal: false, signed: false),
@@ -211,7 +212,7 @@ class _CustomMatchFormState extends State<CustomMatchForm> {
                         height: 5,
                       ),
                       Container(
-                        height: 40,
+                        height: 50,
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         decoration: BoxDecoration(
                             color: primaryColor,
@@ -221,6 +222,7 @@ class _CustomMatchFormState extends State<CustomMatchForm> {
                             Expanded(
                                 child: TextFormField(
                               controller: lengthWord,
+                              style: whiteTextStyle,
                               keyboardType:
                                   const TextInputType.numberWithOptions(
                                       decimal: false, signed: false),
@@ -261,7 +263,7 @@ class _CustomMatchFormState extends State<CustomMatchForm> {
                         height: 5,
                       ),
                       Container(
-                        height: 40,
+                        height: 50,
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         decoration: BoxDecoration(
                             color: primaryColor,
@@ -272,6 +274,7 @@ class _CustomMatchFormState extends State<CustomMatchForm> {
                               Expanded(
                                   child: TextFormField(
                                 controller: questionTime,
+                                style: whiteTextStyle,
                                 keyboardType:
                                     const TextInputType.numberWithOptions(
                                         decimal: false, signed: false),
@@ -368,7 +371,17 @@ class _CustomMatchFormState extends State<CustomMatchForm> {
                                 ],
                               ),
                               onClick: () {
-                                if (!widget.isLogin) {}
+                                if (!widget.isLogin) {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(SnackBar(
+                                    content: Text(
+                                      setLanguage.login_first,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    backgroundColor: alertColor,
+                                  ));
+                                }
+                                _saveFormOnline();
                               }))
                     ],
                   ),

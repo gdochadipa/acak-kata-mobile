@@ -350,10 +350,10 @@ class S {
     );
   }
 
-  /// `Max 25 Ques !`
+  /// `Max 15 Ques !`
   String get question_number_error_max {
     return Intl.message(
-      'Max 25 Ques !',
+      'Max 15 Ques !',
       name: 'question_number_error_max',
       desc: '',
       args: [],

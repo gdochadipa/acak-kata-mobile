@@ -29,7 +29,7 @@
   "time" : "Time",
       "question_number": "Question Number is empty !",
       "question_number_error_min": "Min 5 Ques !",
-      "question_number_error_max": "Max 25 Ques !",
+      "question_number_error_max": "Max 15 Ques !",
       "word_length_form": "Length word is empty !",
       "word_length_form_error_min": "Min 3 letter !",
       "word_length_form_error_max": "Max 10 letter !",

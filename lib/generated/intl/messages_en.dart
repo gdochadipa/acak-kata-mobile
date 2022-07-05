@@ -55,7 +55,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "question_number":
             MessageLookupByLibrary.simpleMessage("Question Number is empty !"),
         "question_number_error_max":
-            MessageLookupByLibrary.simpleMessage("Max 25 Ques !"),
+            MessageLookupByLibrary.simpleMessage("Max 15 Ques !"),
         "question_number_error_min":
             MessageLookupByLibrary.simpleMessage("Min 5 Ques !"),
         "question_time":

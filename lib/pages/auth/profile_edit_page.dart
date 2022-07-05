@@ -36,7 +36,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
     setState(() {
       nameController.text = authProvider.user!.name ?? '';
       emailController.text = authProvider.user!.email ?? '';
-      usernameController.text = authProvider.user!.email ?? '';
+      usernameController.text = authProvider.user!.username ?? '';
     });
   }
 
@@ -69,6 +69,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
             ),
             backgroundColor: successColor,
           ));
+          getInit();
           Navigator.pushNamedAndRemoveUntil(
             context,
             '/home',
@@ -86,6 +87,9 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
         ));
         logger.e(error);
       }
+      setState(() {
+        isLoading = false;
+      });
     }
 
     Widget btnBack() {

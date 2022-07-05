@@ -86,12 +86,10 @@ class AuthProvider with ChangeNotifier {
       pref.setString('name', '${user.name}');
       pref.setString('email', '${user.email}');
       pref.setString('username', '${user.username}');
-
       return true;
     } catch (e) {
       // print(e);
       throw Exception(e);
-      return false;
     }
   }
 }

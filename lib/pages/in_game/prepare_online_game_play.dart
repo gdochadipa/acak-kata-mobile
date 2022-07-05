@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:acakkata/generated/l10n.dart';
 import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/models/level_model.dart';
@@ -324,8 +326,8 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
                               return "Minimal 2 pemain";
                             }
 
-                            if (int.parse(text) > 5) {
-                              return "Maksimal 5 pemain";
+                            if (int.parse(text) > 11) {
+                              return "Maksimal 10 pemain";
                             }
 
                             return null;

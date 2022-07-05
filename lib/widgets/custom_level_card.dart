@@ -181,7 +181,7 @@ class CustomLevelCard extends StatelessWidget {
                                               return setLanguage
                                                   .question_number_error_min;
                                             }
-                                            if (!(double.parse(text) <= 25)) {
+                                            if (!(double.parse(text) <= 15)) {
                                               return setLanguage
                                                   .question_number_error_max;
                                             }

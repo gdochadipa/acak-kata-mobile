@@ -29,7 +29,7 @@
     "time": "Waktu",
     "question_number": "Isi Jumlah Soal !",
     "question_number_error_min": "Minimal lima soal !",
-    "question_number_error_max": "Minimal 25 soal !",
+    "question_number_error_max": "Minimal 15 soal !",
     "word_length_form": "Isi panjang kata !",
     "word_length_form_error_min": "Minimal panjang 3 kata !",
     "word_length_form_error_max": "Minimal panjang 10 kata !",

@@ -16,6 +16,11 @@ class ValidationHelper {
     String pattern = r"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{3,}$";
 
     RegExp regex = RegExp(pattern);
+
+    if (value!.length < 3) {
+      return 'Min 3 characters';
+    }
+
     if (value == null || value.isEmpty || !regex.hasMatch(value)) {
       return 'Enter a valid password, min 3 characters, min one letter and one number';
     } else {
@@ -28,8 +33,13 @@ class ValidationHelper {
         r"^(?=.{3,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$";
 
     RegExp regex = RegExp(pattern);
+
+    if (value!.length < 3) {
+      return 'Min 3 characters';
+    }
+
     if (value == null || value.isEmpty || !regex.hasMatch(value)) {
-      return 'Enter a valid username, min 3 letter';
+      return 'Enter a valid username';
     } else {
       return null;
     }
