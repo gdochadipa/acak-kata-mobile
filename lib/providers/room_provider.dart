@@ -106,8 +106,8 @@ class RoomProvider with ChangeNotifier {
     try {
       SharedPreferences pref = await SharedPreferences.getInstance();
       String? token = pref.getString('token');
-      RoomMatchModel roomMatchModel = await RoomService()
-          .findRoomWithCode(languageId!, token!, roomCode!);
+      RoomMatchModel roomMatchModel =
+          await RoomService().findRoomWithCode(languageId!, token!, roomCode!);
       _roomMatch = roomMatchModel;
       return true;
     } catch (e) {
@@ -121,8 +121,8 @@ class RoomProvider with ChangeNotifier {
     try {
       SharedPreferences pref = await SharedPreferences.getInstance();
       String? token = pref.getString('token');
-      RoomMatchModel roomMatchModel = await RoomService()
-          .findRoomWithCode(languageId!, token!, roomCode!);
+      RoomMatchModel roomMatchModel =
+          await RoomService().findRoomWithCode(languageId!, token!, roomCode!);
       _roomMatch = roomMatchModel;
       return true;
     } catch (e) {
@@ -223,16 +223,6 @@ class RoomProvider with ChangeNotifier {
     roomMatch!.room_match_detail![roomMatch!.room_match_detail!
             .indexWhere((detail) => detail.id!.contains(roomDetailId ?? ''))] =
         detailModel;
-
-    // roomMatch!.room_match_detail!
-    //     .where((detail) => detail.id!.contains(roomDetailId ?? ''))
-    //     .first
-    //     .is_ready = 1;
-
-    // roomMatch!.room_match_detail!
-    //     .where((detail) => detail.id!.contains(roomDetailId ?? ''))
-    //     .first
-    //     .status_player = status;
   }
 
   updateStatusGame(String? roomId, int? statusGame) async {
@@ -254,15 +244,7 @@ class RoomProvider with ChangeNotifier {
     roomMatch!.room_match_detail![roomMatch!.room_match_detail!.indexWhere(
             (roomMatchDetail) => roomMatchDetail.player_id == userID)] =
         detailModel;
-    // roomMatch!.room_match_detail!
-    //     .where((roomMatchDetail) => roomMatchDetail.player_id == userID)
-    //     .first
-    //     .status_player = statusPlayer;
 
-    // roomMatch!.room_match_detail!
-    //     .where((roomMatchDetail) => roomMatchDetail.player_id == userID)
-    //     .first
-    //     .is_ready = 1;
     _roomMatchDetailUser = roomMatch!.room_match_detail!
         .where((roomMatchDetail) => roomMatchDetail.player_id == userID)
         .first;
@@ -325,5 +307,20 @@ class RoomProvider with ChangeNotifier {
             .first
             .is_host ??
         0;
+  }
+
+  bool removePlayerFromRoomMatchDetail({required String player_id}) {
+    List<RoomMatchDetailModel> detail = roomMatch!.room_match_detail!
+        .where((detail) => detail.player_id!.contains(player_id))
+        .toList();
+    if (detail.isNotEmpty) {
+      roomMatch!.room_match_detail!
+          .removeWhere((e) => e.player_id == player_id);
+      print("Player ${detail[0].player!.username} has disconnect !");
+      return true;
+    } else {
+      print("Player ${player_id} not found!");
+      return false;
+    }
   }
 }

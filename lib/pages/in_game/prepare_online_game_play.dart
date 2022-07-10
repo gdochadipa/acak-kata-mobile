@@ -4,6 +4,7 @@ import 'package:acakkata/generated/l10n.dart';
 import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/models/level_model.dart';
 import 'package:acakkata/pages/in_game/waiting_online_room_page.dart';
+import 'package:acakkata/pages/level/level_list_page.dart';
 import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/providers/room_provider.dart';
 import 'package:acakkata/service/socket_service.dart';
@@ -18,7 +19,7 @@ import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 class PrepareOnlineGamePlay extends StatefulWidget {
-  late final LanguageModel? languageModel;
+  final LanguageModel languageModel;
   late final int? selectedQuestion;
   late final int? selectedTime;
   late final int? levelWords;
@@ -29,7 +30,7 @@ class PrepareOnlineGamePlay extends StatefulWidget {
   late final bool? isCustom;
   PrepareOnlineGamePlay(
       {Key? key,
-      this.languageModel,
+      required this.languageModel,
       this.selectedQuestion,
       this.selectedTime,
       this.isHost,
@@ -99,8 +100,17 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
             ),
           ),
           onTap: () {
-            Navigator.pushNamedAndRemoveUntil(
-                context, '/home', (route) => false);
+            // Navigator.pushNamedAndRemoveUntil(
+            //     context, '/home', (route) => false);
+            Navigator.pushAndRemoveUntil(
+                context,
+                CustomPageRoute(
+                  LevelListPage(
+                    isOnline: false,
+                    languageModel: widget.languageModel,
+                  ),
+                ),
+                (route) => false);
           },
         ),
         backgroundColor: transparentColor,
@@ -112,7 +122,7 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
                 padding: const EdgeInsets.all(8),
                 child: Center(
                   child: Image.asset(
-                    'assets/images/${widget.languageModel!.language_icon}',
+                    'assets/images/${widget.languageModel.language_icon}',
                     width: 30,
                     height: 30,
                   ),
@@ -125,8 +135,8 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
                 Center(
                   child: Text(
                     (setLanguage.code == 'en'
-                        ? '${widget.languageModel!.language_name_en}'
-                        : '${widget.languageModel!.language_name_id}'),
+                        ? '${widget.languageModel.language_name_en}'
+                        : '${widget.languageModel.language_name_id}'),
                     style: whiteTextStyle.copyWith(
                       fontWeight: extraBold,
                       fontSize: 22,
@@ -156,7 +166,7 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
 
       try {
         if (await roomProvider.createRoom(
-            language_code: widget.languageModel!.language_code,
+            language_code: widget.languageModel.language_code,
             max_player: int.parse(countPlayer.text),
             time_watch: widget.selectedTime,
             total_question: widget.selectedQuestion,

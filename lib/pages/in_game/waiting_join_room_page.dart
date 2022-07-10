@@ -56,6 +56,7 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
     socketProvider!.socketReceiveQuestion();
     socketProvider!.socketReceiveStatusPlayer();
     socketProvider!.socketReceiveStatusGame();
+    socketProvider!.socketReceiveUserDisconnect();
 
     // await socketService.fireSocket();
     // await socketService.bindEventSearchRoom();
@@ -77,6 +78,37 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
     Logger logger = Logger(
       printer: PrettyPrinter(methodCount: 0),
     );
+
+    handleExitRoom(
+        {required String roomId,
+        required String channelCode,
+        required String playerId}) async {
+      // socketProvider!
+      //     .sendExitRoom(channelCode: channelCode, playerId: playerId);
+
+      try {
+        if (await roomProvider!.cancelGameFromRoom(roomId)) {
+          //send socket to exit
+          socketProvider!
+              .sendExitRoom(channelCode: channelCode, playerId: playerId);
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            duration: const Duration(milliseconds: 1000),
+            content: Text(
+              "${S.of(context).exit_room} !",
+              textAlign: TextAlign.center,
+              style: primaryTextStyle.copyWith(fontWeight: bold, fontSize: 20),
+            ),
+            backgroundColor: whiteColor,
+          ));
+          // socketProvider!.disconnectService();
+
+          Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+        }
+      } catch (e) {
+        logger.e(e);
+      }
+    }
+
     AppBar header() {
       return AppBar(
         leading: Container(),
@@ -167,12 +199,10 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
               ),
             ),
             onClick: () {
-              // Navigator.push(
-              //     context,
-              //     CustomPageRoute(WaitingOnlineRoomPage(
-              //       languageModel: widget.languageModel,
-              //       isOnline: true,
-              //     )));
+              handleExitRoom(
+                  channelCode: roomMatch.channel_code!,
+                  playerId: user!.id!,
+                  roomId: roomMatch.id!);
             }),
       );
     }
@@ -189,6 +219,12 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
               if (snapshot.hasData) {
                 try {
                   var data = json.decode(snapshot.data.toString());
+
+                  if (data['target'] == 'user-disconnected') {
+                    roomProvider!.removePlayerFromRoomMatchDetail(
+                        player_id: data['player_id']);
+                    print('user-disconnected ${data['player_id']}');
+                  }
 
                   ///! mengecek pemain baru
                   if (data['target'] == 'update-player') {

@@ -51,6 +51,10 @@ class SocketProvider with ChangeNotifier {
     await _socketService.bindReceiveQuestion();
   }
 
+  Future<void> socketReceiveUserDisconnect() async {
+    await _socketService.bindReceiveUserDisconnect();
+  }
+
   Future<void> socketSendJoinRoom(
       {required String channelCode,
       required String playerCode,
@@ -91,6 +95,12 @@ class SocketProvider with ChangeNotifier {
   Future<void> socketJoinRoom(
       {required String channelCode, required String playerCode}) async {
     _socketService.emitJoinRoom(channelCode, playerCode);
+  }
+
+  Future<void> sendExitRoom(
+      {required String channelCode, required String playerId}) async {
+    await _socketService.emmitDisconnectRoom(
+        channelCode: channelCode, playerId: playerId);
   }
 
   Future<void> disconnectService() async {

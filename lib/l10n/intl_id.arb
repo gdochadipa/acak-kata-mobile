@@ -42,5 +42,6 @@
     "save_setting" : "Simpan Pengaturan",
     "about" : "Tentang Aplikasi",
     "about_cite": "Sumber Basis Pengetahuan : \n - dictionary.basabali.org \n - Faisal Amir, Dictionary Box\n - Muhammad Irfan Luthfi, Kamus-Jawa-Indonesia\n - Sahri Riza Umami, Kamus Besar Bahasa Indonesia Edisi IV",
-    "login_first" : "Login terlebih dahulu !"
+    "login_first" : "Login terlebih dahulu !",
+    "exit_room": "Keluar dari Ruang Permainan"
 }

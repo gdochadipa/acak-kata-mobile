@@ -13,7 +13,8 @@ const String SOCKET_URL = 'http://10.0.2.2:3000';
 class SocketService {
   late IO.Socket socket;
 
-  final StreamController<String> _eventData = StreamController<String>.broadcast();
+  final StreamController<String> _eventData =
+      StreamController<String>.broadcast();
   Sink get _inEventData => _eventData.sink;
   Stream get eventStream => _eventData.stream;
   Logger logger = Logger(
@@ -47,11 +48,15 @@ class SocketService {
     });
   }
 
-/// question => json
-/// language_name => string
-/// player_id=>  string
-/// 
-/// check room to 
+  /// question => json
+  /// language_name => string
+  /// player_id=>  string
+  ///
+  ///
+  ///
+  /// check room to
+  /// check room to
+  /// check room to
   Future<void> bindReceiveQuestion() async {
     socket.on('broadcast-question', (last) {
       print("soal diterima");
@@ -62,8 +67,8 @@ class SocketService {
 
   Future<void> bindReceiveUserDisconnect() async {
     socket.on('user-disconnected', (last) {
-      final String? data = last.toString();
-      _inEventData.add(data);
+      print(' a user disconnect');
+      _inEventData.add(last.toString());
     });
   }
 
@@ -143,15 +148,12 @@ class SocketService {
   }
 
   Future<void> emmitDisconnectRoom(
-      String channelCode, String languageCode, String playerId) async {
-    socket.emit(
-        'disconnect-room',
-        json.encode({
-          'channel_code': channelCode,
-          'language_code': languageCode,
-          'player_id': playerId
-        }));
-    disconnect();
+      {required String channelCode, required String playerId}) async {
+    Future.delayed(Duration(milliseconds: random(500, 1000)), () async {
+      socket.emit('disconnect-room',
+          json.encode({'channel_code': channelCode, 'player_id': playerId}));
+    });
+    // await disconnect();
   }
 
   Future<void> disconnect() async {

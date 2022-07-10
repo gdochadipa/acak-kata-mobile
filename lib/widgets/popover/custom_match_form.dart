@@ -13,9 +13,10 @@ import 'package:acakkata/widgets/popover/popover_listview.dart';
 import 'package:flutter/material.dart';
 
 class CustomMatchForm extends StatefulWidget {
-  LanguageModel? languageModel;
+  LanguageModel languageModel;
   final bool isLogin;
-  CustomMatchForm({Key? key, this.languageModel, required this.isLogin})
+  CustomMatchForm(
+      {Key? key, required this.languageModel, required this.isLogin})
       : super(key: key);
 
   @override
@@ -124,7 +125,7 @@ class _CustomMatchFormState extends State<CustomMatchForm> {
                       Row(
                         children: [
                           Image.asset(
-                            'assets/images/${widget.languageModel!.language_icon}',
+                            'assets/images/${widget.languageModel.language_icon}',
                             width: 30,
                             height: 30,
                           ),
@@ -133,8 +134,8 @@ class _CustomMatchFormState extends State<CustomMatchForm> {
                           ),
                           Text(
                             (setLanguage.code == 'en'
-                                ? '${widget.languageModel!.language_name_en}'
-                                : '${widget.languageModel!.language_name_id}'),
+                                ? '${widget.languageModel.language_name_en}'
+                                : '${widget.languageModel.language_name_id}'),
                             style: whiteTextStyle.copyWith(
                                 fontSize: 14, fontWeight: bold),
                           )

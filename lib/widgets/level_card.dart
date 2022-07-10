@@ -7,7 +7,6 @@ import 'package:acakkata/pages/in_game/offline_game_play_page.dart';
 import 'package:acakkata/pages/in_game/prepare_online_game_play.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/button/button_bounce.dart';
-import 'package:acakkata/widgets/clicky_button.dart';
 import 'package:acakkata/widgets/custom_page_route.dart';
 import 'package:acakkata/widgets/popover/popover_listview.dart';
 import 'package:animations/animations.dart';
@@ -18,7 +17,7 @@ class ItemLevelCard extends StatefulWidget {
   //   Key? key,
   // }) : super(key: key);
   late final LevelModel? levelModel;
-  late final LanguageModel? languageModel;
+  final LanguageModel languageModel;
   final bool login;
   ItemLevelCard(
       {required this.levelModel,
@@ -80,7 +79,7 @@ class _ItemLevelCardState extends State<ItemLevelCard> {
                                         Row(
                                           children: [
                                             Image.asset(
-                                              'assets/images/${widget.languageModel!.language_icon}',
+                                              'assets/images/${widget.languageModel.language_icon}',
                                               width: 30,
                                               height: 30,
                                             ),
@@ -89,8 +88,8 @@ class _ItemLevelCardState extends State<ItemLevelCard> {
                                             ),
                                             Text(
                                               (setLanguage.code == 'en'
-                                                  ? '${widget.languageModel!.language_name_en}'
-                                                  : '${widget.languageModel!.language_name_id}'),
+                                                  ? '${widget.languageModel.language_name_en}'
+                                                  : '${widget.languageModel.language_name_id}'),
                                               style: whiteTextStyle.copyWith(
                                                   fontSize: 14,
                                                   fontWeight: bold),
@@ -121,7 +120,7 @@ class _ItemLevelCardState extends State<ItemLevelCard> {
                                           .toDouble(),
                                   backgroundColor: grayColor4,
                                   valueColor: AlwaysStoppedAnimation<Color>(
-                                      primaryColor4),
+                                      primaryColor),
                                 ),
                               ),
                             ),

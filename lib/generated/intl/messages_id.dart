@@ -41,6 +41,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Tidak, ingin lanjut"),
         "exit_game_yes":
             MessageLookupByLibrary.simpleMessage("Ya, ingin keluar"),
+        "exit_room":
+            MessageLookupByLibrary.simpleMessage("Keluar dari Ruang Permainan"),
         "false_string": MessageLookupByLibrary.simpleMessage("Salah"),
         "letter": MessageLookupByLibrary.simpleMessage("Huruf"),
         "listLanguage": MessageLookupByLibrary.simpleMessage(

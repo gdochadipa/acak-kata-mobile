@@ -56,6 +56,7 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
         playerCode: '${authProvider!.user!.userCode}');
     socketProvider!.socketReceiveFindRoom();
     socketProvider!.socketReceiveStatusPlayer();
+    socketProvider!.socketReceiveUserDisconnect();
     // await socketService.fireSocket();
     // socketService.emitJoinRoom(
     //     '${roomProvider!.roomMatch!.channel_code}', 'allhost');
@@ -312,6 +313,13 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
               if (snapshot.hasData) {
                 try {
                   var data = json.decode(snapshot.data.toString());
+
+                  if (data['target'] == 'user-disconnected') {
+                    roomProvider!.removePlayerFromRoomMatchDetail(
+                        player_id: data['player_id']);
+                    print('user-disconnected ${data['player_id']}');
+                  }
+
                   if (data['target'] == 'update-player') {
                     RoomMatchDetailModel matchDetailModel =
                         RoomMatchDetailModel.fromJson(data['room_detail']);
@@ -324,10 +332,7 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
                         roomDetailId: data['room_detail_id'],
                         status: data['status_player'],
                         isReady: data['is_ready']);
-                    // logger.d(roomProvider!.roomMatch!.room_match_detail!
-                    //     .where((element) => element.status_player == 2)
-                    //     .length);
-                    // logger.d(roomProvider!.roomMatch!.room_match_detail);
+
                     if (roomProvider!.checkAllAreReceiveQuestion()) {
                       roomProvider!.updateStatusGame(roomMatch.id, 1);
                       socketProvider!.socketSendStatusGame(
