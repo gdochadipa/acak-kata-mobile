@@ -314,12 +314,16 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
                 try {
                   var data = json.decode(snapshot.data.toString());
 
+                  /**
+                   * ketika pemain lain keluar dari permainan
+                   */
                   if (data['target'] == 'user-disconnected') {
                     roomProvider!.removePlayerFromRoomMatchDetail(
                         player_id: data['player_id']);
                     print('user-disconnected ${data['player_id']}');
                   }
 
+                  /** ketika pemain baru bergabung */
                   if (data['target'] == 'update-player') {
                     RoomMatchDetailModel matchDetailModel =
                         RoomMatchDetailModel.fromJson(data['room_detail']);
