@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:acakkata/callbacks/checking_word_callback.dart';
+import 'package:acakkata/models/coordinate.dart';
 import 'package:acakkata/theme.dart';
 import 'package:flutter/material.dart';
 
@@ -16,6 +17,7 @@ class InputAnswerButton extends StatefulWidget {
   final Color color;
   final Color borderColor;
   final Color shadowColor;
+  final Coordinate coordinate;
 
   // InputAnswerButton(this.letter, this.onSelectButtonLetter);
   InputAnswerButton(
@@ -25,7 +27,8 @@ class InputAnswerButton extends StatefulWidget {
       required this.shadowColor,
       required this.letter,
       required this.isBtnSelected,
-      required this.onSelectButtonLetter})
+      required this.onSelectButtonLetter,
+      required this.coordinate})
       : super(key: key);
 
   @override
@@ -50,9 +53,9 @@ class _InputAnswerButtonState extends State<InputAnswerButton>
   void initState() {
     // TODO: implement initState
 
-    Timer.periodic(const Duration(seconds: 2), (timer) {
-      _moveTop = random(0, 350);
-    });
+    // Timer.periodic(const Duration(seconds: 2), (timer) {
+    //   _moveTop = random(0, 350);
+    // });
 
     _animationController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 500))
@@ -97,68 +100,75 @@ class _InputAnswerButtonState extends State<InputAnswerButton>
   @override
   Widget build(BuildContext context) {
     return AnimatedPositioned(
-        top: _moveTop,
-        right: random(0, 300),
-        duration: const Duration(seconds: 2),
+        top: widget.coordinate.x,
+        right: widget.coordinate.y,
+        duration: const Duration(seconds: 0),
         onEnd: () {
-          setState(() {
-            _moveTop = random(0, 300);
-          });
+          // setState(() {
+          //   _moveTop = random(0, 300);
+          // });
         },
-        child: SizedBox(
-          height: 75,
-          width: 75,
-          child: GestureDetector(
-            onTap: widget.isBtnSelected == false
-                ? () {
-                    setState(() {
-                      // widget.isBtnSelected = widget.isBtnSelected ? false : true;
-                      widget.onSelectButtonLetter(
-                          widget.letter, widget.isBtnSelected);
+        child: Visibility(
+          visible: !widget.isBtnSelected,
+          maintainSize: true,
+          maintainAnimation: true,
+          maintainState: true,
+          maintainSemantics: true,
+          child: SizedBox(
+            height: 65,
+            width: 65,
+            child: GestureDetector(
+              onTap: widget.isBtnSelected == false
+                  ? () {
                       setState(() {
-                        _moveTop = random(0, 300);
+                        // widget.isBtnSelected = widget.isBtnSelected ? false : true;
+                        widget.onSelectButtonLetter(
+                            widget.letter, widget.isBtnSelected);
+                        setState(() {
+                          _moveTop = random(0, 300);
+                        });
+                        animateColor(widget.isBtnSelected);
                       });
-                      animateColor(widget.isBtnSelected);
-                    });
-                  }
-                : () {},
-            onTapDown: (_) => setState(() {
-              if (widget.isBtnSelected == false) {
-                _padding = 0.0;
-                _reversePadding = 6;
-              }
-            }),
-            onTapUp: (_) => setState(() {
-              if (widget.isBtnSelected == false) {
-                _padding = 6;
-                _reversePadding = 0.0;
-              }
-            }),
-            child: AnimatedContainer(
-              padding: EdgeInsets.only(bottom: _padding),
-              margin: EdgeInsets.only(top: _reversePadding),
-              decoration: BoxDecoration(
-                  color:
-                      widget.isBtnSelected ? whiteColor3 : widget.shadowColor,
-                  borderRadius: BorderRadius.circular(15)),
-              duration: const Duration(milliseconds: 100),
-              child: Container(
+                    }
+                  : () {},
+              onTapDown: (_) => setState(() {
+                if (widget.isBtnSelected == false) {
+                  _padding = 0.0;
+                  _reversePadding = 6;
+                }
+              }),
+              onTapUp: (_) => setState(() {
+                if (widget.isBtnSelected == false) {
+                  _padding = 6;
+                  _reversePadding = 0.0;
+                }
+              }),
+              child: AnimatedContainer(
+                padding: EdgeInsets.only(bottom: _padding),
+                margin: EdgeInsets.only(top: _reversePadding),
                 decoration: BoxDecoration(
-                    color: widget.isBtnSelected ? whiteColor : widget.color,
-                    borderRadius: BorderRadius.circular(15),
-                    border: Border.all(
-                        width: 2.5,
-                        color: widget.isBtnSelected
-                            ? whiteColor2
-                            : widget.borderColor)),
-                child: Center(
-                  child: Text(
-                    widget.letter,
-                    style: widget.isBtnSelected
-                        ? blackTextStyle.copyWith(
-                            fontSize: 20, fontWeight: bold)
-                        : whiteTextStyle.copyWith(
-                            fontSize: 20, fontWeight: bold),
+                    color:
+                        widget.isBtnSelected ? whiteColor3 : widget.shadowColor,
+                    borderRadius: BorderRadius.circular(15)),
+                duration: const Duration(milliseconds: 100),
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: widget.isBtnSelected ? whiteColor : widget.color,
+                      borderRadius: BorderRadius.circular(15),
+                      border: Border.all(
+                          width: 2.5,
+                          color: widget.isBtnSelected
+                              ? whiteColor2
+                              : widget.borderColor)),
+                  child: Center(
+                    child: Text(
+                      widget.letter,
+                      style: widget.isBtnSelected
+                          ? blackTextStyle.copyWith(
+                              fontSize: 20, fontWeight: bold)
+                          : whiteTextStyle.copyWith(
+                              fontSize: 20, fontWeight: bold),
+                    ),
                   ),
                 ),
               ),

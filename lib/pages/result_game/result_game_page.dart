@@ -159,6 +159,7 @@ class _ResultGamePageState extends State<ResultGamePage> {
                 ? range.name_range_en
                 : range.name_range_id);
           });
+          logger.d("Result ${resultText}");
         }
       }
 

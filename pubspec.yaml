@@ -146,6 +146,7 @@ flutter:
     - assets/images/first.png
     - assets/images/second.png
     - assets/images/third.png
+    - assets/images/icon_shuffle.png
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg

@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:acakkata/generated/l10n.dart';
 import 'package:acakkata/helper/style_helper.dart';
+import 'package:acakkata/models/coordinate.dart';
 import 'package:acakkata/models/level_model.dart';
 import 'package:acakkata/models/word_language_model.dart';
 import 'package:acakkata/models/language_model.dart';
@@ -87,6 +88,7 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
   bool afterAnswer = false;
   bool resultAnswerStatus = false;
   List<int>? listQuestionQueue = [];
+  List<List<Coordinate>> coordinateList = [];
   int queueNow = 0;
   List<int> scoreTime = [];
 
@@ -136,11 +138,42 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
   setUpListQuestionQueue(List<WordLanguageModel>? wordList) async {
     if (wordList!.isNotEmpty) {
       for (var i = 0; i < wordList.length; i++) {
+        List<Coordinate> coordinateCache = [];
+        for (var character in wordList[i].word!.split('')) {
+          Coordinate charCoor = generateCoordinate(coordinateCache);
+          coordinateCache.add(charCoor);
+        }
         setState(() {
           listQuestionQueue!.add(i);
+          coordinateList.add(coordinateCache);
         });
       }
     }
+  }
+
+  double randomDouble(double min, double max) {
+    return min + (Random().nextDouble() * (max - min));
+  }
+
+  Coordinate generateCoordinate(List<Coordinate> coordinateCache) {
+    var coordinate =
+        Coordinate(x: randomDouble(0, 250), y: randomDouble(0, 250));
+    if (coordinateCache.isNotEmpty) {
+      while (true) {
+        var wasCoor = coordinateCache.where((coordi) =>
+            coordi.compareIsInsideRange(
+                x1: coordinate.x ?? 0, y1: coordinate.y ?? 0, range: 37.5));
+
+        if (wasCoor.isEmpty) {
+          return coordinate;
+        } else {
+          coordinate =
+              Coordinate(x: randomDouble(0, 250), y: randomDouble(0, 250));
+        }
+      }
+    }
+
+    return coordinate;
   }
 
   @override
@@ -394,20 +427,23 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
       });
 
       /** mengecek apakah pertanyaan sudah memasuki pertanyaan terakhir */
+      var endQuestion = false;
+
       ///currentArrayQuestion == (totalQuestion - 1)
       if (!((listQuestionQueue!.length - 1) > 0)) {
         /** 
          * *masuk ke hasil permainan
          *  *nextQuestion
          *  */
-        onRunTimeResult(true);
+        endQuestion = true;
       } else {
         /** ke soal selanjutnya 
          * 
          * *nextQuestion
         */
-        onRunTimeResult(false);
+        endQuestion = false;
       }
+      onRunTimeResult(endQuestion);
     });
   }
 
@@ -560,6 +596,18 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
     }
   }
 
+  //shuffle answer
+  shuffleAnswer(List<String>? suffleQuestion, int currentArrayQuestion) {
+    List<Coordinate> coordinateCache = [];
+    for (var character in suffleQuestion!) {
+      Coordinate charCoor = generateCoordinate(coordinateCache);
+      coordinateCache.add(charCoor);
+    }
+    setState(() {
+      coordinateList[currentArrayQuestion] = coordinateCache;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     S? setLanguage = S.of(context);
@@ -654,6 +702,38 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
       );
     }
 
+    ///  implementasi tombol suffle huruf
+    Widget btnSuffleAnswer(
+        List<String>? suffleQuestion, int currentArrayQuestion) {
+      return Container(
+        margin: const EdgeInsets.all(5),
+        alignment: Alignment.center,
+        child: ButtonBounce(
+            onClick: () {
+              //reset jawaban ke null
+              resetAnswer();
+              if (textAnswer != '' && textAnswer.isNotEmpty) {
+                textAnswer = '';
+                answerController.text = textAnswer;
+              }
+              shuffleAnswer(suffleQuestion, currentArrayQuestion);
+            },
+            widthButton: 100,
+            heightButton: 60,
+            borderThick: 5,
+            color: orangeColor,
+            borderColor: orangeColor2,
+            shadowColor: orangeColor3,
+            child: Center(
+              child: Icon(
+                CupertinoIcons.shuffle_medium,
+                semanticLabel: 'Add',
+                color: whiteColor,
+              ),
+            )),
+      );
+    }
+
     /// tombol hapus kata pada jawaban
     Widget btnDeleteLetterAnswer() {
       return Container(
@@ -714,13 +794,16 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
       );
     }
 
-    Widget anotherActionAnswer() {
+    Widget anotherActionAnswer(
+        List<String>? suffleQuestion, int currentArrayQuestion) {
       return Container(
         margin: const EdgeInsets.only(top: 15),
         child: Row(
           children: [
             Flexible(child: btnDeleteLetterAnswer()),
             Flexible(child: btnResetAnswer()),
+            Flexible(
+                child: btnSuffleAnswer(suffleQuestion, currentArrayQuestion)),
             Flexible(child: btnSkipQuestion())
           ],
         ),
@@ -728,7 +811,8 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
     }
 
     /// list tombol jawaban [list per huruf]
-    Widget answerButtons(List<String>? suffleQuestion, String? question) {
+    Widget answerButtons(List<String>? suffleQuestion, String? question,
+        List<Coordinate> coordinats) {
       List fixedList = Iterable.generate(suffleQuestion!.length).toList();
       return SizedBox(
         height: 350,
@@ -740,6 +824,7 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
                 borderColor: StyleHelper.getColorRandom('borderColor', e % 4),
                 shadowColor: StyleHelper.getColorRandom('shadowColor', e % 4),
                 letter: suffleQuestion[e],
+                coordinate: coordinats[e],
                 isBtnSelected: isSelected![e] ?? false,
                 onSelectButtonLetter: (String letter, bool isUnSet) {
                   answerQuestion(letter, e, suffleQuestion, question);
@@ -771,7 +856,11 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
     }
 
     Widget cardBodyBottom(
-        String? question, String? hintQuestion, List<String>? suffleQuestion) {
+        String? question,
+        String? hintQuestion,
+        List<String>? suffleQuestion,
+        List<Coordinate> coordinats,
+        int currentArrayQuestion) {
       return Container(
         margin:
             EdgeInsets.only(top: 10, left: defaultMargin, right: defaultMargin),
@@ -780,8 +869,8 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
             color: primaryColor3, borderRadius: BorderRadius.circular(15)),
         child: Column(
           children: [
-            answerButtons(suffleQuestion, question),
-            anotherActionAnswer()
+            answerButtons(suffleQuestion, question, coordinats),
+            anotherActionAnswer(suffleQuestion, currentArrayQuestion)
           ],
         ),
       );
@@ -905,7 +994,9 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
             child: cardBodyBottom(
                 dataWordList![currentArrayQuestion].word,
                 dataWordList![currentArrayQuestion].word,
-                dataWordList![currentArrayQuestion].word_suffle),
+                dataWordList![currentArrayQuestion].word_suffle,
+                coordinateList[currentArrayQuestion],
+                currentArrayQuestion),
           ),
         ],
       );
