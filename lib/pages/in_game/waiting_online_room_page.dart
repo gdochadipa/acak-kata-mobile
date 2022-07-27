@@ -38,6 +38,7 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
   SocketProvider? socketProvider;
   AuthProvider? authProvider;
   RoomProvider? roomProvider;
+  bool hasStart = false;
 
   @override
   void initState() {
@@ -84,6 +85,43 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
       printer: PrettyPrinter(methodCount: 0),
     );
 
+    actionStartMatch() async {
+      print("on action");
+      print("action start");
+      roomProvider!.updateStatusGame(roomMatch.id, 1);
+      socketProvider!.socketSendStatusGame(
+          channelCode: roomMatch.channel_code ?? '',
+          roomMatch: roomProvider!.roomMatch);
+      logger.d("Game Start ");
+      socketProvider!.pausedStream();
+      Timer(const Duration(milliseconds: 1000), () {
+        LevelModel levelModel = LevelModel(
+            id: 77,
+            level_name: setLanguage.custom_level,
+            level_words: roomMatch.length_word,
+            level_time: roomMatch.time_match,
+            level_lang_code: setLanguage.code,
+            level_lang_id: setLanguage.code,
+            current_score: 0,
+            target_score: 0);
+        Navigator.pushAndRemoveUntil(
+          context,
+          CustomPageRoute(OnlineGamePlayPage(
+            languageModel: widget.languageModel,
+            selectedQuestion: roomMatch.totalQuestion,
+            selectedTime: roomMatch.time_match,
+            isHost: 1,
+            levelWords: roomMatch.length_word,
+            isOnline: true,
+            Stage: setLanguage.custom_level,
+            levelModel: levelModel,
+            isCustom: false,
+          )),
+          (route) => false,
+        );
+      });
+    }
+
     ///1. get question berdasarkan setting room match
     ///!3. share soal dan status game lewat socket
     /// !4. tunggu update kalo semua pemain udah dapet soal (receive socket)
@@ -112,6 +150,15 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
             channelCode: roomMatch.channel_code!,
             roomMatchDetailModel: matchDetail,
             score: 0);
+
+        Timer(const Duration(milliseconds: 5000), () async {
+          if (!hasStart) {
+            actionStartMatch();
+            setState(() {
+              hasStart = true;
+            });
+          }
+        });
       } catch (e, trace) {
         logger.e(e);
         logger.e(trace);
@@ -338,38 +385,10 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
                         isReady: data['is_ready']);
 
                     if (roomProvider!.checkAllAreReceiveQuestion()) {
-                      roomProvider!.updateStatusGame(roomMatch.id, 1);
-                      socketProvider!.socketSendStatusGame(
-                          channelCode: roomMatch.channel_code ?? '',
-                          roomMatch: roomProvider!.roomMatch);
-                      logger.d("Game Start ");
-                      socketProvider!.pausedStream();
-                      Timer(const Duration(milliseconds: 1000), () {
-                        LevelModel levelModel = LevelModel(
-                            id: 77,
-                            level_name: setLanguage.custom_level,
-                            level_words: roomMatch.length_word,
-                            level_time: roomMatch.time_match,
-                            level_lang_code: setLanguage.code,
-                            level_lang_id: setLanguage.code,
-                            current_score: 0,
-                            target_score: 0);
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          CustomPageRoute(OnlineGamePlayPage(
-                            languageModel: widget.languageModel,
-                            selectedQuestion: roomMatch.totalQuestion,
-                            selectedTime: roomMatch.time_match,
-                            isHost: 1,
-                            levelWords: roomMatch.length_word,
-                            isOnline: true,
-                            Stage: setLanguage.custom_level,
-                            levelModel: levelModel,
-                            isCustom: false,
-                          )),
-                          (route) => false,
-                        );
-                      });
+                      if (!hasStart) {
+                        actionStartMatch();
+                        hasStart = true;
+                      }
                     }
                   }
                 } catch (e) {
