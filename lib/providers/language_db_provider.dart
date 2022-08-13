@@ -1,4 +1,3 @@
-
 import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/models/level_model.dart';
 import 'package:acakkata/models/range_result_txt_model.dart';
@@ -284,6 +283,58 @@ class LanguageDBProvider with ChangeNotifier {
         }
       });
 
+      return true;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<bool> searchWord(
+      {required String word, required String languageCode}) async {
+    try {
+      if (_db == null) {
+        throw "bd is not initiated, initiate using [init(db)] function";
+      }
+      late List<Map<String, dynamic>> words;
+
+      if (languageCode == "english") {
+        await _db.transaction((txn) async {
+          words = await txn.query("tb_word_eng",
+              columns: ["id", "word", "meaning", "length_word"],
+              orderBy: "word",
+              where: "word like ?",
+              whereArgs: ['%$word%'],
+              limit: 100);
+        });
+      } else if (languageCode == "indonesia") {
+        await _db.transaction((txn) async {
+          words = await txn.query("tb_word_indo",
+              columns: ["id", "word", "meaning", "length_word"],
+              orderBy: "word",
+              where: "word like ?",
+              whereArgs: ['%$word%'],
+              limit: 100);
+        });
+      } else if (languageCode == "bali") {
+        await _db.transaction((txn) async {
+          words = await txn.query("tb_word_bali",
+              columns: ["id", "word", "meaning", "length_word"],
+              orderBy: "word",
+              where: "word like ?",
+              whereArgs: ['%$word%'],
+              limit: 100);
+        });
+      } else if (languageCode == "java") {
+        await _db.transaction((txn) async {
+          words = await txn.query("tb_word_jawa",
+              columns: ["id", "word", "meaning", "length_word"],
+              orderBy: "word",
+              where: "word like ?",
+              whereArgs: ['%$word%'],
+              limit: 100);
+        });
+      }
+      _dataWordList = words.map((e) => WordLanguageModel.fromJson(e)).toList();
       return true;
     } catch (e) {
       throw Exception(e);

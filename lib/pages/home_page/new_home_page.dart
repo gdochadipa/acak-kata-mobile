@@ -6,13 +6,16 @@ import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/models/user_model.dart';
 import 'package:acakkata/pages/auth/modal/show_login_modal.dart';
 import 'package:acakkata/pages/auth/modal/show_profile_modal.dart';
+import 'package:acakkata/pages/dictionary/dict_search_page.dart';
 import 'package:acakkata/pages/in_game/modal/join_room_modal.dart';
+import 'package:acakkata/pages/level/level_list_page.dart';
 import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/providers/change_language_provider.dart';
 import 'package:acakkata/providers/language_db_provider.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/button/button_bounce.dart';
 import 'package:acakkata/widgets/button/circle_bounce_button.dart';
+import 'package:acakkata/widgets/custom_page_route.dart';
 import 'package:acakkata/widgets/language_card.dart';
 import 'package:acakkata/widgets/popover/language_app_modal.dart';
 import 'package:acakkata/widgets/popover/popover_listview.dart';
@@ -208,7 +211,7 @@ class _NewHomePageState extends State<NewHomePage> {
           builder: (BuildContext context) => const JoinRoomModal());
     }
 
-    showListLanguagePop() async {
+    showListLanguagePop(int typeAccess) async {
       return showModal(
         context: context,
         builder: (BuildContext context) {
@@ -238,7 +241,31 @@ class _NewHomePageState extends State<NewHomePage> {
                       Container(
                         child: Column(
                           children: listLanguageModel!
-                              .map((e) => LanguageCard(e))
+                              .map((e) => LanguageCard(
+                                    language: e,
+                                    onClick: () {
+                                      if (typeAccess == 1) {
+                                        Navigator.pushAndRemoveUntil(
+                                            context,
+                                            CustomPageRoute(
+                                              LevelListPage(
+                                                isOnline: false,
+                                                languageModel: e,
+                                              ),
+                                            ),
+                                            (route) => false);
+                                      } else if (typeAccess == 2) {
+                                        Navigator.pushAndRemoveUntil(
+                                            context,
+                                            CustomPageRoute(
+                                              DictSearchPage(
+                                                languageModel: e,
+                                              ),
+                                            ),
+                                            (route) => false);
+                                      }
+                                    },
+                                  ))
                               .toList(),
                           // children: [
                           //   for (var e in listLanguageModel!) LanguageCard(e)
@@ -282,7 +309,8 @@ class _NewHomePageState extends State<NewHomePage> {
         shadowColor: whiteColor3,
         margin: const EdgeInsets.symmetric(horizontal: 5.0),
         onClick: () {
-          showListLanguagePop();
+          //satu untuk le leveleListPage
+          showListLanguagePop(1);
         },
         paddingHorizontalButton: 10,
         paddingVerticalButton: 10,
@@ -320,6 +348,29 @@ class _NewHomePageState extends State<NewHomePage> {
           height: 55,
           child: Center(
             child: Image.asset('assets/images/profil.png'),
+          ),
+        ),
+      );
+    }
+
+    Widget btnSearch() {
+      return CircleBounceButton(
+        color: blueColor,
+        borderColor: blueColor2,
+        shadowColor: blueColor3,
+        margin: const EdgeInsets.symmetric(horizontal: 5.0),
+        onClick: () {
+          showListLanguagePop(2);
+        },
+        paddingHorizontalButton: 10,
+        paddingVerticalButton: 10,
+        heightButton: 75,
+        widthButton: 75,
+        child: SizedBox(
+          width: 55,
+          height: 55,
+          child: Center(
+            child: Image.asset('assets/images/icon_search.png'),
           ),
         ),
       );
@@ -393,12 +444,38 @@ class _NewHomePageState extends State<NewHomePage> {
       );
     }
 
+    Widget btnProfileBox() {
+      return ButtonBounce(
+        color: blueColor,
+        borderColor: blueColor2,
+        shadowColor: blueColor3,
+        onClick: () {
+          if (!(login)) {
+            showAuthModal();
+          } else {
+            showProfileModal();
+          }
+        },
+        paddingHorizontalButton: 8,
+        paddingVerticalButton: 8,
+        heightButton: 62.92,
+        widthButton: 62.92,
+        child: Container(
+          width: 50,
+          height: 50,
+          child: Center(
+            child: Image.asset('assets/images/profil.png'),
+          ),
+        ),
+      );
+    }
+
     Widget middleMenu() {
       return ElasticIn(
         child: Center(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [btnProfile(), btnPlayGame(), btnFindRoom()],
+            children: [btnSearch(), btnPlayGame(), btnFindRoom()],
           ),
         ),
       );
@@ -500,7 +577,17 @@ class _NewHomePageState extends State<NewHomePage> {
                 Container(
                   margin: const EdgeInsets.only(right: 10, top: 10),
                   alignment: Alignment.topRight,
-                  child: btnSetting(),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      btnSetting(),
+                      const SizedBox(
+                        height: 5,
+                        width: 5,
+                      ),
+                      btnProfileBox()
+                    ],
+                  ),
                 )
               ],
             ),

@@ -9,8 +9,9 @@ import 'custom_page_route.dart';
 
 class LanguageCard extends StatefulWidget {
   // const LanguageCard({Key? key}) : super(key: key);
-  late final LanguageModel language;
-  LanguageCard(this.language);
+  final LanguageModel language;
+  final VoidCallback onClick;
+  LanguageCard({required this.language, required this.onClick});
 
   @override
   State<LanguageCard> createState() => _LanguageCardState();
@@ -36,17 +37,7 @@ class _LanguageCardState extends State<LanguageCard> {
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       child: GestureDetector(
-          onTap: () {
-            Navigator.pushAndRemoveUntil(
-                context,
-                CustomPageRoute(
-                  LevelListPage(
-                    isOnline: false,
-                    languageModel: widget.language,
-                  ),
-                ),
-                (route) => false);
-          },
+          onTap: widget.onClick,
           onTapDown: (_) => setState(() {
                 _padding = 0.0;
                 _reversePadding = _heightShadow;
