@@ -96,7 +96,7 @@ class _DictSearchPageState extends State<DictSearchPage> {
       );
     }
 
-    Widget body1() {
+    Widget body() {
       return Container(
         margin: const EdgeInsets.only(top: 80, left: 15, right: 15),
         padding: const EdgeInsets.only(left: 8, right: 8),
@@ -105,41 +105,47 @@ class _DictSearchPageState extends State<DictSearchPage> {
           children: [
             Padding(
               padding: const EdgeInsets.all(15.0),
-              child: TextField(
-                onChanged: (value) {
-                  setState(() {
-                    filterSearch(value);
-                  });
-                },
-                controller: teSeach,
-                decoration: const InputDecoration(
-                    hintText: 'Search...',
-                    labelText: 'Search',
-                    prefixIcon: Icon(Icons.search),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(25)),
-                    )),
+              child: Container(
+                height: 80,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                decoration: BoxDecoration(
+                    color: whiteColor, borderRadius: BorderRadius.circular(10)),
+                child: TextField(
+                  onChanged: (value) {
+                    setState(() {
+                      filterSearch(value);
+                    });
+                  },
+                  controller: teSeach,
+                  decoration: const InputDecoration(
+                      hintText: 'Search...',
+                      labelText: 'Search',
+                      prefixIcon: Icon(Icons.search),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      )),
+                ),
               ),
             ),
-            Container(
-              child: Expanded(
-                child: ListView.builder(
-                    itemCount: wordList!.length,
-                    shrinkWrap: true,
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    scrollDirection: Axis.vertical,
-                    itemBuilder: (context, i) {
-                      // WordLanguageModel? word = wordList![i];
+            Expanded(
+              child: ListView.builder(
+                  itemCount: wordList!.length,
+                  shrinkWrap: true,
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  scrollDirection: Axis.vertical,
+                  itemBuilder: (context, i) {
+                    // WordLanguageModel? word = wordList![i];
 
-                      return Container(
-                        margin: const EdgeInsets.symmetric(vertical: 5),
-                        child: DictItem(
-                          wordLanguageModel: wordList![i],
-                        ),
-                      );
-                      // return Text("test");
-                    }),
-              ),
+                    return Container(
+                      margin: const EdgeInsets.symmetric(vertical: 5),
+                      child: DictItem(
+                        languageModel: widget.languageModel,
+                        wordLanguageModel: wordList![i],
+                      ),
+                    );
+                    // return Text("test");
+                  }),
             ),
           ],
         ),
@@ -151,7 +157,7 @@ class _DictSearchPageState extends State<DictSearchPage> {
           backgroundColor: primaryColor5,
           body: Stack(
             fit: StackFit.expand,
-            children: [header(), body1()],
+            children: [header(), body()],
           ),
         ),
         onWillPop: () async => false);
