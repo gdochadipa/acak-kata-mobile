@@ -5,12 +5,14 @@ import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/models/level_model.dart';
 import 'package:acakkata/pages/in_game/offline_game_play_page.dart';
 import 'package:acakkata/pages/in_game/prepare_online_game_play.dart';
+import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/button/button_bounce.dart';
 import 'package:acakkata/widgets/clicky_button.dart';
 import 'package:acakkata/widgets/custom_page_route.dart';
 import 'package:acakkata/widgets/popover/popover_listview.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CustomMatchForm extends StatefulWidget {
   LanguageModel languageModel;
@@ -36,8 +38,10 @@ class _CustomMatchFormState extends State<CustomMatchForm> {
 
   @override
   Widget build(BuildContext context) {
+    AuthProvider? _authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
     S? setLanguage = S.of(context);
-    void _saveForm() {
+    void _saveForm() async {
       final isValid = _form.currentState!.validate();
       if (!isValid) {
         return;
@@ -67,34 +71,54 @@ class _CustomMatchFormState extends State<CustomMatchForm> {
       }
     }
 
-    _saveFormOnline() {
+    _saveFormOnline() async {
       final isValid = _form.currentState!.validate();
       if (!isValid) {
         return;
       } else {
-        LevelModel levelModel = LevelModel(
-            id: 77,
-            level_name: setLanguage.custom_level,
-            level_words: int.parse(lengthWord.text),
-            level_time: int.parse(questionTime.text),
-            level_lang_code: setLanguage.code,
-            level_lang_id: setLanguage.code,
-            current_score: 0,
-            target_score: 0);
+        if (!await _authProvider.hasNetwork()) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: const Text(
+              "Disconnect",
+              textAlign: TextAlign.center,
+            ),
+            backgroundColor: alertColor,
+          ));
+        } else {
+          if (!widget.isLogin) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(
+                setLanguage.login_first,
+                textAlign: TextAlign.center,
+              ),
+              backgroundColor: alertColor,
+            ));
+          } else {
+            LevelModel levelModel = LevelModel(
+                id: 77,
+                level_name: setLanguage.custom_level,
+                level_words: int.parse(lengthWord.text),
+                level_time: int.parse(questionTime.text),
+                level_lang_code: setLanguage.code,
+                level_lang_id: setLanguage.code,
+                current_score: 0,
+                target_score: 0);
 
-        Navigator.push(
-            context,
-            CustomPageRoute(PrepareOnlineGamePlay(
-              languageModel: widget.languageModel,
-              selectedQuestion: int.parse(questionNumber.text),
-              selectedTime: int.parse(questionTime.text),
-              isHost: 1,
-              levelWords: int.parse(lengthWord.text),
-              isOnline: true,
-              Stage: levelModel.level_name,
-              levelModel: levelModel,
-              isCustom: false,
-            )));
+            Navigator.push(
+                context,
+                CustomPageRoute(PrepareOnlineGamePlay(
+                  languageModel: widget.languageModel,
+                  selectedQuestion: int.parse(questionNumber.text),
+                  selectedTime: int.parse(questionTime.text),
+                  isHost: 1,
+                  levelWords: int.parse(lengthWord.text),
+                  isOnline: true,
+                  Stage: levelModel.level_name,
+                  levelModel: levelModel,
+                  isCustom: false,
+                )));
+          }
+        }
       }
     }
 

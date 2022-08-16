@@ -5,12 +5,14 @@ import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/models/level_model.dart';
 import 'package:acakkata/pages/in_game/offline_game_play_page.dart';
 import 'package:acakkata/pages/in_game/prepare_online_game_play.dart';
+import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/button/button_bounce.dart';
 import 'package:acakkata/widgets/custom_page_route.dart';
 import 'package:acakkata/widgets/popover/popover_listview.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ItemLevelCard extends StatefulWidget {
   // const ItemLevelCard({
@@ -43,6 +45,8 @@ class _ItemLevelCardState extends State<ItemLevelCard> {
 
   @override
   Widget build(BuildContext context) {
+    AuthProvider? _authProvider = Provider.of<AuthProvider>(context);
+
     showDetailLevelPop() async {
       return showModal(
           context: context,
@@ -376,37 +380,48 @@ class _ItemLevelCardState extends State<ItemLevelCard> {
                                   ),
                                   onClick: () {
                                     Timer(const Duration(milliseconds: 500),
-                                        () {
-                                      if (!(widget.login)) {
+                                        () async {
+                                      if (!await _authProvider.hasNetwork()) {
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(SnackBar(
-                                          content: Text(
-                                            setLanguage.login_first,
+                                          content: const Text(
+                                            "Disconnect",
                                             textAlign: TextAlign.center,
                                           ),
                                           backgroundColor: alertColor,
                                         ));
                                       } else {
-                                        Navigator.push(
-                                            context,
-                                            CustomPageRoute(
-                                                PrepareOnlineGamePlay(
-                                              languageModel:
-                                                  widget.languageModel,
-                                              selectedQuestion: widget
-                                                  .levelModel!
-                                                  .level_question_count,
-                                              selectedTime:
-                                                  widget.levelModel!.level_time,
-                                              isHost: 0,
-                                              levelWords: widget
-                                                  .levelModel!.level_words,
-                                              isOnline: true,
-                                              Stage:
-                                                  widget.levelModel!.level_name,
-                                              levelModel: widget.levelModel,
-                                              isCustom: false,
-                                            )));
+                                        if (!(widget.login)) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                            content: Text(
+                                              setLanguage.login_first,
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            backgroundColor: alertColor,
+                                          ));
+                                        } else {
+                                          Navigator.push(
+                                              context,
+                                              CustomPageRoute(
+                                                  PrepareOnlineGamePlay(
+                                                languageModel:
+                                                    widget.languageModel,
+                                                selectedQuestion: widget
+                                                    .levelModel!
+                                                    .level_question_count,
+                                                selectedTime: widget
+                                                    .levelModel!.level_time,
+                                                isHost: 0,
+                                                levelWords: widget
+                                                    .levelModel!.level_words,
+                                                isOnline: true,
+                                                Stage: widget
+                                                    .levelModel!.level_name,
+                                                levelModel: widget.levelModel,
+                                                isCustom: false,
+                                              )));
+                                        }
                                       }
                                     });
                                   }))

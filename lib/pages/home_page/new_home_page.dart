@@ -41,10 +41,12 @@ class _NewHomePageState extends State<NewHomePage> {
   SharedPreferences? prefs;
   bool wasSelectedLanguage = false;
   bool login = false;
+  bool isNetwork = false;
 
   init() async {
     prefs = await SharedPreferences.getInstance();
     _authProvider = Provider.of<AuthProvider>(context, listen: false);
+    isNetwork = await _authProvider!.hasNetwork();
     setState(() {
       languageChoice = prefs!.getString("choiceLang");
       wasSelectedLanguage = prefs!.getBool("wasSelectedLanguage") ?? false;
@@ -60,6 +62,12 @@ class _NewHomePageState extends State<NewHomePage> {
         prefs!.setString("choiceLang", flag);
         prefs!.setBool("wasSelectedLanguage", true);
       });
+    });
+  }
+
+  void onCheckConnection() async {
+    setState(() async {
+      isNetwork = await _authProvider!.hasNetwork();
     });
   }
 
@@ -383,10 +391,21 @@ class _NewHomePageState extends State<NewHomePage> {
         shadowColor: greenColor3,
         margin: const EdgeInsets.symmetric(horizontal: 5.0),
         onClick: () {
-          if (!login) {
-            showAuthModal();
+          onCheckConnection();
+          if (isNetwork) {
+            if (!login) {
+              showAuthModal();
+            } else {
+              showJoinRoomModal();
+            }
           } else {
-            showJoinRoomModal();
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: const Text(
+                "Connection Failed",
+                textAlign: TextAlign.center,
+              ),
+              backgroundColor: alertColor,
+            ));
           }
         },
         paddingHorizontalButton: 10,

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:acakkata/models/user_model.dart';
 import 'package:acakkata/service/auth_service.dart';
 import 'package:flutter/cupertino.dart';
@@ -90,6 +92,15 @@ class AuthProvider with ChangeNotifier {
     } catch (e) {
       // print(e);
       throw Exception(e);
+    }
+  }
+
+  Future<bool> hasNetwork() async {
+    try {
+      final result = await InternetAddress.lookup("www.google.com");
+      return result.isNotEmpty && result[0].rawAddress.isNotEmpty;
+    } catch (e) {
+      return false;
     }
   }
 }
