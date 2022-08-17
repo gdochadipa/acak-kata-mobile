@@ -1,4 +1,4 @@
-package com.example.acakkata_sqlite_project
+package com.acakkata.id
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -87,6 +87,7 @@ class _NewHomePageState extends State<NewHomePage> {
     // LanguageProvider? languageProvider = Provider.of<LanguageProvider>(context);
     LanguageDBProvider? languageDBProvider =
         Provider.of<LanguageDBProvider>(context);
+
     S? setLanguage = S.of(context);
 
     List<LanguageModel>? listLanguageModel = languageDBProvider.languageList;
@@ -390,7 +391,7 @@ class _NewHomePageState extends State<NewHomePage> {
         borderColor: greenColor2,
         shadowColor: greenColor3,
         margin: const EdgeInsets.symmetric(horizontal: 5.0),
-        onClick: () {
+        onClick: () async {
           onCheckConnection();
           if (isNetwork) {
             if (!login) {
@@ -468,18 +469,29 @@ class _NewHomePageState extends State<NewHomePage> {
         color: blueColor,
         borderColor: blueColor2,
         shadowColor: blueColor3,
-        onClick: () {
-          if (!(login)) {
-            showAuthModal();
+        onClick: () async {
+          onCheckConnection();
+          if (isNetwork) {
+            if (!login) {
+              showAuthModal();
+            } else {
+              showProfileModal();
+            }
           } else {
-            showProfileModal();
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: const Text(
+                "Connection Failed",
+                textAlign: TextAlign.center,
+              ),
+              backgroundColor: alertColor,
+            ));
           }
         },
         paddingHorizontalButton: 8,
         paddingVerticalButton: 8,
         heightButton: 62.92,
         widthButton: 62.92,
-        child: Container(
+        child: SizedBox(
           width: 50,
           height: 50,
           child: Center(
