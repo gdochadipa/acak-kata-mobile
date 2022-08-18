@@ -385,7 +385,7 @@ class _ItemLevelCardState extends State<ItemLevelCard> {
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(SnackBar(
                                           content: const Text(
-                                            "Disconnect",
+                                            "Maaf masih dalam pengembangan",
                                             textAlign: TextAlign.center,
                                           ),
                                           backgroundColor: alertColor,

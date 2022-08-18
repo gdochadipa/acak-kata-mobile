@@ -66,8 +66,9 @@ class _NewHomePageState extends State<NewHomePage> {
   }
 
   void onCheckConnection() async {
-    setState(() async {
-      isNetwork = await _authProvider!.hasNetwork();
+    var network = await _authProvider!.hasNetwork();
+    setState(() {
+      isNetwork = network;
     });
   }
 
@@ -402,7 +403,7 @@ class _NewHomePageState extends State<NewHomePage> {
           } else {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: const Text(
-                "Connection Failed",
+                "Maaf masih dalam pengembangan",
                 textAlign: TextAlign.center,
               ),
               backgroundColor: alertColor,
@@ -480,7 +481,7 @@ class _NewHomePageState extends State<NewHomePage> {
           } else {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: const Text(
-                "Connection Failed",
+                "Maaf masih dalam pengembangan",
                 textAlign: TextAlign.center,
               ),
               backgroundColor: alertColor,

@@ -96,11 +96,12 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<bool> hasNetwork() async {
-    try {
-      final result = await InternetAddress.lookup("www.google.com");
-      return result.isNotEmpty && result[0].rawAddress.isNotEmpty;
-    } catch (e) {
-      return false;
-    }
+    // try {
+    //   final result = await InternetAddress.lookup("www.google.com");
+    //   return result.isNotEmpty && result[0].rawAddress.isNotEmpty;
+    // } catch (e) {
+    //   return false;
+    // }
+    return true;
   }
 }

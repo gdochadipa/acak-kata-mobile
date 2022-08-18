@@ -79,7 +79,7 @@ class _CustomMatchFormState extends State<CustomMatchForm> {
         if (!await _authProvider.hasNetwork()) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: const Text(
-              "Disconnect",
+              "Maaf masih dalam pengembangan",
               textAlign: TextAlign.center,
             ),
             backgroundColor: alertColor,
@@ -405,8 +405,9 @@ class _CustomMatchFormState extends State<CustomMatchForm> {
                                     ),
                                     backgroundColor: alertColor,
                                   ));
+                                } else {
+                                  _saveFormOnline();
                                 }
-                                _saveFormOnline();
                               }))
                     ],
                   ),
