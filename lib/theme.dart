@@ -76,31 +76,24 @@ Color blackColor = const Color(0xff2E2E2E);
 
 Color accentColor = const Color(0xffFF7CFA);
 
-TextStyle primaryTextStyle = GoogleFonts.nunito(
-  color: primaryTextColor,
-);
+TextStyle primaryTextStyle =
+    TextStyle(color: primaryTextColor, fontFamily: 'Nunito');
 
-TextStyle secondaryTextStyle = GoogleFonts.nunito(
-  color: secondaryTextColor,
-);
+TextStyle secondaryTextStyle =
+    TextStyle(color: secondaryTextColor, fontFamily: 'Nunito');
 
-TextStyle thirdTextStyle = GoogleFonts.nunito(color: thirdTextColor);
+TextStyle thirdTextStyle =
+    TextStyle(color: thirdTextColor, fontFamily: 'Nunito');
 
-TextStyle subtitleTextStyle = GoogleFonts.nunito(
-  color: subtitleColor,
-);
+TextStyle subtitleTextStyle =
+    TextStyle(color: subtitleColor, fontFamily: 'Nunito');
 
-TextStyle purpleTextStyle = GoogleFonts.nunito(
-  color: accentColor,
-);
+TextStyle purpleTextStyle = TextStyle(color: accentColor, fontFamily: 'Nunito');
 
-TextStyle blackTextStyle = GoogleFonts.nunito(
-  color: thirdTextColor,
-);
+TextStyle blackTextStyle =
+    TextStyle(color: thirdTextColor, fontFamily: 'Nunito');
 
-TextStyle whiteTextStyle = GoogleFonts.nunito(
-  color: whiteColor,
-);
+TextStyle whiteTextStyle = TextStyle(color: whiteColor, fontFamily: 'Nunito');
 
 TextStyle whiteTextShadowStyle = GoogleFonts.nunito(
   color: whiteColor,
@@ -112,13 +105,14 @@ TextStyle whiteTextShadowStyle = GoogleFonts.nunito(
   ],
 );
 
-TextStyle alertTextStyle = GoogleFonts.nunito(
-  color: alertColor,
-);
+TextStyle alertTextStyle = TextStyle(color: alertColor, fontFamily: 'Nunito');
 
-TextStyle headerText1 = GoogleFonts.nunito(fontSize: 24, fontWeight: semiBold);
-TextStyle headerText2 = GoogleFonts.nunito(fontSize: 28, fontWeight: regular);
-TextStyle headerText3 = GoogleFonts.nunito(fontSize: 16, fontWeight: regular);
+TextStyle headerText1 =
+    TextStyle(fontSize: 24, fontWeight: semiBold, fontFamily: 'Nunito');
+TextStyle headerText2 =
+    TextStyle(fontSize: 28, fontWeight: regular, fontFamily: 'Nunito');
+TextStyle headerText3 =
+    TextStyle(fontSize: 16, fontWeight: regular, fontFamily: 'Nunito');
 FontWeight light = FontWeight.w300;
 FontWeight regular = FontWeight.w400;
 FontWeight medium = FontWeight.w500;

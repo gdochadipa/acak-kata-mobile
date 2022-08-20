@@ -55,6 +55,10 @@ class SocketProvider with ChangeNotifier {
     await _socketService.bindReceiveUserDisconnect();
   }
 
+  Future<void> socketReceiveStartingGameBySchedule() async {
+    await _socketService.bindReceiveStartingGameBySchedule();
+  }
+
   Future<void> socketSendJoinRoom(
       {required String channelCode,
       required String playerCode,

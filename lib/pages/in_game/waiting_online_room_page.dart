@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:acakkata/generated/l10n.dart';
 import 'package:acakkata/helper/style_helper.dart';
@@ -58,6 +59,7 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
     socketProvider!.socketReceiveFindRoom();
     socketProvider!.socketReceiveStatusPlayer();
     socketProvider!.socketReceiveUserDisconnect();
+    socketProvider!.socketReceiveStartingGameBySchedule();
     // await socketService.fireSocket();
     // socketService.emitJoinRoom(
     //     '${roomProvider!.roomMatch!.channel_code}', 'allhost');
@@ -390,6 +392,11 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
                         hasStart = true;
                       }
                     }
+                  }
+
+                  if (data['target'] == 'starting-game-by-schedule') {
+                    logger.d("starting-game-by-schedule is run");
+                    handleStartGame();
                   }
                 } catch (e) {
                   logger.e(e);

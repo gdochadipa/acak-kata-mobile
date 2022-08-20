@@ -244,7 +244,7 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
       );
     }
 
-    Widget DateTimePlay() {
+    Widget dateTimePlay() {
       final format = DateFormat("yyyy-MM-dd HH:mm");
       return Container(
         height: 40,
@@ -362,7 +362,7 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
                 const SizedBox(
                   height: 5,
                 ),
-                DateTimePlay(),
+                dateTimePlay(),
                 const SizedBox(
                   height: 5,
                 ),

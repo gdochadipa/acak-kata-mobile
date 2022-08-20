@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:acakkata/models/room_match_model.dart';
 import 'package:acakkata/models/word_language_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 
 class RoomService {
@@ -20,6 +21,7 @@ class RoomService {
       int level,
       int lengthWord) async {
     var url = Uri.parse('$baseUrl/create-room');
+    var dateUtc = DateTime.now();
     print(url);
     var headers = {'Content-Type': 'application/json', 'Authorization': token};
     var body = jsonEncode({
@@ -28,6 +30,7 @@ class RoomService {
       'max_player': maxPlayer,
       'total_question': totalQuestion,
       'datetime_match': datetimeMatch.toString(),
+      'datetime_client': DateFormat('yyyy-MM-dd hh:mm').format(dateUtc),
       'level': level,
       'length_word': lengthWord
     });

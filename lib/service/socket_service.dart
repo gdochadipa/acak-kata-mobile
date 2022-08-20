@@ -99,6 +99,13 @@ class SocketService {
     });
   }
 
+  Future<void> bindReceiveStartingGameBySchedule() async {
+    socket.on('starting-game-by-schedule', (last) {
+      final String? data = last.toString();
+      _inEventData.add(data);
+    });
+  }
+
   emitJoinRoom(String channelCode, String player) {
     socket.emit(
         'join-room',
