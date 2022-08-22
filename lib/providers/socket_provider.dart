@@ -23,8 +23,9 @@ class SocketProvider with ChangeNotifier {
   }
 
   Future<void> socketEmitJoinRoom(
-      {required String channelCode, required String playerCode}) async {
-    await _socketService.emitJoinRoom(channelCode, playerCode);
+      {required String channelCode,
+      required RoomMatchDetailModel? matchDetail}) async {
+    await _socketService.emitJoinRoom(channelCode, matchDetail!.id!);
   }
 
   pausedStream() {
@@ -96,10 +97,10 @@ class SocketProvider with ChangeNotifier {
         channelCode, roomMatch!.id, roomMatch.status_game);
   }
 
-  Future<void> socketJoinRoom(
-      {required String channelCode, required String playerCode}) async {
-    _socketService.emitJoinRoom(channelCode, playerCode);
-  }
+  // Future<void> socketJoinRoom(
+  //     {required String channelCode, required String playerCode}) async {
+  //   _socketService.emitJoinRoom(channelCode, playerCode);
+  // }
 
   Future<void> sendExitRoom(
       {required String channelCode, required String playerId}) async {

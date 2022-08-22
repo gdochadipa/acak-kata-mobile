@@ -53,9 +53,10 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
 
   connectSocket() async {
     socketProvider!.restartStream();
-    socketProvider!.socketJoinRoom(
+    socketProvider!.socketEmitJoinRoom(
         channelCode: '${roomProvider!.roomMatch!.channel_code}',
-        playerCode: '${authProvider!.user!.userCode}');
+        matchDetail:
+            roomProvider!.getDetailRoomByID(userID: authProvider!.user!.id));
     socketProvider!.socketReceiveFindRoom();
     socketProvider!.socketReceiveStatusPlayer();
     socketProvider!.socketReceiveUserDisconnect();
@@ -263,7 +264,7 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
       );
     }
 
-    Widget ButtonCancelRoom() {
+    Widget buttonCancelRoom() {
       return Container(
         width: double.infinity,
         alignment: Alignment.center,

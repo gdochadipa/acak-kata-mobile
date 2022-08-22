@@ -86,7 +86,8 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
     await socketProvider!.fireStream();
     await socketProvider!.socketEmitJoinRoom(
         channelCode: roomProvider!.roomMatch!.channel_code!,
-        playerCode: authProvider!.user!.userCode!);
+        matchDetail:
+            roomProvider!.getDetailRoomByID(userID: authProvider!.user!.id!));
   }
 
   getDataSocket() async {
@@ -119,8 +120,10 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
 
   handleRefreshRoom() async {
     if (roomProvider!.checkIsHost(userID: authProvider!.user!.id) == 1) {
+      logger.d("Time is running");
       Timer.periodic(const Duration(seconds: 10), (timer) async {
         try {
+          logger.d("Refresh room update");
           /**
            *  ngecek apakah setelah kedua permainan berakhir, 
            *  namun masih belum menerima status permainan dari permainan lain
@@ -172,6 +175,10 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
               _confettiController.play();
               timer.cancel();
             }
+          }
+
+          if (roomProvider!.roomMatch!.status_game == 2) {
+            timer.cancel();
           }
         } catch (e) {
           logger.e(e);
@@ -441,7 +448,7 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
               const Spacer(),
               Container(
                   margin: const EdgeInsets.symmetric(vertical: 5),
-                  child: (rank! < 3 && rank > 0)
+                  child: (rank! < 4 && rank > 0)
                       ? Image.asset(
                           'assets/images/$rankImage',
                           height: 30,
@@ -482,17 +489,19 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
             const SizedBox(
               height: 8,
             ),
-            ListView(
-              shrinkWrap: true,
-              children: listDetail!.map((e) {
-                return AnimationConfiguration.staggeredList(
-                    position: listDetail.indexOf(e),
-                    child: SlideAnimation(
-                      horizontalOffset: 50,
-                      child: FadeInAnimation(
-                          child: rankCard(e, listDetail.indexOf(e) + 1)),
-                    ));
-              }).toList(),
+            Expanded(
+              child: ListView(
+                shrinkWrap: true,
+                children: listDetail!.map((e) {
+                  return AnimationConfiguration.staggeredList(
+                      position: listDetail.indexOf(e),
+                      child: SlideAnimation(
+                        horizontalOffset: 50,
+                        child: FadeInAnimation(
+                            child: rankCard(e, listDetail.indexOf(e) + 1)),
+                      ));
+                }).toList(),
+              ),
             ),
             // ),
           ],
@@ -617,25 +626,25 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
       );
     }
 
-    return Scaffold(
-      backgroundColor: primaryColor5,
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          Align(
-            alignment: Alignment.center,
-            child: body(),
-          ),
-          Align(
-            alignment: Alignment.topCenter,
-            child: confettiStar(),
-          ),
-        ],
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        backgroundColor: primaryColor5,
+        body: Stack(
+          fit: StackFit.expand,
+          children: [
+            body(),
+            Align(
+              alignment: Alignment.topCenter,
+              child: confettiStar(),
+            ),
+          ],
+        ),
+        bottomNavigationBar: Container(
+            decoration: BoxDecoration(color: whiteColor),
+            height: 90,
+            child: backtoMenu()),
       ),
-      bottomNavigationBar: Container(
-          decoration: BoxDecoration(color: whiteColor),
-          height: 90,
-          child: backtoMenu()),
     );
   }
 }

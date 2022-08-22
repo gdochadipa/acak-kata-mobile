@@ -90,6 +90,9 @@ class ExitDialog extends StatelessWidget {
                             ),
                             child: Text(
                               setLanguage.exit_game_no,
+                              maxLines: 1,
+                              softWrap: false,
+                              overflow: TextOverflow.ellipsis,
                               style: primaryTextStyle.copyWith(
                                 fontSize: 12,
                                 fontWeight: medium,

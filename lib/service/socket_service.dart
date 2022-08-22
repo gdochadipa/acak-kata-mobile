@@ -106,11 +106,11 @@ class SocketService {
     });
   }
 
-  emitJoinRoom(String channelCode, String player) {
+  emitJoinRoom(String channelCode, String roomDetailId) {
     socket.emit(
         'join-room',
         json.encode(
-            {'channel_code': channelCode, 'player_id': 'flutter $player'}));
+            {'channel_code': channelCode, 'room_detail_id': roomDetailId}));
   }
 
   Future<void> emitStatusPlayer(String channelCode, String? roomDetID,
