@@ -61,6 +61,7 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
     socketProvider!.socketReceiveStatusPlayer();
     socketProvider!.socketReceiveUserDisconnect();
     socketProvider!.socketReceiveStartingGameBySchedule();
+    socketProvider!.bindOnDisconnect();
     // await socketService.fireSocket();
     // socketService.emitJoinRoom(
     //     '${roomProvider!.roomMatch!.channel_code}', 'allhost');
@@ -96,8 +97,8 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
           channelCode: roomMatch.channel_code ?? '',
           roomMatch: roomProvider!.roomMatch);
       logger.d("Game Start ");
-      socketProvider!.pausedStream();
       Timer(const Duration(milliseconds: 1000), () {
+        socketProvider!.pausedStream();
         LevelModel levelModel = LevelModel(
             id: 77,
             level_name: setLanguage.custom_level,

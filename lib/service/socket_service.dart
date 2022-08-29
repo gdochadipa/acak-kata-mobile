@@ -174,6 +174,12 @@ class SocketService {
     // _eventData.close();
   }
 
+  Future<void> onDisconnect() async {
+    socket.onDisconnect((data) {
+      print("Disconnect onDisconnect flutter ${data.toString()}");
+    });
+  }
+
   Future<void> onTest() async {
     socket.on('eventName', (data) {
       _eventData.add(data);

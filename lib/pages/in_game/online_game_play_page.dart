@@ -92,7 +92,7 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
   int queueNow = 0;
   List<int> scoreTime = [];
 
-  Future<bool> getInit() async {
+  Future<void> getInit() async {
     // LanguageDBProvider langProvider =
     //     Provider.of<LanguageDBProvider>(context, listen: false);
     socketProvider = Provider.of<SocketProvider>(context, listen: false);
@@ -120,19 +120,16 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
       setState(() {
         dataWordList = roomProvider!.listQuestion;
       });
-      logger.d(dataWordList!.length);
+      logger.d("${dataWordList!.length} data length");
       await setUpListQuestionQueue(dataWordList);
       // setup antrian pertanyaan, gunanya untuk mekanisme skip pertanyaan
       setState(() {
         _isLoading = false;
       });
-      return true;
     } catch (e) {
       logger.e(e);
       logger.d('gagal load permainan');
     }
-
-    return false;
   }
 
   setUpListQuestionQueue(List<WordLanguageModel>? wordList) async {
@@ -156,19 +153,21 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
   }
 
   Coordinate generateCoordinate(List<Coordinate> coordinateCache) {
+    double max = 230;
+    double min = 0;
     var coordinate =
-        Coordinate(x: randomDouble(0, 250), y: randomDouble(0, 250));
+        Coordinate(x: randomDouble(min, max), y: randomDouble(min, max));
     if (coordinateCache.isNotEmpty) {
       while (true) {
         var wasCoor = coordinateCache.where((coordi) =>
             coordi.compareIsInsideRange(
-                x1: coordinate.x ?? 0, y1: coordinate.y ?? 0, range: 37.5));
+                x1: coordinate.x ?? min, y1: coordinate.y ?? min, range: 35.5));
 
         if (wasCoor.isEmpty) {
           return coordinate;
         } else {
           coordinate =
-              Coordinate(x: randomDouble(0, 250), y: randomDouble(0, 250));
+              Coordinate(x: randomDouble(min, max), y: randomDouble(min, max));
         }
       }
     }
@@ -186,11 +185,11 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
         parent: _animationRotateController, curve: Curves.elasticOut));
 
     getInit();
-    Timer _timer;
 
     // const duration = Duration(seconds: 1);
-    _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+    Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       if (startCountDown > 0) {
+        print("on Timer.periodic count 1 start");
         if (mounted) {
           setState(() {
             startCountDown--;
@@ -199,6 +198,7 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
         }
       } else {
         timer.cancel();
+        print("on Timer.periodic count 1 game");
         try {
           if (mounted) {
             setState(() {
@@ -460,7 +460,9 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
   Future<void> showCancelGame() async {
     return showDialog(
         context: context,
-        builder: (BuildContext context) => const ExitDialog());
+        builder: (BuildContext context) => const ExitDialog(
+              isOnline: true,
+            ));
   }
 
   /// fungsi untuk memberikan input jawaban setelah menekan tombol huruf

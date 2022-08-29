@@ -148,19 +148,21 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
   }
 
   Coordinate generateCoordinate(List<Coordinate> coordinateCache) {
+    double max = 230;
+    double min = 0;
     var coordinate =
-        Coordinate(x: randomDouble(0, 250), y: randomDouble(0, 250));
+        Coordinate(x: randomDouble(min, max), y: randomDouble(min, max));
     if (coordinateCache.isNotEmpty) {
       while (true) {
         var wasCoor = coordinateCache.where((coordi) =>
             coordi.compareIsInsideRange(
-                x1: coordinate.x ?? 0, y1: coordinate.y ?? 0, range: 37.5));
+                x1: coordinate.x ?? min, y1: coordinate.y ?? min, range: 35.5));
 
         if (wasCoor.isEmpty) {
           return coordinate;
         } else {
           coordinate =
-              Coordinate(x: randomDouble(0, 250), y: randomDouble(0, 250));
+              Coordinate(x: randomDouble(min, max), y: randomDouble(min, max));
         }
       }
     }
@@ -447,7 +449,9 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
   Future<void> showCancelGame() async {
     return showDialog(
         context: context,
-        builder: (BuildContext context) => const ExitDialog());
+        builder: (BuildContext context) => const ExitDialog(
+              isOnline: false,
+            ));
   }
 
   /// fungsi untuk memberikan input jawaban setelah menekan tombol huruf

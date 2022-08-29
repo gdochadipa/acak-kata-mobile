@@ -1,15 +1,20 @@
 import 'package:acakkata/generated/l10n.dart';
+import 'package:acakkata/providers/socket_provider.dart';
+import 'package:acakkata/service/socket_service.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/button/circle_bounce_button.dart';
 import 'package:flutter/material.dart';
 
 class ExitDialog extends StatelessWidget {
+  final bool? isOnline;
   const ExitDialog({
+    required this.isOnline,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    SocketService socketService = SocketService();
     S? setLanguage = S.of(context);
     return SizedBox(
       width: MediaQuery.of(context).size.width - (2 * defaultMargin),
@@ -53,7 +58,8 @@ class ExitDialog extends StatelessWidget {
                           margin: const EdgeInsets.all(2),
                           height: 44,
                           child: TextButton(
-                            onPressed: () {
+                            onPressed: () async {
+                              await socketService.disconnect();
                               Navigator.pushNamedAndRemoveUntil(
                                   context, '/home', (route) => false);
                             },

@@ -74,7 +74,7 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
   @override
   void dispose() {
     // TODO: implement dispose
-    disconnectSocket();
+    // disconnectSocket();
     super.dispose();
   }
 

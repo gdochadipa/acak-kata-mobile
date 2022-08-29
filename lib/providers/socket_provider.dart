@@ -113,6 +113,27 @@ class SocketProvider with ChangeNotifier {
     _socketService.disconnectCloseStream();
   }
 
+  Future<void> reconnectToGame(
+      {required RoomMatchModel? roomMatch,
+      required RoomMatchDetailModel? roomMatchDetailModel,
+      int? score}) async {
+    //join and then update status game
+    //actvie when check result game,
+    await _socketService.emitJoinRoom(
+        roomMatch!.channel_code!, roomMatchDetailModel!.id!);
+    await _socketService.emitStatusPlayer(
+        roomMatch.channel_code!,
+        roomMatchDetailModel.id,
+        roomMatchDetailModel.is_ready,
+        roomMatchDetailModel.status_player,
+        roomMatchDetailModel.player!.username,
+        score ?? 0);
+  }
+
+  Future<void> bindOnDisconnect() async {
+    await _socketService.onDisconnect();
+  }
+
   Future<void> onTest() async {
     await _socketService.onTest();
   }
