@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ffi';
 import 'dart:ui';
 
 import 'package:acakkata/generated/l10n.dart';
@@ -12,6 +13,7 @@ import 'package:acakkata/pages/level/level_list_page.dart';
 import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/providers/change_language_provider.dart';
 import 'package:acakkata/providers/language_db_provider.dart';
+import 'package:acakkata/service/connectivity_service.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/button/button_bounce.dart';
 import 'package:acakkata/widgets/button/circle_bounce_button.dart';
@@ -22,8 +24,10 @@ import 'package:acakkata/widgets/popover/popover_listview.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:animations/animations.dart';
 import 'package:bouncing_widget/bouncing_widget.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -36,17 +40,18 @@ class NewHomePage extends StatefulWidget {
 
 class _NewHomePageState extends State<NewHomePage> {
   ChangeLanguageProvider? _changeLanguageProvider;
+  Map _source = {ConnectivityResult.none: false};
+  final ConnectivityService _connectivityService = ConnectivityService.instance;
   AuthProvider? _authProvider;
   String? languageChoice = 'en';
   SharedPreferences? prefs;
   bool wasSelectedLanguage = false;
   bool login = false;
-  bool isNetwork = false;
 
   init() async {
     prefs = await SharedPreferences.getInstance();
     _authProvider = Provider.of<AuthProvider>(context, listen: false);
-    isNetwork = await _authProvider!.hasNetwork();
+    _connectivityService.initialise();
     setState(() {
       languageChoice = prefs!.getString("choiceLang");
       wasSelectedLanguage = prefs!.getBool("wasSelectedLanguage") ?? false;
@@ -65,13 +70,6 @@ class _NewHomePageState extends State<NewHomePage> {
     });
   }
 
-  void onCheckConnection() async {
-    var network = await _authProvider!.hasNetwork();
-    setState(() {
-      isNetwork = network;
-    });
-  }
-
   @override
   void initState() {
     // TODO: implement initState
@@ -82,16 +80,44 @@ class _NewHomePageState extends State<NewHomePage> {
     super.initState();
   }
 
+  checkConnectivity() {
+    _connectivityService.myStream.listen((source) {
+      setState(() => _source = source);
+    });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     bool isLoading = false;
     // LanguageProvider? languageProvider = Provider.of<LanguageProvider>(context);
     LanguageDBProvider? languageDBProvider =
         Provider.of<LanguageDBProvider>(context);
+    Logger logger = Logger(
+      printer: PrettyPrinter(methodCount: 0),
+    );
+    bool isDisconnected = false;
 
     S? setLanguage = S.of(context);
 
     List<LanguageModel>? listLanguageModel = languageDBProvider.languageList;
+
+    _connectivityService.myStream.listen((source) {
+      if (source.keys.toList()[0] == ConnectivityResult.none) {
+        print("disconnected");
+        isDisconnected = true;
+      }
+
+      if (source.keys.toList()[0] != ConnectivityResult.none) {
+        print("connected");
+        isDisconnected = false;
+      }
+    });
 
     Future<void> showCancelGame() async {
       return showDialog(
@@ -393,8 +419,7 @@ class _NewHomePageState extends State<NewHomePage> {
         shadowColor: greenColor3,
         margin: const EdgeInsets.symmetric(horizontal: 5.0),
         onClick: () async {
-          onCheckConnection();
-          if (isNetwork) {
+          if (_source.keys.toList()[0] != ConnectivityResult.none) {
             if (!login) {
               showAuthModal();
             } else {
@@ -471,8 +496,7 @@ class _NewHomePageState extends State<NewHomePage> {
         borderColor: blueColor2,
         shadowColor: blueColor3,
         onClick: () async {
-          onCheckConnection();
-          if (isNetwork) {
+          if (_source.keys.toList()[0] != ConnectivityResult.none) {
             if (!login) {
               showAuthModal();
             } else {

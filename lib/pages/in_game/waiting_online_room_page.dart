@@ -9,15 +9,19 @@ import 'package:acakkata/models/level_model.dart';
 import 'package:acakkata/models/room_match_detail_model.dart';
 import 'package:acakkata/models/room_match_model.dart';
 import 'package:acakkata/models/user_model.dart';
+import 'package:acakkata/pages/in_game/modal/room_exit_modal.dart';
 import 'package:acakkata/pages/in_game/online_game_play_page.dart';
 import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/providers/room_provider.dart';
 import 'package:acakkata/providers/socket_provider.dart';
+import 'package:acakkata/service/connectivity_service.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/button/button_bounce.dart';
 import 'package:acakkata/widgets/clicky_button.dart';
 import 'package:acakkata/widgets/custom_page_route.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:animations/animations.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -36,6 +40,8 @@ class WaitingOnlineRoomPage extends StatefulWidget {
 
 class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
   // SocketService socketService = SocketService();
+  Map _source = {ConnectivityResult.none: false};
+  final ConnectivityService _connectivityService = ConnectivityService.instance;
   SocketProvider? socketProvider;
   AuthProvider? authProvider;
   RoomProvider? roomProvider;
@@ -48,7 +54,14 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
     roomProvider = Provider.of<RoomProvider>(context, listen: false);
     socketProvider = Provider.of<SocketProvider>(context, listen: false);
     connectSocket();
+    _connectivityService.initialise();
     super.initState();
+    //dipakai untuk check koneksi internet
+    // _connectivityService.initialise();
+  }
+
+  checkConnectivity() {
+    _connectivityService.myStream.listen((event) {});
   }
 
   connectSocket() async {
@@ -76,8 +89,8 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
   @override
   void dispose() {
     // TODO: implement dispose
-    super.dispose();
     socketProvider!.pausedStream();
+    super.dispose();
   }
 
   @override
@@ -88,6 +101,8 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
     Logger logger = Logger(
       printer: PrettyPrinter(methodCount: 0),
     );
+
+    checkConnectivity();
 
     actionStartMatch() async {
       print("on action");
@@ -167,6 +182,20 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
         logger.e(e);
         logger.e(trace);
       }
+    }
+
+    Future<void> showIsDisconnectModal() async {
+      return showModal(
+          context: context,
+          builder: (BuildContext context) {
+            final theme = Theme.of(context);
+            return const Dialog(
+              insetAnimationCurve: Curves.easeInOut,
+              backgroundColor: Colors.transparent,
+              shape: RoundedRectangleBorder(),
+              child: RoomExitModal(),
+            );
+          });
     }
 
     Widget joinPlayerCard(
@@ -513,6 +542,14 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
               );
             }),
       );
+    }
+
+    if (_source.keys.toList()[0] == ConnectivityResult.none) {
+      logger.d('Connectivity none');
+    }
+
+    if (_source.keys.toList()[0] == ConnectivityResult.wifi) {
+      logger.d('Connectivity wifi');
     }
 
     return WillPopScope(

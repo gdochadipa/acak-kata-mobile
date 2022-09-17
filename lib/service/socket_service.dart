@@ -59,7 +59,20 @@ class SocketService {
   /// check room to
   Future<void> bindReceiveQuestion() async {
     socket.on('broadcast-question', (last) {
-      print("soal diterima");
+      final String? data = last.toString();
+      _inEventData.add(data);
+    });
+  }
+
+  Future<void> bindReceiveExitRoom() async {
+    socket.on('host-exit-room', (last) {
+      final String? data = last.toString();
+      _inEventData.add(data);
+    });
+  }
+
+  Future<void> bindReceiveChangeHost() async {
+    socket.on('change-host', (last) {
       final String? data = last.toString();
       _inEventData.add(data);
     });

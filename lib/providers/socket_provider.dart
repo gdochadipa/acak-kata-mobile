@@ -60,6 +60,14 @@ class SocketProvider with ChangeNotifier {
     await _socketService.bindReceiveStartingGameBySchedule();
   }
 
+  Future<void> socketReceiveExitRoom() async {
+    await _socketService.bindReceiveExitRoom();
+  }
+
+  Future<void> socketReceiveChangeHost() async {
+    await _socketService.bindReceiveChangeHost();
+  }
+
   Future<void> socketSendJoinRoom(
       {required String channelCode,
       required String playerCode,

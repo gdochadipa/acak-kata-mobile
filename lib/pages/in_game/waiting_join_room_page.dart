@@ -8,6 +8,7 @@ import 'package:acakkata/models/room_match_detail_model.dart';
 import 'package:acakkata/models/room_match_model.dart';
 import 'package:acakkata/models/user_model.dart';
 import 'package:acakkata/models/word_language_model.dart';
+import 'package:acakkata/pages/in_game/modal/room_exit_modal.dart';
 import 'package:acakkata/pages/in_game/online_game_play_page.dart';
 import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/providers/room_provider.dart';
@@ -17,6 +18,7 @@ import 'package:acakkata/widgets/button/button_bounce.dart';
 import 'package:acakkata/widgets/clicky_button.dart';
 import 'package:acakkata/widgets/custom_page_route.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:animations/animations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -57,6 +59,7 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
     socketProvider!.socketReceiveStatusPlayer();
     socketProvider!.socketReceiveStatusGame();
     socketProvider!.socketReceiveUserDisconnect();
+    socketProvider!.socketReceiveExitRoom();
 
     // await socketService.fireSocket();
     // await socketService.bindEventSearchRoom();
@@ -313,6 +316,22 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
                       status = "Menerima status dari pemain lain";
                       logger.d("Menerima status permainan");
                     }
+                  }
+
+                  //ketika host keluar dari permainan
+                  if (data['target'] == 'host-exit-room') {
+                    socketProvider!.disconnectService();
+                    showModal(
+                        context: context,
+                        builder: (BuildContext context) {
+                          final theme = Theme.of(context);
+                          return const Dialog(
+                            insetAnimationCurve: Curves.easeInOut,
+                            backgroundColor: Colors.transparent,
+                            shape: RoundedRectangleBorder(),
+                            child: RoomExitModal(),
+                          );
+                        });
                   }
                 } catch (e, t) {
                   logger.e(t);
