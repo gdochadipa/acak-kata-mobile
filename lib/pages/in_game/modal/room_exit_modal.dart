@@ -26,7 +26,7 @@ class _RoomExitModalState extends State<RoomExitModal> {
             height: 300,
             child: PopoverListView(
                 child: Container(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(5),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [

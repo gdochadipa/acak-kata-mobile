@@ -12,6 +12,7 @@ import 'package:acakkata/pages/in_game/modal/join_room_modal.dart';
 import 'package:acakkata/pages/level/level_list_page.dart';
 import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/providers/change_language_provider.dart';
+import 'package:acakkata/providers/connectivity_provider.dart';
 import 'package:acakkata/providers/language_db_provider.dart';
 import 'package:acakkata/service/connectivity_service.dart';
 import 'package:acakkata/theme.dart';
@@ -40,8 +41,7 @@ class NewHomePage extends StatefulWidget {
 
 class _NewHomePageState extends State<NewHomePage> {
   ChangeLanguageProvider? _changeLanguageProvider;
-  Map _source = {ConnectivityResult.none: false};
-  final ConnectivityService _connectivityService = ConnectivityService.instance;
+  ConnectivityProvider? _connectivityProvider;
   AuthProvider? _authProvider;
   String? languageChoice = 'en';
   SharedPreferences? prefs;
@@ -51,7 +51,8 @@ class _NewHomePageState extends State<NewHomePage> {
   init() async {
     prefs = await SharedPreferences.getInstance();
     _authProvider = Provider.of<AuthProvider>(context, listen: false);
-    _connectivityService.initialise();
+    _connectivityProvider =
+        Provider.of<ConnectivityProvider>(context, listen: false);
     setState(() {
       languageChoice = prefs!.getString("choiceLang");
       wasSelectedLanguage = prefs!.getBool("wasSelectedLanguage") ?? false;
@@ -80,12 +81,6 @@ class _NewHomePageState extends State<NewHomePage> {
     super.initState();
   }
 
-  checkConnectivity() {
-    _connectivityService.myStream.listen((source) {
-      setState(() => _source = source);
-    });
-  }
-
   @override
   void dispose() {
     // TODO: implement dispose
@@ -107,14 +102,12 @@ class _NewHomePageState extends State<NewHomePage> {
 
     List<LanguageModel>? listLanguageModel = languageDBProvider.languageList;
 
-    _connectivityService.myStream.listen((source) {
+    _connectivityProvider?.streamConnectivity.listen((source) {
       if (source.keys.toList()[0] == ConnectivityResult.none) {
-        print("disconnected");
         isDisconnected = true;
       }
 
       if (source.keys.toList()[0] != ConnectivityResult.none) {
-        print("connected");
         isDisconnected = false;
       }
     });
@@ -419,7 +412,7 @@ class _NewHomePageState extends State<NewHomePage> {
         shadowColor: greenColor3,
         margin: const EdgeInsets.symmetric(horizontal: 5.0),
         onClick: () async {
-          if (_source.keys.toList()[0] != ConnectivityResult.none) {
+          if (!isDisconnected) {
             if (!login) {
               showAuthModal();
             } else {
@@ -496,7 +489,7 @@ class _NewHomePageState extends State<NewHomePage> {
         borderColor: blueColor2,
         shadowColor: blueColor3,
         onClick: () async {
-          if (_source.keys.toList()[0] != ConnectivityResult.none) {
+          if (!isDisconnected) {
             if (!login) {
               showAuthModal();
             } else {

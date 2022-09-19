@@ -12,6 +12,7 @@ import 'package:acakkata/models/user_model.dart';
 import 'package:acakkata/pages/in_game/modal/room_exit_modal.dart';
 import 'package:acakkata/pages/in_game/online_game_play_page.dart';
 import 'package:acakkata/providers/auth_provider.dart';
+import 'package:acakkata/providers/connectivity_provider.dart';
 import 'package:acakkata/providers/room_provider.dart';
 import 'package:acakkata/providers/socket_provider.dart';
 import 'package:acakkata/service/connectivity_service.dart';
@@ -40,8 +41,7 @@ class WaitingOnlineRoomPage extends StatefulWidget {
 
 class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
   // SocketService socketService = SocketService();
-  Map _source = {ConnectivityResult.none: false};
-  final ConnectivityService _connectivityService = ConnectivityService.instance;
+  ConnectivityProvider? _connectivityProvider;
   SocketProvider? socketProvider;
   AuthProvider? authProvider;
   RoomProvider? roomProvider;
@@ -53,15 +53,10 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
     authProvider = Provider.of<AuthProvider>(context, listen: false);
     roomProvider = Provider.of<RoomProvider>(context, listen: false);
     socketProvider = Provider.of<SocketProvider>(context, listen: false);
+    _connectivityProvider =
+        Provider.of<ConnectivityProvider>(context, listen: false);
     connectSocket();
-    _connectivityService.initialise();
     super.initState();
-    //dipakai untuk check koneksi internet
-    // _connectivityService.initialise();
-  }
-
-  checkConnectivity() {
-    _connectivityService.myStream.listen((event) {});
   }
 
   connectSocket() async {
@@ -97,12 +92,41 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
   Widget build(BuildContext context) {
     S? setLanguage = S.of(context);
     UserModel? user = authProvider!.user;
+    bool isDisconnected = false;
+    bool isShow = false;
     RoomMatchModel? roomMatch = roomProvider!.roomMatch!;
     Logger logger = Logger(
       printer: PrettyPrinter(methodCount: 0),
     );
 
-    checkConnectivity();
+    Future<void> showIsDisconnectModal() async {
+      return showModal(
+          context: context,
+          builder: (BuildContext context) {
+            final theme = Theme.of(context);
+            return const Dialog(
+              insetAnimationCurve: Curves.easeInOut,
+              backgroundColor: Colors.transparent,
+              shape: RoundedRectangleBorder(),
+              child: RoomExitModal(),
+            );
+          });
+    }
+
+    _connectivityProvider?.streamConnectivity.listen((source) {
+      if (source.keys.toList()[0] == ConnectivityResult.none) {
+        isDisconnected = true;
+        // bakal jalanin ketika host disconnect
+        if (isShow == false) {
+          isShow = true;
+        }
+      }
+
+      if (source.keys.toList()[0] != ConnectivityResult.none) {
+        isDisconnected = false;
+        // bakal jalanin ketika host terhubung dengan server
+      }
+    });
 
     actionStartMatch() async {
       print("on action");
@@ -182,20 +206,6 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
         logger.e(e);
         logger.e(trace);
       }
-    }
-
-    Future<void> showIsDisconnectModal() async {
-      return showModal(
-          context: context,
-          builder: (BuildContext context) {
-            final theme = Theme.of(context);
-            return const Dialog(
-              insetAnimationCurve: Curves.easeInOut,
-              backgroundColor: Colors.transparent,
-              shape: RoundedRectangleBorder(),
-              child: RoomExitModal(),
-            );
-          });
     }
 
     Widget joinPlayerCard(
@@ -542,14 +552,6 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
               );
             }),
       );
-    }
-
-    if (_source.keys.toList()[0] == ConnectivityResult.none) {
-      logger.d('Connectivity none');
-    }
-
-    if (_source.keys.toList()[0] == ConnectivityResult.wifi) {
-      logger.d('Connectivity wifi');
     }
 
     return WillPopScope(

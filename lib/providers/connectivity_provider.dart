@@ -2,7 +2,7 @@ import 'package:acakkata/service/connectivity_service.dart';
 import 'package:flutter/material.dart';
 
 class ConnectivityProvider with ChangeNotifier {
-  ConnectivityService _connectivityService = ConnectivityService.instance;
+  final ConnectivityService _connectivityService = ConnectivityService.instance;
   Stream get streamConnectivity => _connectivityService.myStream;
 
   ConnectivityProvider() {

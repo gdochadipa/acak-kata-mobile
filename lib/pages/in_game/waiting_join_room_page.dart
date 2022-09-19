@@ -11,6 +11,7 @@ import 'package:acakkata/models/word_language_model.dart';
 import 'package:acakkata/pages/in_game/modal/room_exit_modal.dart';
 import 'package:acakkata/pages/in_game/online_game_play_page.dart';
 import 'package:acakkata/providers/auth_provider.dart';
+import 'package:acakkata/providers/connectivity_provider.dart';
 import 'package:acakkata/providers/room_provider.dart';
 import 'package:acakkata/providers/socket_provider.dart';
 import 'package:acakkata/theme.dart';
@@ -19,6 +20,7 @@ import 'package:acakkata/widgets/clicky_button.dart';
 import 'package:acakkata/widgets/custom_page_route.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:animations/animations.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -41,6 +43,7 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
   SocketProvider? socketProvider;
   AuthProvider? authProvider;
   RoomProvider? roomProvider;
+  ConnectivityProvider? _connectivityProvider;
 
   @override
   void initState() {
@@ -48,6 +51,8 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
     authProvider = Provider.of<AuthProvider>(context, listen: false);
     roomProvider = Provider.of<RoomProvider>(context, listen: false);
     socketProvider = Provider.of<SocketProvider>(context, listen: false);
+    _connectivityProvider =
+        Provider.of<ConnectivityProvider>(context, listen: false);
     connectSocket();
     super.initState();
   }
@@ -66,6 +71,25 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
     // await socketService.bindReceiveStatusPlayer();
   }
 
+  reconnectSocket() async {
+    socketProvider!.restartStream();
+    RoomMatchDetailModel roomSend = roomProvider!.listRoommatchDet!
+        .where((detail) => detail.player_id! == authProvider!.user!.id)
+        .first;
+    roomSend.is_ready = 1;
+    await socketProvider!.socketSendJoinRoom(
+        channelCode: '${roomProvider!.roomMatch!.channel_code}',
+        playerCode: '${authProvider!.user!.id}',
+        languageCode: '${roomProvider!.roomMatch!.language!.language_code}',
+        roomMatchDet: roomSend);
+    socketProvider!.socketReceiveFindRoom();
+    socketProvider!.socketReceiveQuestion();
+    socketProvider!.socketReceiveStatusPlayer();
+    socketProvider!.socketReceiveStatusGame();
+    socketProvider!.socketReceiveUserDisconnect();
+    socketProvider!.socketReceiveExitRoom();
+  }
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -77,10 +101,51 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
   Widget build(BuildContext context) {
     S? setLanguage = S.of(context);
     UserModel? user = authProvider!.user;
+    bool isShow = false;
+    bool isDisconnected = false;
+    int reconnectTimes = 0;
     RoomMatchModel? roomMatch = roomProvider!.roomMatch!;
     Logger logger = Logger(
       printer: PrettyPrinter(methodCount: 0),
     );
+
+    Future<void> reconnectToServer() async {
+      if (!isDisconnected) {
+        // reconnectSocket();
+        print('connecting');
+      }
+    }
+
+    _connectivityProvider?.streamConnectivity.listen((source) {
+      if (source.keys.toList()[0] == ConnectivityResult.none) {
+        isDisconnected = true;
+        print('on Disconnect');
+        // bakal jalanin ketika host disconnect
+        if (isShow == false) {
+          isShow = true;
+          Timer.periodic(const Duration(milliseconds: 10000), (timer) async {
+            print("on reconnceting");
+            await reconnectToServer();
+            if (!isDisconnected) {
+              reconnectSocket();
+              print('connecting');
+              timer.cancel();
+              print('back to connecting');
+            }
+            if (reconnectTimes > 2) {
+              timer.cancel();
+              logger.d("Stop reconnecting to server");
+            }
+          });
+        }
+      }
+
+      if (source.keys.toList()[0] != ConnectivityResult.none) {
+        isDisconnected = false;
+        reconnectTimes = 0;
+        // bakal jalanin ketika host terhubung dengan server
+      }
+    });
 
     handleExitRoom(
         {required String roomId,

@@ -6,11 +6,13 @@ import 'package:acakkata/models/level_model.dart';
 import 'package:acakkata/pages/in_game/offline_game_play_page.dart';
 import 'package:acakkata/pages/in_game/prepare_online_game_play.dart';
 import 'package:acakkata/providers/auth_provider.dart';
+import 'package:acakkata/providers/connectivity_provider.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/button/button_bounce.dart';
 import 'package:acakkata/widgets/custom_page_route.dart';
 import 'package:acakkata/widgets/popover/popover_listview.dart';
 import 'package:animations/animations.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -34,18 +36,32 @@ class _ItemLevelCardState extends State<ItemLevelCard> {
   double _padding = 10;
   double _reversePadding = 0;
   double _heightShadow = 10;
+  ConnectivityProvider? _connectivityProvider;
 
   @override
   void initState() {
     // TODO: implement initState
     _padding = _heightShadow;
     _reversePadding = 0.0;
+    _connectivityProvider =
+        Provider.of<ConnectivityProvider>(context, listen: false);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     AuthProvider? _authProvider = Provider.of<AuthProvider>(context);
+    bool isDisconnected = false;
+
+    _connectivityProvider?.streamConnectivity.listen((source) {
+      if (source.keys.toList()[0] == ConnectivityResult.none) {
+        isDisconnected = true;
+      }
+
+      if (source.keys.toList()[0] != ConnectivityResult.none) {
+        isDisconnected = false;
+      }
+    });
 
     showDetailLevelPop() async {
       return showModal(
@@ -381,7 +397,7 @@ class _ItemLevelCardState extends State<ItemLevelCard> {
                                   onClick: () {
                                     Timer(const Duration(milliseconds: 500),
                                         () async {
-                                      if (!await _authProvider.hasNetwork()) {
+                                      if (isDisconnected) {
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(SnackBar(
                                           content: const Text(

@@ -7,6 +7,7 @@ import 'package:acakkata/pages/home_page/new_home_page.dart';
 import 'package:acakkata/pages/splash_page.dart';
 import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/providers/change_language_provider.dart';
+import 'package:acakkata/providers/connectivity_provider.dart';
 import 'package:acakkata/providers/language_db_provider.dart';
 import 'package:acakkata/providers/language_provider.dart';
 import 'package:acakkata/providers/room_provider.dart';
@@ -44,7 +45,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => RoomProvider()),
         ChangeNotifierProvider(create: (context) => LanguageDBProvider()),
         ChangeNotifierProvider(create: (context) => ChangeLanguageProvider()),
-        ChangeNotifierProvider(create: (context) => SocketProvider())
+        ChangeNotifierProvider(create: (context) => SocketProvider()),
+        ChangeNotifierProvider(create: (context) => ConnectivityProvider())
       ],
       child: MaterialApp(
         localizationsDelegates: const [
