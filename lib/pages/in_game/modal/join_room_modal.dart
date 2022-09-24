@@ -91,7 +91,7 @@ class _JoinRoomModalState extends State<JoinRoomModal> {
           roomSend.is_ready = 1;
           await socketProvider!.socketSendJoinRoom(
               channelCode: '${roomProvider!.roomMatch!.channel_code}',
-              playerCode: '${authProvider!.user!.id}',
+              playerCode: '${roomSend.id}',
               languageCode:
                   '${roomProvider!.roomMatch!.language!.language_code}',
               roomMatchDet: roomSend);

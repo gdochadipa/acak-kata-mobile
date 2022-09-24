@@ -177,9 +177,11 @@ class SocketService {
   }
 
   Future<void> disconnect() async {
-    if (socket.connected) {
-      socket.disconnect();
-      socket.onDisconnect((data) => print("Disconnect"));
+    if (socket != null) {
+      if (socket.connected) {
+        socket.disconnect();
+        socket.onDisconnect((data) => print("Disconnect"));
+      }
     }
   }
 

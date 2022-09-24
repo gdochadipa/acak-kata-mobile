@@ -427,12 +427,14 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
                         status: data['status_player'],
                         isReady: data['is_ready']);
 
-                    if (roomProvider!.checkAllAreReceiveQuestion()) {
-                      if (!hasStart) {
-                        actionStartMatch();
-                        hasStart = true;
-                      }
+                    if (!hasStart) {
+                      actionStartMatch();
+                      hasStart = true;
                     }
+
+                    // if (roomProvider!.checkAllAreReceiveQuestion()) {
+
+                    // }
                   }
 
                   if (data['target'] == 'starting-game-by-schedule') {

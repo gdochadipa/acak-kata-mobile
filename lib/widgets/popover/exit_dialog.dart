@@ -4,6 +4,7 @@ import 'package:acakkata/service/socket_service.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/button/circle_bounce_button.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ExitDialog extends StatelessWidget {
   final bool? isOnline;
@@ -14,8 +15,11 @@ class ExitDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SocketService socketService = SocketService();
+    SocketProvider socketProvider =
+        Provider.of<SocketProvider>(context, listen: false);
+
     S? setLanguage = S.of(context);
+    bool online = isOnline ?? false;
     return SizedBox(
       width: MediaQuery.of(context).size.width - (2 * defaultMargin),
       child: AlertDialog(
@@ -59,7 +63,9 @@ class ExitDialog extends StatelessWidget {
                           height: 44,
                           child: TextButton(
                             onPressed: () async {
-                              await socketService.disconnect();
+                              if (online) {
+                                await socketProvider.disconnect();
+                              }
                               Navigator.pushNamedAndRemoveUntil(
                                   context, '/home', (route) => false);
                             },

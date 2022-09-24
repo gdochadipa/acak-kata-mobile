@@ -145,4 +145,8 @@ class SocketProvider with ChangeNotifier {
   Future<void> onTest() async {
     await _socketService.onTest();
   }
+
+  Future<void> disconnect() async {
+    await _socketService.disconnect();
+  }
 }

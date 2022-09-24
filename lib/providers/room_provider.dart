@@ -323,4 +323,21 @@ class RoomProvider with ChangeNotifier {
       return false;
     }
   }
+
+  void changeHostRoom(
+      {required String host_room_before,
+      required String host_room_after,
+      required String? userId}) {
+    roomMatch!.room_match_detail!
+        .where((detail) => detail.id!.contains(host_room_before))
+        .first
+        .is_host = 0;
+
+    roomMatch!.room_match_detail!
+        .where((detail) => detail.id!.contains(host_room_after))
+        .first
+        .is_host = 1;
+
+    getDetailRoomByID(userID: userId);
+  }
 }

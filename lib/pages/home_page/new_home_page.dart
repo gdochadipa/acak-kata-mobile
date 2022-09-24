@@ -14,7 +14,6 @@ import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/providers/change_language_provider.dart';
 import 'package:acakkata/providers/connectivity_provider.dart';
 import 'package:acakkata/providers/language_db_provider.dart';
-import 'package:acakkata/service/connectivity_service.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/button/button_bounce.dart';
 import 'package:acakkata/widgets/button/circle_bounce_button.dart';

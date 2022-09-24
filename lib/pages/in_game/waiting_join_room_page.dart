@@ -73,6 +73,7 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
 
   reconnectSocket() async {
     socketProvider!.restartStream();
+    await roomProvider!.findRoomMatchID(id: roomProvider!.roomMatch!.id);
     RoomMatchDetailModel roomSend = roomProvider!.listRoommatchDet!
         .where((detail) => detail.player_id! == authProvider!.user!.id)
         .first;
@@ -88,6 +89,7 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
     socketProvider!.socketReceiveStatusGame();
     socketProvider!.socketReceiveUserDisconnect();
     socketProvider!.socketReceiveExitRoom();
+    socketProvider!.socketReceiveChangeHost();
   }
 
   @override
@@ -111,7 +113,7 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
 
     Future<void> reconnectToServer() async {
       if (!isDisconnected) {
-        // reconnectSocket();
+        await reconnectSocket();
         print('connecting');
       }
     }
@@ -125,9 +127,9 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
           isShow = true;
           Timer.periodic(const Duration(milliseconds: 10000), (timer) async {
             print("on reconnceting");
-            await reconnectToServer();
+            // await reconnectToServer();
             if (!isDisconnected) {
-              reconnectSocket();
+              // await reconnectSocket();
               print('connecting');
               timer.cancel();
               print('back to connecting');
