@@ -6,6 +6,9 @@ import 'package:flutter/cupertino.dart';
 class SocketProvider with ChangeNotifier {
   SocketService _socketService = SocketService();
   Stream get streamDataSocket => _socketService.eventStream;
+  bool get isDisconnect => _socketService.socket.disconnected;
+  bool get isConnected => _socketService.socket.connected;
+  bool get isActive => _socketService.socket.active;
 
   SocketProvider() {
     _socketService = SocketService();

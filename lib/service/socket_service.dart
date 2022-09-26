@@ -67,6 +67,7 @@ class SocketService {
   Future<void> bindReceiveExitRoom() async {
     socket.on('host-exit-room', (last) {
       final String? data = last.toString();
+      print(data);
       _inEventData.add(data);
     });
   }

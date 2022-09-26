@@ -74,22 +74,26 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
   reconnectSocket() async {
     socketProvider!.restartStream();
     await roomProvider!.findRoomMatchID(id: roomProvider!.roomMatch!.id);
-    RoomMatchDetailModel roomSend = roomProvider!.listRoommatchDet!
-        .where((detail) => detail.player_id! == authProvider!.user!.id)
-        .first;
-    roomSend.is_ready = 1;
-    await socketProvider!.socketSendJoinRoom(
-        channelCode: '${roomProvider!.roomMatch!.channel_code}',
-        playerCode: '${authProvider!.user!.id}',
-        languageCode: '${roomProvider!.roomMatch!.language!.language_code}',
-        roomMatchDet: roomSend);
-    socketProvider!.socketReceiveFindRoom();
-    socketProvider!.socketReceiveQuestion();
-    socketProvider!.socketReceiveStatusPlayer();
-    socketProvider!.socketReceiveStatusGame();
-    socketProvider!.socketReceiveUserDisconnect();
-    socketProvider!.socketReceiveExitRoom();
-    socketProvider!.socketReceiveChangeHost();
+
+    if (await roomProvider!
+        .checkingRoomWithCode("1", roomProvider!.roomMatch!.room_code)) {
+      RoomMatchDetailModel? roomSend = roomProvider!.listRoommatchDet!
+          .where((detail) => detail.player_id! == authProvider!.user!.id)
+          .first;
+      roomSend.is_ready = 1;
+      await socketProvider!.socketSendJoinRoom(
+          channelCode: '${roomProvider!.roomMatch!.channel_code}',
+          playerCode: '${authProvider!.user!.id}',
+          languageCode: '${roomProvider!.roomMatch!.language!.language_code}',
+          roomMatchDet: roomSend);
+      socketProvider!.socketReceiveFindRoom();
+      socketProvider!.socketReceiveQuestion();
+      socketProvider!.socketReceiveStatusPlayer();
+      socketProvider!.socketReceiveStatusGame();
+      socketProvider!.socketReceiveUserDisconnect();
+      socketProvider!.socketReceiveExitRoom();
+      socketProvider!.socketReceiveChangeHost();
+    }
   }
 
   @override
@@ -126,10 +130,10 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
         if (isShow == false) {
           isShow = true;
           Timer.periodic(const Duration(milliseconds: 10000), (timer) async {
-            print("on reconnceting");
+            print("on reconnecting");
             // await reconnectToServer();
             if (!isDisconnected) {
-              // await reconnectSocket();
+              await reconnectSocket();
               print('connecting');
               timer.cancel();
               print('back to connecting');

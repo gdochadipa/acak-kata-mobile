@@ -94,6 +94,7 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
     UserModel? user = authProvider!.user;
     bool isDisconnected = false;
     bool isShow = false;
+    int reconnectTimes = 0;
     RoomMatchModel? roomMatch = roomProvider!.roomMatch!;
     Logger logger = Logger(
       printer: PrettyPrinter(methodCount: 0),
@@ -113,12 +114,15 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
           });
     }
 
-    _connectivityProvider?.streamConnectivity.listen((source) {
-      if (source.keys.toList()[0] == ConnectivityResult.none) {
+    _connectivityProvider?.streamConnectivity.listen((source) async {
+      print("socket disconnect ${socketProvider!.isDisconnect}");
+      if (source.keys.toList()[0] == ConnectivityResult.none &&
+          socketProvider!.isDisconnect) {
         isDisconnected = true;
         // bakal jalanin ketika host disconnect
         if (isShow == false) {
           isShow = true;
+          await showIsDisconnectModal();
         }
       }
 

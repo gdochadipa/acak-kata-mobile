@@ -1,3 +1,4 @@
+import 'package:acakkata/providers/socket_provider.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/button/button_bounce.dart';
 import 'package:acakkata/widgets/popover/popover_listview.dart';
@@ -15,6 +16,9 @@ class RoomExitModal extends StatefulWidget {
 class _RoomExitModalState extends State<RoomExitModal> {
   @override
   Widget build(BuildContext context) {
+    SocketProvider socketProvider =
+        Provider.of<SocketProvider>(context, listen: false);
+
     return SizedBox(
       width: MediaQuery.of(context).size.width,
       child: Dialog(
@@ -57,7 +61,10 @@ class _RoomExitModalState extends State<RoomExitModal> {
                             ],
                           ),
                         ),
-                        onClick: () {
+                        onClick: () async {
+                          if (socketProvider.isConnected) {
+                            await socketProvider.disconnect();
+                          }
                           Navigator.pushNamedAndRemoveUntil(
                               context, '/home', (route) => false);
                         }),
