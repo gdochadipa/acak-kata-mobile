@@ -398,6 +398,70 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
     }
 
     Widget body() {
+      socketProvider!.setRoomStream.listen((source) {
+        print("on setRoom Receive Data");
+        try {
+          var data = json.decode(source.toString());
+
+          if (data['target'] == 'update-player') {
+            RoomMatchDetailModel matchDetailModel =
+                RoomMatchDetailModel.fromJson(data['room_detail']);
+            roomProvider!.updateRoomDetail(matchDetailModel);
+          }
+        } catch (e) {
+          logger.e("setRoom" + e.toString());
+        }
+      });
+
+      socketProvider!.userDisconnectStream.listen((source) {
+        print("on userDisconnect Receive Data");
+        try {
+          var data = json.decode(source.toString());
+          if (data['target'] == 'user-disconnected') {
+            roomProvider!
+                .removePlayerFromRoomMatchDetail(player_id: data['player_id']);
+            print('user-disconnected ${data['player_id']}');
+          }
+        } catch (e) {
+          logger.e("userDisconnect" + e.toString());
+        }
+      });
+
+      socketProvider!.statusPlayerStream.listen((source) {
+        print("on statusPlayerStream Receive Data");
+        try {
+          var data = json.decode(source.toString());
+          if (data['target'] == 'update-status-player') {
+            roomProvider!.updateStatusPlayer(
+                roomDetailId: data['room_detail_id'],
+                status: data['status_player'],
+                isReady: data['is_ready']);
+
+            if (roomProvider!.checkAllAreReceiveQuestion()) {
+              if (!hasStart) {
+                actionStartMatch();
+                hasStart = true;
+              }
+            }
+          }
+        } catch (e) {
+          logger.e("statusPlayerStream" + e.toString());
+        }
+      });
+
+      socketProvider!.startingBySchedulingStream.listen((source) {
+        try {
+          print("on startingBySchedulingStream Receive Data");
+          var data = json.decode(source.toString());
+          if (data['target'] == 'starting-game-by-schedule') {
+            logger.d("starting-game-by-schedule is run");
+            handleStartGame();
+          }
+        } catch (e) {
+          logger.e("startingBySchedulingStream" + e.toString());
+        }
+      });
+
       return SingleChildScrollView(
         child: StreamBuilder(
             stream: socketProvider!.streamDataSocket,
@@ -409,42 +473,44 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
                   var data = json.decode(snapshot.data.toString());
 
                   /**
-                   * ketika pemain lain keluar dari permainan
+                   * *ketika pemain lain keluar dari permainan
                    */
-                  if (data['target'] == 'user-disconnected') {
-                    roomProvider!.removePlayerFromRoomMatchDetail(
-                        player_id: data['player_id']);
-                    print('user-disconnected ${data['player_id']}');
-                  }
+                  // if (data['target'] == 'user-disconnected') {
+                  //   roomProvider!.removePlayerFromRoomMatchDetail(
+                  //       player_id: data['player_id']);
+                  //   print('user-disconnected ${data['player_id']}');
+                  // }
 
-                  /** ketika pemain baru bergabung */
-                  if (data['target'] == 'update-player') {
-                    RoomMatchDetailModel matchDetailModel =
-                        RoomMatchDetailModel.fromJson(data['room_detail']);
-                    roomProvider!.updateRoomDetail(matchDetailModel);
-                  }
+                  /**
+                   * * ketika pemain baru bergabung */
+                  // if (data['target'] == 'update-player') {
+                  //   RoomMatchDetailModel matchDetailModel =
+                  //       RoomMatchDetailModel.fromJson(data['room_detail']);
+                  //   roomProvider!.updateRoomDetail(matchDetailModel);
+                  // }
 
-                  ///! menerima status pemain lain
-                  if (data['target'] == 'update-status-player') {
-                    roomProvider!.updateStatusPlayer(
-                        roomDetailId: data['room_detail_id'],
-                        status: data['status_player'],
-                        isReady: data['is_ready']);
+                  ///* menerima status pemain lain
+                  // if (data['target'] == 'update-status-player') {
+                  //   roomProvider!.updateStatusPlayer(
+                  //       roomDetailId: data['room_detail_id'],
+                  //       status: data['status_player'],
+                  //       isReady: data['is_ready']);
 
-                    if (!hasStart) {
-                      actionStartMatch();
-                      hasStart = true;
-                    }
+                  //   if (!hasStart) {
+                  //     actionStartMatch();
+                  //     hasStart = true;
+                  //   }
 
-                    // if (roomProvider!.checkAllAreReceiveQuestion()) {
+                  //   // if (roomProvider!.checkAllAreReceiveQuestion()) {
 
-                    // }
-                  }
+                  //   // }
+                  // }
 
-                  if (data['target'] == 'starting-game-by-schedule') {
-                    logger.d("starting-game-by-schedule is run");
-                    handleStartGame();
-                  }
+                  //*dijalankan ketika memulai permainan dengan jadwal
+                  // if (data['target'] == 'starting-game-by-schedule') {
+                  //   logger.d("starting-game-by-schedule is run");
+                  //   handleStartGame();
+                  // }
                 } catch (e) {
                   logger.e(e);
                 }

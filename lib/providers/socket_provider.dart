@@ -6,6 +6,16 @@ import 'package:flutter/cupertino.dart';
 class SocketProvider with ChangeNotifier {
   SocketService _socketService = SocketService();
   Stream get streamDataSocket => _socketService.eventStream;
+  Stream get setRoomStream => _socketService.setRoomStream;
+  Stream get questionStream => _socketService.questionStream;
+  Stream get hostExitRoomStream => _socketService.hostExitRoomStream;
+  Stream get changeHostStream => _socketService.changeHostStream;
+  Stream get userDisconnectStream => _socketService.userDisconnectedStream;
+  Stream get statusPlayerStream => _socketService.statusPlayerStream;
+  Stream get statusGameStream => _socketService.statusGameStream;
+  Stream get startingBySchedulingStream =>
+      _socketService.startingByScheduleStream;
+
   bool get isDisconnect => _socketService.socket.disconnected;
   bool get isConnected => _socketService.socket.connected;
   bool get isActive => _socketService.socket.active;
@@ -36,7 +46,7 @@ class SocketProvider with ChangeNotifier {
   }
 
   resumeStream() {
-    _socketService.onResumeStream();
+    // _socketService.onResumeStream();
   }
 
   Future<void> socketReceiveFindRoom() async {

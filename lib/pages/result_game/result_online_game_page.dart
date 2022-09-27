@@ -546,6 +546,69 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
        * 4. update status game selesai
        * 5. selesai
        */
+
+      socketProvider!.statusPlayerStream.listen(
+        (source) {
+          print("on statusPlayerStream ");
+          try {
+            var data = json.decode(source.toString());
+            if (data['target'] == 'update-status-player') {
+              roomProvider!.updateStatusPlayer(
+                  roomDetailId: data['room_detail_id'],
+                  status: data['status_player'],
+                  isReady: data['is_ready'],
+                  score: data['score']);
+              //! jika host maka akan update status game
+              roomMatch = roomProvider!.roomMatch;
+            }
+
+            logger.d(
+                "check all are game done => ${roomProvider!.checkAllAreGameDone()}");
+
+            if (roomProvider!.checkIsHost(userID: user!.id) == 1) {
+              if (roomProvider!.checkAllAreGameDone() &&
+                  roomProvider!.roomMatch!.status_game == 1) {
+                roomProvider!.updateStatusGame(roomMatch!.id, 2);
+
+                socketProvider!.socketSendStatusGame(
+                    channelCode: roomMatch!.channel_code!,
+                    roomMatch: roomProvider!.roomMatch);
+                roomProvider!.roomMatch!.room_match_detail!
+                    .sort((now, next) => now.score!.compareTo(next.score ?? 0));
+                roomMatch = roomProvider!.roomMatch;
+                onLoading = false;
+                _confettiController.play();
+              }
+            }
+          } catch (e) {
+            logger.e("statusPlayerStream" + e.toString());
+          }
+        },
+      );
+
+      socketProvider!.statusGameStream.listen((source) {
+        print("on statusGameStream ");
+        var data = json.decode(source.toString());
+        try {
+          if (data['target'] == 'update-status-game') {
+            if (roomProvider!.checkIsHost(userID: user!.id) == 0 &&
+                roomProvider!.roomMatch!.status_game == 1) {
+              if (data['status_game'] == 2) {
+                roomProvider!
+                    .updateStatusGame(data['room_id'], data['status_game']);
+                onLoading = false;
+                roomProvider!.roomMatch!.room_match_detail!
+                    .sort((now, next) => now.score!.compareTo(next.score ?? 0));
+                roomMatch = roomProvider!.roomMatch;
+                _confettiController.play();
+              }
+            }
+          }
+        } catch (e) {
+          logger.e("statusGameStream" + e.toString());
+        }
+      });
+
       return StreamBuilder(
           stream: socketProvider!.streamDataSocket,
           builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -554,50 +617,50 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
                 var data = json.decode(snapshot.data.toString());
                 logger.d("data  => ${data.toString()}");
                 //! mengecek status pemain
-                if (data['target'] == 'update-status-player') {
-                  roomProvider!.updateStatusPlayer(
-                      roomDetailId: data['room_detail_id'],
-                      status: data['status_player'],
-                      isReady: data['is_ready'],
-                      score: data['score']);
-                  //! jika host maka akan update status game
-                  roomMatch = roomProvider!.roomMatch;
-                }
+                // if (data['target'] == 'update-status-player') {
+                //   roomProvider!.updateStatusPlayer(
+                //       roomDetailId: data['room_detail_id'],
+                //       status: data['status_player'],
+                //       isReady: data['is_ready'],
+                //       score: data['score']);
+                //   //! jika host maka akan update status game
+                //   roomMatch = roomProvider!.roomMatch;
+                // }
                 // logger.d(
                 //     "is host=> ${roomProvider!.checkIsHost(userID: user!.id)}");
-                logger.d(
-                    "check all are game done => ${roomProvider!.checkAllAreGameDone()}");
+                // logger.d(
+                //     "check all are game done => ${roomProvider!.checkAllAreGameDone()}");
 
-                if (roomProvider!.checkIsHost(userID: user!.id) == 1) {
-                  if (roomProvider!.checkAllAreGameDone() &&
-                      roomProvider!.roomMatch!.status_game == 1) {
-                    roomProvider!.updateStatusGame(roomMatch!.id, 2);
+                // if (roomProvider!.checkIsHost(userID: user!.id) == 1) {
+                //   if (roomProvider!.checkAllAreGameDone() &&
+                //       roomProvider!.roomMatch!.status_game == 1) {
+                //     roomProvider!.updateStatusGame(roomMatch!.id, 2);
 
-                    socketProvider!.socketSendStatusGame(
-                        channelCode: roomMatch!.channel_code!,
-                        roomMatch: roomProvider!.roomMatch);
-                    roomProvider!.roomMatch!.room_match_detail!.sort(
-                        (now, next) => now.score!.compareTo(next.score ?? 0));
-                    roomMatch = roomProvider!.roomMatch;
-                    onLoading = false;
-                    _confettiController.play();
-                  }
-                }
+                //     socketProvider!.socketSendStatusGame(
+                //         channelCode: roomMatch!.channel_code!,
+                //         roomMatch: roomProvider!.roomMatch);
+                //     roomProvider!.roomMatch!.room_match_detail!.sort(
+                //         (now, next) => now.score!.compareTo(next.score ?? 0));
+                //     roomMatch = roomProvider!.roomMatch;
+                //     onLoading = false;
+                //     _confettiController.play();
+                //   }
+                // }
 
-                if (data['target'] == 'update-status-game') {
-                  if (roomProvider!.checkIsHost(userID: user.id) == 0 &&
-                      roomProvider!.roomMatch!.status_game == 1) {
-                    if (data['status_game'] == 2) {
-                      roomProvider!.updateStatusGame(
-                          data['room_id'], data['status_game']);
-                      onLoading = false;
-                      roomProvider!.roomMatch!.room_match_detail!.sort(
-                          (now, next) => now.score!.compareTo(next.score ?? 0));
-                      roomMatch = roomProvider!.roomMatch;
-                      _confettiController.play();
-                    }
-                  }
-                }
+                // if (data['target'] == 'update-status-game') {
+                //   if (roomProvider!.checkIsHost(userID: user.id) == 0 &&
+                //       roomProvider!.roomMatch!.status_game == 1) {
+                //     if (data['status_game'] == 2) {
+                //       roomProvider!.updateStatusGame(
+                //           data['room_id'], data['status_game']);
+                //       onLoading = false;
+                //       roomProvider!.roomMatch!.room_match_detail!.sort(
+                //           (now, next) => now.score!.compareTo(next.score ?? 0));
+                //       roomMatch = roomProvider!.roomMatch;
+                //       _confettiController.play();
+                //     }
+                //   }
+                // }
               } catch (e, t) {
                 logger.e(t);
               }

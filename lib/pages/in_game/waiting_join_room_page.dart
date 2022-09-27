@@ -153,6 +153,10 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
       }
     });
 
+    socketProvider!.setRoomStream.listen((source) {
+      print("on Source :");
+    });
+
     handleExitRoom(
         {required String roomId,
         required String channelCode,

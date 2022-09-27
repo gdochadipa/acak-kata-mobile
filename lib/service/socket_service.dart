@@ -17,18 +17,50 @@ class SocketService {
       StreamController<String>.broadcast();
   Sink get _inEventData => _eventData.sink;
   Stream get eventStream => _eventData.stream;
+
+  //set-room
+  final StreamController<String> _setRoomBroadcast =
+      StreamController<String>.broadcast();
+  Stream get setRoomStream => _setRoomBroadcast.stream;
+
+  //broadcast-question
+  final StreamController<String> _questionBroadcast =
+      StreamController<String>.broadcast();
+  Stream get questionStream => _questionBroadcast.stream;
+
+  //host-exit-room
+  final StreamController<String> _hostExitRoomBroadcast =
+      StreamController<String>.broadcast();
+  Stream get hostExitRoomStream => _hostExitRoomBroadcast.stream;
+
+  //change-host
+  final StreamController<String> _changeHostBroadcast =
+      StreamController<String>.broadcast();
+  Stream get changeHostStream => _changeHostBroadcast.stream;
+
+  //user-disconnected
+  final StreamController<String> _userDisconnectedBroadcast =
+      StreamController<String>.broadcast();
+  Stream get userDisconnectedStream => _userDisconnectedBroadcast.stream;
+
+  //broadcast-status-player
+  final StreamController<String> _statusPlayerBroadcast =
+      StreamController<String>.broadcast();
+  Stream get statusPlayerStream => _statusPlayerBroadcast.stream;
+
+  //broadcast-status-game
+  final StreamController<String> _statusGameBroadcast =
+      StreamController<String>.broadcast();
+  Stream get statusGameStream => _statusGameBroadcast.stream;
+
+  //starting-game-by-schedule
+  final StreamController<String> _startingByScheduleBroadcast =
+      StreamController<String>.broadcast();
+  Stream get startingByScheduleStream => _startingByScheduleBroadcast.stream;
+
   Logger logger = Logger(
     printer: PrettyPrinter(methodCount: 0),
   );
-
-  pausedStream() {
-    // _eventData.onPause;
-  }
-
-  onResumeStream() {
-    // _eventData = StreamController<String>.broadcast();
-    // _eventData.onResume!;
-  }
 
   int random(int min, int max) {
     return min + Random().nextInt(max - min);
@@ -45,6 +77,7 @@ class SocketService {
     socket.on('set-room', (last) {
       final String? data = last.toString();
       _inEventData.add(data);
+      _setRoomBroadcast.sink.add(data!);
     });
   }
 
@@ -61,6 +94,7 @@ class SocketService {
     socket.on('broadcast-question', (last) {
       final String? data = last.toString();
       _inEventData.add(data);
+      _questionBroadcast.sink.add(data!);
     });
   }
 
@@ -69,6 +103,7 @@ class SocketService {
       final String? data = last.toString();
       print(data);
       _inEventData.add(data);
+      _hostExitRoomBroadcast.sink.add(data!);
     });
   }
 
@@ -76,6 +111,7 @@ class SocketService {
     socket.on('change-host', (last) {
       final String? data = last.toString();
       _inEventData.add(data);
+      _changeHostBroadcast.sink.add(data!);
     });
   }
 
@@ -83,6 +119,7 @@ class SocketService {
     socket.on('user-disconnected', (last) {
       print(' a user disconnect');
       _inEventData.add(last.toString());
+      _userDisconnectedBroadcast.sink.add(last.toString());
     });
   }
 
@@ -103,6 +140,7 @@ class SocketService {
     List<String>? testData = [];
     socket.on('broadcast-status-player', (last) {
       _inEventData.add(last.toString());
+      _statusPlayerBroadcast.sink.add(last.toString());
     });
   }
 
@@ -110,6 +148,7 @@ class SocketService {
     socket.on('broadcast-status-game', (last) {
       final String? data = last.toString();
       _inEventData.add(data);
+      _statusGameBroadcast.sink.add(data!);
     });
   }
 
@@ -117,6 +156,7 @@ class SocketService {
     socket.on('starting-game-by-schedule', (last) {
       final String? data = last.toString();
       _inEventData.add(data);
+      _startingByScheduleBroadcast.sink.add(data!);
     });
   }
 
