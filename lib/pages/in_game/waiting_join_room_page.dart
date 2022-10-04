@@ -114,13 +114,7 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
     Logger logger = Logger(
       printer: PrettyPrinter(methodCount: 0),
     );
-
-    Future<void> reconnectToServer() async {
-      if (!isDisconnected) {
-        await reconnectSocket();
-        print('connecting');
-      }
-    }
+    List<WordLanguageModel>? questionList = [];
 
     _connectivityProvider?.streamConnectivity.listen((source) {
       if (source.keys.toList()[0] == ConnectivityResult.none) {
@@ -142,6 +136,7 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
               timer.cancel();
               logger.d("Stop reconnecting to server");
             }
+            reconnectTimes++;
           });
         }
       }
@@ -151,10 +146,6 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
         reconnectTimes = 0;
         // bakal jalanin ketika host terhubung dengan server
       }
-    });
-
-    socketProvider!.setRoomStream.listen((source) {
-      print("on Source :");
     });
 
     handleExitRoom(
@@ -287,127 +278,277 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
 
     Widget body() {
       String status = "Waiting Host";
+      socketProvider!.userDisconnectStream.listen((source) {
+        print("on userDisconnectStream Receive Data");
+        try {
+          var data = json.decode(source.toString());
+          if (data['target'] == 'user-disconnected') {
+            roomProvider!
+                .removePlayerFromRoomMatchDetail(player_id: data['player_id']);
+            print('user-disconnected ${data['player_id']}');
+          }
+        } catch (e) {
+          logger.e("userDisconnectStream :" + e.toString());
+        }
+      });
+
+      socketProvider!.setRoomStream.listen((source) {
+        print("on setRoomStream Receive Data");
+        try {
+          var data = json.decode(source.toString());
+          if (data['target'] == 'update-player') {
+            RoomMatchDetailModel matchDetailModel =
+                RoomMatchDetailModel.fromJson(data['room_detail']);
+            roomProvider!.updateRoomDetail(matchDetailModel);
+          }
+        } catch (e) {
+          logger.e("setRoomStream" + e.toString());
+        }
+      });
+      socketProvider!.questionStream.listen((source) {
+        print("on questionStream Receive Data");
+        try {
+          var data = json.decode(source.toString());
+          if (data['target'] == 'receive_question') {
+            // var questions = null;
+            // if (data['encyrpt'] == false) {
+            //   questions = json.decode(data['question'].toString());
+            // } else {
+
+            // }
+            var questionUtf = utf8.decode(base64.decode(data['question']));
+            var questions = json.decode(questionUtf);
+
+            logger.d("data => ${questions != null}");
+            if (questions != null) {
+              for (var itemQuestion in questions) {
+                WordLanguageModel questi =
+                    WordLanguageModel.fromJson(itemQuestion);
+                questionList.add(questi);
+              }
+              roomProvider!.setQuestionList(questionList);
+              socketProvider!.socketSendStatusPlayer(
+                  channelCode: roomProvider!.roomMatch!.channel_code ?? '',
+                  roomMatchDetailModel: roomProvider!
+                      .getAndUpdateStatusPlayerByID(
+                          userID: user!.id, statusPlayer: 2),
+                  score: 0);
+            }
+            // roomProvider!.isGetQuestion = true;
+            status = "Berhasil menerima Pengaturan";
+          }
+        } catch (e) {
+          logger.e("questionStream:" + e.toString());
+        }
+      });
+
+      socketProvider!.statusGameStream.listen((source) {
+        print("on statusGameStream Receive Data");
+        try {
+          var data = json.decode(source.toString());
+          if (data['target'] == 'update-status-game') {
+            if (data['status_game'] == 1) {
+              roomProvider!
+                  .updateStatusGame(data['room_id'], data['status_game']);
+              logger.d("Game Start ");
+              status = "Permainan Segera Dimulai";
+              Timer(const Duration(milliseconds: 1000), () {
+                socketProvider!.pausedStream();
+                LevelModel levelModel = LevelModel(
+                    id: 77,
+                    level_name: setLanguage.custom_level,
+                    level_words: roomMatch.length_word,
+                    level_time: roomMatch.time_match,
+                    level_lang_code: setLanguage.code,
+                    level_lang_id: setLanguage.code,
+                    current_score: 0,
+                    target_score: 0);
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    CustomPageRoute(OnlineGamePlayPage(
+                      languageModel: widget.languageModel,
+                      selectedQuestion: roomMatch.totalQuestion,
+                      selectedTime: roomMatch.time_match,
+                      isHost: 0,
+                      levelWords: roomMatch.length_word,
+                      isOnline: true,
+                      Stage: setLanguage.custom_level,
+                      levelModel: levelModel,
+                      isCustom: false,
+                    )),
+                    (route) => false);
+              });
+            }
+          }
+        } catch (e) {
+          logger.e("statusGameStream:" + e.toString());
+        }
+      });
+
+      socketProvider!.statusPlayerStream.listen((source) {
+        print("on statusPlayerStream Receive Data");
+        try {
+          var data = json.decode(source.toString());
+          if (data['target'] == 'update-status-player' &&
+              data['status_player'] == 2) {
+            logger.d("data update-status-player => $data");
+            if (data['status_player'] == 2) {
+              roomProvider!.updateStatusPlayer(
+                  roomDetailId: data['room_detail_id'],
+                  status: data['status_player'],
+                  isReady: data['is_ready']);
+              status = "Menerima status dari pemain lain";
+              logger.d("Menerima status permainan");
+            }
+          }
+        } catch (e) {
+          logger.e("statusPlayerStream:" + e.toString());
+        }
+      });
+
+      socketProvider!.hostExitRoomStream.listen((source) {
+        print("on hostExitRoomStream Receive Data");
+        try {
+          var data = json.decode(source.toString());
+          if (data['target'] == 'host-exit-room') {
+            print("host-exit-room is disconnect");
+            socketProvider!.disconnectService();
+            showModal(
+                context: context,
+                builder: (BuildContext context) {
+                  final theme = Theme.of(context);
+                  return const Dialog(
+                    insetAnimationCurve: Curves.easeInOut,
+                    backgroundColor: Colors.transparent,
+                    shape: RoundedRectangleBorder(),
+                    child: RoomExitModal(),
+                  );
+                });
+          }
+        } catch (e) {
+          logger.e("hostExitRoomStream:" + e.toString());
+        }
+      });
+
       return SingleChildScrollView(
         child: StreamBuilder(
             stream: socketProvider!.streamDataSocket,
             builder: (context, snapshot) {
               // logger.d(snapshot.data);
-
-              List<WordLanguageModel>? questionList = [];
               if (snapshot.hasData) {
                 try {
                   var data = json.decode(snapshot.data.toString());
 
-                  if (data['target'] == 'user-disconnected') {
-                    roomProvider!.removePlayerFromRoomMatchDetail(
-                        player_id: data['player_id']);
-                    print('user-disconnected ${data['player_id']}');
-                  }
+                  // if (data['target'] == 'user-disconnected') {
+                  //   roomProvider!.removePlayerFromRoomMatchDetail(
+                  //       player_id: data['player_id']);
+                  //   print('user-disconnected ${data['player_id']}');
+                  // }
 
                   ///! mengecek pemain baru
-                  if (data['target'] == 'update-player') {
-                    RoomMatchDetailModel matchDetailModel =
-                        RoomMatchDetailModel.fromJson(data['room_detail']);
-                    roomProvider!.updateRoomDetail(matchDetailModel);
-                  }
+                  // if (data['target'] == 'update-player') {
+                  //   RoomMatchDetailModel matchDetailModel =
+                  //       RoomMatchDetailModel.fromJson(data['room_detail']);
+                  //   roomProvider!.updateRoomDetail(matchDetailModel);
+                  // }
 
                   ///! menerima soal dari socket
                   // logger.d("data => ${data}");
-                  if (data['target'] == 'receive_question') {
-                    // var questions = null;
-                    // if (data['encyrpt'] == false) {
-                    //   questions = json.decode(data['question'].toString());
-                    // } else {
+                  // if (data['target'] == 'receive_question') {
+                  //   // var questions = null;
+                  //   // if (data['encyrpt'] == false) {
+                  //   //   questions = json.decode(data['question'].toString());
+                  //   // } else {
 
-                    // }
-                    var questionUtf =
-                        utf8.decode(base64.decode(data['question']));
-                    var questions = json.decode(questionUtf);
+                  //   // }
+                  //   var questionUtf =
+                  //       utf8.decode(base64.decode(data['question']));
+                  //   var questions = json.decode(questionUtf);
 
-                    logger.d("data => ${questions != null}");
-                    if (questions != null) {
-                      for (var itemQuestion in questions) {
-                        WordLanguageModel questi =
-                            WordLanguageModel.fromJson(itemQuestion);
-                        questionList.add(questi);
-                      }
-                      roomProvider!.setQuestionList(questionList);
-                      socketProvider!.socketSendStatusPlayer(
-                          channelCode:
-                              roomProvider!.roomMatch!.channel_code ?? '',
-                          roomMatchDetailModel: roomProvider!
-                              .getAndUpdateStatusPlayerByID(
-                                  userID: user!.id, statusPlayer: 2),
-                          score: 0);
-                    }
-                    // roomProvider!.isGetQuestion = true;
-                    status = "Berhasil menerima Pengaturan";
-                  }
+                  //   logger.d("data => ${questions != null}");
+                  //   if (questions != null) {
+                  //     for (var itemQuestion in questions) {
+                  //       WordLanguageModel questi =
+                  //           WordLanguageModel.fromJson(itemQuestion);
+                  //       questionList.add(questi);
+                  //     }
+                  //     roomProvider!.setQuestionList(questionList);
+                  //     socketProvider!.socketSendStatusPlayer(
+                  //         channelCode:
+                  //             roomProvider!.roomMatch!.channel_code ?? '',
+                  //         roomMatchDetailModel: roomProvider!
+                  //             .getAndUpdateStatusPlayerByID(
+                  //                 userID: user!.id, statusPlayer: 2),
+                  //         score: 0);
+                  //   }
+                  //   // roomProvider!.isGetQuestion = true;
+                  //   status = "Berhasil menerima Pengaturan";
+                  // }
 
                   ///! menerima status permainan
-                  if (data['target'] == 'update-status-game') {
-                    if (data['status_game'] == 1) {
-                      roomProvider!.updateStatusGame(
-                          data['room_id'], data['status_game']);
-                      logger.d("Game Start ");
-                      status = "Permainan Segera Dimulai";
-                      Timer(const Duration(milliseconds: 1000), () {
-                        socketProvider!.pausedStream();
-                        LevelModel levelModel = LevelModel(
-                            id: 77,
-                            level_name: setLanguage.custom_level,
-                            level_words: roomMatch.length_word,
-                            level_time: roomMatch.time_match,
-                            level_lang_code: setLanguage.code,
-                            level_lang_id: setLanguage.code,
-                            current_score: 0,
-                            target_score: 0);
-                        Navigator.pushAndRemoveUntil(
-                            context,
-                            CustomPageRoute(OnlineGamePlayPage(
-                              languageModel: widget.languageModel,
-                              selectedQuestion: roomMatch.totalQuestion,
-                              selectedTime: roomMatch.time_match,
-                              isHost: 0,
-                              levelWords: roomMatch.length_word,
-                              isOnline: true,
-                              Stage: setLanguage.custom_level,
-                              levelModel: levelModel,
-                              isCustom: false,
-                            )),
-                            (route) => false);
-                      });
-                    }
-                  }
+                  // if (data['target'] == 'update-status-game') {
+                  //   if (data['status_game'] == 1) {
+                  //     roomProvider!.updateStatusGame(
+                  //         data['room_id'], data['status_game']);
+                  //     logger.d("Game Start ");
+                  //     status = "Permainan Segera Dimulai";
+                  //     Timer(const Duration(milliseconds: 1000), () {
+                  //       socketProvider!.pausedStream();
+                  //       LevelModel levelModel = LevelModel(
+                  //           id: 77,
+                  //           level_name: setLanguage.custom_level,
+                  //           level_words: roomMatch.length_word,
+                  //           level_time: roomMatch.time_match,
+                  //           level_lang_code: setLanguage.code,
+                  //           level_lang_id: setLanguage.code,
+                  //           current_score: 0,
+                  //           target_score: 0);
+                  //       Navigator.pushAndRemoveUntil(
+                  //           context,
+                  //           CustomPageRoute(OnlineGamePlayPage(
+                  //             languageModel: widget.languageModel,
+                  //             selectedQuestion: roomMatch.totalQuestion,
+                  //             selectedTime: roomMatch.time_match,
+                  //             isHost: 0,
+                  //             levelWords: roomMatch.length_word,
+                  //             isOnline: true,
+                  //             Stage: setLanguage.custom_level,
+                  //             levelModel: levelModel,
+                  //             isCustom: false,
+                  //           )),
+                  //           (route) => false);
+                  //     });
+                  //   }
+                  // }
 
                   ///! menerima status pemain lain
-                  if (data['target'] == 'update-status-player') {
-                    logger.d("data update-status-player => $data");
-                    if (data['status_player'] == 2) {
-                      roomProvider!.updateStatusPlayer(
-                          roomDetailId: data['room_detail_id'],
-                          status: data['status_player'],
-                          isReady: data['is_ready']);
-                      status = "Menerima status dari pemain lain";
-                      logger.d("Menerima status permainan");
-                    }
-                  }
+                  // if (data['target'] == 'update-status-player') {
+                  //   logger.d("data update-status-player => $data");
+                  //   if (data['status_player'] == 2) {
+                  //     roomProvider!.updateStatusPlayer(
+                  //         roomDetailId: data['room_detail_id'],
+                  //         status: data['status_player'],
+                  //         isReady: data['is_ready']);
+                  //     status = "Menerima status dari pemain lain";
+                  //     logger.d("Menerima status permainan");
+                  //   }
+                  // }
 
                   //ketika host keluar dari permainan
-                  if (data['target'] == 'host-exit-room') {
-                    socketProvider!.disconnectService();
-                    showModal(
-                        context: context,
-                        builder: (BuildContext context) {
-                          final theme = Theme.of(context);
-                          return const Dialog(
-                            insetAnimationCurve: Curves.easeInOut,
-                            backgroundColor: Colors.transparent,
-                            shape: RoundedRectangleBorder(),
-                            child: RoomExitModal(),
-                          );
-                        });
-                  }
+                  // if (data['target'] == 'host-exit-room') {
+                  //   socketProvider!.disconnectService();
+                  //   showModal(
+                  //       context: context,
+                  //       builder: (BuildContext context) {
+                  //         final theme = Theme.of(context);
+                  //         return const Dialog(
+                  //           insetAnimationCurve: Curves.easeInOut,
+                  //           backgroundColor: Colors.transparent,
+                  //           shape: RoundedRectangleBorder(),
+                  //           child: RoomExitModal(),
+                  //         );
+                  //       });
+                  // }
                 } catch (e, t) {
                   logger.e(t);
                 }

@@ -81,6 +81,21 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
     // await socketService.disconnect();
   }
 
+  reconnectSocket() async {
+    socketProvider!.restartStream();
+
+    if (await roomProvider!.findRoomMatchID(id: roomProvider!.roomMatch!.id)) {
+      socketProvider!.socketEmitJoinRoom(
+          channelCode: '${roomProvider!.roomMatch!.channel_code}',
+          matchDetail:
+              roomProvider!.getDetailRoomByID(userID: authProvider!.user!.id));
+      socketProvider!.socketReceiveFindRoom();
+      socketProvider!.socketReceiveStatusPlayer();
+      socketProvider!.socketReceiveUserDisconnect();
+      socketProvider!.socketReceiveStartingGameBySchedule();
+    }
+  }
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -119,15 +134,50 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
       if (source.keys.toList()[0] == ConnectivityResult.none &&
           socketProvider!.isDisconnect) {
         isDisconnected = true;
+        print('on Disconnect');
         // bakal jalanin ketika host disconnect
         if (isShow == false) {
           isShow = true;
-          await showIsDisconnectModal();
+          // await showIsDisconnectModal();
+          Timer.periodic(const Duration(milliseconds: 5000), (timer) async {
+            print("on reconnecting");
+
+            if (!isDisconnected) {
+              await reconnectSocket();
+              print('connecting');
+              timer.cancel();
+              print('back to connecting');
+            }
+
+            if (reconnectTimes > 2) {
+              timer.cancel();
+              logger.d("Stop reconnecting to server");
+              // await showIsDisconnectModal();
+              if (socketProvider!.isConnected) {
+                await socketProvider!.disconnect();
+              }
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                duration: const Duration(milliseconds: 1000),
+                content: Text(
+                  "Koneksi terputus, semua pemain keluar dari lobi permainan!",
+                  textAlign: TextAlign.center,
+                  style:
+                      primaryTextStyle.copyWith(fontWeight: bold, fontSize: 20),
+                ),
+                backgroundColor: whiteColor,
+              ));
+              Navigator.pushNamedAndRemoveUntil(
+                  context, '/home', (route) => false);
+            }
+
+            reconnectTimes++;
+          });
         }
       }
 
       if (source.keys.toList()[0] != ConnectivityResult.none) {
         isDisconnected = false;
+        reconnectTimes = 0;
         // bakal jalanin ketika host terhubung dengan server
       }
     });
