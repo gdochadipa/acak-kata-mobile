@@ -1,10 +1,16 @@
+import 'dart:convert';
+import 'dart:math';
+
 import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/models/level_model.dart';
 import 'package:acakkata/models/range_result_txt_model.dart';
+import 'package:acakkata/models/relation_word.dart';
 import 'package:acakkata/models/word_language_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart' as path;
 import 'dart:io' as io;
@@ -26,11 +32,20 @@ class LanguageDBProvider with ChangeNotifier {
   List<int>? _queueQuestion;
   List<int>? get queueQuestion => _queueQuestion;
 
+  List<RelationWordModel>? _dataRelationWordList;
+  List<RelationWordModel>? get dataRelationWordList => _dataRelationWordList;
+
   List<RangeResultTxtModel>? _dataRangeTextList;
   List<RangeResultTxtModel>? get rangeTextList => _dataRangeTextList;
 
   int get numberCountDown => _numberCountDown;
   int get totalQuestion => _totalQuestion;
+
+  Logger logger = Logger(
+    printer: PrettyPrinter(methodCount: 0),
+  );
+
+  static const NEW_DB_VERSION = 2;
 
   setRuleGame(int? numberCountDown, int? totalQuestion) {
     _numberCountDown = numberCountDown ?? 15;
@@ -60,21 +75,27 @@ class LanguageDBProvider with ChangeNotifier {
 
   Future<void> init() async {
     try {
+      print("Begin check local Database...");
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      int versionDB = prefs.getInt("NEW_DB_VERSION") ?? 1;
       io.Directory applicationDirectory =
           await getApplicationDocumentsDirectory();
       String dbDictionaryPath = path.join(applicationDirectory.path, 'mydb.db');
       bool dbExistsDictionary = await io.File(dbDictionaryPath).exists();
-      if (!dbExistsDictionary) {
+
+      if (!dbExistsDictionary || versionDB < NEW_DB_VERSION) {
         ByteData data =
             await rootBundle.load(path.join("assets/db", 'mydb.db'));
         List<int> bytes =
             data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
 
         await io.File(dbDictionaryPath).writeAsBytes(bytes, flush: true);
+        prefs.setInt("NEW_DB_VERSION", NEW_DB_VERSION);
       }
 
       _db = await openDatabase(dbDictionaryPath,
-          version: 1, onConfigure: onConfigure, onCreate: (db, version) async {
+          version: NEW_DB_VERSION,
+          onConfigure: onConfigure, onCreate: (db, version) async {
         var batch = db.batch();
         _createTableResultRangeV2(batch);
         await batch.commit();
@@ -134,6 +155,93 @@ class LanguageDBProvider with ChangeNotifier {
 
       return true;
     } catch (e) {
+      return false;
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getWordByRelation(
+      {int? languageId, String? idRelation}) async {
+    late List<Map<String, dynamic>> words;
+
+    switch (languageId) {
+      case 1:
+        words = await _db.rawQuery(
+            "SELECT * from tb_word_indo where id_relation=?", [idRelation]);
+        break;
+      case 2:
+        words = await _db.rawQuery(
+            "SELECT * from tb_word_eng where id_relation=?", [idRelation]);
+        break;
+      case 3:
+        words = await _db.rawQuery(
+            "SELECT * from tb_word_bali where id_relation=?", [idRelation]);
+        break;
+      case 4:
+        words = await _db.rawQuery(
+            "SELECT * from tb_word_jawa where id_relation=?", [idRelation]);
+        break;
+      default:
+        words = await _db.rawQuery(
+            "SELECT * from tb_word_indo where id_relation=?", [idRelation]);
+        break;
+    }
+
+    return words;
+  }
+
+  Future<bool> getRelationalWords(
+      {String? languageCode,
+      int? lengthWord,
+      int? languageId,
+      int? questionNumber}) async {
+    try {
+      if (_db == null) {
+        throw "bd is not initiated, initiate using [init(db)] function";
+      }
+      late List<Map<String, dynamic>> words;
+
+      if (languageId == null) {
+        if (languageCode == "english") {
+          languageId = 2;
+        } else if (languageCode == "indonesia") {
+          languageId = 1;
+        } else if (languageCode == "bali") {
+          languageId = 3;
+        } else if (languageCode == "java") {
+          languageId = 4;
+        }
+      }
+
+      await _db.transaction((txn) async {
+        List<Map<String, dynamic>> countWordData = await txn.rawQuery(
+            "SELECT COUNT(id) as count_word from tb_relation_word where language_id = ? and length_word = ?",
+            [languageId, lengthWord]);
+        int countWord = countWordData.first["count_word"];
+        int randomOffset = Random().nextInt(countWord);
+        words = await txn.rawQuery(
+            "SELECT tb_relation_word.* from tb_relation_word where language_id = ? and length_word = ? limit 4000 offset ?",
+            [languageId, lengthWord, randomOffset]);
+      });
+
+      _dataRelationWordList =
+          words.map((e) => RelationWordModel.fromJson(e)).toList();
+      _dataRelationWordList!.shuffle();
+
+      _dataRelationWordList =
+          _dataRelationWordList!.getRange(0, questionNumber ?? 5).toList();
+      var i = 0;
+      for (var relationWord in _dataRelationWordList!) {
+        List<Map<String, dynamic>> listWords =
+            await getWordByRelation(idRelation: relationWord.id);
+        _dataRelationWordList![i].listWords =
+            listWords.map((e) => WordLanguageModel.fromJson(e)).toList();
+        i++;
+      }
+      logger.d(json.encode(_dataRelationWordList![0]));
+
+      return true;
+    } catch (e) {
+      throw Exception(e);
       return false;
     }
   }

@@ -42,17 +42,32 @@ class NewHomePage extends StatefulWidget {
 class _NewHomePageState extends State<NewHomePage> {
   ChangeLanguageProvider? _changeLanguageProvider;
   ConnectivityProvider? _connectivityProvider;
+  LanguageDBProvider? _languageDBProvider;
   AuthProvider? _authProvider;
   String? languageChoice = 'en';
   SharedPreferences? prefs;
   bool wasSelectedLanguage = false;
   bool login = false;
+  Logger logger = Logger(
+    printer: PrettyPrinter(methodCount: 0),
+  );
+
+  // void tryGetData() async {
+  //   try {
+  //     await _languageDBProvider!.getRelationalWords(
+  //         languageCode: "indonesia", languageId: 1, lengthWord: 3);
+  //   } catch (e) {
+  //     logger.e(e);
+  //   }
+  // }
 
   init() async {
     prefs = await SharedPreferences.getInstance();
     _authProvider = Provider.of<AuthProvider>(context, listen: false);
     _connectivityProvider =
         Provider.of<ConnectivityProvider>(context, listen: false);
+    _languageDBProvider =
+        Provider.of<LanguageDBProvider>(context, listen: false);
     setState(() {
       languageChoice = prefs!.getString("choiceLang");
       wasSelectedLanguage = prefs!.getBool("wasSelectedLanguage") ?? false;
@@ -93,9 +108,6 @@ class _NewHomePageState extends State<NewHomePage> {
     // LanguageProvider? languageProvider = Provider.of<LanguageProvider>(context);
     LanguageDBProvider? languageDBProvider =
         Provider.of<LanguageDBProvider>(context);
-    Logger logger = Logger(
-      printer: PrettyPrinter(methodCount: 0),
-    );
     bool isDisconnected = false;
 
     S? setLanguage = S.of(context);
