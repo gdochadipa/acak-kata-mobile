@@ -151,6 +151,7 @@ flutter:
     - assets/images/third.png
     - assets/images/icon_shuffle.png
     - assets/images/icon_search.png
+    - assets/images/gamepad_white.png
   
   fonts:
     - family: Nunito      

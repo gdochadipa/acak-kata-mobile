@@ -4,6 +4,7 @@ import 'package:acakkata/pages/auth/profile_edit_page.dart';
 import 'package:acakkata/pages/auth/signin_page.dart';
 import 'package:acakkata/pages/auth/signup_page.dart';
 import 'package:acakkata/pages/home_page/new_home_page.dart';
+import 'package:acakkata/pages/settings/setting_page.dart';
 import 'package:acakkata/pages/splash_page.dart';
 import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/providers/change_language_provider.dart';
@@ -66,6 +67,7 @@ class MyApp extends StatelessWidget {
           '/about': (context) => AbountPage(),
           // '/home': (context) => MainPage(),
           '/home': (context) => const NewHomePage(),
+          '/setting': (context) => SettingPage()
         },
         // onGenerateRoute: (setting) {
 

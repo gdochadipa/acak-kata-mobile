@@ -23,6 +23,7 @@ import 'package:acakkata/widgets/popover/language_app_modal.dart';
 import 'package:acakkata/widgets/popover/popover_listview.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:animations/animations.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
@@ -331,26 +332,47 @@ class _NewHomePageState extends State<NewHomePage> {
     }
 
     Widget btnPlayGame() {
-      return CircleBounceButton(
-        color: whiteColor,
-        borderColor: whiteColor2,
-        shadowColor: whiteColor3,
-        margin: const EdgeInsets.symmetric(horizontal: 5.0),
+      return ButtonBounce(
+        color: primaryColor,
+        borderColor: primaryColor2,
+        shadowColor: primaryColor3,
         onClick: () {
-          //satu untuk le leveleListPage
           showListLanguagePop(1);
         },
         paddingHorizontalButton: 10,
         paddingVerticalButton: 10,
-        heightButton: 180,
-        widthButton: 180,
+        heightButton: 75,
+        widthButton: 250,
         child: Container(
-          width: 110,
-          height: 110,
-          child: Center(
-            child: Image.asset('assets/images/arrow_shadow_black.png'),
-          ),
-        ),
+            width: 50,
+            height: 100,
+            child: Row(
+              children: [
+                Image.asset(
+                  'assets/images/gamepad_white.png',
+                  width: 45,
+                  height: 45,
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FittedBox(
+                      fit: BoxFit.contain,
+                      child: AutoSizeText(
+                        "Bermain",
+                        style: whiteTextStyle.copyWith(
+                            fontWeight: bold, fontSize: 20),
+                        presetFontSizes: const [18, 16],
+                        maxLines: 2,
+                      ),
+                    )
+                  ],
+                )
+              ],
+            )),
       );
     }
 
@@ -382,34 +404,55 @@ class _NewHomePageState extends State<NewHomePage> {
     }
 
     Widget btnSearch() {
-      return CircleBounceButton(
-        color: blueColor,
-        borderColor: blueColor2,
-        shadowColor: blueColor3,
-        margin: const EdgeInsets.symmetric(horizontal: 5.0),
+      return ButtonBounce(
+        color: greenColor,
+        borderColor: greenColor2,
+        shadowColor: greenColor3,
         onClick: () {
           showListLanguagePop(2);
         },
         paddingHorizontalButton: 10,
         paddingVerticalButton: 10,
         heightButton: 75,
-        widthButton: 75,
-        child: SizedBox(
-          width: 55,
-          height: 55,
-          child: Center(
-            child: Image.asset('assets/images/icon_search.png'),
-          ),
-        ),
+        widthButton: 250,
+        child: Container(
+            width: 100,
+            height: 55,
+            child: Row(
+              children: [
+                Image.asset(
+                  'assets/images/icon_search.png',
+                  width: 45,
+                  height: 45,
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FittedBox(
+                      fit: BoxFit.contain,
+                      child: AutoSizeText(
+                        "Cari Kata",
+                        style: whiteTextStyle.copyWith(
+                            fontWeight: bold, fontSize: 18),
+                        presetFontSizes: const [15, 16],
+                        maxLines: 2,
+                      ),
+                    )
+                  ],
+                )
+              ],
+            )),
       );
     }
 
     Widget btnFindRoom() {
-      return CircleBounceButton(
-        color: greenColor,
-        borderColor: greenColor2,
-        shadowColor: greenColor3,
-        margin: const EdgeInsets.symmetric(horizontal: 5.0),
+      return ButtonBounce(
+        color: orangeColor,
+        borderColor: orangeColor2,
+        shadowColor: orangeColor3,
         onClick: () async {
           if (!isDisconnected) {
             if (!login) {
@@ -430,12 +473,36 @@ class _NewHomePageState extends State<NewHomePage> {
         paddingHorizontalButton: 10,
         paddingVerticalButton: 10,
         heightButton: 75,
-        widthButton: 75,
+        widthButton: 250,
         child: Container(
-          width: 55,
+          width: 100,
           height: 55,
-          child: Center(
-            child: Image.asset('assets/images/game.png'),
+          child: Row(
+            children: [
+              Image.asset(
+                'assets/images/profil.png',
+                width: 45,
+                height: 45,
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  FittedBox(
+                    fit: BoxFit.contain,
+                    child: AutoSizeText(
+                      "Gabung Permainan",
+                      style: whiteTextStyle.copyWith(
+                          fontWeight: bold, fontSize: 18),
+                      presetFontSizes: const [18, 16],
+                      maxLines: 2,
+                    ),
+                  )
+                ],
+              )
+            ],
           ),
         ),
       );
@@ -466,13 +533,14 @@ class _NewHomePageState extends State<NewHomePage> {
     Widget btnSetting() {
       return ButtonBounce(
         onClick: () {
-          showLanguageAppSetting();
+          // showLanguageAppSetting();
+          Navigator.pushNamed(context, '/setting');
         },
         paddingHorizontalButton: 8,
         paddingVerticalButton: 8,
         heightButton: 62.92,
         widthButton: 62.92,
-        child: Container(
+        child: SizedBox(
           width: 50,
           height: 50,
           child: Center(
@@ -520,13 +588,22 @@ class _NewHomePageState extends State<NewHomePage> {
 
     Widget middleMenu() {
       return ElasticIn(
-        child: Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [btnSearch(), btnPlayGame(), btnFindRoom()],
-          ),
+          child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            btnPlayGame(),
+            const SizedBox(
+              height: 10,
+            ),
+            btnFindRoom(),
+            const SizedBox(
+              height: 10,
+            ),
+            btnSearch()
+          ],
         ),
-      );
+      ));
     }
 
     Widget choiceLanguageCard(String flag) {
