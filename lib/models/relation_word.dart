@@ -27,7 +27,7 @@ class RelationWordModel {
     length_word = data['length_word'];
     letter = json
         .decode(data['letter'].toString())
-        .map<String>((item) => item.toString())
+        .map<String>((item) => item.toString().toUpperCase())
         .toList();
     count_word = data['count_word'];
     language_id = data['language_id'];

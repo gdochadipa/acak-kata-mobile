@@ -237,7 +237,8 @@ class LanguageDBProvider with ChangeNotifier {
             listWords.map((e) => WordLanguageModel.fromJson(e)).toList();
         i++;
       }
-      logger.d(json.encode(_dataRelationWordList![0]));
+
+      // logger.d(json.encode(_dataRelationWordList));
 
       return true;
     } catch (e) {

@@ -6,6 +6,7 @@ import 'package:acakkata/generated/l10n.dart';
 import 'package:acakkata/helper/style_helper.dart';
 import 'package:acakkata/models/coordinate.dart';
 import 'package:acakkata/models/level_model.dart';
+import 'package:acakkata/models/relation_word.dart';
 import 'package:acakkata/models/word_language_model.dart';
 import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/pages/result_game/result_game_page.dart';
@@ -62,7 +63,8 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
     printer: PrettyPrinter(methodCount: 0),
   );
   String textAnswer = '';
-  List<WordLanguageModel>? dataWordList;
+  // List<WordLanguageModel>? dataWordList;
+  List<RelationWordModel>? dataRelationWord;
   final bool _isButtonDisabled = false;
   int totalQuestion = 10;
   int currentArrayQuestion = 0;
@@ -106,16 +108,29 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
 
     widget._langProvider = langProvider;
     try {
-      if (await langProvider.getWords(
-          widget.languageModel!.language_code, widget.levelWords)) {
-        dataWordList =
-            langProvider.dataWordList!.getRange(0, totalQuestion).toList();
-        await setUpListQuestionQueue(dataWordList);
-        // setup antrian pertanyaan, gunanya untuk mekanisme skip pertanyaan
+      // if (await langProvider.getWords(
+      //     widget.languageModel!.language_code, widget.levelWords)) {
+      //   dataWordList =
+      //       langProvider.dataWordList!.getRange(0, totalQuestion).toList();
+      //   await setUpListQuestionQueue(dataWordList);
+      //   // setup antrian pertanyaan, gunanya untuk mekanisme skip pertanyaan
+      //   setState(() {
+      //     _isLoading = false;
+      //   });
+      //   // print("in loading");
+      // }
+
+      if (await langProvider.getRelationalWords(
+          languageCode: widget.languageModel!.language_code,
+          lengthWord: widget.levelWords,
+          languageId: null,
+          questionNumber: totalQuestion)) {
+        dataRelationWord = langProvider.dataRelationWordList!;
+
+        await setUpListQuestionQueue(dataRelationWord);
         setState(() {
           _isLoading = false;
         });
-        // print("in loading");
       }
       return true;
     } catch (e) {
@@ -127,7 +142,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
   }
 
   /// digunakan untuk mendaftarkan antrian ke variabel state
-  setUpListQuestionQueue(List<WordLanguageModel>? wordList) async {
+  setUpListQuestionQueue(List<RelationWordModel>? wordList) async {
     if (wordList!.isNotEmpty) {
       for (var i = 0; i < wordList.length; i++) {
         List<Coordinate> coordinateCache = [];
@@ -383,7 +398,8 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
      * 
      * */
     List<String> listSuffQues =
-        dataWordList![currentArrayQuestion].word!.split('');
+        dataRelationWord![currentArrayQuestion].letter ??
+            dataRelationWord![currentArrayQuestion].word!.split('');
     for (var i = 0; i < listSuffQues.length; i++) {
       setState(() {
         isSelected!.addEntries([MapEntry(i, false)]);
@@ -402,8 +418,8 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
         'currentArrayQuestion': currentArrayQuestion,
         'currentQuestion': currentQuestion,
         'totalQuestion': (totalQuestion - 1),
-        'nowQuestion': dataWordList![currentArrayQuestion].word_suffle,
-        'nowAnswer': dataWordList![currentArrayQuestion].word
+        'nowQuestion': dataRelationWord![currentArrayQuestion].letter,
+        'nowAnswer': dataRelationWord![currentArrayQuestion].word
       });
       /** untuk merestart perhitungan permainan, nilai per 1 detik */
       getTimeScore();
@@ -454,10 +470,24 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
             ));
   }
 
-  /// fungsi untuk memberikan input jawaban setelah menekan tombol huruf
-  /// fungsi ini akan mengecek jawaban ketika pemain menekan tombol terakhir jawaban
-  answerQuestion(
-      String letter, int e, List<String>? suffleQuestion, String? question) {
+  WordLanguageModel? checkAnswerInWords(
+      String answerFromPlayer, int arrayQuestion) {
+    List<WordLanguageModel>? relatedWord = dataRelationWord![arrayQuestion]
+        .listWords!
+        .where((wordLanguage) =>
+            wordLanguage.word!.toLowerCase() == answerFromPlayer.toLowerCase())
+        .toList();
+
+    if (relatedWord.isNotEmpty) {
+      return relatedWord.first;
+    }
+
+    return null;
+  }
+
+  /// *fungsi untuk memberikan input jawaban setelah menekan tombol huruf
+  /// *fungsi ini akan mengecek jawaban ketika pemain menekan tombol terakhir jawaban
+  answerQuestion(String letter, int e, List<String>? suffleQuestion) {
     /**
          * menginputkan huruf ke kolom jawaban 
          * sekaligus juga menginputkan ke sequenceAnswer (urutan huruf jawaban)
@@ -473,12 +503,13 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
      * mengecek apakah panjang kata jawaban sesuai dengan panjang kata soal
      */
     if (textAnswer.length == suffleQuestion!.length) {
-      logger.d(
-          "${answerController.text.toUpperCase()} == ${question!.toUpperCase()} => ${answerController.text.toUpperCase() == question.toUpperCase()}");
       /**
-           * membandingkan apakah jawaban sesuai dengan kata tujuan
+           * *membandingkan apakah jawaban sesuai dengan kata tujuan
+           * !! perbaikan ngecheck jawaban
            */
-      if (answerController.text.toUpperCase() == question.toUpperCase()) {
+      WordLanguageModel? resultCorrect = checkAnswerInWords(
+          answerController.text.toLowerCase(), currentArrayQuestion);
+      if (resultCorrect != null) {
         setState(() {
           /**
            * mekanisme perhitungan skor
@@ -578,7 +609,8 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
   /// reset jawban pada sequence jawaban
   resetAnswer() {
     List<String> listSuffQues =
-        dataWordList![currentArrayQuestion].word!.split('');
+        dataRelationWord![currentArrayQuestion].letter ??
+            dataRelationWord![currentArrayQuestion].word!.split('');
     for (var i = 0; i < listSuffQues.length; i++) {
       setState(() {
         isSelected!.addEntries([MapEntry(i, false)]);
@@ -818,7 +850,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
                 coordinate: coordinats[e],
                 isBtnSelected: isSelected![e] ?? false,
                 onSelectButtonLetter: (String letter, bool isUnSet) {
-                  answerQuestion(letter, e, suffleQuestion, question);
+                  answerQuestion(letter, e, suffleQuestion);
                   // onCheckingAnswer(answer);
                 });
           }).toList(),
@@ -986,9 +1018,9 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
           cardBodyUp(),
           ElasticIn(
             child: cardBodyBottom(
-                dataWordList![currentArrayQuestion].word,
-                dataWordList![currentArrayQuestion].word,
-                dataWordList![currentArrayQuestion].word_suffle,
+                dataRelationWord![currentArrayQuestion].word,
+                dataRelationWord![currentArrayQuestion].word,
+                dataRelationWord![currentArrayQuestion].letter,
                 coordinateList[currentArrayQuestion],
                 currentArrayQuestion),
           ),
@@ -1011,8 +1043,10 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
                       ? resultAnswer(
                           resultAnswerStatus,
                           score,
-                          dataWordList![currentArrayQuestion].word_hint,
-                          dataWordList![currentArrayQuestion].word)
+                          dataRelationWord![currentArrayQuestion]
+                              .word, // ini perbaikan dulu
+                          dataRelationWord![currentArrayQuestion]
+                              .word) // ini perbaikan dulu
                       : (_isLoading ? Container() : mainBody())),
             ],
           )),

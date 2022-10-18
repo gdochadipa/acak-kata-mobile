@@ -73,6 +73,7 @@ class _NewHomePageState extends State<NewHomePage> {
       wasSelectedLanguage = prefs!.getBool("wasSelectedLanguage") ?? false;
       login = prefs!.getBool('login') ?? false;
     });
+    // tryGetData();
   }
 
   void onChangeLanguage(String flag) {
