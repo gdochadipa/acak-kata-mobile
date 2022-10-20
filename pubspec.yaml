@@ -154,6 +154,8 @@ flutter:
     - assets/images/gamepad_white.png
     - assets/images/book.png
     - assets/images/new_star.png
+    - assets/images/fail.png
+    - assets/images/success.png
   
   fonts:
     - family: Nunito      
