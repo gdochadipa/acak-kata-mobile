@@ -1,15 +1,17 @@
 import 'dart:async';
-import 'dart:ffi';
 import 'dart:ui';
 
 import 'package:acakkata/generated/l10n.dart';
 import 'package:acakkata/models/language_model.dart';
+import 'package:acakkata/models/level_model.dart';
 import 'package:acakkata/models/user_model.dart';
 import 'package:acakkata/pages/auth/modal/show_login_modal.dart';
 import 'package:acakkata/pages/auth/modal/show_profile_modal.dart';
 import 'package:acakkata/pages/dictionary/dict_search_page.dart';
+import 'package:acakkata/pages/in_game/modal/answer_modal.dart';
 import 'package:acakkata/pages/in_game/modal/join_room_modal.dart';
 import 'package:acakkata/pages/level/level_list_page.dart';
+import 'package:acakkata/pages/result_game/result_offline_game_page.dart';
 import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/providers/change_language_provider.dart';
 import 'package:acakkata/providers/connectivity_provider.dart';
@@ -52,15 +54,6 @@ class _NewHomePageState extends State<NewHomePage> {
     printer: PrettyPrinter(methodCount: 0),
   );
 
-  // void tryGetData() async {
-  //   try {
-  //     await _languageDBProvider!.getRelationalWords(
-  //         languageCode: "indonesia", languageId: 1, lengthWord: 3);
-  //   } catch (e) {
-  //     logger.e(e);
-  //   }
-  // }
-
   init() async {
     prefs = await SharedPreferences.getInstance();
     _authProvider = Provider.of<AuthProvider>(context, listen: false);
@@ -85,6 +78,38 @@ class _NewHomePageState extends State<NewHomePage> {
         prefs!.setBool("wasSelectedLanguage", true);
       });
     });
+  }
+
+  void goToTest() {
+    LanguageModel languageModel = LanguageModel(
+        id: "1",
+        language_code: 'indonesia',
+        language_collection: 'indonesia',
+        language_icon: 'indonesia',
+        language_name: 'Bahasa Indonesia',
+        language_name_en: 'Indonesians',
+        language_name_id: 'Indonesia');
+
+    LevelModel levelModel = LevelModel(
+        id: 1,
+        current_score: 0,
+        is_unlock: 1,
+        level_lang_code: '1',
+        level_lang_id: '1',
+        level_name: 'Level1',
+        level_question_count: 12,
+        level_time: 12,
+        level_words: 5,
+        sorting_level: 5,
+        target_score: 80);
+    Navigator.push(
+        context,
+        CustomPageRoute(ResultOfflineGamePage(
+            languageModel: languageModel,
+            finalTimeRate: 15,
+            finalScoreRate: 3,
+            level: levelModel,
+            isCustom: true)));
   }
 
   @override
@@ -350,7 +375,8 @@ class _NewHomePageState extends State<NewHomePage> {
         borderColor: primaryColor2,
         shadowColor: primaryColor3,
         onClick: () {
-          showListLanguagePop(1);
+          // showListLanguagePop(1);
+          goToTest();
         },
         paddingHorizontalButton: 10,
         paddingVerticalButton: 10,

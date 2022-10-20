@@ -9,6 +9,7 @@ import 'package:acakkata/models/level_model.dart';
 import 'package:acakkata/models/relation_word.dart';
 import 'package:acakkata/models/word_language_model.dart';
 import 'package:acakkata/models/language_model.dart';
+import 'package:acakkata/pages/in_game/modal/answer_modal.dart';
 import 'package:acakkata/pages/result_game/result_game_page.dart';
 import 'package:acakkata/providers/language_db_provider.dart';
 import 'package:acakkata/theme.dart';
@@ -19,6 +20,7 @@ import 'package:acakkata/widgets/component/result_answer_component.dart';
 import 'package:acakkata/widgets/custom_page_route.dart';
 import 'package:acakkata/widgets/gameplay/footer_gameplay_page.dart';
 import 'package:acakkata/widgets/popover/exit_dialog.dart';
+import 'package:animations/animations.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -240,6 +242,19 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
     if (mounted) setState(f);
   }
 
+  Future<void> showResultAnswerModal({bool resultAnswerStatus = false}) async {
+    return showModal(
+        context: context,
+        builder: (BuildContext context) {
+          S? language = S.of(context);
+          Future.delayed(const Duration(milliseconds: 1000), () {
+            Navigator.of(context).pop(true);
+          });
+          return AnswerModal(
+              setLanguage: language, resultAnswerStatus: resultAnswerStatus);
+        });
+  }
+
   /// get Time Score digunakan untuk menghitung secara manual untuk durasi utama permainan
   /// sebagai pencetak  angka pada stopwatch
   ///
@@ -341,51 +356,45 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
 
   /// runTime Result merupakan mekanisme perhitungan timer untuk melihat
   /// hasil jawaban. batas waktu yang ditentukan  adalah 5 detik setelah pertanyaan
-  onRunTimeResult(bool endGame) async {
-    _timeInRes =
-        Timer.periodic(const Duration(seconds: 1), (Timer timer) async {
-      if (answerCountDown > 0) {
-        setState(() {
-          answerCountDown--;
-        });
-      } else {
-        _timeInRes!.cancel();
-        _timerInGame!.cancel();
-        _timerScore!.cancel();
-        if (endGame) {
-          double allScoreTime = scoreTime.fold(
-              0, (previousValue, element) => previousValue + element);
-          double newScoreTime = 0;
-          double newScoreCount = 0;
-          if (allScoreTime > 0 && scoreTime.isNotEmpty) {
-            newScoreTime =
-                (((allScoreTime / scoreTime.length) / (numberCountDown)) * 0.4);
-          }
-          if (scoreCount > 0) {
-            newScoreCount = ((scoreCount / totalQuestion) * 0.6);
-          }
+  onRunTimeResult(bool endGame, bool isCorrectAnswer) async {
+    _timerInGame!.cancel();
+    _timerScore!.cancel();
+    showResultAnswerModal(resultAnswerStatus: isCorrectAnswer);
 
-          Navigator.pushAndRemoveUntil(
-              context,
-              CustomPageRoute(ResultGamePage(widget.languageModel, newScoreTime,
-                  newScoreCount, widget.levelModel, widget.isCustom)),
-              (route) => false);
-        } else {
-          /**
+    Future.delayed(const Duration(milliseconds: 1000), () async {
+      if (endGame) {
+        double allScoreTime = scoreTime.fold(
+            0, (previousValue, element) => previousValue + element);
+        double newScoreTime = 0;
+        double newScoreCount = 0;
+        if (allScoreTime > 0 && scoreTime.isNotEmpty) {
+          newScoreTime =
+              (((allScoreTime / scoreTime.length) / (numberCountDown)) * 0.4);
+        }
+        if (scoreCount > 0) {
+          newScoreCount = ((scoreCount / totalQuestion) * 0.6);
+        }
+
+        Navigator.pushAndRemoveUntil(
+            context,
+            CustomPageRoute(ResultGamePage(widget.languageModel, newScoreTime,
+                newScoreCount, widget.levelModel, widget.isCustom)),
+            (route) => false);
+      } else {
+        /**
            * setelah perhitungan jika belum diakhir pertanyaan maka akan lanjut
            *  ke pertanyaan selanjutnya
            */
-          await onSkipQueueQuestion(true);
-          setState(() {
-            // currentArrayQuestion++;
-            currentQuestion = currentArrayQuestion + 1;
-            afterAnswer = false;
-          });
-        }
-        onResetAnswerField();
-        getTimeScore();
-        onCoreCountTimeInGame(numberCountDown);
+        await onSkipQueueQuestion(true);
+        setState(() {
+          // currentArrayQuestion++;
+          currentQuestion = currentArrayQuestion + 1;
+          afterAnswer = false;
+        });
       }
+      onResetAnswerField();
+      getTimeScore();
+      onCoreCountTimeInGame(numberCountDown);
     });
   }
 
@@ -448,7 +457,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
         */
         endQuestion = false;
       }
-      onRunTimeResult(endQuestion);
+      onRunTimeResult(endQuestion, false);
     });
   }
 
@@ -538,18 +547,8 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
              * *nextQuestion
              */
 
-            onRunTimeResult(true);
-            // if () {
-            // } else {
-            //   onRunTimeResult(false);
-            // }
+            onRunTimeResult(true, true);
           } else {
-            // currentArrayQuestion++;
-            // currentQuestion++;
-
-            // countDownAnswer = numberCountDown;
-            // getTimeScore();
-            // onCoreCountTimeInGame(numberCountDown);
             /**
              ** ketika soal masih tersisa
              */
@@ -561,7 +560,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
             /**
              * *nextQuestion
              */
-            onRunTimeResult(false);
+            onRunTimeResult(false, true);
           }
         });
 
@@ -1039,15 +1038,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
               header(),
               isCountDown
                   ? countStart()
-                  : (afterAnswer
-                      ? resultAnswer(
-                          resultAnswerStatus,
-                          score,
-                          dataRelationWord![currentArrayQuestion]
-                              .word, // ini perbaikan dulu
-                          dataRelationWord![currentArrayQuestion]
-                              .word) // ini perbaikan dulu
-                      : (_isLoading ? Container() : mainBody())),
+                  : (_isLoading ? Container() : mainBody()),
             ],
           )),
         ));

@@ -9,6 +9,8 @@ Color primaryColor3 = const Color(0xff4F349E);
 Color primaryColor4 = const Color(0xff5C33CF);
 Color primaryColor5 = const Color(0xff643FCA);
 Color primaryColor6 = const Color(0xff4B2F97);
+Color primaryColor7 = const Color(0xff663BE2);
+Color primaryColor8 = const Color(0xff4F349E);
 
 Color redColor = const Color(0xffF66062);
 Color redColor2 = const Color(0xffAB4447);
