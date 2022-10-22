@@ -114,17 +114,6 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
     widget._langProvider = langProvider;
     _languageDBProvider = langProvider;
     try {
-      // if (await langProvider.getWords(
-      //     widget.languageModel!.language_code, widget.levelWords)) {
-      //   dataWordList =
-      //       langProvider.dataWordList!.getRange(0, totalQuestion).toList();
-      //   await setUpListQuestionQueue(dataWordList);
-      //   // setup antrian pertanyaan, gunanya untuk mekanisme skip pertanyaan
-      //   setState(() {
-      //     _isLoading = false;
-      //   });
-      //   // print("in loading");
-      // }
       if (_languageDBProvider!.dataHistoryGameDetailList != null) {
         await _languageDBProvider!.resetSingleHistoryGameDetail();
       } else {
@@ -408,13 +397,9 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
           newScoreCount = ((scoreCount / totalQuestion) * 0.6);
         }
 
-        Future.delayed(const Duration(milliseconds: 1000), () async {
-          // Navigator.pushAndRemoveUntil(
-          //     context,
-          //     CustomPageRoute(ResultGamePage(widget.languageModel, newScoreTime,
-          //         newScoreCount, widget.levelModel, widget.isCustom)),
-          //     (route) => false);
+        _isLoading = true;
 
+        Future.delayed(const Duration(milliseconds: 1000), () {
           Navigator.pushAndRemoveUntil(
               context,
               CustomPageRoute(ResultOfflineGamePage(
@@ -436,10 +421,10 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
           currentQuestion = currentArrayQuestion + 1;
           afterAnswer = false;
         });
+        onResetAnswerField();
+        getTimeScore();
+        onCoreCountTimeInGame(numberCountDown);
       }
-      onResetAnswerField();
-      getTimeScore();
-      onCoreCountTimeInGame(numberCountDown);
     });
   }
 

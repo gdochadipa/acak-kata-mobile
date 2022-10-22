@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:acakkata/generated/l10n.dart';
 import 'package:acakkata/models/history_game_detail_model.dart';
 import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/models/level_model.dart';
+import 'package:acakkata/models/range_result_txt_model.dart';
 import 'package:acakkata/providers/language_db_provider.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/button/button_bounce.dart';
@@ -108,6 +110,29 @@ class _ResultOfflineGamePageState extends State<ResultOfflineGamePage> {
   Widget build(BuildContext context) {
     S? setLanguage = S.of(context);
 
+    Path drawStar(Size size) {
+      double degToRad(double deg) => deg * (pi / 180.0);
+
+      const numberOfPoints = 5;
+      final halfWidth = size.width / 2;
+      final externalRadius = halfWidth;
+      final internalRadius = halfWidth / 2.5;
+      final degreesPerStep = degToRad(360 / numberOfPoints);
+      final halfDegreesPerStep = degreesPerStep / 2;
+      final path = Path();
+      final fullAngle = degToRad(360);
+      path.moveTo(size.width, halfWidth);
+
+      for (double step = 0; step < fullAngle; step += degreesPerStep) {
+        path.lineTo(halfWidth + externalRadius * cos(step),
+            halfWidth + externalRadius * sin(step));
+        path.lineTo(halfWidth + internalRadius * cos(step + halfDegreesPerStep),
+            halfWidth + internalRadius * sin(step + halfDegreesPerStep));
+      }
+      path.close();
+      return path;
+    }
+
     Widget textHeader() {
       return Container(
         margin: const EdgeInsets.only(bottom: 10),
@@ -134,7 +159,7 @@ class _ResultOfflineGamePageState extends State<ResultOfflineGamePage> {
       );
     }
 
-    Widget scoreHeader() {
+    Widget scoreHeader({required int? finalScoreGame}) {
       return Container(
         width: 180,
         height: 180,
@@ -143,7 +168,7 @@ class _ResultOfflineGamePageState extends State<ResultOfflineGamePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("89",
+              Text("$finalScoreGame",
                   textAlign: TextAlign.center,
                   style:
                       whiteTextStyle.copyWith(fontSize: 48, fontWeight: bold)),
@@ -157,7 +182,7 @@ class _ResultOfflineGamePageState extends State<ResultOfflineGamePage> {
       );
     }
 
-    Widget textResultHeader() {
+    Widget textResultHeader({required String? resultText}) {
       return Container(
         width: 180,
         margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
@@ -168,7 +193,7 @@ class _ResultOfflineGamePageState extends State<ResultOfflineGamePage> {
         ),
         child: Center(
           child: Text(
-            "Bagus",
+            "$resultText",
             style: primaryTextStyle.copyWith(fontSize: 20, fontWeight: bold),
           ),
         ),
@@ -176,6 +201,19 @@ class _ResultOfflineGamePageState extends State<ResultOfflineGamePage> {
     }
 
     Widget resultGame() {
+      String? resultText = "";
+      int finalScore =
+          ((widget.finalScoreRate + widget.finalTimeRate) * 100).round();
+      List<RangeResultTxtModel>? rangeRes = _languageDBProvider!.rangeTextList;
+      for (var range in rangeRes!) {
+        if (range.range_min! <= finalScore && range.range_max! >= finalScore) {
+          setState(() {
+            resultText = (setLanguage.code == 'en'
+                ? range.name_range_en
+                : range.name_range_id);
+          });
+        }
+      }
       return Container(
         decoration: BoxDecoration(color: primaryColor7),
         padding: const EdgeInsets.all(15),
@@ -189,11 +227,11 @@ class _ResultOfflineGamePageState extends State<ResultOfflineGamePage> {
             const SizedBox(
               height: 15,
             ),
-            scoreHeader(),
+            scoreHeader(finalScoreGame: finalScore),
             const SizedBox(
               height: 3,
             ),
-            textResultHeader(),
+            textResultHeader(resultText: resultText),
             const SizedBox(
               height: 10,
             ),
@@ -268,7 +306,8 @@ class _ResultOfflineGamePageState extends State<ResultOfflineGamePage> {
                   answer: (e.statusAnswer == 1 ? true : false),
                   answerWord: e.correctAnswerByUser?.word,
                   meaning: e.correctAnswerByUser?.word_hint,
-                  relatedWord: e.questionWord))
+                  relatedWord:
+                      e.listWords!.map((word) => word.word ?? '').toList()))
               .toList());
     }
 
@@ -353,12 +392,36 @@ class _ResultOfflineGamePageState extends State<ResultOfflineGamePage> {
       );
     }
 
+    Widget confettiStar() {
+      return ConfettiWidget(
+        confettiController: _confettiController,
+        blastDirectionality: BlastDirectionality
+            .explosive, // don't specify a direction, blast randomly
+        shouldLoop: true, // start again as soon as the animation is finished
+        colors: const [
+          Color(0xffFD47F6),
+          Color(0xffFF7CFA),
+          Color(0xffFF00F5),
+          Color(0xffBD00B6),
+          Color(0xffF5BCF3),
+          Color(0xffFF00F5)
+        ], // manually specify the colors to be used
+        createParticlePath: drawStar, // define a custom shape/path.
+      );
+    }
+
     return WillPopScope(
         child: Scaffold(
           backgroundColor: whiteColor,
           body: Stack(
             fit: StackFit.expand,
-            children: [body()],
+            children: [
+              body(),
+              Align(
+                alignment: Alignment.topCenter,
+                child: confettiStar(),
+              ),
+            ],
           ),
         ),
         onWillPop: () async => false);
