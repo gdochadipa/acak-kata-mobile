@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:acakkata/models/history_game_detail_model.dart';
 import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/models/level_model.dart';
 import 'package:acakkata/models/range_result_txt_model.dart';
@@ -38,6 +39,10 @@ class LanguageDBProvider with ChangeNotifier {
   List<RangeResultTxtModel>? _dataRangeTextList;
   List<RangeResultTxtModel>? get rangeTextList => _dataRangeTextList;
 
+  List<HistoryGameDetailModel>? _dataHistoryGameDetailList;
+  List<HistoryGameDetailModel>? get dataHistoryGameDetailList =>
+      _dataHistoryGameDetailList;
+
   int get numberCountDown => _numberCountDown;
   int get totalQuestion => _totalQuestion;
 
@@ -45,7 +50,7 @@ class LanguageDBProvider with ChangeNotifier {
     printer: PrettyPrinter(methodCount: 0),
   );
 
-  static const NEW_DB_VERSION = 2;
+  static const NEW_DB_VERSION = 3;
 
   setRuleGame(int? numberCountDown, int? totalQuestion) {
     _numberCountDown = numberCountDown ?? 15;
@@ -242,6 +247,7 @@ class LanguageDBProvider with ChangeNotifier {
 
       return true;
     } catch (e) {
+      logger.e(e);
       throw Exception(e);
       return false;
     }
@@ -448,5 +454,22 @@ class LanguageDBProvider with ChangeNotifier {
     } catch (e) {
       throw Exception(e);
     }
+  }
+
+  Future<void> saveSingleHistoryGameDetail(
+      {required HistoryGameDetailModel? historyGameDetailModel}) async {
+    _dataHistoryGameDetailList!.add(historyGameDetailModel!);
+  }
+
+  Future<void> resetSingleHistoryGameDetail() async {
+    if (_dataHistoryGameDetailList != null) {
+      _dataHistoryGameDetailList!.clear();
+    } else {
+      _dataHistoryGameDetailList = [];
+    }
+  }
+
+  Future<void> setSingleHistoryGameDetail() async {
+    _dataHistoryGameDetailList = [];
   }
 }

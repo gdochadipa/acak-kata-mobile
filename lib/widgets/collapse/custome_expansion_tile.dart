@@ -361,7 +361,7 @@ class _ExpansionTileState extends State<CustomExpansionTile>
     final Color borderSideColor = _borderColor.value ?? Colors.transparent;
 
     return Container(
-      margin: const EdgeInsets.all(10),
+      margin: const EdgeInsets.all(15),
       decoration: BoxDecoration(
           color: primaryColor9, borderRadius: BorderRadius.circular(10)),
       child: Column(

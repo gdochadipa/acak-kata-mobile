@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:acakkata/generated/l10n.dart';
+import 'package:acakkata/models/history_game_detail_model.dart';
 import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/models/level_model.dart';
 import 'package:acakkata/providers/language_db_provider.dart';
 import 'package:acakkata/theme.dart';
+import 'package:acakkata/widgets/button/button_bounce.dart';
 import 'package:acakkata/widgets/collapse/custome_expansion_tile.dart';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +37,7 @@ class ResultOfflineGamePage extends StatefulWidget {
 class _ResultOfflineGamePageState extends State<ResultOfflineGamePage> {
   late ConfettiController _confettiController;
   late LanguageDBProvider? _languageDBProvider;
+  List<HistoryGameDetailModel>? _historyGameDetailModel;
   bool isLoading = false;
   Logger logger = Logger(
     printer: PrettyPrinter(methodCount: 0),
@@ -44,6 +47,14 @@ class _ResultOfflineGamePageState extends State<ResultOfflineGamePage> {
     isLoading = true;
     _languageDBProvider =
         Provider.of<LanguageDBProvider>(context, listen: false);
+
+    logger.d(_languageDBProvider!.dataHistoryGameDetailList!.length);
+
+    if (_languageDBProvider!.dataHistoryGameDetailList != null) {
+      _historyGameDetailModel = _languageDBProvider!.dataHistoryGameDetailList;
+    } else {
+      _historyGameDetailModel = [];
+    }
 
     // logger.d(widget.finalScoreRate);
     // logger.d(widget.finalTimeRate);
@@ -78,7 +89,7 @@ class _ResultOfflineGamePageState extends State<ResultOfflineGamePage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    // updateLevel();
+    updateLevel();
     _confettiController =
         ConfettiController(duration: const Duration(seconds: 5));
     Timer(const Duration(milliseconds: 800), () {
@@ -219,7 +230,7 @@ class _ResultOfflineGamePageState extends State<ResultOfflineGamePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  answerWord.toString(),
+                  meaning.toString(),
                   style:
                       blackTextStyle.copyWith(fontSize: 14, fontWeight: medium),
                 ),
@@ -248,60 +259,17 @@ class _ResultOfflineGamePageState extends State<ResultOfflineGamePage> {
     }
 
     Widget wordHistoryAnswers() {
-      return Expanded(
-        child: ListView(
+      return ListView(
           shrinkWrap: true,
-          physics: const AlwaysScrollableScrollPhysics(),
+          physics: const ClampingScrollPhysics(),
           scrollDirection: Axis.vertical,
-          children: [
-            CustomExpansionTile(
-              leading: Image.asset(
-                'assets/images/success.png',
-                height: 30,
-                width: 30,
-              ),
-              title: Text(
-                "AYAM",
-                style:
-                    primaryTextStyle.copyWith(fontSize: 18, fontWeight: bold),
-              ),
-              children: [
-                Container(
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "CrossAxisAlignment.baseline is not supported since the expanded children",
-                        style: blackTextStyle.copyWith(
-                            fontSize: 12, fontWeight: medium),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Wrap(
-                        spacing: 8.0, // gap between adjacent chips
-                        runSpacing: 4.0, // gap between lines
-                        crossAxisAlignment: WrapCrossAlignment.start,
-                        children: [
-                          Chip(
-                            label: Text(
-                              "data",
-                              style: whiteTextStyle.copyWith(fontSize: 15),
-                            ),
-                            backgroundColor: successColor,
-                          )
-                        ],
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ],
-        ),
-      );
+          children: _historyGameDetailModel!
+              .map((e) => childrenAnswer(
+                  answer: (e.statusAnswer == 1 ? true : false),
+                  answerWord: e.correctAnswerByUser?.word,
+                  meaning: e.correctAnswerByUser?.word_hint,
+                  relatedWord: e.questionWord))
+              .toList());
     }
 
     Widget starView(
@@ -321,6 +289,32 @@ class _ResultOfflineGamePageState extends State<ResultOfflineGamePage> {
               width: width,
             ),
           ));
+    }
+
+    Widget backtoMenu() {
+      return Container(
+        width: double.infinity,
+        margin: const EdgeInsets.only(top: 5),
+        alignment: Alignment.center,
+        child: ButtonBounce(
+            onClick: isLoading
+                ? () {}
+                : () {
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, '/home', (route) => false);
+                  },
+            color: redColor,
+            borderColor: redColor2,
+            shadowColor: redColor3,
+            widthButton: 245,
+            heightButton: 60,
+            child: Center(
+              child: Text(
+                setLanguage.back_to_menu,
+                style: whiteTextStyle.copyWith(fontSize: 18, fontWeight: black),
+              ),
+            )),
+      );
     }
 
     Widget body() {
@@ -345,7 +339,15 @@ class _ResultOfflineGamePageState extends State<ResultOfflineGamePage> {
                     left: 40, top: 310, rotate: 50, height: 49.1, width: 44)
               ],
             ),
-            wordHistoryAnswers()
+            Container(
+              margin: const EdgeInsets.only(top: 10, left: 15),
+              child: Text(
+                "Hasil Jawaban",
+                style: blackTextStyle.copyWith(fontSize: 18, fontWeight: bold),
+              ),
+            ),
+            wordHistoryAnswers(),
+            backtoMenu()
           ],
         ),
       );

@@ -5,12 +5,14 @@ import 'dart:math';
 import 'package:acakkata/generated/l10n.dart';
 import 'package:acakkata/helper/style_helper.dart';
 import 'package:acakkata/models/coordinate.dart';
+import 'package:acakkata/models/history_game_detail_model.dart';
 import 'package:acakkata/models/level_model.dart';
 import 'package:acakkata/models/relation_word.dart';
 import 'package:acakkata/models/word_language_model.dart';
 import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/pages/in_game/modal/answer_modal.dart';
 import 'package:acakkata/pages/result_game/result_game_page.dart';
+import 'package:acakkata/pages/result_game/result_offline_game_page.dart';
 import 'package:acakkata/providers/language_db_provider.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/answer_input_buttons.dart';
@@ -60,6 +62,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
   late final _animationRotateController = AnimationController(
       vsync: this, duration: const Duration(milliseconds: 1000));
   late Animation animationRotate;
+  late LanguageDBProvider? _languageDBProvider;
   TextEditingController answerController = TextEditingController(text: '');
   Logger logger = Logger(
     printer: PrettyPrinter(methodCount: 0),
@@ -109,6 +112,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
     });
 
     widget._langProvider = langProvider;
+    _languageDBProvider = langProvider;
     try {
       // if (await langProvider.getWords(
       //     widget.languageModel!.language_code, widget.levelWords)) {
@@ -121,20 +125,25 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
       //   });
       //   // print("in loading");
       // }
+      if (_languageDBProvider!.dataHistoryGameDetailList != null) {
+        await _languageDBProvider!.resetSingleHistoryGameDetail();
+      } else {
+        await _languageDBProvider!.setSingleHistoryGameDetail();
+      }
 
-      if (await langProvider.getRelationalWords(
+      if (await _languageDBProvider!.getRelationalWords(
           languageCode: widget.languageModel!.language_code,
           lengthWord: widget.levelWords,
           languageId: null,
           questionNumber: totalQuestion)) {
-        dataRelationWord = langProvider.dataRelationWordList!;
+        dataRelationWord = _languageDBProvider!.dataRelationWordList!;
 
         await setUpListQuestionQueue(dataRelationWord);
         setState(() {
           _isLoading = false;
         });
+        return true;
       }
-      return true;
     } catch (e) {
       logger.e(e);
       logger.d('gagal load permainan');
@@ -231,10 +240,22 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    _timerInGame!.cancel();
-    _timerScore!.cancel();
+    if (_timeInRes != null) {
+      _timerInGame!.cancel();
+    }
+    if (_timerScore != null) {
+      _timerScore!.cancel();
+    }
     if (_timeInRes != null) {
       _timeInRes!.cancel();
+    }
+  }
+
+  @override
+  void setState(VoidCallback fn) {
+    // TODO: implement setState
+    if (mounted) {
+      super.setState(fn);
     }
   }
 
@@ -361,6 +382,18 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
     _timerScore!.cancel();
     showResultAnswerModal(resultAnswerStatus: isCorrectAnswer);
 
+    // ketika jawaban salah maka akan simpan jawaban salah
+    if (!isCorrectAnswer) {
+      await saveHistoryGameplay(
+          questionWord: dataRelationWord![currentArrayQuestion].letter,
+          answerWord: null,
+          statusAnswer: 0,
+          remainingTime: 0,
+          correctAnswer:
+              dataRelationWord![currentArrayQuestion].listWords!.first,
+          listWord: dataRelationWord![currentArrayQuestion].listWords!);
+    }
+
     Future.delayed(const Duration(milliseconds: 1000), () async {
       if (endGame) {
         double allScoreTime = scoreTime.fold(
@@ -375,11 +408,23 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
           newScoreCount = ((scoreCount / totalQuestion) * 0.6);
         }
 
-        Navigator.pushAndRemoveUntil(
-            context,
-            CustomPageRoute(ResultGamePage(widget.languageModel, newScoreTime,
-                newScoreCount, widget.levelModel, widget.isCustom)),
-            (route) => false);
+        Future.delayed(const Duration(milliseconds: 1000), () async {
+          // Navigator.pushAndRemoveUntil(
+          //     context,
+          //     CustomPageRoute(ResultGamePage(widget.languageModel, newScoreTime,
+          //         newScoreCount, widget.levelModel, widget.isCustom)),
+          //     (route) => false);
+
+          Navigator.pushAndRemoveUntil(
+              context,
+              CustomPageRoute(ResultOfflineGamePage(
+                  languageModel: widget.languageModel,
+                  finalTimeRate: newScoreTime,
+                  finalScoreRate: newScoreCount,
+                  level: widget.levelModel,
+                  isCustom: widget.isCustom)),
+              (route) => false);
+        });
       } else {
         /**
            * setelah perhitungan jika belum diakhir pertanyaan maka akan lanjut
@@ -434,7 +479,9 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
       getTimeScore();
 
       timer.cancel();
-      _timerScore!.cancel();
+      if (_timerScore != null) {
+        _timerScore!.cancel();
+      }
       setState(() {
         afterAnswer = true;
         answerCountDown = 5;
@@ -494,9 +541,28 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
     return null;
   }
 
+  Future<void> saveHistoryGameplay(
+      {required List<String>? questionWord,
+      required String? answerWord,
+      required int? statusAnswer,
+      required int? remainingTime,
+      required WordLanguageModel? correctAnswer,
+      required List<WordLanguageModel>? listWord}) async {
+    HistoryGameDetailModel? historyGameDetail = HistoryGameDetailModel(
+        answerWord: answerWord,
+        statusAnswer: statusAnswer,
+        listWords: listWord,
+        correctAnswerByUser: correctAnswer,
+        questionWord: questionWord,
+        remainingTime: remainingTime);
+
+    _languageDBProvider!
+        .saveSingleHistoryGameDetail(historyGameDetailModel: historyGameDetail);
+  }
+
   /// *fungsi untuk memberikan input jawaban setelah menekan tombol huruf
   /// *fungsi ini akan mengecek jawaban ketika pemain menekan tombol terakhir jawaban
-  answerQuestion(String letter, int e, List<String>? suffleQuestion) {
+  answerQuestion(String letter, int e, List<String>? suffleQuestion) async {
     /**
          * menginputkan huruf ke kolom jawaban 
          * sekaligus juga menginputkan ke sequenceAnswer (urutan huruf jawaban)
@@ -518,7 +584,15 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
            */
       WordLanguageModel? resultCorrect = checkAnswerInWords(
           answerController.text.toLowerCase(), currentArrayQuestion);
+      // logger.d(resultCorrect?.toJson());
       if (resultCorrect != null) {
+        await saveHistoryGameplay(
+            questionWord: dataRelationWord![currentArrayQuestion].letter,
+            answerWord: dataRelationWord![currentArrayQuestion].word,
+            statusAnswer: 1,
+            remainingTime: countDownAnswer,
+            correctAnswer: resultCorrect,
+            listWord: dataRelationWord![currentArrayQuestion].listWords!);
         setState(() {
           /**
            * mekanisme perhitungan skor
