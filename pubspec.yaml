@@ -64,6 +64,7 @@ dependencies:
   rename: ^2.0.1
   change_app_package_name: ^1.1.0
   connectivity_plus: ^2.3.6+1
+  audioplayers: ^0.20.1
 
 dev_dependencies:
   flutter_test:
@@ -93,69 +94,10 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/images/icon_email.png
-    - assets/images/icon_flag_id.png
-    - assets/images/icon_password.png
-    - assets/images/icon_search.jpg
-    - assets/images/icon_time.jpg
-    - assets/images/icon_username.png
-    - assets/images/photo_profile.png
-    - assets/images/trophy.png
-    - assets/images/bali_lang.png
-    - assets/images/en_lang.png
-    - assets/images/id_lang.png
-    - assets/images/java_lang.png
-    - assets/images/arrow.png
     - assets/db/mydb.db
-    - assets/images/Lightbulb.png
-    - assets/images/logo_biru.png
-    - assets/images/logo_putih.png
-    - assets/images/multi_player.png
-    - assets/images/single_player.png
-    - assets/images/trophy_2.png
-    - assets/images/success_icon.png
-    - assets/images/fail_icon.png
-    - assets/images/background.png
-    - assets/images/background_512w.png
-    - assets/images/icon_exit.png
-    - assets/images/icon_group_white.png
-    - assets/images/icon_play.png
-    - assets/images/icon_play_white.png
-    - assets/images/icon_profile.png
-    - assets/images/icon_setting.png
-    - assets/images/en_flag.png
-    - assets/images/id_flag.png
-    - assets/images/edit_icon.png
-    - assets/images/time_square_icon.png
-    - assets/images/words_icon.png
-    - assets/images/white_clock_icon.png
-    - assets/images/arrow_blue.png
-    - assets/images/icon_black_game.png
-    - assets/images/logo_baru_no.png
-    - assets/images/question.png
-    - assets/images/star.png
-    - assets/images/great_job.png
-    - assets/images/light_bulb.png
-    - assets/images/logout.png
-    - assets/images/setting.png
-    - assets/images/game.png
-    - assets/images/arrow_shadow.png
-    - assets/images/profil.png
-    - assets/images/arrow_shadow_black.png
-    - assets/images/icon_lock.png
-    - assets/images/icon_pencil.png
-    - assets/images/icon_time.png
-    - assets/images/icon_kata.png
-    - assets/images/first.png
-    - assets/images/second.png
-    - assets/images/third.png
-    - assets/images/icon_shuffle.png
-    - assets/images/icon_search.png
-    - assets/images/gamepad_white.png
-    - assets/images/book.png
-    - assets/images/new_star.png
-    - assets/images/fail.png
-    - assets/images/success.png
+    - assets/images/
+    - assets/music/
+    - assets/sfx/
   
   fonts:
     - family: Nunito      
