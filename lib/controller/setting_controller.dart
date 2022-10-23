@@ -10,6 +10,8 @@ class SettingsController {
 
   ValueNotifier<bool> musicOn = ValueNotifier(false);
 
+  ValueNotifier<String> language = ValueNotifier('id');
+
   SettingsController({required SettingsPersistence persistence})
       : _persistence = persistence;
 
@@ -36,5 +38,10 @@ class SettingsController {
   void toggleSoundsOn() {
     soundsOn.value = !soundsOn.value;
     _persistence.saveSoundsOn(soundsOn.value);
+  }
+
+  void toggleLanguageChoice(String flag) {
+    language.value = flag;
+    _persistence.saveLanguage(language.value);
   }
 }

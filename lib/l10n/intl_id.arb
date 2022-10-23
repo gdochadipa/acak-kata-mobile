@@ -43,5 +43,8 @@
     "about" : "Tentang Aplikasi",
     "about_cite": "Sumber Basis Pengetahuan : \n - dictionary.basabali.org \n - Faisal Amir, Dictionary Box\n - Muhammad Irfan Luthfi, Kamus-Jawa-Indonesia\n - Sahri Riza Umami, Kamus Besar Bahasa Indonesia Edisi IV",
     "login_first" : "Login terlebih dahulu !",
-    "exit_room": "Keluar dari Ruang Permainan"
+    "exit_room": "Keluar dari Ruang Permainan",
+    "find_word": "Kamus",
+    "join_room": "Gabung Permainan",
+    "music": "Musik"
 }

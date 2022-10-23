@@ -499,6 +499,36 @@ class S {
       args: [],
     );
   }
+
+  /// `Dictionary`
+  String get find_word {
+    return Intl.message(
+      'Dictionary',
+      name: 'find_word',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Join Room`
+  String get join_room {
+    return Intl.message(
+      'Join Room',
+      name: 'join_room',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Music`
+  String get music {
+    return Intl.message(
+      'Music',
+      name: 'music',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

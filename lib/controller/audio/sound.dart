@@ -35,10 +35,6 @@ List<String> soundTypeToFilename(SfxType type) {
         'fwfwfwfwfw1.mp3',
         'fwfwfwfw1.mp3',
       ];
-    case SfxType.drawGrid:
-      return [
-        'swishswish1.mp3',
-      ];
   }
 }
 
@@ -52,16 +48,8 @@ double soundTypeToVolume(SfxType type) {
     case SfxType.buttonTap:
     case SfxType.congrats:
     case SfxType.erase:
-    case SfxType.drawGrid:
       return 1.0;
   }
 }
 
-enum SfxType {
-  drawX,
-  drawO,
-  buttonTap,
-  congrats,
-  erase,
-  drawGrid,
-}
+enum SfxType { drawX, drawO, buttonTap, congrats, erase }

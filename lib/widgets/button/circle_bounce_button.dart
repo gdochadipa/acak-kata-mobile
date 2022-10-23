@@ -1,4 +1,7 @@
+import 'package:acakkata/controller/audio/sound.dart';
+import 'package:acakkata/controller/audio_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CircleBounceButton extends StatefulWidget {
   final Widget child;
@@ -48,6 +51,7 @@ class _CircleBounceButtonState extends State<CircleBounceButton> {
 
   @override
   Widget build(BuildContext context) {
+    final audio = context.watch<AudioController>();
     return Container(
       margin: widget.margin,
       child: SizedBox(
@@ -61,6 +65,7 @@ class _CircleBounceButtonState extends State<CircleBounceButton> {
           onTapUp: (_) => setState(() {
             _padding = widget.heightShadow;
             _reversePadding = 0.0;
+            audio.playSfx(SfxType.buttonTap, queue: 0);
           }),
           child: AnimatedContainer(
             padding: EdgeInsets.only(bottom: _padding),

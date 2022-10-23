@@ -1,4 +1,9 @@
+import 'package:acakkata/controller/audio/sound.dart';
+import 'package:acakkata/controller/audio_controller.dart';
+import 'package:acakkata/controller/setting_controller.dart';
+import 'package:acakkata/generated/l10n.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ButtonBounce extends StatefulWidget {
   final Widget child;
@@ -48,6 +53,7 @@ class _ButtonBounceState extends State<ButtonBounce> {
 
   @override
   Widget build(BuildContext context) {
+    final audio = context.watch<AudioController>();
     return Container(
       child: SizedBox(
         height: widget.heightButton,
@@ -61,6 +67,7 @@ class _ButtonBounceState extends State<ButtonBounce> {
           onTapUp: (_) => setState(() {
             _padding = widget.heightShadow;
             _reversePadding = 0.0;
+            audio.playSfx(SfxType.buttonTap, queue: 0);
           }),
           child: AnimatedContainer(
             padding: EdgeInsets.only(bottom: _padding),

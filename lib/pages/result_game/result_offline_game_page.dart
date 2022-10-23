@@ -265,7 +265,8 @@ class _ResultOfflineGamePageState extends State<ResultOfflineGamePage> {
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
                   meaning.toString(),

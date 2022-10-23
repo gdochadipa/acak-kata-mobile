@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:ffi';
 import 'dart:math';
 
+import 'package:acakkata/controller/audio/sound.dart';
+import 'package:acakkata/controller/audio_controller.dart';
 import 'package:acakkata/generated/l10n.dart';
 import 'package:acakkata/helper/style_helper.dart';
 import 'package:acakkata/models/coordinate.dart';
@@ -257,6 +259,12 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
         context: context,
         builder: (BuildContext context) {
           S? language = S.of(context);
+          final audio = context.watch<AudioController>();
+          if (resultAnswerStatus) {
+            audio.playSfx(SfxType.congrats, queue: 0);
+          } else {
+            audio.playSfx(SfxType.erase, queue: 0);
+          }
           Future.delayed(const Duration(milliseconds: 1000), () {
             Navigator.of(context).pop(true);
           });

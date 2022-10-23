@@ -401,7 +401,7 @@ class _NewHomePageState extends State<NewHomePage> {
                     FittedBox(
                       fit: BoxFit.contain,
                       child: AutoSizeText(
-                        "Bermain",
+                        setLanguage.play,
                         style: whiteTextStyle.copyWith(
                             fontWeight: bold, fontSize: 20),
                         presetFontSizes: const [18, 16],
@@ -473,7 +473,7 @@ class _NewHomePageState extends State<NewHomePage> {
                     FittedBox(
                       fit: BoxFit.contain,
                       child: AutoSizeText(
-                        "Cari Kata",
+                        "${setLanguage.find_word}",
                         style: whiteTextStyle.copyWith(
                             fontWeight: bold, fontSize: 18),
                         presetFontSizes: const [15, 16],
@@ -532,10 +532,10 @@ class _NewHomePageState extends State<NewHomePage> {
                   FittedBox(
                     fit: BoxFit.contain,
                     child: AutoSizeText(
-                      "Gabung Permainan",
+                      setLanguage.join_room,
                       style: whiteTextStyle.copyWith(
-                          fontWeight: bold, fontSize: 18),
-                      presetFontSizes: const [18, 16],
+                          fontWeight: bold, fontSize: 12),
+                      presetFontSizes: const [14, 12],
                       maxLines: 2,
                     ),
                   )

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:acakkata/controller/setting_controller.dart';
 import 'package:acakkata/generated/l10n.dart';
 import 'package:acakkata/providers/change_language_provider.dart';
 import 'package:acakkata/theme.dart';
@@ -41,20 +42,6 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  void onChangeLanguage(String? flag) {
-    if (flag != null) {
-      S language = S.of(context);
-      // print("set flag ${language.code}");
-      setState(() {
-        _changeLanguageProvider!.changeLocale(flag);
-        wasSelectedLanguage = true;
-        prefs!.setString("choiceLang", flag);
-        prefs!.setBool("wasSelectedLanguage", true);
-      });
-    }
-    Navigator.pop(context);
-  }
-
   @override
   void initState() {
     // TODO: implement initState
@@ -65,6 +52,21 @@ class _SettingPageState extends State<SettingPage> {
   @override
   Widget build(BuildContext context) {
     S? setLanguage = S.of(context);
+    final setting = context.watch<SettingsController>();
+
+    void onChangeLanguage(String? flag) {
+      if (flag != null) {
+        S language = S.of(context);
+        // print("set flag ${language.code}");
+        setState(() {
+          _changeLanguageProvider!.changeLocale(flag);
+          wasSelectedLanguage = true;
+          prefs!.setString("choiceLang", flag);
+          prefs!.setBool("wasSelectedLanguage", true);
+        });
+      }
+      Navigator.pop(context);
+    }
 
     Widget btnExits() {
       return ButtonBounce(
@@ -123,6 +125,9 @@ class _SettingPageState extends State<SettingPage> {
                       setState(() {
                         languageSelected = listLang[int.parse(item.toString())];
                       });
+                      setting.toggleLanguageChoice(languageSelected ?? 'id');
+                      _changeLanguageProvider!
+                          .changeLocale(languageSelected ?? 'id');
                       // print(
                       //     "on selected = ${selected}  ${listLang[int.parse(item.toString())]} ");
                       return;
@@ -183,25 +188,22 @@ class _SettingPageState extends State<SettingPage> {
                 );
               },
             ),
-            ButtonBounce(
-                color: primaryColor,
-                borderColor: primaryColor2,
-                shadowColor: primaryColor3,
-                widthButton: 180,
-                heightButton: 60,
-                child: Center(
-                  child: Text(
-                    setLanguage.save_setting,
-                    style:
-                        whiteTextStyle.copyWith(fontSize: 16, fontWeight: bold),
-                  ),
-                ),
-                onClick: () {
-                  print("selected lang ${languageSelected}");
-                  Timer(const Duration(milliseconds: 50), () {
-                    onChangeLanguage(languageSelected ?? null);
-                  });
-                }),
+            ValueListenableBuilder<bool>(
+                valueListenable: setting.musicOn,
+                builder: (context, musicOn, child) => _SettingLine(
+                      setLanguage.music,
+                      Icon(musicOn ? Icons.music_note : Icons.music_off,
+                          color: whiteColor),
+                      onSelected: () => setting.toggleMusicOn(),
+                    )),
+            ValueListenableBuilder<bool>(
+                valueListenable: setting.soundsOn,
+                builder: (context, soundsOn, child) => _SettingLine(
+                      "SFX",
+                      Icon(soundsOn ? Icons.graphic_eq : Icons.volume_off,
+                          color: whiteColor),
+                      onSelected: () => setting.toggleSoundsOn(),
+                    )),
             const SizedBox(
               height: 10,
             ),
@@ -250,5 +252,43 @@ class _SettingPageState extends State<SettingPage> {
           )),
         ),
         onWillPop: () async => false);
+  }
+}
+
+class _SettingLine extends StatelessWidget {
+  final String title;
+
+  final Widget icon;
+
+  final VoidCallback? onSelected;
+
+  const _SettingLine(this.title, this.icon, {this.onSelected, Key? key})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+          color: primaryColor8, borderRadius: BorderRadius.circular(10)),
+      margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+      padding: const EdgeInsets.all(10),
+      child: InkResponse(
+          highlightShape: BoxShape.rectangle,
+          onTap: onSelected,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  title,
+                  style: whiteTextStyle.copyWith(fontSize: 21),
+                ),
+                const Spacer(),
+                icon,
+              ],
+            ),
+          )),
+    );
   }
 }

@@ -25,21 +25,28 @@ class LocalStorageSettingPersistence extends SettingsPersistence {
   }
 
   @override
-  Future<bool> getIsLogin() {
-    // TODO: implement getIsLogin
-    throw UnimplementedError();
+  Future<bool> getIsLogin() async {
+    final prefs = await instanceFuture;
+    return prefs.getBool('login') ?? false;
   }
 
   @override
-  Future<String> getLanguage() {
-    // TODO: implement getLanguage
-    throw UnimplementedError();
+  Future<String> getLanguage() async {
+    final prefs = await instanceFuture;
+    return prefs.getString('choiceLang') ?? 'id';
   }
 
   @override
-  Future<UserModel> getUserLogin() {
-    // TODO: implement getUserLogin
-    throw UnimplementedError();
+  Future<UserModel> getUserLogin() async {
+    final prefs = await instanceFuture;
+    UserModel _user = UserModel(
+        id: prefs.getString('id'),
+        name: prefs.getString('name'),
+        email: prefs.getString('email'),
+        username: prefs.getString('username'),
+        userCode: prefs.getString('userCode'),
+        token: prefs.getString('token'));
+    return _user;
   }
 
   @override
@@ -61,20 +68,26 @@ class LocalStorageSettingPersistence extends SettingsPersistence {
   }
 
   @override
-  Future<void> saveIsLogin(bool value) {
-    // TODO: implement saveIsLogin
-    throw UnimplementedError();
+  Future<void> saveIsLogin(bool value) async {
+    final prefs = await instanceFuture;
+    await prefs.setBool('login', value);
   }
 
   @override
-  Future<void> saveLanguage(String language) {
-    // TODO: implement saveLanguage
-    throw UnimplementedError();
+  Future<void> saveLanguage(String language) async {
+    final prefs = await instanceFuture;
+    await prefs.setString('choiceLang', language);
   }
 
   @override
-  Future<void> saveUserLogin(UserModel userModel) {
-    // TODO: implement saveUserLogin
-    throw UnimplementedError();
+  Future<void> saveUserLogin(UserModel user) async {
+    final pref = await instanceFuture;
+    pref.setBool('login', true);
+    pref.setString('id', '${user.id}');
+    pref.setString('name', user.name ?? '');
+    pref.setString('email', '${user.email}');
+    pref.setString('username', '${user.username}');
+    pref.setString('userCode', '${user.userCode}');
+    pref.setString('token', '${user.token}');
   }
 }

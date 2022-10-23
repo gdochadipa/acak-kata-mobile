@@ -54,7 +54,7 @@ class AudioController {
     _sfxCache =
         AudioCache(prefix: 'assets/sfx/', fixedPlayer: _sfxPlayers.first);
 
-    _musicPlayer.onPlayerCompletion.listen((event) {});
+    _musicPlayer.onPlayerCompletion.listen(_changeSong);
   }
 
   void attachLifeCycleNotifier(
@@ -115,13 +115,13 @@ class AudioController {
     }
   }
 
-  void intialize() async {
+  void initialize() async {
     _log.info('Preloading sound effects');
     await _sfxCache
         .loadAll(SfxType.values.expand(soundTypeToFilename).toList());
   }
 
-  void playSfx(SfxType type) {
+  void playSfx(SfxType type, {int? queue}) {
     final muted = _settings?.muted.value ?? true;
     if (muted) {
       _log.info(() => 'Ignoring playing sound ($type) because audio is muted.');
@@ -136,7 +136,8 @@ class AudioController {
 
     _log.info(() => 'Playing sound: $type');
     final options = soundTypeToFilename(type);
-    final filename = options[_random.nextInt(options.length)];
+    final newQueue = (queue ?? _random.nextInt(options.length));
+    final filename = options[newQueue];
     _log.info(() => '- Chosen filename: $filename');
     _sfxCache.play(filename, volume: soundTypeToVolume(type));
     _currentSfxPlayer = (_currentSfxPlayer + 1) % _sfxPlayers.length;

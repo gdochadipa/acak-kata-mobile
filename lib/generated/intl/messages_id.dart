@@ -43,12 +43,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "exit_room":
             MessageLookupByLibrary.simpleMessage("Keluar dari Ruang Permainan"),
         "false_string": MessageLookupByLibrary.simpleMessage("Salah"),
+        "find_word": MessageLookupByLibrary.simpleMessage("Kamus"),
+        "join_room": MessageLookupByLibrary.simpleMessage("Gabung Permainan"),
         "letter": MessageLookupByLibrary.simpleMessage("Huruf"),
         "listLanguage": MessageLookupByLibrary.simpleMessage(
             "Pilih Bahasa untuk Permainan"),
         "login_first":
             MessageLookupByLibrary.simpleMessage("Login terlebih dahulu !"),
         "multi_player": MessageLookupByLibrary.simpleMessage("Pemain Ganda"),
+        "music": MessageLookupByLibrary.simpleMessage("Musik"),
         "next": MessageLookupByLibrary.simpleMessage("Selanjutnya"),
         "of_string": MessageLookupByLibrary.simpleMessage("dari"),
         "play": MessageLookupByLibrary.simpleMessage("Main"),

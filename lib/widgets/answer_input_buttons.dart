@@ -2,9 +2,12 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:acakkata/callbacks/checking_word_callback.dart';
+import 'package:acakkata/controller/audio/sound.dart';
+import 'package:acakkata/controller/audio_controller.dart';
 import 'package:acakkata/models/coordinate.dart';
 import 'package:acakkata/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class InputAnswerButton extends StatefulWidget {
   // const InputAnswerButton({
@@ -99,6 +102,7 @@ class _InputAnswerButtonState extends State<InputAnswerButton>
 
   @override
   Widget build(BuildContext context) {
+    final audio = context.watch<AudioController>();
     return AnimatedPositioned(
         top: widget.coordinate.x,
         right: widget.coordinate.y,
@@ -142,6 +146,7 @@ class _InputAnswerButtonState extends State<InputAnswerButton>
                   _padding = 6;
                   _reversePadding = 0.0;
                 }
+                audio.playSfx(SfxType.buttonTap, queue: 0);
               }),
               child: AnimatedContainer(
                 padding: EdgeInsets.only(bottom: _padding),
