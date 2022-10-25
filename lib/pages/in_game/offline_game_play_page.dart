@@ -35,7 +35,7 @@ import 'package:animate_do/animate_do.dart';
 class OfflineGamePlayPage extends StatefulWidget {
   // const GamePlayPage({Key? key}) : super(key: key);
   late final LanguageDBProvider _langProvider;
-  late final LanguageModel? languageModel;
+  late final LanguageModel languageModel;
   late final int? selectedQuestion;
   late final int? selectedTime;
   late final int? levelWords;
@@ -45,7 +45,7 @@ class OfflineGamePlayPage extends StatefulWidget {
   late final LevelModel? levelModel;
   late final bool? isCustom;
   OfflineGamePlayPage(
-      {this.languageModel,
+      {required this.languageModel,
       this.selectedQuestion,
       this.selectedTime,
       this.isHost,
@@ -104,7 +104,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
         Provider.of<LanguageDBProvider>(context, listen: false);
     langProvider.setRuleGame(widget.selectedTime, widget.selectedQuestion);
     // langProvider.init();
-    String language = widget.languageModel?.language_code ?? "indonesia";
+    String language = widget.languageModel.language_code ?? "indonesia";
 
     setState(() {
       _isLoading = true;
@@ -123,7 +123,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
       }
 
       if (await _languageDBProvider!.getRelationalWords(
-          languageCode: widget.languageModel!.language_code,
+          languageCode: widget.languageModel.language_code,
           lengthWord: widget.levelWords,
           languageId: null,
           questionNumber: totalQuestion)) {
@@ -1015,7 +1015,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
         leading: Container(
           padding: const EdgeInsets.all(8),
           child: Image.asset(
-            'assets/images/${widget.languageModel!.language_icon}',
+            'assets/images/${widget.languageModel.language_icon}',
             width: 30,
             height: 30,
           ),
@@ -1027,8 +1027,8 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
             ),
             Text(
               (setLanguage.code == 'en'
-                  ? '${widget.languageModel!.language_name_en}'
-                  : '${widget.languageModel!.language_name_id}'),
+                  ? '${widget.languageModel.language_name_en}'
+                  : '${widget.languageModel.language_name_id}'),
               style: whiteTextShadowStyle.copyWith(
                   fontWeight: black, fontSize: 24, color: whiteColor),
             ),

@@ -43,6 +43,8 @@ class _ButtonBounceState extends State<ButtonBounce> {
   double _padding = 6;
   double _reversePadding = 0;
 
+  int lastTimeClicked = 0;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -54,12 +56,23 @@ class _ButtonBounceState extends State<ButtonBounce> {
   @override
   Widget build(BuildContext context) {
     final audio = context.watch<AudioController>();
+
+    double intervalMs = 1500;
+
     return Container(
       child: SizedBox(
         height: widget.heightButton,
         width: widget.widthButton,
         child: GestureDetector(
-          onTap: widget.onClick,
+          onTap: () {
+            int now = DateTime.now().millisecondsSinceEpoch;
+            if (now - lastTimeClicked < intervalMs) {
+              return;
+            }
+            lastTimeClicked = now;
+            widget.onClick();
+          },
+          excludeFromSemantics: true,
           onTapDown: (_) => setState(() {
             _padding = 0.0;
             _reversePadding = widget.heightShadow;

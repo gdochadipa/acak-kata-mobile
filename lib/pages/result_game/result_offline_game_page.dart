@@ -6,10 +6,12 @@ import 'package:acakkata/models/history_game_detail_model.dart';
 import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/models/level_model.dart';
 import 'package:acakkata/models/range_result_txt_model.dart';
+import 'package:acakkata/pages/level/level_list_page.dart';
 import 'package:acakkata/providers/language_db_provider.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/button/button_bounce.dart';
 import 'package:acakkata/widgets/collapse/custome_expansion_tile.dart';
+import 'package:acakkata/widgets/custom_page_route.dart';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
@@ -26,7 +28,7 @@ class ResultOfflineGamePage extends StatefulWidget {
       required this.isCustom})
       : super(key: key);
 
-  final LanguageModel? languageModel;
+  final LanguageModel languageModel;
   final double finalTimeRate;
   final double finalScoreRate;
   final LevelModel? level;
@@ -141,8 +143,8 @@ class _ResultOfflineGamePageState extends State<ResultOfflineGamePage> {
             children: [
               Text(
                 (setLanguage.code == 'en'
-                    ? '${widget.languageModel?.language_name_en}'
-                    : '${widget.languageModel?.language_name_id}'),
+                    ? '${widget.languageModel.language_name_en}'
+                    : '${widget.languageModel.language_name_id}'),
                 textAlign: TextAlign.center,
                 style: whiteTextStyle.copyWith(fontSize: 28, fontWeight: bold),
               ),
@@ -340,8 +342,17 @@ class _ResultOfflineGamePageState extends State<ResultOfflineGamePage> {
             onClick: isLoading
                 ? () {}
                 : () {
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, '/home', (route) => false);
+                    // Navigator.pushNamedAndRemoveUntil(
+                    //     context, '/home', (route) => false);
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        CustomPageRoute(
+                          LevelListPage(
+                            isOnline: false,
+                            languageModel: widget.languageModel,
+                          ),
+                        ),
+                        (route) => false);
                   },
             color: redColor,
             borderColor: redColor2,

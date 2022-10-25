@@ -12,7 +12,7 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 
 class CustomLevelCard extends StatelessWidget {
-  late final LanguageModel? languageModel;
+  late final LanguageModel languageModel;
   final bool isLogin;
   CustomLevelCard(
       {Key? key, required this.languageModel, required this.isLogin})
@@ -131,7 +131,7 @@ class CustomLevelCard extends StatelessWidget {
                                 const SizedBox(
                                   height: 1.85,
                                 ),
-                                Text("${languageModel!.language_name_en}",
+                                Text("${languageModel.language_name_en}",
                                     textAlign: TextAlign.left,
                                     style: blackTextStyle.copyWith(
                                       fontSize: 14,
