@@ -90,4 +90,28 @@ class LocalStorageSettingPersistence extends SettingsPersistence {
     pref.setString('userCode', '${user.userCode}');
     pref.setString('token', '${user.token}');
   }
+
+  @override
+  Future<double> getCalculatePercentByScore() async {
+    final prefs = await instanceFuture;
+    return prefs.getDouble('calculate_percent_by_score') ?? 60;
+  }
+
+  @override
+  Future<double> getCalculatePercentByTime() async {
+    final prefs = await instanceFuture;
+    return prefs.getDouble('calculate_percent_by_time') ?? 60;
+  }
+
+  @override
+  Future<void> setCalculatePercentByScore(double calculate) async {
+    final prefs = await instanceFuture;
+    prefs.setDouble('calculate_percent_by_score', calculate);
+  }
+
+  @override
+  Future<void> setCalculatePercentByTime(double calculate) async {
+    final prefs = await instanceFuture;
+    prefs.setDouble('calculate_percent_by_time', calculate);
+  }
 }

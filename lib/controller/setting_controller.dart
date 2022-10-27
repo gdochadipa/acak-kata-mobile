@@ -12,6 +12,10 @@ class SettingsController {
 
   ValueNotifier<String> language = ValueNotifier('id');
 
+  ValueNotifier<double> percentScore = ValueNotifier(60);
+
+  ValueNotifier<double> percentTime = ValueNotifier(40);
+
   SettingsController({required SettingsPersistence persistence})
       : _persistence = persistence;
 
@@ -43,5 +47,18 @@ class SettingsController {
   void toggleLanguageChoice(String flag) {
     language.value = flag;
     _persistence.saveLanguage(language.value);
+  }
+
+  void saveCalculateOfflineScore(
+      {required double percentScoreInp, required double percentTimeInp}) {
+    percentScore.value = percentScoreInp;
+    percentTime.value = percentTimeInp;
+    _persistence.setCalculatePercentByScore(percentScore.value);
+    _persistence.setCalculatePercentByTime(percentTime.value);
+  }
+
+  void getCalculateOfflineScore() async {
+    percentScore.value = await _persistence.getCalculatePercentByScore();
+    percentTime.value = await _persistence.getCalculatePercentByTime();
   }
 }

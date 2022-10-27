@@ -13,6 +13,10 @@ abstract class SettingsPersistence {
 
   Future<bool> getIsLogin();
 
+  Future<double> getCalculatePercentByScore();
+
+  Future<double> getCalculatePercentByTime();
+
   Future<void> saveMusicOn(bool value);
 
   Future<void> saveMuted(bool value);
@@ -24,4 +28,8 @@ abstract class SettingsPersistence {
   Future<void> saveUserLogin(UserModel userModel);
 
   Future<void> saveIsLogin(bool value);
+
+  Future<void> setCalculatePercentByScore(double calculate);
+
+  Future<void> setCalculatePercentByTime(double calculate);
 }

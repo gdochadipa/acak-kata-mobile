@@ -34,6 +34,8 @@ class RoomProvider with ChangeNotifier {
   bool _isGetQuestion = false;
   bool get isGetQuestion => _isGetQuestion;
 
+  double? resultEndScore;
+
   set isGetQuestion(bool isGet) {
     _isGetQuestion = isGet;
   }
@@ -339,5 +341,11 @@ class RoomProvider with ChangeNotifier {
         .is_host = 1;
 
     getDetailRoomByID(userID: userId);
+  }
+
+  void calculateEndScore(
+      {required double percentageScore, required double percentageTime}) {
+    resultEndScore =
+        ((percentageScore + percentageTime) * 100).round() as double?;
   }
 }
