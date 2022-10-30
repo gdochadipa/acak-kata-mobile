@@ -25,19 +25,24 @@ class RelationWordModel {
     id = (data['_id'] ?? data['id'].toString());
     word = data['word'];
     length_word = data['length_word'];
-    letter = json
-        .decode(data['letter'].toString())
-        .map<String>((item) => item.toString().toUpperCase())
-        .toList();
+    letter = data['word'].toUpperCase().split("");
     count_word = data['count_word'];
     language_id = data['language_id'];
     // List<String>
   }
 
-  RelationWordModel.wordQuestion(
-      List<Map<String, dynamic>> data, RelationWordModel relationWordModel) {
-    listWords = data.map((e) => WordLanguageModel.fromJson(e)).toList();
+  void wordQuestion(List<dynamic> data) {
+    listWords = data
+        .map((e) => WordLanguageModel(
+            id: e['id'].toString(),
+            id_relation: e['id_relation'],
+            length_word: e['length_word'],
+            word: e['word'],
+            word_hint: e['meaning']))
+        .toList();
   }
+
+  void wordQuestionList() {}
 
   Map<String, dynamic> toJson() => {
         "id": id,

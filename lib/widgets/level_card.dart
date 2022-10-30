@@ -397,7 +397,7 @@ class _ItemLevelCardState extends State<ItemLevelCard> {
                                   onClick: () {
                                     Timer(const Duration(milliseconds: 500),
                                         () async {
-                                      if (!isDisconnected) {
+                                      if (isDisconnected) {
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(SnackBar(
                                           content: const Text(

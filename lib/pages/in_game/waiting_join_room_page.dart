@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:acakkata/generated/l10n.dart';
 import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/models/level_model.dart';
+import 'package:acakkata/models/relation_word.dart';
 import 'package:acakkata/models/room_match_detail_model.dart';
 import 'package:acakkata/models/room_match_model.dart';
 import 'package:acakkata/models/user_model.dart';
@@ -114,7 +115,7 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
     Logger logger = Logger(
       printer: PrettyPrinter(methodCount: 0),
     );
-    List<WordLanguageModel>? questionList = [];
+    List<RelationWordModel>? questionList = [];
 
     _connectivityProvider?.streamConnectivity.listen((source) {
       if (source.keys.toList()[0] == ConnectivityResult.none) {
@@ -322,11 +323,14 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
             logger.d("data => ${questions != null}");
             if (questions != null) {
               for (var itemQuestion in questions) {
-                WordLanguageModel questi =
-                    WordLanguageModel.fromJson(itemQuestion);
+                RelationWordModel questi =
+                    RelationWordModel.fromJson(itemQuestion);
+                List new_list_words = json.decode(itemQuestion['list_words']);
+                print(new_list_words);
+                questi.wordQuestion(new_list_words);
                 questionList.add(questi);
               }
-              roomProvider!.setQuestionList(questionList);
+              roomProvider!.setRelatedQuestionList(questionList);
               socketProvider!.socketSendStatusPlayer(
                   channelCode: roomProvider!.roomMatch!.channel_code ?? '',
                   roomMatchDetailModel: roomProvider!
@@ -337,8 +341,9 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
             // roomProvider!.isGetQuestion = true;
             status = "Berhasil menerima Pengaturan";
           }
-        } catch (e) {
+        } catch (e, stacktrace) {
           logger.e("questionStream:" + e.toString());
+          print('Stacktrace: ' + stacktrace.toString());
         }
       });
 

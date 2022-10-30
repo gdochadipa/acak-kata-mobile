@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:acakkata/models/relation_word.dart';
 import 'package:acakkata/models/room_match_model.dart';
 import 'package:acakkata/models/word_language_model.dart';
 import 'package:http/http.dart' as http;
@@ -164,6 +165,44 @@ class RoomService {
         throw Exception('Gagal panggil pertanyaan');
       }
     } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<List<RelationWordModel>> getPackageRelatedQuestion(
+      String token,
+      String languageCode,
+      int questionNum,
+      String channelCode,
+      int lengthWord) async {
+    try {
+      var headers = {
+        'Content-Type': 'application/json',
+        'Authorization': token
+      };
+
+      final url = Uri.parse(
+          '$baseUrl/package-question/related-word?language_code=$languageCode&question_num=$questionNum&channel_code=$channelCode&length_word=$lengthWord');
+
+      var response = await http.get(url, headers: headers);
+      logger.d(response.body);
+
+      if (response.statusCode == 200) {
+        List data = jsonDecode(response.body)['data'];
+        List<RelationWordModel> listWord = [];
+
+        for (var item in data) {
+          RelationWordModel relationData = RelationWordModel.fromJson(item);
+          relationData.wordQuestion(item['list_words']);
+
+          listWord.add(relationData);
+        }
+        return listWord;
+      } else {
+        throw Exception('Gagal panggil pertanyaan');
+      }
+    } catch (e, stacktrace) {
+      print('Stacktrace: ' + stacktrace.toString());
       throw Exception(e);
     }
   }

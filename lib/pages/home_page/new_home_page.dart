@@ -16,6 +16,7 @@ import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/providers/change_language_provider.dart';
 import 'package:acakkata/providers/connectivity_provider.dart';
 import 'package:acakkata/providers/language_db_provider.dart';
+import 'package:acakkata/providers/room_provider.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/button/button_bounce.dart';
 import 'package:acakkata/widgets/button/circle_bounce_button.dart';
@@ -45,6 +46,7 @@ class _NewHomePageState extends State<NewHomePage> {
   ChangeLanguageProvider? _changeLanguageProvider;
   ConnectivityProvider? _connectivityProvider;
   LanguageDBProvider? _languageDBProvider;
+  RoomProvider? _roomProvider;
   AuthProvider? _authProvider;
   String? languageChoice = 'en';
   SharedPreferences? prefs;
@@ -61,6 +63,7 @@ class _NewHomePageState extends State<NewHomePage> {
         Provider.of<ConnectivityProvider>(context, listen: false);
     _languageDBProvider =
         Provider.of<LanguageDBProvider>(context, listen: false);
+    _roomProvider = Provider.of<RoomProvider>(context, listen: false);
     setState(() {
       languageChoice = prefs!.getString("choiceLang");
       wasSelectedLanguage = prefs!.getBool("wasSelectedLanguage") ?? false;
@@ -78,6 +81,14 @@ class _NewHomePageState extends State<NewHomePage> {
         prefs!.setBool("wasSelectedLanguage", true);
       });
     });
+  }
+
+  Future<void> onTestGet() async {
+    try {
+      await _roomProvider!.getPackageRelatedQuestion("indonesia", "code");
+    } catch (e, stacktrace) {
+      logger.e(e);
+    }
   }
 
   void goToTest() {
@@ -376,7 +387,7 @@ class _NewHomePageState extends State<NewHomePage> {
         shadowColor: primaryColor3,
         onClick: () {
           showListLanguagePop(1);
-          // goToTest();
+          // onTestGet();
         },
         paddingHorizontalButton: 10,
         paddingVerticalButton: 10,

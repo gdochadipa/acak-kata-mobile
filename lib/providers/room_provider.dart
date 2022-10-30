@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:acakkata/models/history_game_detail_model.dart';
+import 'package:acakkata/models/relation_word.dart';
 import 'package:acakkata/models/room_match_detail_model.dart';
 import 'package:acakkata/models/room_match_model.dart';
 import 'package:acakkata/models/word_language_model.dart';
@@ -23,6 +25,13 @@ class RoomProvider with ChangeNotifier {
 
   List<WordLanguageModel>? _listQuestion;
   List<WordLanguageModel>? get listQuestion => _listQuestion;
+
+  List<RelationWordModel>? _listRelatedQuestion;
+  List<RelationWordModel>? get listRelatedQuestion => _listRelatedQuestion;
+
+  List<HistoryGameDetailModel>? _dataHistoryGameDetailList;
+  List<HistoryGameDetailModel>? get dataHistoryGameDetailList =>
+      _dataHistoryGameDetailList;
 
   List<int>? _queueQuestion;
   List<int>? get queueQuestion => _queueQuestion;
@@ -50,26 +59,36 @@ class RoomProvider with ChangeNotifier {
     _totalQuestion = totalQuestion ?? 15;
   }
 
-  Future<void> setQuestionList(List<WordLanguageModel>? question) async {
-    _listQuestion = question;
-    if (_listQuestion != null) {
-      _queueQuestion = [for (var i = 0; i < _listQuestion!.length; i++) i];
+  // Future<void> setQuestionList(List<WordLanguageModel>? question) async {
+  //   _listQuestion = question;
+  //   if (_listQuestion != null) {
+  //     _queueQuestion = [for (var i = 0; i < _listQuestion!.length; i++) i];
+  //   }
+
+  //   var rand = Random();
+  //   for (var i = _queueQuestion!.length - 1; i > 0; i--) {
+  //     var n = rand.nextInt(i + 1);
+  //     var temp = _listQuestion![i];
+  //     _listQuestion![i] = _listQuestion![n];
+  //     _listQuestion![n] = temp;
+  //   }
+  // }
+
+  Future<void> setRelatedQuestionList(List<RelationWordModel>? question) async {
+    _listRelatedQuestion = question;
+    if (_listRelatedQuestion != null) {
+      _queueQuestion = [
+        for (var i = 0; i < _listRelatedQuestion!.length; i++) i
+      ];
     }
 
     var rand = Random();
-    // for (var i = _queueQuestion!.length - 1; i > 0; i--) {
-    //   var n = rand.nextInt(i + 1);
-    //   var temp = _queueQuestion![i];
-    //   _queueQuestion![i] = _queueQuestion![n];
-    //   _queueQuestion![n] = temp;
-    // }
     for (var i = _queueQuestion!.length - 1; i > 0; i--) {
       var n = rand.nextInt(i + 1);
-      var temp = _listQuestion![i];
-      _listQuestion![i] = _listQuestion![n];
-      _listQuestion![n] = temp;
+      var temp = _listRelatedQuestion![i];
+      _listRelatedQuestion![i] = _listRelatedQuestion![n];
+      _listRelatedQuestion![n] = temp;
     }
-    // notifyListeners();
   }
 
   Future<bool> createRoom(
@@ -188,6 +207,39 @@ class RoomProvider with ChangeNotifier {
       throw Exception(e);
       return false;
     }
+  }
+
+  Future<bool> getPackageRelatedQuestion(
+      String? languageCode, String? channelCode) async {
+    try {
+      SharedPreferences pref = await SharedPreferences.getInstance();
+      String? token = pref.getString('token');
+
+      List<RelationWordModel> listRelatedQuestion = await RoomService()
+          .getPackageRelatedQuestion(token!, languageCode!, 4, channelCode!, 3);
+      _listRelatedQuestion = listRelatedQuestion;
+
+      return true;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<void> saveSingleHistoryGameDetail(
+      {required HistoryGameDetailModel? historyGameDetailModel}) async {
+    _dataHistoryGameDetailList!.add(historyGameDetailModel!);
+  }
+
+  Future<void> resetSingleHistoryGameDetail() async {
+    if (_dataHistoryGameDetailList != null) {
+      _dataHistoryGameDetailList!.clear();
+    } else {
+      _dataHistoryGameDetailList = [];
+    }
+  }
+
+  Future<void> setSingleHistoryGameDetail() async {
+    _dataHistoryGameDetailList = [];
   }
 
   bool updateRoomDetail(RoomMatchDetailModel? roomMatchDetailModel) {

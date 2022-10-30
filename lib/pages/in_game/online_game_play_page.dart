@@ -1,12 +1,17 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:acakkata/controller/audio/sound.dart';
+import 'package:acakkata/controller/audio_controller.dart';
 import 'package:acakkata/generated/l10n.dart';
 import 'package:acakkata/helper/style_helper.dart';
 import 'package:acakkata/models/coordinate.dart';
+import 'package:acakkata/models/history_game_detail_model.dart';
 import 'package:acakkata/models/level_model.dart';
-import 'package:acakkata/models/word_language_model.dart';
+import 'package:acakkata/models/relation_word.dart';
 import 'package:acakkata/models/language_model.dart';
+import 'package:acakkata/models/word_language_model.dart';
+import 'package:acakkata/pages/in_game/modal/answer_modal.dart';
 import 'package:acakkata/pages/result_game/result_online_game_page.dart';
 import 'package:acakkata/providers/room_provider.dart';
 import 'package:acakkata/providers/socket_provider.dart';
@@ -19,6 +24,7 @@ import 'package:acakkata/widgets/component/result_answer_component.dart';
 import 'package:acakkata/widgets/custom_page_route.dart';
 import 'package:acakkata/widgets/gameplay/footer_gameplay_page.dart';
 import 'package:acakkata/widgets/popover/exit_dialog.dart';
+import 'package:animations/animations.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -64,7 +70,8 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
   RoomProvider? roomProvider;
   SocketProvider? socketProvider;
   String textAnswer = '';
-  List<WordLanguageModel>? dataWordList;
+  // List<RelationWordModel>? dataWordList;
+  List<RelationWordModel>? dataRelationWord;
   final bool _isButtonDisabled = false;
   int totalQuestion = 10;
   int currentArrayQuestion = 0;
@@ -106,22 +113,18 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
       countDownAnswer = numberCountDown;
       totalQuestion = roomProvider!.totalQuestion;
     });
-    // logger.d(roomProvider!.roomMatch!.toJson());
-    // logger.d('number count down ${widget.selectedTime}');
 
     try {
-      // if (await langProvider.getWords(
-      //     widget.languageModel!.language_code, widget.levelWords)) {
-      //   dataWordList =
-      //       langProvider.dataWordList!.getRange(0, totalQuestion).toList();
+      if (roomProvider!.dataHistoryGameDetailList != null) {
+        await roomProvider!.resetSingleHistoryGameDetail();
+      } else {
+        await roomProvider!.setSingleHistoryGameDetail();
+      }
 
-      //   // print("in loading");
-      // }
       setState(() {
-        dataWordList = roomProvider!.listQuestion;
+        dataRelationWord = roomProvider!.listRelatedQuestion;
       });
-      logger.d("${dataWordList!.length} data length");
-      await setUpListQuestionQueue(dataWordList);
+      await setUpListQuestionQueue(dataRelationWord);
       // setup antrian pertanyaan, gunanya untuk mekanisme skip pertanyaan
       setState(() {
         _isLoading = false;
@@ -132,7 +135,8 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
     }
   }
 
-  setUpListQuestionQueue(List<WordLanguageModel>? wordList) async {
+  /// digunakan untuk mendaftarkan antrian ke variabel state
+  setUpListQuestionQueue(List<RelationWordModel>? wordList) async {
     if (wordList!.isNotEmpty) {
       for (var i = 0; i < wordList.length; i++) {
         List<Coordinate> coordinateCache = [];
@@ -196,17 +200,23 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
             _animationRotateController.forward(from: 0.0);
           });
         }
-      } else {
+      }
+
+      /// bagian untuk memulai menjawab soal ketika hitung mundur habis
+      else {
         timer.cancel();
         print("on Timer.periodic count 1 game");
         try {
           if (mounted) {
             setState(() {
               isCountDown = false;
-              afterAnswer = false;
             });
           }
+
+          /// perhitungan waktu tampilan
           getTimeScore();
+
+          /// merupakan perhitungan waktu utama, waktu ditentukan sesuai level atau custom
           onCoreCountTimeInGame(numberCountDown);
         } catch (e, trace) {
           logger.e(e);
@@ -222,10 +232,11 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
   void dispose() {
     // TODO: implement dispose
     _animationRotateController.dispose();
+    super.dispose();
     if (_timerInGame != null) {
       _timerInGame!.cancel();
     }
-    super.dispose();
+
     if (_timerScore != null) {
       _timerScore!.cancel();
     }
@@ -234,8 +245,35 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
     }
   }
 
+  @override
+  void setState(VoidCallback fn) {
+    // TODO: implement setState
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
   void setStateIfMounted(f) {
     if (mounted) setState(f);
+  }
+
+  Future<void> showResultAnswerModal({bool resultAnswerStatus = false}) async {
+    return showModal(
+        context: context,
+        builder: (BuildContext context) {
+          S? language = S.of(context);
+          final audio = context.watch<AudioController>();
+          if (resultAnswerStatus) {
+            audio.playSfx(SfxType.congrats, queue: 0);
+          } else {
+            audio.playSfx(SfxType.erase, queue: 0);
+          }
+          Future.delayed(const Duration(milliseconds: 1000), () {
+            Navigator.of(context).pop(true);
+          });
+          return AnswerModal(
+              setLanguage: language, resultAnswerStatus: resultAnswerStatus);
+        });
   }
 
   /// get Time Score digunakan untuk menghitung secara manual untuk durasi utama permainan
@@ -260,24 +298,37 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
   /// digunakan untuk menentukan apakah question akan lanjut atau tidak
   onSkipQueueQuestion(bool isAnswer) async {
     setState(() {
+      ///mengecek apkaah pentanyaan sekarang masuk antrian
+      ///jika ia maka proses akan dilanjutkan
       if (listQuestionQueue!.asMap().containsKey(queueNow)) {
+        ///jika proses skip adalah ketika menjawab pertanyaan
+        ///maka akan menghapus dari proses antrian dan tidak dapat diakses lagi
         if (isAnswer) {
           int removeQueue = queueNow;
           listQuestionQueue!.removeAt(removeQueue);
           if (listQuestionQueue!.length <= queueNow) {
             queueNow--;
           }
-        } else {
+        }
+
+        /// jika tidak dalam proses menjawab maka dapat ke soal selanjutnya pada antrian listQuestionQueue
+        else {
           if (listQuestionQueue!.asMap().containsKey(queueNow + 1)) {
             queueNow++;
           } else {
             queueNow = 0;
           }
         }
-      } else {
+      }
+
+      /// jika tidak maka antrian ke 0 dari listQuestionQueue
+      else {
         queueNow = 0;
       }
 
+      /// mengecek apakah urutan antrian sekarang itu masuk ke antrian sekarang
+      /// jika masih ada sisa maka proses akan berlanjut ke soal selanjutnya
+      /// jika tidak maka permainan selesai
       if (listQuestionQueue!.asMap().containsKey(queueNow)) {
         currentArrayQuestion = listQuestionQueue![queueNow];
       } else {
@@ -326,35 +377,40 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
 
   /// runTime Result merupakan mekanisme perhitungan timer untuk melihat
   /// hasil jawaban. batas waktu yang ditentukan  adalah 5 detik setelah pertanyaan
-  onRunTimeResult(bool endGame) async {
-    _timeInRes =
-        Timer.periodic(const Duration(seconds: 1), (Timer timer) async {
-      if (answerCountDown > 0) {
-        setState(() {
-          answerCountDown--;
-        });
-      } else {
-        _timeInRes!.cancel();
-        _timerInGame!.cancel();
-        _timerScore!.cancel();
-        if (endGame) {
-          double allScoreTime = scoreTime.fold(
-              0, (previousValue, element) => previousValue + element);
-          double newScoreTime = 0;
-          double newScoreCount = 0;
-          if (allScoreTime > 0 && scoreTime.isNotEmpty) {
-            newScoreTime =
-                (((allScoreTime / scoreTime.length) / (numberCountDown)) * 0.4);
-          }
-          if (scoreCount > 0) {
-            newScoreCount = ((scoreCount / totalQuestion) * 0.6);
-          }
+  onRunTimeResult(bool endGame, bool isCorrectAnswer) async {
+    _timerInGame!.cancel();
+    _timerScore!.cancel();
+    showResultAnswerModal(resultAnswerStatus: isCorrectAnswer);
 
-          // Navigator.pushAndRemoveUntil(
-          //     context,
-          //     CustomPageRoute(ResultGamePage(widget.languageModel, newScoreTime,
-          //         newScoreCount, widget.levelModel, widget.isCustom)),
-          //     (route) => false);
+    // ketika jawaban salah maka akan simpan jawaban salah
+    if (!isCorrectAnswer) {
+      await saveHistoryGameplay(
+          questionWord: dataRelationWord![currentArrayQuestion].letter,
+          answerWord: null,
+          statusAnswer: 0,
+          remainingTime: 0,
+          correctAnswer:
+              dataRelationWord![currentArrayQuestion].listWords!.first,
+          listWord: dataRelationWord![currentArrayQuestion].listWords!);
+    }
+
+    Future.delayed(const Duration(milliseconds: 1000), () async {
+      if (endGame) {
+        double allScoreTime = scoreTime.fold(
+            0, (previousValue, element) => previousValue + element);
+        double newScoreTime = 0;
+        double newScoreCount = 0;
+        if (allScoreTime > 0 && scoreTime.isNotEmpty) {
+          newScoreTime =
+              (((allScoreTime / scoreTime.length) / (numberCountDown)) * 0.4);
+        }
+        if (scoreCount > 0) {
+          newScoreCount = ((scoreCount / totalQuestion) * 0.6);
+        }
+
+        _isLoading = true;
+
+        Future.delayed(const Duration(milliseconds: 1000), () {
           Navigator.pushAndRemoveUntil(
               context,
               CustomPageRoute(ResultOnlineGamePage(
@@ -365,18 +421,18 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
                 level: widget.levelModel,
               )),
               (route) => false);
-        } else {
-          /**
+        });
+      } else {
+        /**
            * setelah perhitungan jika belum diakhir pertanyaan maka akan lanjut
            *  ke pertanyaan selanjutnya
            */
-          await onSkipQueueQuestion(true);
-          setState(() {
-            // currentArrayQuestion++;
-            currentQuestion = currentArrayQuestion + 1;
-            afterAnswer = false;
-          });
-        }
+        await onSkipQueueQuestion(true);
+        setState(() {
+          // currentArrayQuestion++;
+          currentQuestion = currentArrayQuestion + 1;
+          afterAnswer = false;
+        });
         onResetAnswerField();
         getTimeScore();
         onCoreCountTimeInGame(numberCountDown);
@@ -393,7 +449,8 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
      * 
      * */
     List<String> listSuffQues =
-        dataWordList![currentArrayQuestion].word!.split('');
+        dataRelationWord![currentArrayQuestion].letter ??
+            dataRelationWord![currentArrayQuestion].word!.split('');
     for (var i = 0; i < listSuffQues.length; i++) {
       setState(() {
         isSelected!.addEntries([MapEntry(i, false)]);
@@ -412,14 +469,16 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
         'currentArrayQuestion': currentArrayQuestion,
         'currentQuestion': currentQuestion,
         'totalQuestion': (totalQuestion - 1),
-        'nowQuestion': dataWordList![currentArrayQuestion].word_suffle,
-        'nowAnswer': dataWordList![currentArrayQuestion].word
+        'nowQuestion': dataRelationWord![currentArrayQuestion].letter,
+        'nowAnswer': dataRelationWord![currentArrayQuestion].word
       });
       /** untuk merestart perhitungan permainan, nilai per 1 detik */
       getTimeScore();
 
       timer.cancel();
-      _timerScore!.cancel();
+      if (_timerScore != null) {
+        _timerScore!.cancel();
+      }
       setState(() {
         afterAnswer = true;
         answerCountDown = 5;
@@ -443,7 +502,7 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
         */
         endQuestion = false;
       }
-      onRunTimeResult(endQuestion);
+      onRunTimeResult(endQuestion, false);
     });
   }
 
@@ -465,10 +524,43 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
             ));
   }
 
-  /// fungsi untuk memberikan input jawaban setelah menekan tombol huruf
-  /// fungsi ini akan mengecek jawaban ketika pemain menekan tombol terakhir jawaban
-  answerQuestion(
-      String letter, int e, List<String>? suffleQuestion, String? question) {
+  WordLanguageModel? checkAnswerInWords(
+      String answerFromPlayer, int arrayQuestion) {
+    List<WordLanguageModel>? relatedWord = dataRelationWord![arrayQuestion]
+        .listWords!
+        .where((wordLanguage) =>
+            wordLanguage.word!.toLowerCase() == answerFromPlayer.toLowerCase())
+        .toList();
+
+    if (relatedWord.isNotEmpty) {
+      return relatedWord.first;
+    }
+
+    return null;
+  }
+
+  Future<void> saveHistoryGameplay(
+      {required List<String>? questionWord,
+      required String? answerWord,
+      required int? statusAnswer,
+      required int? remainingTime,
+      required WordLanguageModel? correctAnswer,
+      required List<WordLanguageModel>? listWord}) async {
+    HistoryGameDetailModel? historyGameDetail = HistoryGameDetailModel(
+        answerWord: answerWord,
+        statusAnswer: statusAnswer,
+        listWords: listWord,
+        correctAnswerByUser: correctAnswer,
+        questionWord: questionWord,
+        remainingTime: remainingTime);
+
+    roomProvider!
+        .saveSingleHistoryGameDetail(historyGameDetailModel: historyGameDetail);
+  }
+
+  /// *fungsi untuk memberikan input jawaban setelah menekan tombol huruf
+  /// *fungsi ini akan mengecek jawaban ketika pemain menekan tombol terakhir jawaban
+  answerQuestion(String letter, int e, List<String>? suffleQuestion) async {
     /**
          * menginputkan huruf ke kolom jawaban 
          * sekaligus juga menginputkan ke sequenceAnswer (urutan huruf jawaban)
@@ -484,12 +576,20 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
      * mengecek apakah panjang kata jawaban sesuai dengan panjang kata soal
      */
     if (textAnswer.length == suffleQuestion!.length) {
-      logger.d(
-          "${answerController.text.toUpperCase()} == ${question!.toUpperCase()} => ${answerController.text.toUpperCase() == question.toUpperCase()}");
       /**
-           * membandingkan apakah jawaban sesuai dengan kata tujuan
+           * *membandingkan apakah jawaban sesuai dengan kata tujuan
+           * !! perbaikan ngecheck jawaban
            */
-      if (answerController.text.toUpperCase() == question.toUpperCase()) {
+      WordLanguageModel? resultCorrect = checkAnswerInWords(
+          answerController.text.toLowerCase(), currentArrayQuestion);
+      if (resultCorrect != null) {
+        await saveHistoryGameplay(
+            questionWord: dataRelationWord![currentArrayQuestion].letter,
+            answerWord: dataRelationWord![currentArrayQuestion].word,
+            statusAnswer: 1,
+            remainingTime: countDownAnswer,
+            correctAnswer: resultCorrect,
+            listWord: dataRelationWord![currentArrayQuestion].listWords!);
         setState(() {
           /**
            * mekanisme perhitungan skor
@@ -518,18 +618,8 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
              * *nextQuestion
              */
 
-            onRunTimeResult(true);
-            // if () {
-            // } else {
-            //   onRunTimeResult(false);
-            // }
+            onRunTimeResult(true, true);
           } else {
-            // currentArrayQuestion++;
-            // currentQuestion++;
-
-            // countDownAnswer = numberCountDown;
-            // getTimeScore();
-            // onCoreCountTimeInGame(numberCountDown);
             /**
              ** ketika soal masih tersisa
              */
@@ -541,7 +631,7 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
             /**
              * *nextQuestion
              */
-            onRunTimeResult(false);
+            onRunTimeResult(false, true);
           }
         });
 
@@ -589,7 +679,8 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
   /// reset jawban pada sequence jawaban
   resetAnswer() {
     List<String> listSuffQues =
-        dataWordList![currentArrayQuestion].word!.split('');
+        dataRelationWord![currentArrayQuestion].letter ??
+            dataRelationWord![currentArrayQuestion].word!.split('');
     for (var i = 0; i < listSuffQues.length; i++) {
       setState(() {
         isSelected!.addEntries([MapEntry(i, false)]);
@@ -688,7 +779,7 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
                 answerController.text = textAnswer;
               }
             },
-            widthButton: 120,
+            widthButton: 100,
             heightButton: 60,
             borderThick: 5,
             color: primaryColor,
@@ -783,7 +874,7 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
             color: greenColor,
             borderColor: greenColor2,
             shadowColor: greenColor3,
-            widthButton: 120,
+            widthButton: 100,
             heightButton: 60,
             borderThick: 5,
             child: Center(
@@ -829,7 +920,7 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
                 coordinate: coordinats[e],
                 isBtnSelected: isSelected![e] ?? false,
                 onSelectButtonLetter: (String letter, bool isUnSet) {
-                  answerQuestion(letter, e, suffleQuestion, question);
+                  answerQuestion(letter, e, suffleQuestion);
                   // onCheckingAnswer(answer);
                 });
           }).toList(),
@@ -948,21 +1039,23 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
           ],
         ),
         actions: [
-          Container(
-              padding: const EdgeInsets.all(8),
-              child: CircleBounceButton(
-                color: whiteColor,
-                borderColor: whiteColor2,
-                shadowColor: whiteColor4,
-                onClick: () {
-                  showCancelGame();
-                },
-                paddingHorizontalButton: 1,
-                paddingVerticalButton: 1,
-                heightButton: 45,
-                widthButton: 45,
-                child: Icon(Icons.close, color: whiteColor4, size: 25),
-              )),
+          afterAnswer
+              ? Container()
+              : Container(
+                  padding: const EdgeInsets.all(8),
+                  child: CircleBounceButton(
+                    color: whiteColor,
+                    borderColor: whiteColor2,
+                    shadowColor: whiteColor4,
+                    onClick: () {
+                      showCancelGame();
+                    },
+                    paddingHorizontalButton: 1,
+                    paddingVerticalButton: 1,
+                    heightButton: 45,
+                    widthButton: 45,
+                    child: Icon(Icons.close, color: whiteColor4, size: 25),
+                  )),
         ],
       );
     }
@@ -994,9 +1087,9 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
           cardBodyUp(),
           ElasticIn(
             child: cardBodyBottom(
-                dataWordList![currentArrayQuestion].word,
-                dataWordList![currentArrayQuestion].word,
-                dataWordList![currentArrayQuestion].word_suffle,
+                dataRelationWord![currentArrayQuestion].word,
+                dataRelationWord![currentArrayQuestion].word,
+                dataRelationWord![currentArrayQuestion].letter,
                 coordinateList[currentArrayQuestion],
                 currentArrayQuestion),
           ),
@@ -1015,13 +1108,7 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
               header(),
               isCountDown
                   ? countStart()
-                  : (afterAnswer
-                      ? resultAnswer(
-                          resultAnswerStatus,
-                          score,
-                          dataWordList![currentArrayQuestion].word_hint,
-                          dataWordList![currentArrayQuestion].word)
-                      : (_isLoading ? Container() : mainBody())),
+                  : (_isLoading ? Container() : mainBody()),
             ],
           )),
         ));

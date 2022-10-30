@@ -226,10 +226,10 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
     /// !baru update status game mulai dan share lewat socket
     handleStartGame() async {
       try {
-        if (await roomProvider!.getPackageQuestion(
+        if (await roomProvider!.getPackageRelatedQuestion(
             roomMatch.language!.language_code, roomMatch.channel_code)) {
-          var questions = base64
-              .encode(utf8.encode(json.encode(roomProvider!.listQuestion)));
+          var questions = base64.encode(
+              utf8.encode(json.encode(roomProvider!.listRelatedQuestion)));
           await socketProvider!.socketSendQuestion(
               channelCode: roomMatch.channel_code!,
               languageCode: roomMatch.language!.language_code!,
