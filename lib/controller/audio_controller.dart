@@ -145,11 +145,11 @@ class AudioController {
   }
 
   void _changeSong(void _) {
-    _log.info('Last song finished playing.');
+    _log.info('lagu terakhir dimainkan.');
     // Put the song that just finished playing to the end of the playlist.
     _playlist.addLast(_playlist.removeFirst());
     // Play the next song.
-    _log.info(() => 'Playing ${_playlist.first} now.');
+    _log.info(() => 'Lagu sekarang ${_playlist.first} ');
     _musicCache.play(_playlist.first.filename);
   }
 
@@ -181,7 +181,7 @@ class AudioController {
     _log.info('Resuming music');
     switch (_musicPlayer.state) {
       case PlayerState.PAUSED:
-        _log.info('Calling _musicPlayer.resume()');
+        _log.info('status musik pause, mencoba memulai ');
         try {
           await _musicPlayer.resume();
         } catch (e) {
@@ -191,19 +191,14 @@ class AudioController {
         }
         break;
       case PlayerState.STOPPED:
-        _log.info("resumeMusic() called when music is stopped. "
-            "This probably means we haven't yet started the music. "
-            "For example, the game was started with sound off.");
+        _log.info("Status musik sedang berhenti, mencoba memulai kembali");
         _musicCache.play(_playlist.first.filename);
         break;
       case PlayerState.PLAYING:
-        _log.warning('resumeMusic() called when music is playing. '
-            'Nothing to do.');
+        _log.warning('Musik sedang dimainkan');
         break;
       case PlayerState.COMPLETED:
-        _log.warning('resumeMusic() called when music is completed. '
-            "Music should never be 'completed' as it's either not playing "
-            "or looping forever.");
+        _log.warning('Musik selesai dimainkan, mencoba memulai kembali');
         _musicCache.play(_playlist.first.filename);
         break;
     }

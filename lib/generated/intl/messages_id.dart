@@ -75,7 +75,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Simpan Pengaturan"),
         "second": MessageLookupByLibrary.simpleMessage("Detik"),
         "second_question":
-            MessageLookupByLibrary.simpleMessage("Detik / \n Soal"),
+            MessageLookupByLibrary.simpleMessage("Detik per Soal"),
         "setting": MessageLookupByLibrary.simpleMessage("Pengaturan"),
         "single_player": MessageLookupByLibrary.simpleMessage("Pemain Tunggal"),
         "time": MessageLookupByLibrary.simpleMessage("Waktu"),

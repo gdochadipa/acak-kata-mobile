@@ -5,6 +5,8 @@ class ConnectivityProvider with ChangeNotifier {
   final ConnectivityService _connectivityService = ConnectivityService.instance;
   Stream get streamConnectivity => _connectivityService.myStream;
 
+  bool isDisconnect = false;
+
   ConnectivityProvider() {
     _connectivityService.initialise();
   }

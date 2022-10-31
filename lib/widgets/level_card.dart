@@ -51,15 +51,15 @@ class _ItemLevelCardState extends State<ItemLevelCard> {
   @override
   Widget build(BuildContext context) {
     AuthProvider? _authProvider = Provider.of<AuthProvider>(context);
-    bool isDisconnected = false;
+    // bool isDisconnected = false;
 
     _connectivityProvider?.streamConnectivity.listen((source) {
       if (source.keys.toList()[0] == ConnectivityResult.none) {
-        isDisconnected = true;
+        _connectivityProvider!.isDisconnect = true;
       }
 
       if (source.keys.toList()[0] != ConnectivityResult.none) {
-        isDisconnected = false;
+        _connectivityProvider!.isDisconnect = false;
       }
     });
 
@@ -155,156 +155,138 @@ class _ItemLevelCardState extends State<ItemLevelCard> {
                         color: whiteColor,
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: Row(
+                      child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Flexible(
-                              flex: 1,
-                              fit: FlexFit.tight,
-                              child: Column(
-                                children: [
-                                  Container(
-                                    height: 70,
-                                    width: 70,
-                                    decoration: BoxDecoration(
-                                        color: primaryColor5,
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 7, vertical: 20),
-                                    margin: const EdgeInsets.only(left: 5),
-                                    child: Wrap(
-                                      children: [
-                                        Image.asset(
-                                          'assets/images/icon_kata.png',
-                                          width: 30,
-                                          height: 30,
-                                        ),
-                                        Container(
-                                          margin: const EdgeInsets.only(
-                                              left: 5, bottom: 5),
-                                          child: Text(
-                                            "${widget.levelModel!.level_words}",
-                                            style: whiteTextStyle.copyWith(
-                                                fontSize: 21, fontWeight: bold),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    height: 30,
-                                    width: 50,
-                                    margin: const EdgeInsets.only(
-                                        left: 5, top: 5, right: 5),
-                                    child: Center(
-                                      child: Text(
-                                        setLanguage.letter,
-                                        style: blackTextStyle.copyWith(
-                                            fontSize: 14, fontWeight: bold),
+                          Row(
+                            children: [
+                              Container(
+                                width: 75,
+                                decoration: BoxDecoration(
+                                    color: primaryColor5,
+                                    borderRadius: BorderRadius.circular(10)),
+                                padding: const EdgeInsets.all(10),
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 5, vertical: 5),
+                                child: Center(
+                                  child: Wrap(
+                                    children: [
+                                      Image.asset(
+                                        'assets/images/icon_kata.png',
+                                        width: 30,
+                                        height: 30,
                                       ),
-                                    ),
-                                  )
-                                ],
-                              )),
-                          Flexible(
-                              flex: 1,
-                              fit: FlexFit.tight,
-                              child: Column(
-                                children: [
-                                  Container(
-                                    height: 70,
-                                    width: 70,
-                                    margin: const EdgeInsets.symmetric(
-                                        horizontal: 5, vertical: 5),
-                                    decoration: BoxDecoration(
-                                        color: primaryColor5,
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 7, vertical: 20),
-                                    child: Wrap(
-                                      children: [
-                                        Image.asset(
-                                          'assets/images/icon_time.png',
-                                          width: 25,
-                                          height: 25,
+                                      Container(
+                                        margin: const EdgeInsets.only(
+                                            left: 5, bottom: 5),
+                                        child: Text(
+                                          "${widget.levelModel!.level_words}",
+                                          style: whiteTextStyle.copyWith(
+                                              fontSize: 21, fontWeight: bold),
                                         ),
-                                        Container(
-                                          margin: const EdgeInsets.only(
-                                              left: 5, bottom: 2),
-                                          child: Text(
-                                            "${widget.levelModel!.level_time}",
-                                            style: whiteTextStyle.copyWith(
-                                                fontSize: 20, fontWeight: bold),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    height: 30,
-                                    width: 50,
-                                    margin: const EdgeInsets.only(
-                                        left: 5, top: 0, right: 5),
-                                    child: Center(
-                                      child: Text(
-                                        setLanguage.second_question,
-                                        style: blackTextStyle.copyWith(
-                                            fontSize: 13, fontWeight: bold),
                                       ),
-                                    ),
-                                  )
-                                ],
-                              )),
-                          Flexible(
-                              flex: 1,
-                              fit: FlexFit.tight,
-                              child: Column(
-                                children: [
-                                  Container(
-                                    height: 70,
-                                    width: 70,
-                                    decoration: BoxDecoration(
-                                        color: primaryColor5,
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 7, vertical: 20),
-                                    child: Wrap(
-                                      children: [
-                                        Image.asset(
-                                          'assets/images/icon_pencil.png',
-                                          width: 30,
-                                          height: 30,
-                                        ),
-                                        Container(
-                                          margin: const EdgeInsets.only(
-                                              left: 5, bottom: 5),
-                                          child: Text(
-                                            "${widget.levelModel!.level_question_count}",
-                                            style: whiteTextStyle.copyWith(
-                                                fontSize: 20, fontWeight: bold),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                    ],
                                   ),
-                                  Container(
-                                    height: 30,
-                                    width: 50,
-                                    margin: const EdgeInsets.only(
-                                        left: 5, top: 5, right: 5),
-                                    child: Center(
-                                      child: Text(
-                                        setLanguage.question,
-                                        style: blackTextStyle.copyWith(
-                                            fontSize: 14, fontWeight: bold),
+                                ),
+                              ),
+                              Container(
+                                width: 100,
+                                margin:
+                                    const EdgeInsets.only(left: 10, right: 5),
+                                child: Text(
+                                  setLanguage.letter,
+                                  style: blackTextStyle.copyWith(
+                                      fontSize: 15, fontWeight: bold),
+                                ),
+                              )
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Container(
+                                width: 75,
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 5, vertical: 5),
+                                decoration: BoxDecoration(
+                                    color: primaryColor5,
+                                    borderRadius: BorderRadius.circular(10)),
+                                padding: const EdgeInsets.all(10),
+                                child: Center(
+                                  child: Wrap(
+                                    children: [
+                                      Image.asset(
+                                        'assets/images/icon_time.png',
+                                        width: 25,
+                                        height: 25,
                                       ),
-                                    ),
-                                  )
-                                ],
-                              ))
+                                      Container(
+                                        margin: const EdgeInsets.only(
+                                            left: 5, bottom: 2),
+                                        child: Text(
+                                          "${widget.levelModel!.level_time}",
+                                          style: whiteTextStyle.copyWith(
+                                              fontSize: 20, fontWeight: bold),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                width: 100,
+                                margin: const EdgeInsets.only(
+                                    left: 5, top: 0, right: 5),
+                                child: Text(
+                                  setLanguage.second_question,
+                                  style: blackTextStyle.copyWith(
+                                      fontSize: 15, fontWeight: bold),
+                                ),
+                              )
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Container(
+                                width: 75,
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 5, vertical: 5),
+                                decoration: BoxDecoration(
+                                    color: primaryColor5,
+                                    borderRadius: BorderRadius.circular(10)),
+                                padding: const EdgeInsets.all(10),
+                                child: Center(
+                                  child: Wrap(
+                                    children: [
+                                      Image.asset(
+                                        'assets/images/icon_pencil.png',
+                                        width: 25,
+                                        height: 25,
+                                      ),
+                                      Container(
+                                        margin: const EdgeInsets.only(
+                                            left: 5, bottom: 2),
+                                        child: Text(
+                                          "${widget.levelModel!.level_question_count}",
+                                          style: whiteTextStyle.copyWith(
+                                              fontSize: 20, fontWeight: bold),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                width: 100,
+                                margin: const EdgeInsets.only(
+                                    left: 5, top: 0, right: 5),
+                                child: Text(
+                                  setLanguage.question,
+                                  style: blackTextStyle.copyWith(
+                                      fontSize: 15, fontWeight: bold),
+                                ),
+                              )
+                            ],
+                          ),
                         ],
                       ),
                     ),
@@ -397,7 +379,7 @@ class _ItemLevelCardState extends State<ItemLevelCard> {
                                   onClick: () {
                                     Timer(const Duration(milliseconds: 500),
                                         () async {
-                                      if (isDisconnected) {
+                                      if (_connectivityProvider!.isDisconnect) {
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(SnackBar(
                                           content: const Text(

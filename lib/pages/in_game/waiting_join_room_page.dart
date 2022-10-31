@@ -326,7 +326,6 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
                 RelationWordModel questi =
                     RelationWordModel.fromJson(itemQuestion);
                 List new_list_words = json.decode(itemQuestion['list_words']);
-                print(new_list_words);
                 questi.wordQuestion(new_list_words);
                 questionList.add(questi);
               }

@@ -280,10 +280,10 @@ class S {
     );
   }
 
-  /// `Second / \n ques`
+  /// `Second per ques`
   String get second_question {
     return Intl.message(
-      'Second / \n ques',
+      'Second per ques',
       name: 'second_question',
       desc: '',
       args: [],

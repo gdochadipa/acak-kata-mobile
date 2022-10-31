@@ -145,7 +145,7 @@ class _NewHomePageState extends State<NewHomePage> {
     // LanguageProvider? languageProvider = Provider.of<LanguageProvider>(context);
     LanguageDBProvider? languageDBProvider =
         Provider.of<LanguageDBProvider>(context);
-    bool isDisconnected = false;
+    // bool isDisconnected = false;
 
     S? setLanguage = S.of(context);
 
@@ -153,11 +153,11 @@ class _NewHomePageState extends State<NewHomePage> {
 
     _connectivityProvider?.streamConnectivity.listen((source) {
       if (source.keys.toList()[0] == ConnectivityResult.none) {
-        isDisconnected = true;
+        _connectivityProvider?.isDisconnect = true;
       }
 
       if (source.keys.toList()[0] != ConnectivityResult.none) {
-        isDisconnected = false;
+        _connectivityProvider?.isDisconnect = false;
       }
     });
 
@@ -504,7 +504,8 @@ class _NewHomePageState extends State<NewHomePage> {
         borderColor: orangeColor2,
         shadowColor: orangeColor3,
         onClick: () async {
-          if (!isDisconnected) {
+          bool isDisconnect = _connectivityProvider?.isDisconnect ?? false;
+          if (!isDisconnect) {
             if (!login) {
               showAuthModal();
             } else {
@@ -606,7 +607,8 @@ class _NewHomePageState extends State<NewHomePage> {
         borderColor: blueColor2,
         shadowColor: blueColor3,
         onClick: () async {
-          if (!isDisconnected) {
+          bool isDisconnect = _connectivityProvider?.isDisconnect ?? false;
+          if (!isDisconnect) {
             if (!login) {
               showAuthModal();
             } else {

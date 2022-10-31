@@ -22,7 +22,7 @@
   "second":"Second",
   "ques":"ques",
   "question":"Question",
-  "second_question": "Second / \n ques",
+  "second_question": "Second per ques",
   "challenge":"Challenge \n Friends",
   "question_count" : "Number of Questions",
   "word_length": "Word Length",

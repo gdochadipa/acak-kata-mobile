@@ -72,7 +72,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "save_setting": MessageLookupByLibrary.simpleMessage("Save Setting"),
         "second": MessageLookupByLibrary.simpleMessage("Second"),
         "second_question":
-            MessageLookupByLibrary.simpleMessage("Second / \n ques"),
+            MessageLookupByLibrary.simpleMessage("Second per ques"),
         "setting": MessageLookupByLibrary.simpleMessage("Setting"),
         "single_player": MessageLookupByLibrary.simpleMessage("Single Player"),
         "time": MessageLookupByLibrary.simpleMessage("Time"),
