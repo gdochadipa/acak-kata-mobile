@@ -230,15 +230,18 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
   @override
   void dispose() {
     // TODO: implement dispose
+    _animationRotateController.dispose();
     super.dispose();
     if (_timeInRes != null) {
+      _timeInRes!.cancel();
+    }
+
+    if (_timerInGame != null) {
       _timerInGame!.cancel();
     }
+
     if (_timerScore != null) {
       _timerScore!.cancel();
-    }
-    if (_timeInRes != null) {
-      _timeInRes!.cancel();
     }
   }
 

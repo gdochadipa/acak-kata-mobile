@@ -297,6 +297,14 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
   }
 
   @override
+  void setState(VoidCallback fn) {
+    // TODO: implement setState
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     S? setLanguage = S.of(context);
     UserModel? user = authProvider!.user;
