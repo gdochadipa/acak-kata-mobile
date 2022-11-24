@@ -46,5 +46,13 @@
     "exit_room": "Keluar dari Ruang Permainan",
     "find_word": "Kamus",
     "join_room": "Gabung Permainan",
-    "music": "Musik"
+    "music": "Musik",
+    "join_room_text": "Masukan kode ruang",
+    "success_find_room": "Berhasil menemukan ruangan",
+    "find_room": "Cari Ruang",
+    "failed_find_room": "Gagal mencari ruangan",
+    "start_game": "Permainan Segera Dimulai",
+    "receive_setting": "Berhasil menerima pengaturan",
+    "receive_status_player": "Menerima status dari pemain lain",
+    "waiting_host": "Menunggu host"
 }

@@ -142,7 +142,7 @@ class _JoinRoomModalState extends State<JoinRoomModal> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  "Masukan Kode Ruangan",
+                  setLanguage.join_room_text,
                   style: whiteTextStyle.copyWith(
                       fontSize: 18, fontWeight: semiBold),
                 ),
@@ -175,7 +175,7 @@ class _JoinRoomModalState extends State<JoinRoomModal> {
                 ),
                 if (_validation)
                   Text(
-                    _textValidation ?? 'Gagal membuat room',
+                    _textValidation ?? setLanguage.failed_find_room,
                     textAlign: TextAlign.left,
                     style: alertTextStyle.copyWith(fontSize: 11),
                   ),
@@ -191,7 +191,7 @@ class _JoinRoomModalState extends State<JoinRoomModal> {
                         child: Wrap(
                           children: [
                             Text(
-                              'Cari Room',
+                              setLanguage.find_room,
                               style: whiteTextStyle.copyWith(
                                   fontSize: 14, fontWeight: bold),
                             ),

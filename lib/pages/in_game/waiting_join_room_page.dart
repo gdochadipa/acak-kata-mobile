@@ -278,7 +278,7 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
     }
 
     Widget body() {
-      String status = "Waiting Host";
+      String status = setLanguage.waiting_host;
       socketProvider!.userDisconnectStream.listen((source) {
         print("on userDisconnectStream Receive Data");
         try {
@@ -338,7 +338,7 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
                   score: 0);
             }
             // roomProvider!.isGetQuestion = true;
-            status = "Berhasil menerima Pengaturan";
+            status = setLanguage.receive_setting;
           }
         } catch (e, stacktrace) {
           logger.e("questionStream:" + e.toString());
@@ -355,7 +355,7 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
               roomProvider!
                   .updateStatusGame(data['room_id'], data['status_game']);
               logger.d("Game Start ");
-              status = "Permainan Segera Dimulai";
+              status = setLanguage.start_game;
               Timer(const Duration(milliseconds: 1000), () {
                 socketProvider!.pausedStream();
                 LevelModel levelModel = LevelModel(
@@ -401,7 +401,7 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
                   roomDetailId: data['room_detail_id'],
                   status: data['status_player'],
                   isReady: data['is_ready']);
-              status = "Menerima status dari pemain lain";
+              status = setLanguage.receive_status_player;
               logger.d("Menerima status permainan");
             }
           }
@@ -442,117 +442,6 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
               if (snapshot.hasData) {
                 try {
                   var data = json.decode(snapshot.data.toString());
-
-                  // if (data['target'] == 'user-disconnected') {
-                  //   roomProvider!.removePlayerFromRoomMatchDetail(
-                  //       player_id: data['player_id']);
-                  //   print('user-disconnected ${data['player_id']}');
-                  // }
-
-                  ///! mengecek pemain baru
-                  // if (data['target'] == 'update-player') {
-                  //   RoomMatchDetailModel matchDetailModel =
-                  //       RoomMatchDetailModel.fromJson(data['room_detail']);
-                  //   roomProvider!.updateRoomDetail(matchDetailModel);
-                  // }
-
-                  ///! menerima soal dari socket
-                  // logger.d("data => ${data}");
-                  // if (data['target'] == 'receive_question') {
-                  //   // var questions = null;
-                  //   // if (data['encyrpt'] == false) {
-                  //   //   questions = json.decode(data['question'].toString());
-                  //   // } else {
-
-                  //   // }
-                  //   var questionUtf =
-                  //       utf8.decode(base64.decode(data['question']));
-                  //   var questions = json.decode(questionUtf);
-
-                  //   logger.d("data => ${questions != null}");
-                  //   if (questions != null) {
-                  //     for (var itemQuestion in questions) {
-                  //       WordLanguageModel questi =
-                  //           WordLanguageModel.fromJson(itemQuestion);
-                  //       questionList.add(questi);
-                  //     }
-                  //     roomProvider!.setQuestionList(questionList);
-                  //     socketProvider!.socketSendStatusPlayer(
-                  //         channelCode:
-                  //             roomProvider!.roomMatch!.channel_code ?? '',
-                  //         roomMatchDetailModel: roomProvider!
-                  //             .getAndUpdateStatusPlayerByID(
-                  //                 userID: user!.id, statusPlayer: 2),
-                  //         score: 0);
-                  //   }
-                  //   // roomProvider!.isGetQuestion = true;
-                  //   status = "Berhasil menerima Pengaturan";
-                  // }
-
-                  ///! menerima status permainan
-                  // if (data['target'] == 'update-status-game') {
-                  //   if (data['status_game'] == 1) {
-                  //     roomProvider!.updateStatusGame(
-                  //         data['room_id'], data['status_game']);
-                  //     logger.d("Game Start ");
-                  //     status = "Permainan Segera Dimulai";
-                  //     Timer(const Duration(milliseconds: 1000), () {
-                  //       socketProvider!.pausedStream();
-                  //       LevelModel levelModel = LevelModel(
-                  //           id: 77,
-                  //           level_name: setLanguage.custom_level,
-                  //           level_words: roomMatch.length_word,
-                  //           level_time: roomMatch.time_match,
-                  //           level_lang_code: setLanguage.code,
-                  //           level_lang_id: setLanguage.code,
-                  //           current_score: 0,
-                  //           target_score: 0);
-                  //       Navigator.pushAndRemoveUntil(
-                  //           context,
-                  //           CustomPageRoute(OnlineGamePlayPage(
-                  //             languageModel: widget.languageModel,
-                  //             selectedQuestion: roomMatch.totalQuestion,
-                  //             selectedTime: roomMatch.time_match,
-                  //             isHost: 0,
-                  //             levelWords: roomMatch.length_word,
-                  //             isOnline: true,
-                  //             Stage: setLanguage.custom_level,
-                  //             levelModel: levelModel,
-                  //             isCustom: false,
-                  //           )),
-                  //           (route) => false);
-                  //     });
-                  //   }
-                  // }
-
-                  ///! menerima status pemain lain
-                  // if (data['target'] == 'update-status-player') {
-                  //   logger.d("data update-status-player => $data");
-                  //   if (data['status_player'] == 2) {
-                  //     roomProvider!.updateStatusPlayer(
-                  //         roomDetailId: data['room_detail_id'],
-                  //         status: data['status_player'],
-                  //         isReady: data['is_ready']);
-                  //     status = "Menerima status dari pemain lain";
-                  //     logger.d("Menerima status permainan");
-                  //   }
-                  // }
-
-                  //ketika host keluar dari permainan
-                  // if (data['target'] == 'host-exit-room') {
-                  //   socketProvider!.disconnectService();
-                  //   showModal(
-                  //       context: context,
-                  //       builder: (BuildContext context) {
-                  //         final theme = Theme.of(context);
-                  //         return const Dialog(
-                  //           insetAnimationCurve: Curves.easeInOut,
-                  //           backgroundColor: Colors.transparent,
-                  //           shape: RoundedRectangleBorder(),
-                  //           child: RoomExitModal(),
-                  //         );
-                  //       });
-                  // }
                 } catch (e, t) {
                   logger.e(t);
                 }

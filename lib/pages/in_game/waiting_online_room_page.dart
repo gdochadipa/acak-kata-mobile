@@ -331,7 +331,7 @@ class _WaitingOnlineRoomPageState extends State<WaitingOnlineRoomPage> {
               child: Wrap(
                 children: [
                   Text(
-                    'Bermain',
+                    setLanguage.play,
                     style: primaryTextStyle.copyWith(
                         fontSize: 18, fontWeight: bold),
                   ),

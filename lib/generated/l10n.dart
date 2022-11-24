@@ -529,6 +529,86 @@ class S {
       args: [],
     );
   }
+
+  /// `Input Room Code`
+  String get join_room_text {
+    return Intl.message(
+      'Input Room Code',
+      name: 'join_room_text',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Success Find Room`
+  String get success_find_room {
+    return Intl.message(
+      'Success Find Room',
+      name: 'success_find_room',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Find Room`
+  String get find_room {
+    return Intl.message(
+      'Find Room',
+      name: 'find_room',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Failed find a room`
+  String get failed_find_room {
+    return Intl.message(
+      'Failed find a room',
+      name: 'failed_find_room',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Starting game`
+  String get start_game {
+    return Intl.message(
+      'Starting game',
+      name: 'start_game',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Successfully receive settings`
+  String get receive_setting {
+    return Intl.message(
+      'Successfully receive settings',
+      name: 'receive_setting',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Successfully Receive player status`
+  String get receive_status_player {
+    return Intl.message(
+      'Successfully Receive player status',
+      name: 'receive_status_player',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Waiting Host`
+  String get waiting_host {
+    return Intl.message(
+      'Waiting Host',
+      name: 'waiting_host',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -46,5 +46,13 @@
     "exit_room" : "Exit from Room",
     "find_word" :"Dictionary",
     "join_room":"Join Room",
-    "music":"Music"
+    "music":"Music",
+    "join_room_text":"Input Room Code",
+    "success_find_room":"Success Find Room",
+    "find_room":"Find Room",
+    "failed_find_room":"Failed find a room",
+    "start_game" :"Starting game",
+    "receive_setting": "Successfully receive settings",
+    "receive_status_player": "Successfully Receive player status",
+        "waiting_host": "Waiting Host"
 }

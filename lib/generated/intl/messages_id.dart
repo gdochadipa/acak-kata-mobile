@@ -42,9 +42,14 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Ya, ingin keluar"),
         "exit_room":
             MessageLookupByLibrary.simpleMessage("Keluar dari Ruang Permainan"),
+        "failed_find_room":
+            MessageLookupByLibrary.simpleMessage("Gagal mencari ruangan"),
         "false_string": MessageLookupByLibrary.simpleMessage("Salah"),
+        "find_room": MessageLookupByLibrary.simpleMessage("Cari Ruang"),
         "find_word": MessageLookupByLibrary.simpleMessage("Kamus"),
         "join_room": MessageLookupByLibrary.simpleMessage("Gabung Permainan"),
+        "join_room_text":
+            MessageLookupByLibrary.simpleMessage("Masukan kode ruang"),
         "letter": MessageLookupByLibrary.simpleMessage("Huruf"),
         "listLanguage": MessageLookupByLibrary.simpleMessage(
             "Pilih Bahasa untuk Permainan"),
@@ -70,6 +75,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Maximal waktu 30 detik !"),
         "question_time_error_min":
             MessageLookupByLibrary.simpleMessage("Minimal waktu 7 detik !"),
+        "receive_setting": MessageLookupByLibrary.simpleMessage(
+            "Berhasil menerima pengaturan"),
+        "receive_status_player": MessageLookupByLibrary.simpleMessage(
+            "Menerima status dari pemain lain"),
         "reset": MessageLookupByLibrary.simpleMessage("Reset"),
         "save_setting":
             MessageLookupByLibrary.simpleMessage("Simpan Pengaturan"),
@@ -78,8 +87,13 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Detik per Soal"),
         "setting": MessageLookupByLibrary.simpleMessage("Pengaturan"),
         "single_player": MessageLookupByLibrary.simpleMessage("Pemain Tunggal"),
+        "start_game":
+            MessageLookupByLibrary.simpleMessage("Permainan Segera Dimulai"),
+        "success_find_room":
+            MessageLookupByLibrary.simpleMessage("Berhasil menemukan ruangan"),
         "time": MessageLookupByLibrary.simpleMessage("Waktu"),
         "true_string": MessageLookupByLibrary.simpleMessage("Benar"),
+        "waiting_host": MessageLookupByLibrary.simpleMessage("Menunggu host"),
         "welcome": MessageLookupByLibrary.simpleMessage("Hi Welcome"),
         "word_length": MessageLookupByLibrary.simpleMessage("Panjang Kata"),
         "word_length_form":
