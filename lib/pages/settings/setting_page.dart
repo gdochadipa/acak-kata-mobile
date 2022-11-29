@@ -99,13 +99,6 @@ class _SettingPageState extends State<SettingPage> {
             child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              alignment: Alignment.center,
-              child: Text(
-                setLanguage.setting,
-                style: whiteTextStyle.copyWith(fontSize: 25, fontWeight: bold),
-              ),
-            ),
             const SizedBox(
               height: 20,
             ),
@@ -139,17 +132,19 @@ class _SettingPageState extends State<SettingPage> {
                     child: BackdropFilter(
                       filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
                       child: Container(
-                        width: 110,
+                        width: 120,
                         margin: const EdgeInsets.all(11),
                         padding: const EdgeInsets.all(15),
                         decoration: BoxDecoration(
-                            color: Colors.grey.shade200.withOpacity(0.5),
+                            color: selected
+                                ? primaryColor8
+                                : Colors.grey.shade200.withOpacity(0.5),
                             border: Border.all(
                                 width: 2,
                                 color: selected
-                                    ? blackColor
+                                    ? primaryColor7
                                     : Colors.grey.shade200.withOpacity(0.5)),
-                            borderRadius: BorderRadius.circular(10)),
+                            borderRadius: BorderRadius.circular(15)),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -169,14 +164,14 @@ class _SettingPageState extends State<SettingPage> {
                                           "English",
                                           textAlign: TextAlign.center,
                                           style: whiteTextStyle.copyWith(
-                                              fontSize: 16,
+                                              fontSize: 14,
                                               fontWeight: bold,
                                               color: Colors.white),
                                         )
                                       : Text("Indonesia",
                                           textAlign: TextAlign.center,
                                           style: whiteTextStyle.copyWith(
-                                              fontSize: 16,
+                                              fontSize: 14,
                                               fontWeight: bold,
                                               color: Colors.white)),
                             )
@@ -188,6 +183,9 @@ class _SettingPageState extends State<SettingPage> {
                 );
               },
             ),
+            const SizedBox(
+              height: 50,
+            ),
             ValueListenableBuilder<bool>(
                 valueListenable: setting.musicOn,
                 builder: (context, musicOn, child) => _SettingLine(
@@ -196,6 +194,9 @@ class _SettingPageState extends State<SettingPage> {
                           color: whiteColor),
                       onSelected: () => setting.toggleMusicOn(),
                     )),
+            const SizedBox(
+              height: 20,
+            ),
             ValueListenableBuilder<bool>(
                 valueListenable: setting.soundsOn,
                 builder: (context, soundsOn, child) => _SettingLine(
@@ -204,26 +205,6 @@ class _SettingPageState extends State<SettingPage> {
                           color: whiteColor),
                       onSelected: () => setting.toggleSoundsOn(),
                     )),
-            const SizedBox(
-              height: 10,
-            ),
-            ButtonBounce(
-              color: whiteColor,
-              borderColor: whiteColor2,
-              shadowColor: whiteColor3,
-              widthButton: 180,
-              heightButton: 60,
-              onClick: () {
-                Navigator.pushNamed(context, '/about');
-              },
-              child: Center(
-                child: Text(
-                  setLanguage.about,
-                  style:
-                      primaryTextStyle.copyWith(fontSize: 16, fontWeight: bold),
-                ),
-              ),
-            )
           ],
         )),
       );
@@ -242,14 +223,47 @@ class _SettingPageState extends State<SettingPage> {
                   ),
                 ),
               ),
-              cardBody(),
+              Container(
+                margin: const EdgeInsets.only(top: 20),
+                alignment: Alignment.topCenter,
+                child: Text(
+                  setLanguage.setting,
+                  style:
+                      whiteTextStyle.copyWith(fontSize: 25, fontWeight: bold),
+                ),
+              ),
+              Center(
+                child: cardBody(),
+              ),
               Container(
                 margin: const EdgeInsets.only(left: 10, top: 10),
                 alignment: Alignment.topLeft,
                 child: btnExits(),
               ),
+              Container(
+                margin: const EdgeInsets.only(bottom: 20, top: 10),
+                alignment: Alignment.bottomCenter,
+                child: ButtonBounce(
+                  color: whiteColor,
+                  borderColor: whiteColor2,
+                  shadowColor: whiteColor3,
+                  widthButton: 180,
+                  heightButton: 60,
+                  onClick: () {
+                    Navigator.pushNamed(context, '/about');
+                  },
+                  child: Center(
+                    child: Text(
+                      setLanguage.about,
+                      style: primaryTextStyle.copyWith(
+                          fontSize: 16, fontWeight: bold),
+                    ),
+                  ),
+                ),
+              )
             ],
           )),
+          backgroundColor: backgroundColor2,
         ),
         onWillPop: () async => false);
   }

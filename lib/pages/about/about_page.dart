@@ -15,6 +15,13 @@ class _AbountPageState extends State<AbountPage> {
   Widget build(BuildContext context) {
     S? setLanguage = S.of(context);
 
+    List<String> listAbout = [
+      "dictionary.basabali.org",
+      "Faisal Amir, Dictionary Box",
+      "Muhammad Irfan Luthfi, Kamus-Jawa-Indonesia",
+      "Sahri Riza Umami, Kamus Besar Bahasa Indonesia Edisi IV"
+    ];
+
     Widget btnExits() {
       return ButtonBounce(
         color: redColor,
@@ -42,16 +49,19 @@ class _AbountPageState extends State<AbountPage> {
         margin: const EdgeInsets.all(15),
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15), color: primaryColor5),
+            borderRadius: BorderRadius.circular(15), color: primaryColor9),
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const SizedBox(
+                height: 15,
+              ),
               Center(
                 child: Text(
                   setLanguage.about,
                   style:
-                      whiteTextStyle.copyWith(fontSize: 22, fontWeight: black),
+                      blackTextStyle.copyWith(fontSize: 22, fontWeight: black),
                 ),
               ),
               const SizedBox(
@@ -59,10 +69,58 @@ class _AbountPageState extends State<AbountPage> {
               ),
               Container(
                 margin: const EdgeInsets.all(5),
-                child: Text(
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.fromLTRB(16, 5, 16, 5),
+                child: Flexible(
+                    child: Text(
                   setLanguage.about_cite,
                   style:
-                      whiteTextStyle.copyWith(fontSize: 18, fontWeight: medium),
+                      blackTextStyle.copyWith(fontSize: 16, fontWeight: medium),
+                )),
+              ),
+              Container(
+                margin: const EdgeInsets.all(5),
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.fromLTRB(16, 5, 16, 5),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: listAbout.map((e) {
+                      return Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            '\u2022',
+                            style: TextStyle(
+                              fontSize: 16,
+                              height: 1.55,
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          Flexible(
+                            child: Text(e,
+                                textAlign: TextAlign.left,
+                                softWrap: true,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: medium,
+                                  color: Colors.black.withOpacity(0.6),
+                                  height: 1.55,
+                                )),
+                          ),
+                        ],
+                      );
+                    }).toList()),
+              ),
+              Container(
+                margin: const EdgeInsets.all(5),
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.fromLTRB(16, 5, 16, 5),
+                child: Text(
+                  setLanguage.contact_us,
+                  style:
+                      blackTextStyle.copyWith(fontSize: 16, fontWeight: bold),
                 ),
               )
             ],

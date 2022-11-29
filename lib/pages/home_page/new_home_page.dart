@@ -370,12 +370,10 @@ class _NewHomePageState extends State<NewHomePage> {
 
     Widget logoHeader() {
       return ElasticIn(
-        child: Container(
-          child: Image.asset(
-            'assets/images/logo_baru_no.png',
-            height: 396.58,
-            width: 231.46,
-          ),
+        child: Image.asset(
+          'assets/images/logo_baru_no.png',
+          height: 250.58,
+          width: 231.46,
         ),
       );
     }
@@ -640,7 +638,6 @@ class _NewHomePageState extends State<NewHomePage> {
 
     Widget middleMenu() {
       return ElasticIn(
-          child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -655,7 +652,7 @@ class _NewHomePageState extends State<NewHomePage> {
             btnSearch()
           ],
         ),
-      ));
+      );
     }
 
     Widget choiceLanguageCard(String flag) {
@@ -716,7 +713,7 @@ class _NewHomePageState extends State<NewHomePage> {
     Widget body() {
       return Container(
           margin: const EdgeInsets.only(
-              left: 20.0, right: 20.0, bottom: 10.0, top: 0.0),
+              left: 10.0, right: 10.0, bottom: 10.0, top: 0.0),
           child: SingleChildScrollView(
             child: Column(
               children: [

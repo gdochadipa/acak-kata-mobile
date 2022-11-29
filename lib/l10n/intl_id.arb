@@ -41,7 +41,7 @@
     "setting":"Pengaturan",
     "save_setting" : "Simpan Pengaturan",
     "about" : "Tentang Aplikasi",
-    "about_cite": "Sumber Basis Pengetahuan : \n - dictionary.basabali.org \n - Faisal Amir, Dictionary Box\n - Muhammad Irfan Luthfi, Kamus-Jawa-Indonesia\n - Sahri Riza Umami, Kamus Besar Bahasa Indonesia Edisi IV",
+    "about_cite": "Acak Kata adalah sebuah permainan mobile untuk mengasah keterampilan dalam penguasaan kosakata dalam berbagai bahasa, yaitu Bahasa Bali, Bahasa Jawa, Bahasa Indonesia dan Bahasa Inggris",
     "login_first" : "Login terlebih dahulu !",
     "exit_room": "Keluar dari Ruang Permainan",
     "find_word": "Kamus",
@@ -54,5 +54,6 @@
     "start_game": "Permainan Segera Dimulai",
     "receive_setting": "Berhasil menerima pengaturan",
     "receive_status_player": "Menerima status dari pemain lain",
-    "waiting_host": "Menunggu host"
+    "waiting_host": "Menunggu host",
+    "contact_us": "Kritik dan saran silahkan kontak kami : baliintegratedsolution"
 }

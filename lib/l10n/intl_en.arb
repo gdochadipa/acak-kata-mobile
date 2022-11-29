@@ -41,7 +41,7 @@
     "setting": "Setting",
     "save_setting" : "Save Setting",
     "about": "About",
-    "about_cite": "Source Dictionary : \n - dictionary.basabali.org \n - Faisal Amir, Dictionary Box\n - Muhammad Irfan Luthfi, Kamus-Jawa-Indonesia\n - Sahri Riza Umami, Kamus Besar Bahasa Indonesia Edisi IV",
+    "about_cite": "Acak Kata is mobile game app for improve skill vocabulary in various language, like Balinese, Javanese, Indonesians, and English",
     "login_first" : "Login first !",
     "exit_room" : "Exit from Room",
     "find_word" :"Dictionary",
@@ -54,5 +54,6 @@
     "start_game" :"Starting game",
     "receive_setting": "Successfully receive settings",
     "receive_status_player": "Successfully Receive player status",
-        "waiting_host": "Waiting Host"
+        "waiting_host": "Waiting Host",
+        "contact_us": "Criticism and suggestions please contact us : baliintegratedsolution"
 }

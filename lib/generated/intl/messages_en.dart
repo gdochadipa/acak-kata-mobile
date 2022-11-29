@@ -24,13 +24,15 @@ class MessageLookup extends MessageLookupByLibrary {
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "about": MessageLookupByLibrary.simpleMessage("About"),
         "about_cite": MessageLookupByLibrary.simpleMessage(
-            "Source Dictionary : \n - dictionary.basabali.org \n - Faisal Amir, Dictionary Box\n - Muhammad Irfan Luthfi, Kamus-Jawa-Indonesia\n - Sahri Riza Umami, Kamus Besar Bahasa Indonesia Edisi IV"),
+            "Acak Kata is mobile game app for improve skill vocabulary in various language, like Balinese, Javanese, Indonesians, and English"),
         "answer": MessageLookupByLibrary.simpleMessage("Answer"),
         "back": MessageLookupByLibrary.simpleMessage("Back"),
         "back_to_menu": MessageLookupByLibrary.simpleMessage("BACK TO MENU"),
         "challenge":
             MessageLookupByLibrary.simpleMessage("Challenge \n Friends"),
         "code": MessageLookupByLibrary.simpleMessage("en"),
+        "contact_us": MessageLookupByLibrary.simpleMessage(
+            "Criticism and suggestions please contact us : baliintegratedsolution"),
         "custom_level": MessageLookupByLibrary.simpleMessage("Custom Level"),
         "delete": MessageLookupByLibrary.simpleMessage("Delete"),
         "exit": MessageLookupByLibrary.simpleMessage("Exit"),

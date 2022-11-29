@@ -470,10 +470,10 @@ class S {
     );
   }
 
-  /// `Source Dictionary : \n - dictionary.basabali.org \n - Faisal Amir, Dictionary Box\n - Muhammad Irfan Luthfi, Kamus-Jawa-Indonesia\n - Sahri Riza Umami, Kamus Besar Bahasa Indonesia Edisi IV`
+  /// `Acak Kata is mobile game app for improve skill vocabulary in various language, like Balinese, Javanese, Indonesians, and English`
   String get about_cite {
     return Intl.message(
-      'Source Dictionary : \n - dictionary.basabali.org \n - Faisal Amir, Dictionary Box\n - Muhammad Irfan Luthfi, Kamus-Jawa-Indonesia\n - Sahri Riza Umami, Kamus Besar Bahasa Indonesia Edisi IV',
+      'Acak Kata is mobile game app for improve skill vocabulary in various language, like Balinese, Javanese, Indonesians, and English',
       name: 'about_cite',
       desc: '',
       args: [],
@@ -605,6 +605,16 @@ class S {
     return Intl.message(
       'Waiting Host',
       name: 'waiting_host',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Criticism and suggestions please contact us : baliintegratedsolution`
+  String get contact_us {
+    return Intl.message(
+      'Criticism and suggestions please contact us : baliintegratedsolution',
+      name: 'contact_us',
       desc: '',
       args: [],
     );
