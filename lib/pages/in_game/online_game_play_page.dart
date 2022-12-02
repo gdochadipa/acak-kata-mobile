@@ -268,7 +268,7 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
           } else {
             audio.playSfx(SfxType.erase, queue: 0);
           }
-          Future.delayed(const Duration(milliseconds: 1000), () {
+          Future.delayed(const Duration(milliseconds: 500), () {
             Navigator.of(context).pop(true);
           });
           return AnswerModal(
