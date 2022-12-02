@@ -178,8 +178,8 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
             level: widget.levelModel!.id,
             length_word: widget.levelWords)) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: const Text(
-              "Berhasil membuat Room",
+            content: Text(
+              setLanguage.successfuly_create_room,
               textAlign: TextAlign.center,
             ),
             backgroundColor: successColor,
@@ -210,7 +210,7 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
       }
     }
 
-    Widget ButtonCreateRoom() {
+    Widget buttonCreateRoom() {
       return Container(
         width: double.infinity,
         margin: const EdgeInsets.only(top: 20),
@@ -225,7 +225,7 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
               child: Wrap(
                 children: [
                   Text(
-                    'Buat Room Match',
+                    setLanguage.create_room_match,
                     style: primaryTextStyle.copyWith(
                         fontSize: 14, fontWeight: bold),
                   ),
@@ -291,7 +291,7 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
                   return null;
                 },
                 decoration: InputDecoration.collapsed(
-                    hintText: 'Waktu Mulai Permainan',
+                    hintText: setLanguage.ending_time,
                     hintStyle: whiteTextStyle.copyWith(fontSize: 12)),
               )),
             ],
@@ -311,7 +311,7 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Jumlah Pemain',
+                  setLanguage.max_player,
                   textAlign: TextAlign.left,
                   style: whiteTextStyle.copyWith(
                       fontSize: 17, fontWeight: semiBold),
@@ -350,7 +350,7 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
                             return null;
                           },
                           decoration: InputDecoration.collapsed(
-                              hintText: 'Jumlah Pemain',
+                              hintText: setLanguage.max_player,
                               hintStyle: whiteTextStyle.copyWith(fontSize: 12)),
                         ))
                       ],
@@ -361,7 +361,7 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
                   height: 15,
                 ),
                 Text(
-                  'Waktu Mulai Permainan',
+                  setLanguage.ending_time,
                   textAlign: TextAlign.left,
                   style: whiteTextStyle.copyWith(
                       fontSize: 17, fontWeight: semiBold),
@@ -373,7 +373,7 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
                 const SizedBox(
                   height: 5,
                 ),
-                ButtonCreateRoom()
+                buttonCreateRoom()
               ],
             ),
           ),

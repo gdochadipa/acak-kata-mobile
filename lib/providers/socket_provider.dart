@@ -15,6 +15,7 @@ class SocketProvider with ChangeNotifier {
   Stream get statusGameStream => _socketService.statusGameStream;
   Stream get startingBySchedulingStream =>
       _socketService.startingByScheduleStream;
+  Stream get endingBySchedulingStream => _socketService.endingByScheduleStream;
 
   bool get isDisconnect => _socketService.socket.disconnected;
   bool get isConnected => _socketService.socket.connected;
@@ -79,6 +80,10 @@ class SocketProvider with ChangeNotifier {
 
   Future<void> socketReceiveChangeHost() async {
     await _socketService.bindReceiveChangeHost();
+  }
+
+  Future<void> socketReceiveEndingGameBySchedule() async {
+    await _socketService.bindReceiveEndingGameBySchedule();
   }
 
   Future<void> socketSendJoinRoom(

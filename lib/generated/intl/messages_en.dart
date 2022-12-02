@@ -33,8 +33,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "code": MessageLookupByLibrary.simpleMessage("en"),
         "contact_us": MessageLookupByLibrary.simpleMessage(
             "Criticism and suggestions please contact us : baliintegratedsolution"),
+        "create_room_match":
+            MessageLookupByLibrary.simpleMessage("Create Room Match"),
         "custom_level": MessageLookupByLibrary.simpleMessage("Custom Level"),
         "delete": MessageLookupByLibrary.simpleMessage("Delete"),
+        "ending_time": MessageLookupByLibrary.simpleMessage("End Time Game"),
         "exit": MessageLookupByLibrary.simpleMessage("Exit"),
         "exit_game": MessageLookupByLibrary.simpleMessage(
             "Do you want to exit game? the progress will be lost"),
@@ -54,6 +57,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "letter": MessageLookupByLibrary.simpleMessage("Letter"),
         "listLanguage": MessageLookupByLibrary.simpleMessage("List Language"),
         "login_first": MessageLookupByLibrary.simpleMessage("Login first !"),
+        "max_player": MessageLookupByLibrary.simpleMessage("Maximum player"),
         "multi_player": MessageLookupByLibrary.simpleMessage("Multi Player"),
         "music": MessageLookupByLibrary.simpleMessage("Music"),
         "next": MessageLookupByLibrary.simpleMessage("Next"),
@@ -89,6 +93,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "start_game": MessageLookupByLibrary.simpleMessage("Starting game"),
         "success_find_room":
             MessageLookupByLibrary.simpleMessage("Success Find Room"),
+        "successfuly_create_room": MessageLookupByLibrary.simpleMessage(
+            "Successfully create room match"),
         "time": MessageLookupByLibrary.simpleMessage("Time"),
         "true_string": MessageLookupByLibrary.simpleMessage("Correct"),
         "waiting_host": MessageLookupByLibrary.simpleMessage("Waiting Host"),

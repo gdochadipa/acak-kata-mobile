@@ -619,6 +619,46 @@ class S {
       args: [],
     );
   }
+
+  /// `Maximum player`
+  String get max_player {
+    return Intl.message(
+      'Maximum player',
+      name: 'max_player',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `End Time Game`
+  String get ending_time {
+    return Intl.message(
+      'End Time Game',
+      name: 'ending_time',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create Room Match`
+  String get create_room_match {
+    return Intl.message(
+      'Create Room Match',
+      name: 'create_room_match',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Successfully create room match`
+  String get successfuly_create_room {
+    return Intl.message(
+      'Successfully create room match',
+      name: 'successfuly_create_room',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

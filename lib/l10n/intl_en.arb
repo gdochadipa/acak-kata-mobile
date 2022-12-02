@@ -55,5 +55,9 @@
     "receive_setting": "Successfully receive settings",
     "receive_status_player": "Successfully Receive player status",
         "waiting_host": "Waiting Host",
-        "contact_us": "Criticism and suggestions please contact us : baliintegratedsolution"
+        "contact_us": "Criticism and suggestions please contact us : baliintegratedsolution",
+        "max_player": "Maximum player",
+        "ending_time": "End Time Game",
+        "create_room_match" : "Create Room Match",
+        "successfuly_create_room": "Successfully create room match"
 }

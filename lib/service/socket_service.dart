@@ -58,6 +58,11 @@ class SocketService {
       StreamController<String>.broadcast();
   Stream get startingByScheduleStream => _startingByScheduleBroadcast.stream;
 
+  //ending-game-by-schedule
+  final StreamController<String> _endingByScheduleBroadcast =
+      StreamController<String>.broadcast();
+  Stream get endingByScheduleStream => _endingByScheduleBroadcast.stream;
+
   Logger logger = Logger(
     printer: PrettyPrinter(methodCount: 0),
   );
@@ -157,6 +162,14 @@ class SocketService {
       final String? data = last.toString();
       _inEventData.add(data);
       _startingByScheduleBroadcast.sink.add(data!);
+    });
+  }
+
+  Future<void> bindReceiveEndingGameBySchedule() async {
+    socket.on('ending-game-by-schedule', (last) {
+      final String? data = last.toString();
+      _inEventData.add(data);
+      _endingByScheduleBroadcast.sink.add(data!);
     });
   }
 

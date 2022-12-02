@@ -98,6 +98,7 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
   getDataSocket() async {
     await socketProvider!.socketReceiveStatusPlayer();
     await socketProvider!.socketReceiveStatusGame();
+    await socketProvider!.socketReceiveEndingGameBySchedule();
   }
 
   handleFinishGame() async {
@@ -127,31 +128,35 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
     var requestTime = 0;
     Timer.periodic(Duration(seconds: seconds), (timer) async {
       print("run non host");
-      await roomProvider!.findRoomMatchID(id: roomProvider!.roomMatch!.id);
-      if (roomProvider!.roomMatch!.status_game == 1) {
-        roomProvider!.updateStatusGame(roomProvider!.roomMatch!.id, 2);
-        socketProvider!.socketSendStatusGame(
-            channelCode: roomProvider!.roomMatch!.channel_code!,
-            roomMatch: roomProvider!.roomMatch);
+
+      if (roomProvider!.roomMatch!.status_game != 2 &&
+          roomProvider!.roomMatch!.status_game != 3) {
+        await roomProvider!.findRoomMatchID(id: roomProvider!.roomMatch!.id);
+        if (roomProvider!.roomMatch!.status_game == 1) {
+          roomProvider!.updateStatusGame(roomProvider!.roomMatch!.id, 2);
+          socketProvider!.socketSendStatusGame(
+              channelCode: roomProvider!.roomMatch!.channel_code!,
+              roomMatch: roomProvider!.roomMatch);
+        }
+
+        if (roomProvider!.roomMatch!.status_game == 2) {
+          roomProvider!.roomMatch!.room_match_detail!
+              .sort((now, next) => now.score!.compareTo(next.score ?? 0));
+
+          setState(() {
+            roomMatch = roomProvider!.roomMatch;
+            onLoading = false;
+          });
+
+          _confettiController.play();
+          timer.cancel();
+        }
+
+        if (requestTime > 2) {
+          timer.cancel();
+        }
+        requestTime++;
       }
-
-      if (roomProvider!.roomMatch!.status_game == 2) {
-        roomProvider!.roomMatch!.room_match_detail!
-            .sort((now, next) => now.score!.compareTo(next.score ?? 0));
-
-        setState(() {
-          roomMatch = roomProvider!.roomMatch;
-          onLoading = false;
-        });
-
-        _confettiController.play();
-        timer.cancel();
-      }
-
-      if (requestTime > 2) {
-        timer.cancel();
-      }
-      requestTime++;
     });
   }
 
@@ -262,6 +267,7 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
     await socketProvider!.fireStream();
     await socketProvider!.socketReceiveStatusPlayer();
     await socketProvider!.socketReceiveStatusGame();
+    await socketProvider!.socketReceiveEndingGameBySchedule();
     if (roomProvider!.roomMatchDetailUser!.status_player != 3) {
       int finalScore =
           ((widget.finalScoreRate + widget.finalTimeRate) * 100).round();
@@ -436,128 +442,6 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
       }
       path.close();
       return path;
-    }
-
-    Widget barRank(int numberRank) {
-      double heightBar = 0;
-      switch (numberRank) {
-        case 1:
-          heightBar = 10;
-          break;
-        case 2:
-          heightBar = 100;
-          break;
-        case 3:
-          heightBar = 150;
-          break;
-        default:
-          heightBar = 10;
-          break;
-      }
-      return Expanded(
-        child: Container(
-          margin: EdgeInsets.only(left: 5, right: 5, top: heightBar, bottom: 5),
-          padding: const EdgeInsets.only(top: 5),
-          width: 50,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5), color: barColor),
-          child: Center(
-            child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              child: Text(
-                "$numberRank",
-                style: whiteTextStyle.copyWith(fontSize: 36, fontWeight: bold),
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-
-    Widget platePlayer(int rank, RoomMatchDetailModel roomMatchDetail) {
-      return Expanded(
-        child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 5),
-          child: Column(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: purpleCard,
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: Container(
-                    margin: const EdgeInsets.all(10),
-                    child: Text(
-                      "${roomMatchDetail.player!.username}",
-                      maxLines: 1,
-                      softWrap: false,
-                      overflow: TextOverflow.ellipsis,
-                      style: whiteTextStyle.copyWith(
-                          fontSize: 16, fontWeight: bold),
-                    )),
-              ),
-              const SizedBox(
-                height: 5,
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  color: blackColor,
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: Container(
-                  margin: const EdgeInsets.all(10),
-                  child: Text(
-                    "${roomMatchDetail.score}",
-                    textAlign: TextAlign.center,
-                    style:
-                        whiteTextStyle.copyWith(fontSize: 14, fontWeight: bold),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-
-    Widget rankBars() {
-      return AnimatedContainer(
-        transform:
-            _isInitialValue ? Matrix4.identity() : Matrix4.rotationX(100),
-        duration: const Duration(milliseconds: 800),
-        height: heightRanks,
-        margin: const EdgeInsets.only(top: 5),
-        child: Row(
-          children: roomProvider!.roomMatch!.room_match_detail!.length >= 3
-              ? [barRank(2), barRank(1), barRank(3)]
-              : roomProvider!.roomMatch!.room_match_detail!
-                  .map((e) => barRank(
-                      roomProvider!.roomMatch!.room_match_detail!.indexOf(e) +
-                          1))
-                  .toList(),
-        ),
-      );
-    }
-
-    Widget rankPlayers() {
-      return Container(
-        child: Row(
-          children: roomProvider!.roomMatch!.room_match_detail!.length >= 3
-              ? [
-                  platePlayer(
-                      0, roomProvider!.roomMatch!.room_match_detail![1]),
-                  platePlayer(
-                      1, roomProvider!.roomMatch!.room_match_detail![0]),
-                  platePlayer(2, roomProvider!.roomMatch!.room_match_detail![2])
-                ]
-              : roomProvider!.roomMatch!.room_match_detail!
-                  .map((e) => platePlayer(
-                      roomProvider!.roomMatch!.room_match_detail!.indexOf(e) +
-                          1,
-                      e))
-                  .toList(),
-        ),
-      );
     }
 
     Widget rankCard(RoomMatchDetailModel? roomDetail, int? rank) {
@@ -747,6 +631,21 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
           }
         } catch (e) {
           logger.e("statusGameStream" + e.toString());
+        }
+      });
+
+      socketProvider!.endingBySchedulingStream.listen((source) {
+        print("on ending Game Result ");
+        var data = json.decode(source.toString());
+        try {
+          if (data['target'] == 'ending-game-by-schedule') {
+            RoomMatchModel roomMatch = RoomMatchModel.fromJson(data['data']);
+            if (roomMatch.id == roomProvider!.roomMatch!.id) {
+              roomProvider!.roomMatch = roomMatch;
+            }
+          }
+        } catch (e) {
+          logger.e("ending game result" + e.toString());
         }
       });
 

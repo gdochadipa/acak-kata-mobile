@@ -32,8 +32,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "code": MessageLookupByLibrary.simpleMessage("id"),
         "contact_us": MessageLookupByLibrary.simpleMessage(
             "Kritik dan saran silahkan kontak kami : baliintegratedsolution"),
+        "create_room_match":
+            MessageLookupByLibrary.simpleMessage("Buat Room Match"),
         "custom_level": MessageLookupByLibrary.simpleMessage("Kustom Level"),
         "delete": MessageLookupByLibrary.simpleMessage("Hapus"),
+        "ending_time":
+            MessageLookupByLibrary.simpleMessage("Waktu akhir permainan"),
         "exit": MessageLookupByLibrary.simpleMessage("Keluar"),
         "exit_game":
             MessageLookupByLibrary.simpleMessage("Ingin keluar permainan ?"),
@@ -57,6 +61,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Pilih Bahasa untuk Permainan"),
         "login_first":
             MessageLookupByLibrary.simpleMessage("Login terlebih dahulu !"),
+        "max_player": MessageLookupByLibrary.simpleMessage("Jumlah pemain"),
         "multi_player": MessageLookupByLibrary.simpleMessage("Pemain Ganda"),
         "music": MessageLookupByLibrary.simpleMessage("Musik"),
         "next": MessageLookupByLibrary.simpleMessage("Selanjutnya"),
@@ -93,6 +98,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Permainan Segera Dimulai"),
         "success_find_room":
             MessageLookupByLibrary.simpleMessage("Berhasil menemukan ruangan"),
+        "successfuly_create_room": MessageLookupByLibrary.simpleMessage(
+            "Berhasil membuat ruang permainan"),
         "time": MessageLookupByLibrary.simpleMessage("Waktu"),
         "true_string": MessageLookupByLibrary.simpleMessage("Benar"),
         "waiting_host": MessageLookupByLibrary.simpleMessage("Menunggu host"),

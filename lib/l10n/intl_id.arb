@@ -55,5 +55,9 @@
     "receive_setting": "Berhasil menerima pengaturan",
     "receive_status_player": "Menerima status dari pemain lain",
     "waiting_host": "Menunggu host",
-    "contact_us": "Kritik dan saran silahkan kontak kami : baliintegratedsolution"
+    "contact_us": "Kritik dan saran silahkan kontak kami : baliintegratedsolution",
+    "max_player": "Jumlah pemain",
+    "ending_time": "Waktu akhir permainan",
+    "create_room_match": "Buat Room Match",
+    "successfuly_create_room": "Berhasil membuat ruang permainan"
 }
