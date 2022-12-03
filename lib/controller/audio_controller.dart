@@ -16,12 +16,7 @@ class AudioController {
 
   final AudioPlayer _musicPlayer;
 
-  /// This is a list of [AudioPlayer] instances which are rotated to play
-  /// sound effects.
-  ///
-  /// Normally, we would just call [AudioCache.play] and let it procure its
-  /// own [AudioPlayer] every time. But this seems to lead to errors and
-  /// bad performance on iOS devices.
+
   final List<AudioPlayer> _sfxPlayers;
 
   int _currentSfxPlayer = 0;
@@ -34,15 +29,7 @@ class AudioController {
 
   ValueNotifier<AppLifecycleState>? _lifecycleNotifier;
 
-  /// Creates an instance that plays music and sound.
-  ///
-  /// Use [polyphony] to configure the number of sound effects (SFX) that can
-  /// play at the same time. A [polyphony] of `1` will always only play one
-  /// sound (a new sound will stop the previous one). See discussion
-  /// of [_sfxPlayers] to learn why this is the case.
-  ///
-  /// Background music does not count into the [polyphony] limit. Music will
-  /// never be overridden by sound effects.
+
   AudioController({int polyphony = 2})
       : assert(polyphony >= 2),
         _musicPlayer = AudioPlayer(playerId: 'musicPlayer'),

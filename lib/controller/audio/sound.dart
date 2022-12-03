@@ -1,22 +1,5 @@
 List<String> soundTypeToFilename(SfxType type) {
   switch (type) {
-    case SfxType.drawX:
-      return [
-        'hash1.mp3',
-        'hash2.mp3',
-        'hash3.mp3',
-      ];
-    case SfxType.drawO:
-      return [
-        'wssh1.mp3',
-        'wssh2.mp3',
-        'dsht1.mp3',
-        'ws1.mp3',
-        'spsh1.mp3',
-        'hh1.mp3',
-        'hh2.mp3',
-        'kss1.mp3',
-      ];
     case SfxType.buttonTap:
       return [
         'bubble_click.wav',
@@ -26,25 +9,16 @@ List<String> soundTypeToFilename(SfxType type) {
       ];
     case SfxType.congrats:
       return [
-        'yay1.mp3',
-        'wehee1.mp3',
-        'oo1.mp3',
+        'correct_answer2.mp3',
       ];
     case SfxType.erase:
-      return [
-        'fwfwfwfwfw1.mp3',
-        'fwfwfwfw1.mp3',
-      ];
+      return ['wrong_answer1.mp3'];
   }
 }
 
 /// Allows control over loudness of different SFX types.
 double soundTypeToVolume(SfxType type) {
   switch (type) {
-    case SfxType.drawX:
-      return 0.4;
-    case SfxType.drawO:
-      return 0.2;
     case SfxType.buttonTap:
     case SfxType.congrats:
     case SfxType.erase:
@@ -52,4 +26,4 @@ double soundTypeToVolume(SfxType type) {
   }
 }
 
-enum SfxType { drawX, drawO, buttonTap, congrats, erase }
+enum SfxType { buttonTap, congrats, erase }
