@@ -236,8 +236,9 @@ class LanguageDBProvider with ChangeNotifier {
           _dataRelationWordList!.getRange(0, questionNumber ?? 5).toList();
       var i = 0;
       for (var relationWord in _dataRelationWordList!) {
-        List<Map<String, dynamic>> listWords =
-            await getWordByRelation(idRelation: relationWord.id);
+        logger.d(relationWord.id);
+        List<Map<String, dynamic>> listWords = await getWordByRelation(
+            idRelation: relationWord.id, languageId: languageId);
         _dataRelationWordList![i].listWords =
             listWords.map((e) => WordLanguageModel.fromJson(e)).toList();
         i++;

@@ -120,18 +120,20 @@ class _SignUpPageState extends State<SignUpPage> {
               height: 55,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
-                  color: primaryColor, borderRadius: BorderRadius.circular(10)),
+                  color: primaryColor9,
+                  borderRadius: BorderRadius.circular(10)),
               child: Center(
                 child: Row(
                   children: [
                     Expanded(
                         child: TextFormField(
-                      style: whiteTextStyle,
+                      style: primaryTextStyle,
                       validator: (valid) =>
                           ValidationHelper.validateUsername(valid),
                       controller: nameController,
                       decoration: InputDecoration.collapsed(
-                          hintText: 'Your Username', hintStyle: whiteTextStyle),
+                          hintText: 'Your Username',
+                          hintStyle: subtitleTextStyle),
                     ))
                   ],
                 ),
@@ -159,7 +161,8 @@ class _SignUpPageState extends State<SignUpPage> {
               height: 55,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
-                  color: primaryColor, borderRadius: BorderRadius.circular(10)),
+                  color: primaryColor9,
+                  borderRadius: BorderRadius.circular(10)),
               child: Center(
                 child: Row(
                   children: [
@@ -168,10 +171,10 @@ class _SignUpPageState extends State<SignUpPage> {
                       controller: emailController,
                       validator: (validate) =>
                           ValidationHelper.validateEmail(validate),
-                      style: whiteTextStyle,
+                      style: primaryTextStyle,
                       decoration: InputDecoration.collapsed(
                           hintText: 'Your Email Address',
-                          hintStyle: whiteTextStyle),
+                          hintStyle: subtitleTextStyle),
                     ))
                   ],
                 ),
@@ -199,19 +202,21 @@ class _SignUpPageState extends State<SignUpPage> {
               height: 55,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
-                  color: primaryColor, borderRadius: BorderRadius.circular(10)),
+                  color: primaryColor9,
+                  borderRadius: BorderRadius.circular(10)),
               child: Center(
                 child: Row(
                   children: [
                     Expanded(
                         child: TextFormField(
                       obscureText: true,
-                      style: whiteTextStyle,
+                      style: primaryTextStyle,
                       validator: (valid) =>
                           ValidationHelper.validatePassowrd(valid),
                       controller: passwordController,
                       decoration: InputDecoration.collapsed(
-                          hintText: 'Your Password', hintStyle: whiteTextStyle),
+                          hintText: 'Your Password',
+                          hintStyle: subtitleTextStyle),
                     ))
                   ],
                 ),

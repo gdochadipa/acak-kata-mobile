@@ -310,10 +310,10 @@ class S {
     );
   }
 
-  /// `Word Length`
+  /// `Word Length(letter)`
   String get word_length {
     return Intl.message(
-      'Word Length',
+      'Word Length(letter)',
       name: 'word_length',
       desc: '',
       args: [],

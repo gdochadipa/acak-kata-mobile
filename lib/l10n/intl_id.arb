@@ -25,7 +25,7 @@
     "second_question":"Detik per Soal",
     "challenge": "Tantang \n Teman",
     "question_count": "Jumlah Soal",
-    "word_length" : "Panjang Kata",
+    "word_length" : "Panjang Kata(huruf)",
     "time": "Waktu",
     "question_number": "Isi Jumlah Soal !",
     "question_number_error_min": "Minimal lima soal !",

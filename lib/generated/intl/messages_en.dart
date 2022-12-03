@@ -99,7 +99,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "true_string": MessageLookupByLibrary.simpleMessage("Correct"),
         "waiting_host": MessageLookupByLibrary.simpleMessage("Waiting Host"),
         "welcome": MessageLookupByLibrary.simpleMessage("Hi Welcome"),
-        "word_length": MessageLookupByLibrary.simpleMessage("Word Length"),
+        "word_length":
+            MessageLookupByLibrary.simpleMessage("Word Length(letter)"),
         "word_length_form":
             MessageLookupByLibrary.simpleMessage("Length word is empty !"),
         "word_length_form_error_max":

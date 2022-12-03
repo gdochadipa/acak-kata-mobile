@@ -129,6 +129,10 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
           questionNumber: totalQuestion)) {
         dataRelationWord = _languageDBProvider!.dataRelationWordList!;
 
+        for (var element in dataRelationWord!) {
+          logger.d(element.toJson());
+        }
+
         await setUpListQuestionQueue(dataRelationWord);
         setState(() {
           _isLoading = false;

@@ -153,18 +153,18 @@ class _JoinRoomModalState extends State<JoinRoomModal> {
                   height: 40,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   decoration: BoxDecoration(
-                      color: primaryColor,
+                      color: primaryColor9,
                       borderRadius: BorderRadius.circular(15)),
                   child: Center(
                       child: Row(
                     children: [
                       Expanded(
                           child: TextFormField(
-                        style: whiteTextStyle.copyWith(fontSize: 20),
+                        style: primaryTextStyle.copyWith(fontSize: 20),
                         controller: roomCodeController,
                         decoration: InputDecoration.collapsed(
                           hintText: '5XXXXX',
-                          hintStyle: whiteTextStyle,
+                          hintStyle: subtitleTextStyle,
                         ),
                       )),
                     ],

@@ -186,14 +186,14 @@ class _CustomMatchFormState extends State<CustomMatchForm> {
                         height: 50,
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         decoration: BoxDecoration(
-                            color: primaryColor,
+                            color: primaryColor9,
                             borderRadius: BorderRadius.circular(10)),
                         child: Center(
                           child: Row(
                             children: [
                               Expanded(
                                   child: TextFormField(
-                                style: whiteTextStyle,
+                                style: primaryTextStyle,
                                 keyboardType:
                                     const TextInputType.numberWithOptions(
                                         decimal: false, signed: false),
@@ -214,7 +214,7 @@ class _CustomMatchFormState extends State<CustomMatchForm> {
                                 },
                                 decoration: InputDecoration.collapsed(
                                     hintText: setLanguage.question_count,
-                                    hintStyle: whiteTextStyle),
+                                    hintStyle: subtitleTextStyle),
                               ))
                             ],
                           ),
@@ -240,14 +240,14 @@ class _CustomMatchFormState extends State<CustomMatchForm> {
                         height: 50,
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         decoration: BoxDecoration(
-                            color: primaryColor,
+                            color: primaryColor9,
                             borderRadius: BorderRadius.circular(10)),
                         child: Row(
                           children: [
                             Expanded(
                                 child: TextFormField(
                               controller: lengthWord,
-                              style: whiteTextStyle,
+                              style: primaryTextStyle,
                               keyboardType:
                                   const TextInputType.numberWithOptions(
                                       decimal: false, signed: false),
@@ -265,7 +265,7 @@ class _CustomMatchFormState extends State<CustomMatchForm> {
                               },
                               decoration: InputDecoration.collapsed(
                                   hintText: setLanguage.word_length,
-                                  hintStyle: whiteTextStyle),
+                                  hintStyle: subtitleTextStyle),
                             ))
                           ],
                         ),
@@ -291,7 +291,7 @@ class _CustomMatchFormState extends State<CustomMatchForm> {
                         height: 50,
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         decoration: BoxDecoration(
-                            color: primaryColor,
+                            color: primaryColor9,
                             borderRadius: BorderRadius.circular(10)),
                         child: Center(
                           child: Row(
@@ -299,7 +299,7 @@ class _CustomMatchFormState extends State<CustomMatchForm> {
                               Expanded(
                                   child: TextFormField(
                                 controller: questionTime,
-                                style: whiteTextStyle,
+                                style: primaryTextStyle,
                                 keyboardType:
                                     const TextInputType.numberWithOptions(
                                         decimal: false, signed: false),
@@ -318,7 +318,7 @@ class _CustomMatchFormState extends State<CustomMatchForm> {
                                 decoration: InputDecoration.collapsed(
                                     hintText:
                                         '${setLanguage.time} (${setLanguage.second})',
-                                    hintStyle: whiteTextStyle),
+                                    hintStyle: subtitleTextStyle),
                               ))
                             ],
                           ),
@@ -337,7 +337,7 @@ class _CustomMatchFormState extends State<CustomMatchForm> {
                               color: greenColor,
                               borderColor: greenColor2,
                               shadowColor: greenColor3,
-                              heightButton: 60,
+                              heightButton: 70,
                               widthButton: 150,
                               child: Center(
                                 child: Wrap(
@@ -345,7 +345,7 @@ class _CustomMatchFormState extends State<CustomMatchForm> {
                                     Text(
                                       setLanguage.play,
                                       style: whiteTextStyle.copyWith(
-                                          fontSize: 16, fontWeight: bold),
+                                          fontSize: 14, fontWeight: bold),
                                     ),
                                     const SizedBox(
                                       width: 5,
@@ -371,7 +371,7 @@ class _CustomMatchFormState extends State<CustomMatchForm> {
                               color: primaryColor,
                               borderColor: primaryColor2,
                               shadowColor: primaryColor3,
-                              heightButton: 60,
+                              heightButton: 70,
                               widthButton: 150,
                               child: Stack(
                                 children: [
@@ -381,7 +381,7 @@ class _CustomMatchFormState extends State<CustomMatchForm> {
                                     child: Text(
                                       setLanguage.challenge,
                                       style: whiteTextStyle.copyWith(
-                                          fontSize: 16, fontWeight: bold),
+                                          fontSize: 14, fontWeight: bold),
                                     ),
                                   ),
                                   Container(

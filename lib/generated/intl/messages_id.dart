@@ -104,7 +104,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "true_string": MessageLookupByLibrary.simpleMessage("Benar"),
         "waiting_host": MessageLookupByLibrary.simpleMessage("Menunggu host"),
         "welcome": MessageLookupByLibrary.simpleMessage("Hi Welcome"),
-        "word_length": MessageLookupByLibrary.simpleMessage("Panjang Kata"),
+        "word_length":
+            MessageLookupByLibrary.simpleMessage("Panjang Kata(huruf)"),
         "word_length_form":
             MessageLookupByLibrary.simpleMessage("Isi panjang kata !"),
         "word_length_form_error_max":

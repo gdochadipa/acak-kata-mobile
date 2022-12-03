@@ -137,18 +137,20 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
               height: 50,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
-                  color: primaryColor, borderRadius: BorderRadius.circular(10)),
+                  color: primaryColor9,
+                  borderRadius: BorderRadius.circular(10)),
               child: Center(
                 child: Row(
                   children: [
                     Expanded(
                         child: TextFormField(
-                      style: whiteTextStyle,
+                      style: primaryTextStyle,
                       validator: (value) =>
                           ValidationHelper.validateUsername(value),
                       controller: usernameController,
                       decoration: InputDecoration.collapsed(
-                          hintText: 'Your Username', hintStyle: whiteTextStyle),
+                          hintText: 'Your Username',
+                          hintStyle: subtitleTextStyle),
                     ))
                   ],
                 ),
@@ -176,18 +178,19 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
               height: 50,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
-                  color: primaryColor, borderRadius: BorderRadius.circular(10)),
+                  color: primaryColor9,
+                  borderRadius: BorderRadius.circular(10)),
               child: Center(
                 child: Row(
                   children: [
                     Expanded(
                         child: TextFormField(
-                      style: whiteTextStyle,
+                      style: primaryTextStyle,
                       controller: nameController,
                       validator: (value) =>
                           ValidationHelper.validateUsername(value),
                       decoration: InputDecoration.collapsed(
-                          hintText: 'Nama', hintStyle: whiteTextStyle),
+                          hintText: 'Nama', hintStyle: subtitleTextStyle),
                     ))
                   ],
                 ),
@@ -215,19 +218,20 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
               height: 50,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
-                  color: primaryColor, borderRadius: BorderRadius.circular(10)),
+                  color: primaryColor9,
+                  borderRadius: BorderRadius.circular(10)),
               child: Center(
                 child: Row(
                   children: [
                     Expanded(
                         child: TextFormField(
                       controller: emailController,
-                      style: whiteTextStyle,
+                      style: primaryTextStyle,
                       validator: (value) =>
                           ValidationHelper.validateEmail(value),
                       decoration: InputDecoration.collapsed(
                           hintText: 'Your Email Address',
-                          hintStyle: whiteTextStyle),
+                          hintStyle: subtitleTextStyle),
                     ))
                   ],
                 ),

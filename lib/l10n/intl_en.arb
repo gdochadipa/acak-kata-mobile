@@ -25,7 +25,7 @@
   "second_question": "Second per ques",
   "challenge":"Challenge \n Friends",
   "question_count" : "Number of Questions",
-  "word_length": "Word Length",
+  "word_length": "Word Length(letter)",
   "time" : "Time",
       "question_number": "Question Number is empty !",
       "question_number_error_min": "Min 5 Ques !",

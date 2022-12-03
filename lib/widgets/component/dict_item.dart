@@ -75,12 +75,13 @@ class _DictItemState extends State<DictItem> {
               const SizedBox(
                 height: 10,
               ),
-              AutoSizeText(
+              Text(
                 "${widget.wordLanguageModel!.word_hint}",
                 maxLines: 3,
+                overflow: TextOverflow.ellipsis,
                 style:
-                    blackTextStyle.copyWith(fontSize: 18, fontWeight: semiBold),
-              ),
+                    blackTextStyle.copyWith(fontSize: 14, fontWeight: semiBold),
+              )
             ],
           ),
         ),

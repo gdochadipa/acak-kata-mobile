@@ -323,14 +323,14 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
                   height: 40,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   decoration: BoxDecoration(
-                      color: primaryColor,
+                      color: primaryColor9,
                       borderRadius: BorderRadius.circular(10)),
                   child: Center(
                     child: Row(
                       children: [
                         Expanded(
                             child: TextFormField(
-                          style: whiteTextStyle.copyWith(fontSize: 14),
+                          style: primaryTextStyle.copyWith(fontSize: 14),
                           keyboardType: const TextInputType.numberWithOptions(
                               decimal: false, signed: false),
                           controller: countPlayer,
@@ -351,7 +351,8 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
                           },
                           decoration: InputDecoration.collapsed(
                               hintText: setLanguage.max_player,
-                              hintStyle: whiteTextStyle.copyWith(fontSize: 12)),
+                              hintStyle:
+                                  subtitleTextStyle.copyWith(fontSize: 12)),
                         ))
                       ],
                     ),
