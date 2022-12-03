@@ -8,7 +8,6 @@ import 'package:acakkata/models/user_model.dart';
 import 'package:acakkata/pages/auth/modal/show_login_modal.dart';
 import 'package:acakkata/pages/auth/modal/show_profile_modal.dart';
 import 'package:acakkata/pages/dictionary/dict_search_page.dart';
-import 'package:acakkata/pages/in_game/modal/answer_modal.dart';
 import 'package:acakkata/pages/in_game/modal/join_room_modal.dart';
 import 'package:acakkata/pages/level/level_list_page.dart';
 import 'package:acakkata/pages/result_game/result_offline_game_page.dart';

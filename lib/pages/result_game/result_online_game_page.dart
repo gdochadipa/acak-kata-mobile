@@ -16,7 +16,9 @@ import 'package:acakkata/providers/socket_provider.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/button/button_bounce.dart';
 import 'package:acakkata/widgets/clicky_button.dart';
+import 'package:acakkata/widgets/popover/history_answer_list_modal.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:animations/animations.dart';
 import 'package:confetti/confetti.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
@@ -129,8 +131,8 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
     Timer.periodic(Duration(seconds: seconds), (timer) async {
       print("run non host");
 
-      if (roomProvider!.roomMatch!.status_game != 2 &&
-          roomProvider!.roomMatch!.status_game != 3) {
+      if (roomProvider!.checkAllAreGameDone() &&
+          roomProvider!.roomMatch!.status_game == 1) {
         await roomProvider!.findRoomMatchID(id: roomProvider!.roomMatch!.id);
         if (roomProvider!.roomMatch!.status_game == 1) {
           roomProvider!.updateStatusGame(roomProvider!.roomMatch!.id, 2);
@@ -320,6 +322,20 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
     // RoomMatchModel? roomMatch = roomProvider!.roomMatch!;
     // bool onLoading = true;
 
+    Future<void> showHistoryAnswerModal() async {
+      return showModal(
+          context: context,
+          builder: (BuildContext context) {
+            final theme = Theme.of(context);
+            return const Dialog(
+              child: HistoryAnswerListModal(),
+              insetAnimationCurve: Curves.easeInOut,
+              backgroundColor: Colors.transparent,
+              shape: RoundedRectangleBorder(),
+            );
+          });
+    }
+
     _connectivityProvider?.streamConnectivity.listen(
       (event) {
         if (event.keys.toList()[0] == ConnectivityResult.none) {
@@ -416,6 +432,29 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
               child: Text(
                 setLanguage.back_to_menu,
                 style: whiteTextStyle.copyWith(fontSize: 16, fontWeight: bold),
+              ),
+            )),
+      );
+    }
+
+    Widget btnShowHistoryAnswer() {
+      return Container(
+        width: double.infinity,
+        alignment: Alignment.center,
+        child: ButtonBounce(
+            onClick: () {
+              showHistoryAnswerModal();
+            },
+            color: whiteColor,
+            borderColor: whiteColor2,
+            shadowColor: whiteColor3,
+            widthButton: 245,
+            heightButton: 60,
+            child: Center(
+              child: Text(
+                "Lihat Jawaban",
+                style:
+                    primaryTextStyle.copyWith(fontSize: 16, fontWeight: bold),
               ),
             )),
       );
@@ -527,7 +566,7 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
         alignment: Alignment.center,
         margin: const EdgeInsets.only(top: 80, left: 5, right: 5),
         padding: const EdgeInsets.all(5),
-        child: Column(
+        child: ListView(
           children: [
             ElasticIn(child: textHeader()),
             const SizedBox(
@@ -536,6 +575,8 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
             Expanded(
               child: ListView(
                 shrinkWrap: true,
+                physics: const ClampingScrollPhysics(),
+                scrollDirection: Axis.vertical,
                 children: listDetail!.map((e) {
                   return AnimationConfiguration.staggeredList(
                       position: listDetail.indexOf(e),
@@ -547,6 +588,13 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
                 }).toList(),
               ),
             ),
+
+            const SizedBox(height: 40),
+
+            btnShowHistoryAnswer(),
+            const SizedBox(height: 10),
+            backtoMenu()
+
             // ),
           ],
         ),
@@ -714,10 +762,6 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
             ),
           ],
         ),
-        bottomNavigationBar: Container(
-            decoration: BoxDecoration(color: whiteColor),
-            height: 90,
-            child: backtoMenu()),
       ),
     );
   }
