@@ -398,7 +398,6 @@ class _ResultOfflineGamePageState extends State<ResultOfflineGamePage> {
               ),
             ),
             wordHistoryAnswers(),
-            backtoMenu()
           ],
         ),
       );
@@ -434,6 +433,11 @@ class _ResultOfflineGamePageState extends State<ResultOfflineGamePage> {
                 child: confettiStar(),
               ),
             ],
+          ),
+          bottomNavigationBar: SizedBox(
+            height: 70,
+            child:
+                Padding(padding: const EdgeInsets.all(5), child: backtoMenu()),
           ),
         ),
         onWillPop: () async => false);

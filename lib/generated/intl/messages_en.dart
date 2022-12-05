@@ -27,7 +27,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Acak Kata is mobile game app for improve skill vocabulary in various language, like Balinese, Javanese, Indonesians, and English"),
         "answer": MessageLookupByLibrary.simpleMessage("Answer"),
         "back": MessageLookupByLibrary.simpleMessage("Back"),
-        "back_to_menu": MessageLookupByLibrary.simpleMessage("BACK TO MENU"),
+        "back_to_menu": MessageLookupByLibrary.simpleMessage("Back to Home"),
         "challenge":
             MessageLookupByLibrary.simpleMessage("Challenge \n Friends"),
         "code": MessageLookupByLibrary.simpleMessage("en"),
@@ -88,6 +88,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "second": MessageLookupByLibrary.simpleMessage("Second"),
         "second_question":
             MessageLookupByLibrary.simpleMessage("Second per ques"),
+        "see_answers": MessageLookupByLibrary.simpleMessage("See the Answers"),
         "setting": MessageLookupByLibrary.simpleMessage("Setting"),
         "single_player": MessageLookupByLibrary.simpleMessage("Single Player"),
         "start_game": MessageLookupByLibrary.simpleMessage("Starting game"),

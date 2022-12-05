@@ -138,7 +138,7 @@ class _SignInPageState extends State<SignInPage> {
               height: 40,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
-                  color: primaryColor, borderRadius: BorderRadius.circular(10)),
+                  color: whiteColor, borderRadius: BorderRadius.circular(10)),
               child: Center(
                 child: Row(
                   children: [
@@ -176,7 +176,7 @@ class _SignInPageState extends State<SignInPage> {
               height: 40,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
-                  color: primaryColor, borderRadius: BorderRadius.circular(10)),
+                  color: whiteColor, borderRadius: BorderRadius.circular(10)),
               child: Center(
                 child: Row(
                   children: [

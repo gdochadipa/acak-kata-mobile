@@ -414,49 +414,54 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
     }
 
     Widget backtoMenu() {
-      return Container(
-        width: double.infinity,
-        alignment: Alignment.center,
-        child: ButtonBounce(
-            onClick: () {
-              socketProvider!.disconnectService();
-              Navigator.pushNamedAndRemoveUntil(
-                  context, '/home', (route) => false);
-            },
-            color: redColor,
-            borderColor: redColor2,
-            shadowColor: redColor3,
-            widthButton: 245,
-            heightButton: 60,
-            child: Center(
-              child: Text(
-                setLanguage.back_to_menu,
-                style: whiteTextStyle.copyWith(fontSize: 16, fontWeight: bold),
-              ),
-            )),
+      return Expanded(
+        flex: 5,
+        child: Container(
+          alignment: Alignment.center,
+          child: ButtonBounce(
+              onClick: () {
+                socketProvider!.disconnectService();
+                Navigator.pushNamedAndRemoveUntil(
+                    context, '/home', (route) => false);
+              },
+              color: redColor,
+              borderColor: redColor2,
+              shadowColor: redColor3,
+              widthButton: 150,
+              heightButton: 60,
+              child: Center(
+                child: Text(
+                  setLanguage.back_to_menu,
+                  style:
+                      whiteTextStyle.copyWith(fontSize: 16, fontWeight: bold),
+                ),
+              )),
+        ),
       );
     }
 
     Widget btnShowHistoryAnswer() {
-      return Container(
-        width: double.infinity,
-        alignment: Alignment.center,
-        child: ButtonBounce(
-            onClick: () {
-              showHistoryAnswerModal();
-            },
-            color: whiteColor,
-            borderColor: whiteColor2,
-            shadowColor: whiteColor3,
-            widthButton: 245,
-            heightButton: 60,
-            child: Center(
-              child: Text(
-                "Lihat Jawaban",
-                style:
-                    primaryTextStyle.copyWith(fontSize: 16, fontWeight: bold),
-              ),
-            )),
+      return Expanded(
+        flex: 5,
+        child: Container(
+          alignment: Alignment.center,
+          child: ButtonBounce(
+              onClick: () {
+                showHistoryAnswerModal();
+              },
+              color: whiteColor,
+              borderColor: whiteColor2,
+              shadowColor: whiteColor3,
+              widthButton: 150,
+              heightButton: 60,
+              child: Center(
+                child: Text(
+                  setLanguage.see_answers,
+                  style:
+                      primaryTextStyle.copyWith(fontSize: 14, fontWeight: bold),
+                ),
+              )),
+        ),
       );
     }
 
@@ -589,11 +594,9 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
               ),
             ),
 
-            const SizedBox(height: 40),
+            // const SizedBox(height: 40),
 
-            btnShowHistoryAnswer(),
-            const SizedBox(height: 10),
-            backtoMenu()
+            // const SizedBox(height: 10),
 
             // ),
           ],
@@ -761,6 +764,15 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
               child: confettiStar(),
             ),
           ],
+        ),
+        bottomNavigationBar: SizedBox(
+          height: 70,
+          child: Padding(
+            padding: const EdgeInsets.all(5),
+            child: Row(
+              children: [btnShowHistoryAnswer(), backtoMenu()],
+            ),
+          ),
         ),
       ),
     );

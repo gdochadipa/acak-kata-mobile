@@ -92,6 +92,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "second": MessageLookupByLibrary.simpleMessage("Detik"),
         "second_question":
             MessageLookupByLibrary.simpleMessage("Detik per Soal"),
+        "see_answers": MessageLookupByLibrary.simpleMessage("Lihat Jawaban"),
         "setting": MessageLookupByLibrary.simpleMessage("Pengaturan"),
         "single_player": MessageLookupByLibrary.simpleMessage("Pemain Tunggal"),
         "start_game":

@@ -430,10 +430,10 @@ class S {
     );
   }
 
-  /// `BACK TO MENU`
+  /// `Back to Home`
   String get back_to_menu {
     return Intl.message(
-      'BACK TO MENU',
+      'Back to Home',
       name: 'back_to_menu',
       desc: '',
       args: [],
@@ -655,6 +655,16 @@ class S {
     return Intl.message(
       'Successfully create room match',
       name: 'successfuly_create_room',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `See the Answers`
+  String get see_answers {
+    return Intl.message(
+      'See the Answers',
+      name: 'see_answers',
       desc: '',
       args: [],
     );

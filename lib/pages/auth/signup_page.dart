@@ -120,8 +120,7 @@ class _SignUpPageState extends State<SignUpPage> {
               height: 55,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
-                  color: primaryColor9,
-                  borderRadius: BorderRadius.circular(10)),
+                  color: whiteColor, borderRadius: BorderRadius.circular(10)),
               child: Center(
                 child: Row(
                   children: [
@@ -161,8 +160,7 @@ class _SignUpPageState extends State<SignUpPage> {
               height: 55,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
-                  color: primaryColor9,
-                  borderRadius: BorderRadius.circular(10)),
+                  color: whiteColor, borderRadius: BorderRadius.circular(10)),
               child: Center(
                 child: Row(
                   children: [
@@ -202,8 +200,7 @@ class _SignUpPageState extends State<SignUpPage> {
               height: 55,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
-                  color: primaryColor9,
-                  borderRadius: BorderRadius.circular(10)),
+                  color: whiteColor, borderRadius: BorderRadius.circular(10)),
               child: Center(
                 child: Row(
                   children: [

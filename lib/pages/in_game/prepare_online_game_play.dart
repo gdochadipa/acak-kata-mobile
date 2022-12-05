@@ -257,13 +257,13 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
         height: 40,
         padding: const EdgeInsets.symmetric(horizontal: 16),
         decoration: BoxDecoration(
-            color: primaryColor, borderRadius: BorderRadius.circular(15)),
+            color: whiteColor, borderRadius: BorderRadius.circular(15)),
         child: Center(
           child: Row(
             children: [
               Expanded(
                   child: DateTimeField(
-                style: whiteTextStyle.copyWith(fontSize: 14),
+                style: primaryTextStyle.copyWith(fontSize: 14),
                 format: format,
                 initialValue: valueDateTime,
                 controller: dateTime,
@@ -323,7 +323,7 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
                   height: 40,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   decoration: BoxDecoration(
-                      color: primaryColor9,
+                      color: whiteColor,
                       borderRadius: BorderRadius.circular(10)),
                   child: Center(
                     child: Row(

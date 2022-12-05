@@ -153,7 +153,7 @@ class _JoinRoomModalState extends State<JoinRoomModal> {
                   height: 40,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   decoration: BoxDecoration(
-                      color: primaryColor9,
+                      color: whiteColor,
                       borderRadius: BorderRadius.circular(15)),
                   child: Center(
                       child: Row(
