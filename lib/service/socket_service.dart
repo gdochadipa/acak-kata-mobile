@@ -8,7 +8,7 @@ import 'package:logger/logger.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 const String SOCKET_KEY = '';
-const String SOCKET_URL = 'http://10.0.2.2:3000';
+const String SOCKET_URL = 'http://139.59.117.124:3000';
 
 class SocketService {
   late IO.Socket socket;

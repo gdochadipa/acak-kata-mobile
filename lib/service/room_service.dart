@@ -8,7 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 
 class RoomService {
-  String baseUrl = 'http://10.0.2.2:3000/api/v1/room';
+  String baseUrl = 'http://139.59.117.124:3000/api/v1/room';
   Logger logger = Logger(
     printer: PrettyPrinter(methodCount: 0),
   );

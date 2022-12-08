@@ -383,7 +383,7 @@ class _ItemLevelCardState extends State<ItemLevelCard> {
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(SnackBar(
                                           content: const Text(
-                                            "Maaf masih dalam pengembangan",
+                                            "Server gagal meresponse",
                                             textAlign: TextAlign.center,
                                           ),
                                           backgroundColor: alertColor,

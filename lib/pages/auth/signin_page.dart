@@ -145,10 +145,10 @@ class _SignInPageState extends State<SignInPage> {
                     Expanded(
                         child: TextFormField(
                       controller: emailController,
-                      style: whiteTextStyle,
+                      style: primaryTextStyle,
                       decoration: InputDecoration.collapsed(
                           hintText: 'Your Email Address',
-                          hintStyle: whiteTextStyle),
+                          hintStyle: primaryTextStyle),
                     ))
                   ],
                 ),
@@ -183,10 +183,11 @@ class _SignInPageState extends State<SignInPage> {
                     Expanded(
                         child: TextFormField(
                       obscureText: true,
-                      style: whiteTextStyle,
+                      style: primaryTextStyle,
                       controller: passwordController,
                       decoration: InputDecoration.collapsed(
-                          hintText: 'Your Password', hintStyle: whiteTextStyle),
+                          hintText: 'Your Password',
+                          hintStyle: primaryTextStyle),
                     ))
                   ],
                 ),

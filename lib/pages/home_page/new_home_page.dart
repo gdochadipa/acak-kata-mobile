@@ -511,7 +511,7 @@ class _NewHomePageState extends State<NewHomePage> {
           } else {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: const Text(
-                "Maaf masih dalam pengembangan",
+                "Server gagal merespon",
                 textAlign: TextAlign.center,
               ),
               backgroundColor: alertColor,
@@ -614,7 +614,7 @@ class _NewHomePageState extends State<NewHomePage> {
           } else {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: const Text(
-                "Maaf masih dalam pengembangan",
+                "Server gagal merespon",
                 textAlign: TextAlign.center,
               ),
               backgroundColor: alertColor,

@@ -4,8 +4,8 @@ import 'package:acakkata/models/user_model.dart';
 import 'package:http/http.dart' as http;
 
 class AuthService {
-  String baseUrl = 'http://10.0.2.2:3000/api/v1/auth';
-  String baseUrlUser = 'http://10.0.2.2:3000/api/v1/user';
+  String baseUrl = 'http://139.59.117.124:3000/api/v1/auth';
+  String baseUrlUser = 'http://139.59.117.124:3000/api/v1/user';
 
   Future<UserModel> register(
       {required String name,
