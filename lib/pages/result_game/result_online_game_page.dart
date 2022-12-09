@@ -433,7 +433,7 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
                 child: Text(
                   setLanguage.back_to_menu,
                   style:
-                      whiteTextStyle.copyWith(fontSize: 16, fontWeight: bold),
+                      whiteTextStyle.copyWith(fontSize: 14, fontWeight: bold),
                 ),
               )),
         ),
