@@ -27,7 +27,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Acak Kata adalah sebuah permainan mobile untuk mengasah keterampilan dalam penguasaan kosakata dalam berbagai bahasa, yaitu Bahasa Bali, Bahasa Jawa, Bahasa Indonesia dan Bahasa Inggris"),
         "answer": MessageLookupByLibrary.simpleMessage("Jawaban"),
         "back": MessageLookupByLibrary.simpleMessage("Kembali"),
-        "back_to_menu": MessageLookupByLibrary.simpleMessage("KEMBALI KE MENU"),
+        "back_to_menu": MessageLookupByLibrary.simpleMessage("Kembali ke Menu"),
         "challenge": MessageLookupByLibrary.simpleMessage("Tantang \n Teman"),
         "code": MessageLookupByLibrary.simpleMessage("id"),
         "contact_us": MessageLookupByLibrary.simpleMessage(

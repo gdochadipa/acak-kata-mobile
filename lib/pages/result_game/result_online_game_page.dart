@@ -604,6 +604,40 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
       );
     }
 
+    Widget newCardBody() {
+      roomProvider!.roomMatch!.room_match_detail!
+          .sort((now, next) => -now.score!.compareTo(next.score ?? 0));
+      List<RoomMatchDetailModel>? listDetail =
+          roomProvider!.roomMatch!.room_match_detail;
+      return Column(
+        children: [
+          const SizedBox(
+            height: 15,
+          ),
+          ElasticIn(child: textHeader()),
+          const SizedBox(
+            height: 8,
+          ),
+          Expanded(
+            child: ListView(
+              shrinkWrap: true,
+              physics: const ClampingScrollPhysics(),
+              scrollDirection: Axis.vertical,
+              children: listDetail!.map((e) {
+                return AnimationConfiguration.staggeredList(
+                    position: listDetail.indexOf(e),
+                    child: SlideAnimation(
+                      horizontalOffset: 50,
+                      child: FadeInAnimation(
+                          child: rankCard(e, listDetail.indexOf(e) + 1)),
+                    ));
+              }).toList(),
+            ),
+          ),
+        ],
+      );
+    }
+
     Widget cardBodyOnLoad() {
       return Container(
           alignment: Alignment.center,
@@ -726,9 +760,9 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
               } catch (e, t) {
                 logger.e(t);
               }
-              return onLoading ? cardBodyOnLoad() : cardBody();
+              return onLoading ? cardBodyOnLoad() : newCardBody();
             } else {
-              return onLoading ? cardBodyOnLoad() : cardBody();
+              return onLoading ? cardBodyOnLoad() : newCardBody();
             }
           });
     }
