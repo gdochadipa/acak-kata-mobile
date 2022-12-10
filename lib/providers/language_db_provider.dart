@@ -223,6 +223,10 @@ class LanguageDBProvider with ChangeNotifier {
             [languageId, lengthWord]);
         int countWord = countWordData.first["count_word"];
         int randomOffset = Random().nextInt(countWord);
+
+        if (randomOffset > (countWord - (questionNumber ?? 0))) {
+          randomOffset = countWord - (questionNumber ?? 0);
+        }
         words = await txn.rawQuery(
             "SELECT tb_relation_word.* from tb_relation_word where language_id = ? and length_word = ? limit 4000 offset ?",
             [languageId, lengthWord, randomOffset]);
