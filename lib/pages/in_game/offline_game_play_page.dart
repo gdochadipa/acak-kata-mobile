@@ -122,7 +122,7 @@ class _OfflineGamePlayPageState extends State<OfflineGamePlayPage>
         await _languageDBProvider!.setSingleHistoryGameDetail();
       }
 
-      if (await _languageDBProvider!.getRelationalWords(
+      if (await _languageDBProvider!.getRelationalWordsDict(
           languageCode: widget.languageModel.language_code,
           lengthWord: widget.levelWords,
           languageId: null,

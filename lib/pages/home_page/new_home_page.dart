@@ -85,6 +85,11 @@ class _NewHomePageState extends State<NewHomePage> {
   Future<void> onTestGet() async {
     try {
       await _roomProvider!.getPackageRelatedQuestion("indonesia", "code");
+      // await _languageDBProvider!.getRelationalWordsDict(
+      //     languageCode: "indonesia",
+      //     languageId: 1,
+      //     lengthWord: 5,
+      //     questionNumber: 5);
     } catch (e, stacktrace) {
       logger.e(e);
     }

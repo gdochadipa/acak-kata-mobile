@@ -21,7 +21,7 @@ class WordLanguageModel {
   String toRawJson() => json.encode(toJson());
 
   WordLanguageModel.fromJson(Map<String, dynamic> json) {
-    id = json['_id'];
+    id = (json['_id'] ?? json['id'].toString());
     List<String> listSuffle = json['word'].toUpperCase().split("");
     if (listSuffle.isNotEmpty) {
       var randm = Random();

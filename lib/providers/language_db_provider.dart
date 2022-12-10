@@ -50,7 +50,7 @@ class LanguageDBProvider with ChangeNotifier {
     printer: PrettyPrinter(methodCount: 0),
   );
 
-  static const NEW_DB_VERSION = 6;
+  static const NEW_DB_VERSION = 8;
 
   setRuleGame(int? numberCountDown, int? totalQuestion) {
     _numberCountDown = numberCountDown ?? 15;
@@ -253,6 +253,59 @@ class LanguageDBProvider with ChangeNotifier {
       return true;
     } catch (e) {
       logger.e(e);
+      throw Exception(e);
+      return false;
+    }
+  }
+
+  Future<bool> getRelationalWordsDict(
+      {String? languageCode,
+      int? lengthWord,
+      int? languageId,
+      int? questionNumber}) async {
+    try {
+      if (_db == null) {
+        throw "bd is not initiated, initiate using [init(db)] function";
+      }
+      late List<Map<String, dynamic>> words;
+
+      if (languageId == null) {
+        if (languageCode == "english") {
+          languageId = 2;
+        } else if (languageCode == "indonesia") {
+          languageId = 1;
+        } else if (languageCode == "bali") {
+          languageId = 3;
+        } else if (languageCode == "java") {
+          languageId = 4;
+        }
+      }
+
+      await _db.transaction((txn) async {
+        List<Map<String, dynamic>> countWordData = await txn.rawQuery(
+            "SELECT COUNT(id) as count_word from tb_dict_word where language_id = ? and length_word = ?",
+            [languageId, lengthWord]);
+        int countWord = countWordData.first["count_word"];
+        int randomOffset = Random().nextInt(countWord);
+
+        if (randomOffset > (countWord - (questionNumber ?? 0))) {
+          randomOffset = countWord - (questionNumber ?? 0);
+        }
+        words = await txn.rawQuery(
+            "SELECT tb_dict_word.* from tb_dict_word where language_id = ? and length_word = ? limit 4000 offset ?",
+            [languageId, lengthWord, randomOffset]);
+      });
+
+      _dataRelationWordList =
+          words.map((e) => RelationWordModel.fromJson(e)).toList();
+      _dataRelationWordList!.shuffle();
+
+      _dataRelationWordList =
+          _dataRelationWordList!.getRange(0, questionNumber ?? 5).toList();
+
+      return true;
+    } catch (e, stacktrace) {
+      logger.e('Stacktrace: ' + stacktrace.toString());
       throw Exception(e);
       return false;
     }
