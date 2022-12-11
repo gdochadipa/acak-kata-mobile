@@ -323,10 +323,9 @@ class _WaitingJoinRoomPageState extends State<WaitingJoinRoomPage> {
             logger.d("data => ${questions != null}");
             if (questions != null) {
               for (var itemQuestion in questions) {
+                logger.d(itemQuestion);
                 RelationWordModel questi =
                     RelationWordModel.fromJson(itemQuestion);
-                List new_list_words = json.decode(itemQuestion['list_words']);
-                questi.wordQuestion(new_list_words);
                 questionList.add(questi);
               }
               roomProvider!.setRelatedQuestionList(questionList);

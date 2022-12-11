@@ -186,10 +186,10 @@ class RoomService {
           '$baseUrl/package-question/related-word?language_code=$languageCode&question_num=$questionNum&channel_code=$channelCode&length_word=$lengthWord');
 
       var response = await http.get(url, headers: headers);
-      logger.d(response.body);
 
       if (response.statusCode == 200) {
         List data = jsonDecode(response.body)['data'];
+        logger.d(data);
         List<RelationWordModel> listWord = [];
 
         for (var item in data) {

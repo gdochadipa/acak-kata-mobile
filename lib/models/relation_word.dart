@@ -28,6 +28,7 @@ class RelationWordModel {
     letter = data['word'].toUpperCase().split("");
     count_word = data['count_word'];
     language_id = data['language_id'];
+    print(json.decode(data['word_related'])[0]);
     List<dynamic> words = json.decode(data['word_related']);
     listWords = words.map((e) => WordLanguageModel.fromJson(e)).toList();
     // List<String>
@@ -53,6 +54,6 @@ class RelationWordModel {
         "letter": letter,
         "count_word": count_word,
         "language_id": language_id,
-        "list_words": json.encode(listWords)
+        "word_related": json.encode(listWords)
       };
 }

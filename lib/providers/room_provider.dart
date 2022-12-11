@@ -216,7 +216,12 @@ class RoomProvider with ChangeNotifier {
       String? token = pref.getString('token');
 
       List<RelationWordModel> listRelatedQuestion = await RoomService()
-          .getPackageRelatedQuestion(token!, languageCode!, 4, channelCode!, 3);
+          .getPackageRelatedQuestion(
+              token!,
+              languageCode!,
+              roomMatch!.totalQuestion ?? 4,
+              channelCode!,
+              roomMatch!.length_word ?? 3);
       _listRelatedQuestion = listRelatedQuestion;
 
       return true;
