@@ -62,6 +62,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "login_first":
             MessageLookupByLibrary.simpleMessage("Login terlebih dahulu !"),
         "max_player": MessageLookupByLibrary.simpleMessage("Jumlah pemain"),
+        "min_char_three":
+            MessageLookupByLibrary.simpleMessage("Minimal 3 karakter"),
         "multi_player": MessageLookupByLibrary.simpleMessage("Pemain Ganda"),
         "music": MessageLookupByLibrary.simpleMessage("Musik"),
         "next": MessageLookupByLibrary.simpleMessage("Selanjutnya"),
@@ -103,6 +105,12 @@ class MessageLookup extends MessageLookupByLibrary {
             "Berhasil membuat ruang permainan"),
         "time": MessageLookupByLibrary.simpleMessage("Waktu"),
         "true_string": MessageLookupByLibrary.simpleMessage("Benar"),
+        "valid_email":
+            MessageLookupByLibrary.simpleMessage("Format email tidak sesuai"),
+        "valid_pass": MessageLookupByLibrary.simpleMessage(
+            "Min 3 karakter, satu huruf dan satu angka"),
+        "valid_username":
+            MessageLookupByLibrary.simpleMessage("Masukan username yang valid"),
         "waiting_host": MessageLookupByLibrary.simpleMessage("Menunggu host"),
         "welcome": MessageLookupByLibrary.simpleMessage("Hi Welcome"),
         "word_length":

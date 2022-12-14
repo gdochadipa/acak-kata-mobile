@@ -60,5 +60,9 @@
     "ending_time": "End Time Game",
     "create_room_match" : "Create Room Match",
     "successfuly_create_room": "Successfully create room match",
-    "see_answers": "See the Answers"
+    "see_answers": "See the Answers",
+    "valid_username": "Username Invalid",
+    "min_char_three": "Min 3 characters",
+    "valid_pass": "Min 3 characters, one letter and one number",
+    "valid_email": "Invalid email format"
 }

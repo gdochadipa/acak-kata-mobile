@@ -71,12 +71,11 @@ class _AbountPageState extends State<AbountPage> {
                 margin: const EdgeInsets.all(5),
                 alignment: Alignment.centerLeft,
                 padding: const EdgeInsets.fromLTRB(16, 5, 16, 5),
-                child: Flexible(
-                    child: Text(
+                child: Text(
                   setLanguage.about_cite,
                   style:
                       blackTextStyle.copyWith(fontSize: 16, fontWeight: medium),
-                )),
+                ),
               ),
               Container(
                 margin: const EdgeInsets.all(5),

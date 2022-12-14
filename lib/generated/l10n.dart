@@ -669,6 +669,46 @@ class S {
       args: [],
     );
   }
+
+  /// `Username Invalid`
+  String get valid_username {
+    return Intl.message(
+      'Username Invalid',
+      name: 'valid_username',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Min 3 characters`
+  String get min_char_three {
+    return Intl.message(
+      'Min 3 characters',
+      name: 'min_char_three',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Min 3 characters, one letter and one number`
+  String get valid_pass {
+    return Intl.message(
+      'Min 3 characters, one letter and one number',
+      name: 'valid_pass',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invalid email format`
+  String get valid_email {
+    return Intl.message(
+      'Invalid email format',
+      name: 'valid_email',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

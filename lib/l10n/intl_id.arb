@@ -60,5 +60,9 @@
     "ending_time": "Waktu akhir permainan",
     "create_room_match": "Buat Room Match",
     "successfuly_create_room": "Berhasil membuat ruang permainan",
-    "see_answers" : "Lihat Jawaban"
+    "see_answers" : "Lihat Jawaban",
+    "valid_username" : "Masukan username yang valid",
+    "min_char_three" :"Minimal 3 karakter",
+    "valid_pass" : "Min 3 karakter, satu huruf dan satu angka",
+    "valid_email" : "Format email tidak sesuai"
 }

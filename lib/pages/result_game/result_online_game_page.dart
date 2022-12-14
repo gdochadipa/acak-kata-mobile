@@ -129,7 +129,7 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
   handleNonHostRoom({required int seconds}) async {
     var requestTime = 0;
     Timer.periodic(Duration(seconds: seconds), (timer) async {
-      print("run non host");
+      print("run non host 2");
 
       if (roomProvider!.checkAllAreGameDone() &&
           roomProvider!.roomMatch!.status_game == 1) {
@@ -159,13 +159,22 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
         }
         requestTime++;
       }
+
+      if (roomProvider!.roomMatch!.status_game == 2) {
+        setState(() {
+          onLoading = false;
+        });
+
+        _confettiController.play();
+        timer.cancel();
+      }
     });
   }
 
   handleRefreshRoom() async {
     if (roomProvider!.checkIsHost(userID: authProvider!.user!.id) == 1) {
       logger.d("Time is running");
-      print("run non host");
+      print("run non host 1");
       Timer.periodic(const Duration(seconds: 5), (timer) async {
         try {
           logger.d("Refresh room update");
@@ -695,6 +704,12 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
 
             logger.d(
                 "check all are game done => ${roomProvider!.checkAllAreGameDone()}");
+
+            if (roomProvider!.checkAllAreGameDone()) {
+              setState(() {
+                onLoading = false;
+              });
+            }
           } catch (e) {
             logger.e("statusPlayerStream" + e.toString());
           }
@@ -724,12 +739,14 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
         var data = json.decode(source.toString());
         try {
           if (data['target'] == 'ending-game-by-schedule') {
+            logger.d(data["data"]);
             RoomMatchModel roomMatch = RoomMatchModel.fromJson(data['data']);
             if (roomMatch.id == roomProvider!.roomMatch!.id) {
               roomProvider!.roomMatch = roomMatch;
             }
           }
-        } catch (e) {
+        } catch (e, stacktrace) {
+          logger.e("ending game result " + stacktrace.toString());
           logger.e("ending game result" + e.toString());
         }
       });

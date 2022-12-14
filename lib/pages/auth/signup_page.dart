@@ -1,3 +1,4 @@
+import 'package:acakkata/generated/l10n.dart';
 import 'package:acakkata/helper/validation_helper.dart';
 import 'package:acakkata/pages/auth/signin_page.dart';
 import 'package:acakkata/providers/auth_provider.dart';
@@ -32,7 +33,7 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
     final bottom = MediaQuery.of(context).viewInsets.bottom;
-
+    S? setLanguage = S.of(context);
     handleSignUp() async {
       setState(() {
         isLoading = true;
@@ -245,7 +246,7 @@ class _SignUpPageState extends State<SignUpPage> {
             heightButton: 50,
             child: Center(
               child: Text(
-                'SIGN UP',
+                'Sign Up',
                 style: primaryTextStyle.copyWith(
                     fontSize: 16, fontWeight: extraBold),
               ),

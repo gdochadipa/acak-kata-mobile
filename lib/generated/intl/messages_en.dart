@@ -58,6 +58,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "listLanguage": MessageLookupByLibrary.simpleMessage("List Language"),
         "login_first": MessageLookupByLibrary.simpleMessage("Login first !"),
         "max_player": MessageLookupByLibrary.simpleMessage("Maximum player"),
+        "min_char_three":
+            MessageLookupByLibrary.simpleMessage("Min 3 characters"),
         "multi_player": MessageLookupByLibrary.simpleMessage("Multi Player"),
         "music": MessageLookupByLibrary.simpleMessage("Music"),
         "next": MessageLookupByLibrary.simpleMessage("Next"),
@@ -98,6 +100,12 @@ class MessageLookup extends MessageLookupByLibrary {
             "Successfully create room match"),
         "time": MessageLookupByLibrary.simpleMessage("Time"),
         "true_string": MessageLookupByLibrary.simpleMessage("Correct"),
+        "valid_email":
+            MessageLookupByLibrary.simpleMessage("Invalid email format"),
+        "valid_pass": MessageLookupByLibrary.simpleMessage(
+            "Min 3 characters, one letter and one number"),
+        "valid_username":
+            MessageLookupByLibrary.simpleMessage("Username Invalid"),
         "waiting_host": MessageLookupByLibrary.simpleMessage("Waiting Host"),
         "welcome": MessageLookupByLibrary.simpleMessage("Hi Welcome"),
         "word_length":

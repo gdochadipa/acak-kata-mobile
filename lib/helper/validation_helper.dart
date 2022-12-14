@@ -22,7 +22,7 @@ class ValidationHelper {
     }
 
     if (value == null || value.isEmpty || !regex.hasMatch(value)) {
-      return 'Enter a valid password, min 3 characters, min one letter and one number';
+      return 'Min 3 chars, min one letter and one number';
     } else {
       return null;
     }
