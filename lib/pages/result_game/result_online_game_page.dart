@@ -157,7 +157,6 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
         if (requestTime > 2) {
           timer.cancel();
         }
-        requestTime++;
       }
 
       if (roomProvider!.roomMatch!.status_game == 2) {
@@ -168,6 +167,17 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
         _confettiController.play();
         timer.cancel();
       }
+
+      if (roomProvider!.roomMatch!.status_game == 1 && requestTime > 1) {
+        setState(() {
+          onLoading = false;
+        });
+
+        _confettiController.play();
+        timer.cancel();
+      }
+
+      requestTime++;
     });
   }
 
@@ -270,7 +280,7 @@ class _ResultOnlineGamePageState extends State<ResultOnlineGamePage> {
         }
       });
     } else {
-      await handleNonHostRoom(seconds: 15);
+      await handleNonHostRoom(seconds: 10);
     }
   }
 
