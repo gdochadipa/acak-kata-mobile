@@ -409,7 +409,6 @@ class LanguageDBProvider with ChangeNotifier {
       await _db.transaction((txn) async {
         int updateCount = await txn
             .update("tb_level", row, where: "id = ?", whereArgs: [levelId]);
-        // print("update tb_level ${updateCount}");
       });
 
       return true;
@@ -447,7 +446,6 @@ class LanguageDBProvider with ChangeNotifier {
             limit: 1,
             orderBy: "sorting_level DESC",
             whereArgs: [levelModel.level_lang_code, nextLevel]);
-        // print("length ${levels.length}");
 
         if (levels.isNotEmpty) {
           await txn.update("tb_level", row,

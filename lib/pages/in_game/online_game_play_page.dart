@@ -17,6 +17,7 @@ import 'package:acakkata/providers/room_provider.dart';
 import 'package:acakkata/providers/socket_provider.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/answer_input_buttons.dart';
+import 'package:acakkata/widgets/answer_show_button.dart';
 import 'package:acakkata/widgets/button/button_bounce.dart';
 import 'package:acakkata/widgets/button/circle_bounce_button.dart';
 import 'package:acakkata/widgets/clicky_button.dart';
@@ -70,6 +71,7 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
   RoomProvider? roomProvider;
   SocketProvider? socketProvider;
   String textAnswer = '';
+  List<String>? textAnswerArray = [];
   // List<RelationWordModel>? dataWordList;
   List<RelationWordModel>? dataRelationWord;
   final bool _isButtonDisabled = false;
@@ -511,6 +513,7 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
     resetAnswer();
     if (textAnswer != '' && textAnswer.isNotEmpty) {
       textAnswer = '';
+      textAnswerArray!.clear();
       answerController.text = textAnswer;
     }
   }
@@ -568,6 +571,7 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
          */
     setState(() {
       textAnswer = textAnswer + letter;
+      textAnswerArray!.add(letter);
       answerController.text = textAnswer;
       isSelected![e] = true;
       sequenceAnswer!.add(e);
@@ -653,6 +657,7 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
         resetAnswer();
         if (textAnswer != '' && textAnswer.isNotEmpty) {
           textAnswer = '';
+          textAnswerArray!.clear();
           answerController.text = textAnswer;
         }
       } else {
@@ -670,6 +675,7 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
         resetAnswer();
         if (textAnswer != '' && textAnswer.isNotEmpty) {
           textAnswer = '';
+          textAnswerArray!.clear();
           answerController.text = textAnswer;
         }
       }
@@ -765,6 +771,28 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
       );
     }
 
+    ///form pengganti input huruf
+    Widget answerInputForm() {
+      return Container(
+        height: 60,
+        margin:
+            EdgeInsets.only(top: 5, left: defaultMargin, right: defaultMargin),
+        padding: const EdgeInsets.only(left: 10, right: 5),
+        decoration: BoxDecoration(
+            color: primaryColor3, borderRadius: BorderRadius.circular(15)),
+        child: Row(
+            children: textAnswerArray!.map((e) {
+          return Flexible(
+              child: AnswerShowButton(
+                  color: whiteColor,
+                  borderColor: whiteColor2,
+                  shadowColor: whiteColor3,
+                  letter: e.toString(),
+                  isBtnSelected: true));
+        }).toList()),
+      );
+    }
+
     ///  implementasi tombol reset jawaban
     Widget btnResetAnswer() {
       return Container(
@@ -776,6 +804,7 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
               resetAnswer();
               if (textAnswer != '' && textAnswer.isNotEmpty) {
                 textAnswer = '';
+                textAnswerArray!.clear();
                 answerController.text = textAnswer;
               }
             },
@@ -807,6 +836,7 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
               resetAnswer();
               if (textAnswer != '' && textAnswer.isNotEmpty) {
                 textAnswer = '';
+                textAnswerArray!.clear();
                 answerController.text = textAnswer;
               }
               shuffleAnswer(suffleQuestion, currentArrayQuestion);
@@ -817,6 +847,7 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
             color: orangeColor,
             borderColor: orangeColor2,
             shadowColor: orangeColor3,
+            isRapidClick: true,
             child: Center(
               child: Icon(
                 CupertinoIcons.shuffle_medium,
@@ -843,11 +874,13 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
                 setState(() {
                   isSelected!.update(lett, (value) => false);
                   sequenceAnswer!.removeLast();
+                  textAnswerArray!.removeLast();
                 });
               }
             },
             widthButton: 120,
             heightButton: 60,
+            isRapidClick: true,
             color: redColor,
             borderColor: redColor2,
             shadowColor: redColor3,
@@ -929,22 +962,17 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
     }
 
     Widget cardBodyUp() {
-      return Column(
-        children: [
-          ElasticIn(
-            child: Container(
-              margin:
-                  EdgeInsets.only(left: defaultMargin, right: defaultMargin),
-              padding: const EdgeInsets.only(left: 15, right: 15, bottom: 16),
-              child: Column(
-                children: [
-                  textTime(),
-                  answerInput(),
-                ],
-              ),
-            ),
+      return ElasticIn(
+        child: Container(
+          padding: const EdgeInsets.only(bottom: 16),
+          child: Column(
+            children: [
+              textTime(),
+              // answerInput(),
+              answerInputForm()
+            ],
           ),
-        ],
+        ),
       );
     }
 

@@ -18,6 +18,7 @@ class ButtonBounce extends StatefulWidget {
   final Color borderColor;
   final Color shadowColor;
   final double borderRadius;
+  final bool isRapidClick;
 
   const ButtonBounce(
       {Key? key,
@@ -32,7 +33,8 @@ class ButtonBounce extends StatefulWidget {
       required this.child,
       this.color = const Color(0xff8B62FF),
       this.borderColor = const Color(0xff5833BF),
-      this.shadowColor = const Color(0xff4F349E)})
+      this.shadowColor = const Color(0xff4F349E),
+      this.isRapidClick = false})
       : super(key: key);
 
   @override
@@ -65,11 +67,13 @@ class _ButtonBounceState extends State<ButtonBounce> {
         width: widget.widthButton,
         child: GestureDetector(
           onTap: () {
-            int now = DateTime.now().millisecondsSinceEpoch;
-            if (now - lastTimeClicked < intervalMs) {
-              return;
+            if (!widget.isRapidClick) {
+              int now = DateTime.now().millisecondsSinceEpoch;
+              if (now - lastTimeClicked < intervalMs) {
+                return;
+              }
+              lastTimeClicked = now;
             }
-            lastTimeClicked = now;
             widget.onClick();
           },
           excludeFromSemantics: true,
