@@ -79,6 +79,9 @@ Color blackColor = const Color(0xff2E2E2E);
 
 Color accentColor = const Color(0xffFF7CFA);
 
+Color kGreyColor = const Color(0xff94959B);
+Color kBlackColor = const Color(0xff222222);
+
 TextStyle primaryTextStyle =
     TextStyle(color: primaryTextColor, fontFamily: 'Nunito');
 
@@ -95,6 +98,8 @@ TextStyle purpleTextStyle = TextStyle(color: accentColor, fontFamily: 'Nunito');
 
 TextStyle blackTextStyle =
     TextStyle(color: thirdTextColor, fontFamily: 'Nunito');
+
+TextStyle grayTextStyle = TextStyle(color: kGreyColor, fontFamily: 'Nunito');
 
 TextStyle whiteTextStyle = TextStyle(color: whiteColor, fontFamily: 'Nunito');
 

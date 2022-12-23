@@ -100,6 +100,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Successfully create room match"),
         "time": MessageLookupByLibrary.simpleMessage("Time"),
         "true_string": MessageLookupByLibrary.simpleMessage("Correct"),
+        "tutorial": MessageLookupByLibrary.simpleMessage("Tutorial"),
         "valid_email":
             MessageLookupByLibrary.simpleMessage("Invalid email format"),
         "valid_pass": MessageLookupByLibrary.simpleMessage(

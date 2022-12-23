@@ -105,6 +105,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Berhasil membuat ruang permainan"),
         "time": MessageLookupByLibrary.simpleMessage("Waktu"),
         "true_string": MessageLookupByLibrary.simpleMessage("Benar"),
+        "tutorial": MessageLookupByLibrary.simpleMessage("Tutorial"),
         "valid_email":
             MessageLookupByLibrary.simpleMessage("Format email tidak sesuai"),
         "valid_pass": MessageLookupByLibrary.simpleMessage(

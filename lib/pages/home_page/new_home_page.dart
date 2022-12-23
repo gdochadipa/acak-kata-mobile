@@ -11,6 +11,7 @@ import 'package:acakkata/pages/dictionary/dict_search_page.dart';
 import 'package:acakkata/pages/in_game/modal/join_room_modal.dart';
 import 'package:acakkata/pages/level/level_list_page.dart';
 import 'package:acakkata/pages/result_game/result_offline_game_page.dart';
+import 'package:acakkata/pages/tutorial/tutorial_menu_page.dart';
 import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/providers/change_language_provider.dart';
 import 'package:acakkata/providers/connectivity_provider.dart';
@@ -293,6 +294,12 @@ class _NewHomePageState extends State<NewHomePage> {
           builder: (BuildContext context) => const JoinRoomModal());
     }
 
+    Future<void> showTutorialModal() async {
+      return showModal(
+          context: context,
+          builder: (BuildContext context) => const TutorialMenuPage());
+    }
+
     showListLanguagePop(int typeAccess) async {
       return showModal(
         context: context,
@@ -428,29 +435,51 @@ class _NewHomePageState extends State<NewHomePage> {
       );
     }
 
-    Widget btnProfile() {
-      return CircleBounceButton(
+    Widget btnTutorial() {
+      return ButtonBounce(
         color: blueColor,
         borderColor: blueColor2,
         shadowColor: blueColor3,
-        margin: const EdgeInsets.symmetric(horizontal: 5.0),
         onClick: () {
-          if (!(login)) {
-            showAuthModal();
-          } else {
-            showProfileModal();
-          }
+          showTutorialModal();
         },
         paddingHorizontalButton: 10,
         paddingVerticalButton: 10,
         heightButton: 75,
-        widthButton: 75,
+        widthButton: 250,
         child: SizedBox(
           width: 55,
           height: 55,
-          child: Center(
-            child: Image.asset('assets/images/profil.png'),
-          ),
+          child: Container(
+              width: 100,
+              height: 55,
+              child: Row(
+                children: [
+                  Image.asset(
+                    'assets/images/icon_tutorial.png',
+                    width: 45,
+                    height: 45,
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      FittedBox(
+                        fit: BoxFit.contain,
+                        child: AutoSizeText(
+                          setLanguage.tutorial,
+                          style: whiteTextStyle.copyWith(
+                              fontWeight: bold, fontSize: 18),
+                          presetFontSizes: const [15, 16],
+                          maxLines: 2,
+                        ),
+                      )
+                    ],
+                  )
+                ],
+              )),
         ),
       );
     }
@@ -646,6 +675,10 @@ class _NewHomePageState extends State<NewHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             btnPlayGame(),
+            const SizedBox(
+              height: 10,
+            ),
+            btnTutorial(),
             const SizedBox(
               height: 10,
             ),

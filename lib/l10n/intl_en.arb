@@ -64,5 +64,6 @@
     "valid_username": "Username Invalid",
     "min_char_three": "Min 3 characters",
     "valid_pass": "Min 3 characters, one letter and one number",
-    "valid_email": "Invalid email format"
+    "valid_email": "Invalid email format",
+    "tutorial": "Tutorial"
 }
