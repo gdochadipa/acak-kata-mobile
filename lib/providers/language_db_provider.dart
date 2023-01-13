@@ -50,7 +50,7 @@ class LanguageDBProvider with ChangeNotifier {
     printer: PrettyPrinter(methodCount: 0),
   );
 
-  static const NEW_DB_VERSION = 8;
+  static const NEW_DB_VERSION = 9;
 
   setRuleGame(int? numberCountDown, int? totalQuestion) {
     _numberCountDown = numberCountDown ?? 15;

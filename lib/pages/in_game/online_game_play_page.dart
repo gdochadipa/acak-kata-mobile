@@ -404,10 +404,10 @@ class _OnlineGamePlayPageState extends State<OnlineGamePlayPage>
         double newScoreCount = 0;
         if (allScoreTime > 0 && scoreTime.isNotEmpty) {
           newScoreTime =
-              (((allScoreTime / scoreTime.length) / (numberCountDown)) * 0.4);
+              (((allScoreTime / scoreTime.length) / (numberCountDown)) * 0.3);
         }
         if (scoreCount > 0) {
-          newScoreCount = ((scoreCount / totalQuestion) * 0.6);
+          newScoreCount = ((scoreCount / totalQuestion) * 0.7);
         }
 
         _isLoading = true;
