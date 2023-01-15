@@ -6,6 +6,7 @@ import 'package:acakkata/models/room_match_detail_model.dart';
 import 'package:acakkata/models/room_match_model.dart';
 import 'package:acakkata/models/word_language_model.dart';
 import 'package:acakkata/service/room_service.dart';
+import 'package:acakkata/setting/persistence/setting_persistence.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -44,6 +45,17 @@ class RoomProvider with ChangeNotifier {
   bool get isGetQuestion => _isGetQuestion;
 
   double? resultEndScore;
+
+  ValueNotifier<String> baseUrl = ValueNotifier("");
+
+  final SettingsPersistence _persistence;
+
+  RoomProvider({required SettingsPersistence persistence})
+      : _persistence = persistence;
+
+  Future<void> loadStateFromPersistence() async {
+    _persistence.getServerUrl().then((value) => baseUrl.value = value);
+  }
 
   set isGetQuestion(bool isGet) {
     _isGetQuestion = isGet;
@@ -105,15 +117,16 @@ class RoomProvider with ChangeNotifier {
       _totalQuestion = total_question ?? 15;
       SharedPreferences pref = await SharedPreferences.getInstance();
       String? token = pref.getString('token');
-      RoomMatchModel roomMatchModel = await RoomService().createRoom(
-          language_code!,
-          time_watch!,
-          max_player!,
-          total_question!,
-          token!,
-          datetime_match!,
-          level!,
-          length_word!);
+      RoomMatchModel roomMatchModel =
+          await RoomService(serverUrl: baseUrl.value).createRoom(
+              language_code!,
+              time_watch!,
+              max_player!,
+              total_question!,
+              token!,
+              datetime_match!,
+              level!,
+              length_word!);
       _roomMatch = roomMatchModel;
 
       return true;
@@ -128,7 +141,8 @@ class RoomProvider with ChangeNotifier {
       SharedPreferences pref = await SharedPreferences.getInstance();
       String? token = pref.getString('token');
       RoomMatchModel roomMatchModel =
-          await RoomService().findRoomWithCode(languageId!, token!, roomCode!);
+          await RoomService(serverUrl: baseUrl.value)
+              .findRoomWithCode(languageId!, token!, roomCode!);
       _roomMatch = roomMatchModel;
       return true;
     } catch (e) {
@@ -143,7 +157,8 @@ class RoomProvider with ChangeNotifier {
       SharedPreferences pref = await SharedPreferences.getInstance();
       String? token = pref.getString('token');
       RoomMatchModel roomMatchModel =
-          await RoomService().findRoomWithCode(languageId!, token!, roomCode!);
+          await RoomService(serverUrl: baseUrl.value)
+              .findRoomWithCode(languageId!, token!, roomCode!);
       _roomMatch = roomMatchModel;
       return true;
     } catch (e) {
@@ -157,7 +172,8 @@ class RoomProvider with ChangeNotifier {
       SharedPreferences pref = await SharedPreferences.getInstance();
       String? token = pref.getString('token');
       RoomMatchModel roomMatchModel =
-          await RoomService().findRoomMatchByID(id: id!, token: token!);
+          await RoomService(serverUrl: baseUrl.value)
+              .findRoomMatchByID(id: id!, token: token!);
       _roomMatch = roomMatchModel;
       return true;
     } catch (e) {
@@ -170,7 +186,8 @@ class RoomProvider with ChangeNotifier {
     try {
       SharedPreferences pref = await SharedPreferences.getInstance();
       String? token = pref.getString('token');
-      bool isConfirm = await RoomService().confirmGame(token!, roomId!);
+      bool isConfirm = await RoomService(serverUrl: baseUrl.value)
+          .confirmGame(token!, roomId!);
 
       return isConfirm;
     } catch (e) {
@@ -183,7 +200,8 @@ class RoomProvider with ChangeNotifier {
     try {
       SharedPreferences pref = await SharedPreferences.getInstance();
       String? token = pref.getString('token');
-      bool isCancel = await RoomService().cancelGameFromRoom(token!, roomId!);
+      bool isCancel = await RoomService(serverUrl: baseUrl.value)
+          .cancelGameFromRoom(token!, roomId!);
 
       return isCancel;
     } catch (e) {
@@ -198,9 +216,13 @@ class RoomProvider with ChangeNotifier {
       SharedPreferences pref = await SharedPreferences.getInstance();
       String? token = pref.getString('token');
 
-      List<WordLanguageModel> listQuestion = await RoomService()
-          .getPackageQuestion(token!, languageCode!, roomMatch!.totalQuestion!,
-              channelCode!, roomMatch!.length_word!);
+      List<WordLanguageModel> listQuestion =
+          await RoomService(serverUrl: baseUrl.value).getPackageQuestion(
+              token!,
+              languageCode!,
+              roomMatch!.totalQuestion!,
+              channelCode!,
+              roomMatch!.length_word!);
       _listQuestion = listQuestion;
       return true;
     } catch (e) {
@@ -215,8 +237,8 @@ class RoomProvider with ChangeNotifier {
       SharedPreferences pref = await SharedPreferences.getInstance();
       String? token = pref.getString('token');
 
-      List<RelationWordModel> listRelatedQuestion = await RoomService()
-          .getPackageRelatedQuestion(
+      List<RelationWordModel> listRelatedQuestion =
+          await RoomService(serverUrl: baseUrl.value).getPackageRelatedQuestion(
               token!,
               languageCode!,
               roomMatch!.totalQuestion ?? 4,

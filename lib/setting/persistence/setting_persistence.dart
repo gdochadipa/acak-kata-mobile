@@ -1,3 +1,4 @@
+import 'package:acakkata/models/server_url.dart';
 import 'package:acakkata/models/user_model.dart';
 
 abstract class SettingsPersistence {
@@ -32,4 +33,10 @@ abstract class SettingsPersistence {
   Future<void> setCalculatePercentByScore(double calculate);
 
   Future<void> setCalculatePercentByTime(double calculate);
+
+  Future<void> setServerUrl(ServerUrl serverUrl);
+
+  Future<String> getServerUrl();
+
+  Future<String> getServerSocket();
 }

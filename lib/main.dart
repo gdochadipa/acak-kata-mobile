@@ -49,14 +49,25 @@ class MyApp extends StatelessWidget {
     return AppLifeCycleObserver(
       child: MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (context) => AuthProvider()),
           ChangeNotifierProvider(
-            create: (context) => LanguageProvider(),
+              create: (context) =>
+                  AuthProvider(persistence: settingsPersistence)
+                    ..loadStateFromPersistence()),
+          ChangeNotifierProvider(
+            create: (context) =>
+                LanguageProvider(persistence: settingsPersistence)
+                  ..loadStateFromPersistence(),
           ),
-          ChangeNotifierProvider(create: (context) => RoomProvider()),
+          ChangeNotifierProvider(
+              create: (context) =>
+                  RoomProvider(persistence: settingsPersistence)
+                    ..loadStateFromPersistence()),
           ChangeNotifierProvider(create: (context) => LanguageDBProvider()),
           ChangeNotifierProvider(create: (context) => ChangeLanguageProvider()),
-          ChangeNotifierProvider(create: (context) => SocketProvider()),
+          ChangeNotifierProvider(
+              create: (context) =>
+                  SocketProvider(persistence: settingsPersistence)
+                    ..loadStateFromPersistence()),
           ChangeNotifierProvider(create: (context) => ConnectivityProvider()),
           Provider<SettingsController>(
               lazy: false,

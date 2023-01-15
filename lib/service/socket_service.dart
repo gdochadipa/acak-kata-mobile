@@ -5,13 +5,15 @@ import 'dart:math' hide log;
 
 import 'package:acakkata/models/room_match_detail_model.dart';
 import 'package:logger/logger.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
-const String SOCKET_KEY = '';
-const String SOCKET_URL = 'http://139.59.117.124:3000';
+// const String SOCKET_KEY = '';
+// const String SOCKET_URL = 'http://139.59.117.124:3000';
 
 class SocketService {
   late IO.Socket socket;
+  String SOCKET_URL = 'http://139.59.117.124:3000';
 
   final StreamController<String> _eventData =
       StreamController<String>.broadcast();
@@ -277,5 +279,9 @@ class SocketService {
 
   Future<void> fireSocket() async {
     await initSocket();
+  }
+
+  setUpSocketUrl({required String socketUrl}) {
+    SOCKET_URL = socketUrl;
   }
 }

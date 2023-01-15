@@ -3,7 +3,13 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class LanguageService {
-  String baseUrl = 'http://139.59.117.124:3000/api/v1/language';
+  // String baseUrl = 'http://139.59.117.124:3000/api/v1/language';
+
+  String baseUrl = '';
+
+  LanguageService({required String serverUrl}) {
+    baseUrl = '$serverUrl/api/v1/language';
+  }
 
   Future<List<LanguageModel>> getLanguage() async {
     var url = Uri.parse('$baseUrl/language');

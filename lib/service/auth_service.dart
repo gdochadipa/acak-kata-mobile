@@ -1,11 +1,20 @@
 import 'dart:convert';
 
 import 'package:acakkata/models/user_model.dart';
+import 'package:acakkata/setting/persistence/setting_persistence.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
-  String baseUrl = 'http://139.59.117.124:3000/api/v1/auth';
-  String baseUrlUser = 'http://139.59.117.124:3000/api/v1/user';
+  // String baseUrl = 'http://139.59.117.124:3000/api/v1/auth';
+  // String baseUrlUser = 'http://139.59.117.124:3000/api/v1/user';
+  String baseUrl = '';
+  String baseUrlUser = '';
+
+  AuthService({required String serverUrl}) {
+    baseUrl = '$serverUrl/api/v1/auth';
+    baseUrlUser = '$serverUrl/api/v1/user';
+  }
 
   Future<UserModel> register(
       {required String name,

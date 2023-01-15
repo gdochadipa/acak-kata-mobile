@@ -1,6 +1,7 @@
 import 'package:acakkata/models/room_match_detail_model.dart';
 import 'package:acakkata/models/room_match_model.dart';
 import 'package:acakkata/service/socket_service.dart';
+import 'package:acakkata/setting/persistence/setting_persistence.dart';
 import 'package:flutter/cupertino.dart';
 
 class SocketProvider with ChangeNotifier {
@@ -20,19 +21,40 @@ class SocketProvider with ChangeNotifier {
   bool get isDisconnect => _socketService.socket.disconnected;
   bool get isConnected => _socketService.socket.connected;
   bool get isActive => _socketService.socket.active;
+  ValueNotifier<String> baseUrl = ValueNotifier("http://139.59.117.124:3000");
+  late final SettingsPersistence _persistence;
 
-  SocketProvider() {
-    _socketService = SocketService();
-    _socketService.fireSocket();
+  SocketProvider({required SettingsPersistence persistence}) {
+    _persistence = persistence;
   }
 
+  Future<void> loadStateFromPersistence() async {
+    _persistence.getServerSocket().then((value) {
+      baseUrl.value = value;
+    });
+
+    _socketService.setUpSocketUrl(socketUrl: baseUrl.value);
+  }
+
+  // SocketProvider() {
+  //   // _socketService = SocketService();
+  //   // _socketService.fireSocket();
+  // }
+
   restartStream() {
+    _persistence.getServerSocket().then((value) {
+      baseUrl.value = value;
+    });
+    print("base url" + baseUrl.value);
     // _socketService.onResumeStream();
     _socketService = SocketService();
+    _socketService.setUpSocketUrl(socketUrl: baseUrl.value);
     _socketService.fireSocket();
   }
 
   fireStream() {
+    _persistence.getServerSocket().then((value) => baseUrl.value = value);
+    _socketService.setUpSocketUrl(socketUrl: baseUrl.value);
     _socketService.fireSocket();
   }
 

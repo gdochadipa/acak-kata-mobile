@@ -2,12 +2,23 @@ import 'dart:io';
 
 import 'package:acakkata/models/user_model.dart';
 import 'package:acakkata/service/auth_service.dart';
+import 'package:acakkata/setting/persistence/setting_persistence.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthProvider with ChangeNotifier {
   UserModel? _user;
   UserModel? get user => _user;
+  ValueNotifier<String> baseUrl = ValueNotifier("");
+
+  final SettingsPersistence _persistence;
+
+  AuthProvider({required SettingsPersistence persistence})
+      : _persistence = persistence;
+
+  Future<void> loadStateFromPersistence() async {
+    _persistence.getServerUrl().then((value) => baseUrl.value = value);
+  }
 
   set user(UserModel? user) {
     _user = user;
@@ -19,7 +30,7 @@ class AuthProvider with ChangeNotifier {
       required String email,
       required String password}) async {
     try {
-      UserModel user = await AuthService()
+      UserModel user = await AuthService(serverUrl: baseUrl.value)
           .register(name: name, email: email, password: password);
       _user = user;
       SharedPreferences pref = await SharedPreferences.getInstance();
@@ -40,8 +51,8 @@ class AuthProvider with ChangeNotifier {
 
   Future<bool> login({required String email, required String password}) async {
     try {
-      UserModel user =
-          await AuthService().login(email: email, password: password);
+      UserModel user = await AuthService(serverUrl: baseUrl.value)
+          .login(email: email, password: password);
       _user = user;
       SharedPreferences pref = await SharedPreferences.getInstance();
       pref.setBool('login', true);
@@ -78,7 +89,7 @@ class AuthProvider with ChangeNotifier {
       SharedPreferences pref = await SharedPreferences.getInstance();
       String? token = pref.getString('token');
       String? id = pref.getString('id');
-      UserModel user = await AuthService().editProfile(
+      UserModel user = await AuthService(serverUrl: baseUrl.value).editProfile(
           id: id!,
           email: email!,
           username: username!,

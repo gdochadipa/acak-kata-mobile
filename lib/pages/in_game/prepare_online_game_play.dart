@@ -49,7 +49,7 @@ class PrepareOnlineGamePlay extends StatefulWidget {
 class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
   TextEditingController room_code = TextEditingController(text: '');
   TextEditingController gameTime = TextEditingController(text: '');
-  SocketService socketService = SocketService();
+  // SocketService socketService = SocketService();
   Future<SharedPreferences> prefs = SharedPreferences.getInstance();
   bool? isLoading = false;
 
@@ -66,11 +66,11 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
   }
 
   connectSocket() async {
-    await socketService.fireSocket();
+    // await socketService.fireSocket();
   }
 
   disconnectSocket() async {
-    await socketService.disconnect();
+    // await socketService.disconnect();
   }
 
   @override
@@ -343,8 +343,8 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
                               return "Minimal 2 pemain";
                             }
 
-                            if (int.parse(text) > 11) {
-                              return "Maksimal 10 pemain";
+                            if (int.parse(text) > 40) {
+                              return "Maksimal 40 pemain";
                             }
 
                             return null;

@@ -1,3 +1,4 @@
+import 'package:acakkata/models/server_url.dart';
 import 'package:acakkata/models/user_model.dart';
 import 'package:acakkata/setting/persistence/setting_persistence.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -113,5 +114,24 @@ class LocalStorageSettingPersistence extends SettingsPersistence {
   Future<void> setCalculatePercentByTime(double calculate) async {
     final prefs = await instanceFuture;
     prefs.setDouble('calculate_percent_by_time', calculate);
+  }
+
+  @override
+  Future<String> getServerSocket() async {
+    final prefs = await instanceFuture;
+    return prefs.getString('set_socket') ?? "http://139.59.117.124:3000";
+  }
+
+  @override
+  Future<String> getServerUrl() async {
+    final prefs = await instanceFuture;
+    return prefs.getString('set_url') ?? "http://139.59.117.124:3000";
+  }
+
+  @override
+  Future<void> setServerUrl(ServerUrl serverUrl) async {
+    final pref = await instanceFuture;
+    pref.setString('set_url', "http://139.59.117.124:3000");
+    pref.setString('set_socket', "http://139.59.117.124:3000");
   }
 }

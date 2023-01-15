@@ -7,6 +7,7 @@ import 'package:acakkata/widgets/custom_page_route.dart';
 import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignInPage extends StatefulWidget {
   // const SignInPage({Key? key}) : super(key: key);
@@ -32,6 +33,9 @@ class _SignInPageState extends State<SignInPage> {
   }
 
   getInit() async {
+    // SharedPreferences pref = await SharedPreferences.getInstance();
+    // String socketUrl =
+    //     pref.getString('set_socket') ?? 'http://139.59.117.124:3000';
     await socket.fireSocket();
   }
 
