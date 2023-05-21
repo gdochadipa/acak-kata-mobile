@@ -1,4 +1,5 @@
 import 'package:acakkata/theme.dart';
+import 'package:acakkata/widgets/button/circle_bounce_button.dart';
 import 'package:flutter/material.dart';
 
 class PopoverListView extends StatelessWidget {
@@ -9,48 +10,38 @@ class PopoverListView extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    Widget _buildHandle(BuildContext context) {
-      final theme = Theme.of(context);
-      return Container(
-        margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
+    return Container(
+      alignment: Alignment.center,
+      child: SingleChildScrollView(
+        child: Stack(
           children: [
-            Align(
-              alignment: Alignment.centerRight,
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Icon(
-                  Icons.close,
-                  color: primaryTextColor,
-                  size: 25,
-                ),
-              ),
+            Container(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                  color: primaryColor5,
+                  borderRadius: const BorderRadius.all(Radius.circular(16)),
+                  border: Border.all(width: 6, color: primaryColor2)),
+              child: child,
             ),
             Container(
-              height: 5,
-              decoration: BoxDecoration(
-                  color: theme.dividerColor,
-                  borderRadius: BorderRadius.all(Radius.circular(2.5))),
-            )
+                alignment: Alignment.topRight,
+                child: CircleBounceButton(
+                  color: redColor,
+                  borderColor: redColor2,
+                  shadowColor: redColor3,
+                  onClick: () {
+                    Navigator.pop(context);
+                  },
+                  paddingHorizontalButton: 1,
+                  paddingVerticalButton: 1,
+                  heightButton: 45,
+                  widthButton: 45,
+                  child: Icon(Icons.close, color: whiteColor, size: 25),
+                )),
           ],
         ),
-      );
-    }
-
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 16, horizontal: 0),
-      padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-          color: theme.cardColor,
-          borderRadius: BorderRadius.all(Radius.circular(16))),
-      child: SingleChildScrollView(
-          child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [_buildHandle(context), child],
-      )),
+      ),
     );
   }
 }

@@ -22,27 +22,50 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "about": MessageLookupByLibrary.simpleMessage("Tentang Aplikasi"),
+        "about_cite": MessageLookupByLibrary.simpleMessage(
+            "Acak Kata adalah sebuah permainan mobile untuk mengasah keterampilan dalam penguasaan kosakata dalam berbagai bahasa, yaitu Bahasa Bali, Bahasa Jawa, Bahasa Indonesia dan Bahasa Inggris"),
         "answer": MessageLookupByLibrary.simpleMessage("Jawaban"),
         "back": MessageLookupByLibrary.simpleMessage("Kembali"),
-        "back_to_menu": MessageLookupByLibrary.simpleMessage("KEMBALI KE MENU"),
+        "back_to_menu": MessageLookupByLibrary.simpleMessage("Kembali ke Menu"),
         "challenge": MessageLookupByLibrary.simpleMessage("Tantang \n Teman"),
         "code": MessageLookupByLibrary.simpleMessage("id"),
+        "contact_us": MessageLookupByLibrary.simpleMessage(
+            "Kritik dan saran silahkan kontak kami : baliintegratedsolution"),
+        "create_room_match":
+            MessageLookupByLibrary.simpleMessage("Buat Room Match"),
         "custom_level": MessageLookupByLibrary.simpleMessage("Kustom Level"),
         "delete": MessageLookupByLibrary.simpleMessage("Hapus"),
+        "ending_time":
+            MessageLookupByLibrary.simpleMessage("Waktu akhir permainan"),
         "exit": MessageLookupByLibrary.simpleMessage("Keluar"),
         "exit_game":
             MessageLookupByLibrary.simpleMessage("Ingin keluar permainan ?"),
         "exit_game_menu":
             MessageLookupByLibrary.simpleMessage("Ingin keluar permainan ?"),
-        "exit_game_no":
-            MessageLookupByLibrary.simpleMessage("Tidak, ingin lanjut"),
+        "exit_game_no": MessageLookupByLibrary.simpleMessage("Tidak"),
         "exit_game_yes":
             MessageLookupByLibrary.simpleMessage("Ya, ingin keluar"),
+        "exit_room":
+            MessageLookupByLibrary.simpleMessage("Keluar dari Ruang Permainan"),
+        "failed_find_room":
+            MessageLookupByLibrary.simpleMessage("Gagal mencari ruangan"),
         "false_string": MessageLookupByLibrary.simpleMessage("Salah"),
+        "find_room": MessageLookupByLibrary.simpleMessage("Cari Ruang"),
+        "find_word": MessageLookupByLibrary.simpleMessage("Kamus"),
+        "join_room": MessageLookupByLibrary.simpleMessage("Gabung Permainan"),
+        "join_room_text":
+            MessageLookupByLibrary.simpleMessage("Masukan kode ruang"),
         "letter": MessageLookupByLibrary.simpleMessage("Huruf"),
         "listLanguage": MessageLookupByLibrary.simpleMessage(
             "Pilih Bahasa untuk Permainan"),
+        "login_first":
+            MessageLookupByLibrary.simpleMessage("Login terlebih dahulu !"),
+        "max_player": MessageLookupByLibrary.simpleMessage("Jumlah pemain"),
+        "min_char_three":
+            MessageLookupByLibrary.simpleMessage("Minimal 3 karakter"),
         "multi_player": MessageLookupByLibrary.simpleMessage("Pemain Ganda"),
+        "music": MessageLookupByLibrary.simpleMessage("Musik"),
         "next": MessageLookupByLibrary.simpleMessage("Selanjutnya"),
         "of_string": MessageLookupByLibrary.simpleMessage("dari"),
         "play": MessageLookupByLibrary.simpleMessage("Main"),
@@ -52,7 +75,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "question_number":
             MessageLookupByLibrary.simpleMessage("Isi Jumlah Soal !"),
         "question_number_error_max":
-            MessageLookupByLibrary.simpleMessage("Minimal 25 soal !"),
+            MessageLookupByLibrary.simpleMessage("Minimal 15 soal !"),
         "question_number_error_min":
             MessageLookupByLibrary.simpleMessage("Minimal lima soal !"),
         "question_time":
@@ -61,18 +84,38 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Maximal waktu 30 detik !"),
         "question_time_error_min":
             MessageLookupByLibrary.simpleMessage("Minimal waktu 7 detik !"),
+        "receive_setting": MessageLookupByLibrary.simpleMessage(
+            "Berhasil menerima pengaturan"),
+        "receive_status_player": MessageLookupByLibrary.simpleMessage(
+            "Menerima status dari pemain lain"),
         "reset": MessageLookupByLibrary.simpleMessage("Reset"),
         "save_setting":
             MessageLookupByLibrary.simpleMessage("Simpan Pengaturan"),
         "second": MessageLookupByLibrary.simpleMessage("Detik"),
         "second_question":
-            MessageLookupByLibrary.simpleMessage("Detik / \n Soal"),
+            MessageLookupByLibrary.simpleMessage("Detik per Soal"),
+        "see_answers": MessageLookupByLibrary.simpleMessage("Lihat Jawaban"),
         "setting": MessageLookupByLibrary.simpleMessage("Pengaturan"),
         "single_player": MessageLookupByLibrary.simpleMessage("Pemain Tunggal"),
+        "start_game":
+            MessageLookupByLibrary.simpleMessage("Permainan Segera Dimulai"),
+        "success_find_room":
+            MessageLookupByLibrary.simpleMessage("Berhasil menemukan ruangan"),
+        "successfuly_create_room": MessageLookupByLibrary.simpleMessage(
+            "Berhasil membuat ruang permainan"),
         "time": MessageLookupByLibrary.simpleMessage("Waktu"),
         "true_string": MessageLookupByLibrary.simpleMessage("Benar"),
+        "tutorial": MessageLookupByLibrary.simpleMessage("Tutorial"),
+        "valid_email":
+            MessageLookupByLibrary.simpleMessage("Format email tidak sesuai"),
+        "valid_pass": MessageLookupByLibrary.simpleMessage(
+            "Min 3 karakter, satu huruf dan satu angka"),
+        "valid_username":
+            MessageLookupByLibrary.simpleMessage("Masukan username yang valid"),
+        "waiting_host": MessageLookupByLibrary.simpleMessage("Menunggu host"),
         "welcome": MessageLookupByLibrary.simpleMessage("Hi Welcome"),
-        "word_length": MessageLookupByLibrary.simpleMessage("Panjang Kata"),
+        "word_length":
+            MessageLookupByLibrary.simpleMessage("Panjang Kata(huruf)"),
         "word_length_form":
             MessageLookupByLibrary.simpleMessage("Isi panjang kata !"),
         "word_length_form_error_max":

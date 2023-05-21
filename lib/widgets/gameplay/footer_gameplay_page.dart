@@ -12,7 +12,7 @@ class FooterGamePlayPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(15),
+      padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(color: backgroundColor1),
       child: Center(
         child: Row(
@@ -20,27 +20,27 @@ class FooterGamePlayPage extends StatelessWidget {
             Flexible(
                 child: Container(
               alignment: Alignment.centerLeft,
-              padding: EdgeInsets.all(2),
+              padding: const EdgeInsets.all(2),
               child: Container(
-                  padding: EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                       color: blackColor,
                       borderRadius: BorderRadius.circular(5)),
                   child: Text(
-                    "${scoreCount}",
+                    "$scoreCount",
                     style:
                         whiteTextStyle.copyWith(fontSize: 20, fontWeight: bold),
                   )),
             )),
-            SizedBox(
+            const SizedBox(
               width: 20,
             ),
             Flexible(
                 child: Container(
-              margin: EdgeInsets.all(5),
+              margin: const EdgeInsets.all(5),
               alignment: Alignment.centerRight,
               child: Text(
-                "${stage}",
+                stage,
                 style: blackTextStyle.copyWith(fontSize: 20, fontWeight: bold),
               ),
             ))

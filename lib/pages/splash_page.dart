@@ -1,12 +1,9 @@
 import 'dart:async';
-import 'dart:io';
-import 'package:acakkata/generated/l10n.dart';
 import 'package:acakkata/models/user_model.dart';
 import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/providers/change_language_provider.dart';
 import 'package:acakkata/providers/language_db_provider.dart';
 import 'package:acakkata/providers/language_provider.dart';
-import 'package:acakkata/service/socket_service.dart';
 import 'package:acakkata/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
@@ -25,18 +22,18 @@ class _SplashPageState extends State<SplashPage> {
     printer: PrettyPrinter(methodCount: 0),
   );
 
-  double _width = 80;
-  double _height = 60;
+  double _width = 120;
+  double _height = 90;
 
   @override
   void initState() {
     // TODO: implement initState
     getInit();
     super.initState();
-    Timer(Duration(milliseconds: 500), () {
+    Timer(const Duration(milliseconds: 500), () {
       setState(() {
-        _width = 200;
-        _height = 170;
+        _width = 280;
+        _height = 210;
       });
     });
     // Timer(Duration(seconds: 3), () => Navigator.pushNamed(context, '/home'));
@@ -84,7 +81,7 @@ class _SplashPageState extends State<SplashPage> {
 
       await langProvider.getLanguage();
       await langProvider.getRangeText();
-      Timer(Duration(milliseconds: 1500), () {
+      Timer(const Duration(milliseconds: 1500), () {
         Navigator.pushNamed(context, '/home');
         // Navigator.push(context, CustomPageRoute(ExamplePage()));
       });
@@ -99,20 +96,20 @@ class _SplashPageState extends State<SplashPage> {
       backgroundColor: backgroundColor2,
       body: Stack(children: [
         Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
               image: DecorationImage(
-                  image: AssetImage("assets/images/background_512w.png"),
-                  fit: BoxFit.cover)),
+                  image: AssetImage("assets/images/background.png"),
+                  repeat: ImageRepeat.repeat)),
         ),
         Center(
           child: AnimatedContainer(
-            duration: Duration(milliseconds: 1000),
+            duration: const Duration(milliseconds: 1000),
             curve: Curves.elasticInOut,
             width: _width,
             height: _height,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
                 image: DecorationImage(
-                    image: AssetImage('assets/images/logo_putih.png'))),
+                    image: AssetImage('assets/images/logo_baru_no.png'))),
           ),
         )
       ]),

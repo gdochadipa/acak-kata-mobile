@@ -280,10 +280,10 @@ class S {
     );
   }
 
-  /// `Second / \n ques`
+  /// `Second per ques`
   String get second_question {
     return Intl.message(
-      'Second / \n ques',
+      'Second per ques',
       name: 'second_question',
       desc: '',
       args: [],
@@ -310,10 +310,10 @@ class S {
     );
   }
 
-  /// `Word Length`
+  /// `Word Length(letter)`
   String get word_length {
     return Intl.message(
-      'Word Length',
+      'Word Length(letter)',
       name: 'word_length',
       desc: '',
       args: [],
@@ -350,10 +350,10 @@ class S {
     );
   }
 
-  /// `Max 25 Ques !`
+  /// `Max 15 Ques !`
   String get question_number_error_max {
     return Intl.message(
-      'Max 25 Ques !',
+      'Max 15 Ques !',
       name: 'question_number_error_max',
       desc: '',
       args: [],
@@ -430,10 +430,10 @@ class S {
     );
   }
 
-  /// `BACK TO MENU`
+  /// `Back to Home`
   String get back_to_menu {
     return Intl.message(
-      'BACK TO MENU',
+      'Back to Home',
       name: 'back_to_menu',
       desc: '',
       args: [],
@@ -455,6 +455,266 @@ class S {
     return Intl.message(
       'Save Setting',
       name: 'save_setting',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `About`
+  String get about {
+    return Intl.message(
+      'About',
+      name: 'about',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Acak Kata is mobile game app for improve skill vocabulary in various language, like Balinese, Javanese, Indonesians, and English`
+  String get about_cite {
+    return Intl.message(
+      'Acak Kata is mobile game app for improve skill vocabulary in various language, like Balinese, Javanese, Indonesians, and English',
+      name: 'about_cite',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Login first !`
+  String get login_first {
+    return Intl.message(
+      'Login first !',
+      name: 'login_first',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Exit from Room`
+  String get exit_room {
+    return Intl.message(
+      'Exit from Room',
+      name: 'exit_room',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dictionary`
+  String get find_word {
+    return Intl.message(
+      'Dictionary',
+      name: 'find_word',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Join Room`
+  String get join_room {
+    return Intl.message(
+      'Join Room',
+      name: 'join_room',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Music`
+  String get music {
+    return Intl.message(
+      'Music',
+      name: 'music',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Input Room Code`
+  String get join_room_text {
+    return Intl.message(
+      'Input Room Code',
+      name: 'join_room_text',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Success Find Room`
+  String get success_find_room {
+    return Intl.message(
+      'Success Find Room',
+      name: 'success_find_room',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Find Room`
+  String get find_room {
+    return Intl.message(
+      'Find Room',
+      name: 'find_room',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Failed find a room`
+  String get failed_find_room {
+    return Intl.message(
+      'Failed find a room',
+      name: 'failed_find_room',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Starting game`
+  String get start_game {
+    return Intl.message(
+      'Starting game',
+      name: 'start_game',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Successfully receive settings`
+  String get receive_setting {
+    return Intl.message(
+      'Successfully receive settings',
+      name: 'receive_setting',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Successfully Receive player status`
+  String get receive_status_player {
+    return Intl.message(
+      'Successfully Receive player status',
+      name: 'receive_status_player',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Waiting Host`
+  String get waiting_host {
+    return Intl.message(
+      'Waiting Host',
+      name: 'waiting_host',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Criticism and suggestions please contact us : baliintegratedsolution`
+  String get contact_us {
+    return Intl.message(
+      'Criticism and suggestions please contact us : baliintegratedsolution',
+      name: 'contact_us',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Maximum player`
+  String get max_player {
+    return Intl.message(
+      'Maximum player',
+      name: 'max_player',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `End Time Game`
+  String get ending_time {
+    return Intl.message(
+      'End Time Game',
+      name: 'ending_time',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create Room Match`
+  String get create_room_match {
+    return Intl.message(
+      'Create Room Match',
+      name: 'create_room_match',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Successfully create room match`
+  String get successfuly_create_room {
+    return Intl.message(
+      'Successfully create room match',
+      name: 'successfuly_create_room',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `See the Answers`
+  String get see_answers {
+    return Intl.message(
+      'See the Answers',
+      name: 'see_answers',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Username Invalid`
+  String get valid_username {
+    return Intl.message(
+      'Username Invalid',
+      name: 'valid_username',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Min 3 characters`
+  String get min_char_three {
+    return Intl.message(
+      'Min 3 characters',
+      name: 'min_char_three',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Min 3 characters, one letter and one number`
+  String get valid_pass {
+    return Intl.message(
+      'Min 3 characters, one letter and one number',
+      name: 'valid_pass',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invalid email format`
+  String get valid_email {
+    return Intl.message(
+      'Invalid email format',
+      name: 'valid_email',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tutorial`
+  String get tutorial {
+    return Intl.message(
+      'Tutorial',
+      name: 'tutorial',
       desc: '',
       args: [],
     );

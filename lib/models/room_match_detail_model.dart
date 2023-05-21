@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:acakkata/models/user_model.dart';
 
 class RoomMatchDetailModel {
@@ -23,6 +21,7 @@ class RoomMatchDetailModel {
   ///
   int? status_player;
   UserModel? player;
+  int? rank_player;
 
   RoomMatchDetailModel(this.id, this.player_id, this.is_host, this.score,
       this.is_ready, this.status_player, this.player);
@@ -35,6 +34,7 @@ class RoomMatchDetailModel {
     is_ready = json['is_ready'];
     status_player = json['status_player'];
     player_id = json['player_id'];
+    rank_player = json['rank_player'];
     player = json['player'].isEmpty
         ? UninitializedUserModel()
         : UserModel.fromJson(json['player']);
@@ -48,7 +48,8 @@ class RoomMatchDetailModel {
       'player': player!.toJson(),
       'is_host': is_host,
       'is_ready': is_ready,
-      'status_player': status_player
+      'status_player': status_player,
+      'rank_player': rank_player
     };
   }
 }

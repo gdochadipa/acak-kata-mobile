@@ -1,11 +1,9 @@
 import 'package:acakkata/theme.dart';
 import 'package:flutter/material.dart';
-/**
- * 
- * Rencananya buat btn raised pake container sama gesture detector
- * gestur detector 
- * 
- */
+/// 
+/// Rencananya buat btn raised pake container sama gesture detector
+/// gestur detector 
+/// 
 
 class BtnRaised extends StatefulWidget {
   final VoidCallback onClick;
@@ -26,7 +24,7 @@ class _BtnRaisedState extends State<BtnRaised>
     // TODO: implement initState
     super.initState();
     _animationController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+        AnimationController(vsync: this, duration: const Duration(milliseconds: 500));
     sizeAnimation =
         Tween<double>(begin: 100.0, end: 105).animate(_animationController);
   }
@@ -36,7 +34,7 @@ class _BtnRaisedState extends State<BtnRaised>
     return Container(
       height: 50,
       width: double.infinity,
-      margin: EdgeInsets.only(top: 30),
+      margin: const EdgeInsets.only(top: 30),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           color: backgroundColor2,
@@ -45,7 +43,7 @@ class _BtnRaisedState extends State<BtnRaised>
                 color: shadowBackgroundColor2,
                 spreadRadius: 0,
                 blurRadius: 0,
-                offset: Offset(0, 4),
+                offset: const Offset(0, 4),
                 blurStyle: BlurStyle.solid)
           ]),
       child: Center(
@@ -53,7 +51,7 @@ class _BtnRaisedState extends State<BtnRaised>
           onTap: () {
             widget.onClick();
           },
-          child: Text(
+          child: const Text(
             'Create Account',
             textAlign: TextAlign.left,
             style: TextStyle(

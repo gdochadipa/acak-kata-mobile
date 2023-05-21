@@ -1,11 +1,15 @@
+import 'dart:developer';
+
 import 'package:acakkata/generated/l10n.dart';
 import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/models/level_model.dart';
 import 'package:acakkata/pages/in_game/waiting_online_room_page.dart';
+import 'package:acakkata/pages/level/level_list_page.dart';
 import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/providers/room_provider.dart';
 import 'package:acakkata/service/socket_service.dart';
 import 'package:acakkata/theme.dart';
+import 'package:acakkata/widgets/button/button_bounce.dart';
 import 'package:acakkata/widgets/clicky_button.dart';
 import 'package:acakkata/widgets/custom_page_route.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
@@ -13,9 +17,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PrepareOnlineGamePlay extends StatefulWidget {
-  late final LanguageModel? languageModel;
+  final LanguageModel languageModel;
   late final int? selectedQuestion;
   late final int? selectedTime;
   late final int? levelWords;
@@ -26,7 +31,7 @@ class PrepareOnlineGamePlay extends StatefulWidget {
   late final bool? isCustom;
   PrepareOnlineGamePlay(
       {Key? key,
-      this.languageModel,
+      required this.languageModel,
       this.selectedQuestion,
       this.selectedTime,
       this.isHost,
@@ -44,7 +49,8 @@ class PrepareOnlineGamePlay extends StatefulWidget {
 class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
   TextEditingController room_code = TextEditingController(text: '');
   TextEditingController gameTime = TextEditingController(text: '');
-  SocketService socketService = SocketService();
+  // SocketService socketService = SocketService();
+  Future<SharedPreferences> prefs = SharedPreferences.getInstance();
   bool? isLoading = false;
 
   late RoomProvider roomProvider =
@@ -60,17 +66,17 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
   }
 
   connectSocket() async {
-    await socketService.fireSocket();
+    // await socketService.fireSocket();
   }
 
   disconnectSocket() async {
-    await socketService.disconnect();
+    // await socketService.disconnect();
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
-    disconnectSocket();
+    // disconnectSocket();
     super.dispose();
   }
 
@@ -87,38 +93,68 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
 
     AppBar header() {
       return AppBar(
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: primaryColor,
+        leading: GestureDetector(
+          child: SizedBox(
+            child: Image.asset(
+              'assets/images/arrow.png',
+              width: 5,
+              height: 5,
+            ),
           ),
-          onPressed: () {
-            // Navigator.pop(context);
-            Navigator.pushNamedAndRemoveUntil(
-                context, '/home', (route) => false);
+          onTap: () {
+            // Navigator.pushNamedAndRemoveUntil(
+            //     context, '/home', (route) => false);
+            Navigator.pushAndRemoveUntil(
+                context,
+                CustomPageRoute(
+                  LevelListPage(
+                    isOnline: false,
+                    languageModel: widget.languageModel,
+                  ),
+                ),
+                (route) => false);
           },
         ),
-        backgroundColor: backgroundColor1,
+        backgroundColor: transparentColor,
         elevation: 0,
         centerTitle: true,
-        title: Column(
+        title: Row(
           children: [
-            SizedBox(
+            Container(
+                padding: const EdgeInsets.all(8),
+                child: Center(
+                  child: Image.asset(
+                    'assets/images/${widget.languageModel.language_icon}',
+                    width: 30,
+                    height: 30,
+                  ),
+                )),
+            const SizedBox(
               height: 8,
             ),
-            Text(
-              (setLanguage.code == 'en'
-                  ? '${widget.languageModel!.language_name_en}'
-                  : '${widget.languageModel!.language_name_id}'),
-              style: headerText2.copyWith(
-                  fontWeight: extraBold, fontSize: 20, color: primaryTextColor),
-            ),
-            Text(
-              widget.isOnline == true
-                  ? '${setLanguage.multi_player}'
-                  : '${setLanguage.single_player}',
-              style:
-                  primaryTextStyle.copyWith(fontSize: 14, fontWeight: medium),
+            Column(
+              children: [
+                Center(
+                  child: Text(
+                    (setLanguage.code == 'en'
+                        ? '${widget.languageModel.language_name_en}'
+                        : '${widget.languageModel.language_name_id}'),
+                    style: whiteTextStyle.copyWith(
+                      fontWeight: extraBold,
+                      fontSize: 22,
+                    ),
+                  ),
+                ),
+                Center(
+                  child: Text(
+                    widget.isOnline == true
+                        ? setLanguage.multi_player
+                        : setLanguage.single_player,
+                    style: whiteTextStyle.copyWith(
+                        fontSize: 14, fontWeight: medium),
+                  ),
+                )
+              ],
             )
           ],
         ),
@@ -132,20 +168,27 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
 
       try {
         if (await roomProvider.createRoom(
-            language_code: widget.languageModel!.language_code,
+            language_code: widget.languageModel.language_code,
             max_player: int.parse(countPlayer.text),
             time_watch: widget.selectedTime,
             total_question: widget.selectedQuestion,
-            datetime_match: DateFormat('yyyy-MM-dd hh:mm').parse(dateTime.text),
+            datetime_match: DateFormat('yyyy-MM-dd hh:mm')
+                .parseUTC(dateTime.text)
+                .toLocal(),
             level: widget.levelModel!.id,
             length_word: widget.levelWords)) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(
-              "Berhasil membuat Room",
+              setLanguage.successfuly_create_room,
               textAlign: TextAlign.center,
             ),
             backgroundColor: successColor,
           ));
+
+          prefs.then((pref) {
+            pref.setString("last_channel_code",
+                roomProvider.roomMatch!.channel_code ?? '');
+          });
 
           Navigator.push(
               context,
@@ -167,35 +210,37 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
       }
     }
 
-    Widget ButtonCreateRoom() {
+    Widget buttonCreateRoom() {
       return Container(
         width: double.infinity,
-        margin: EdgeInsets.only(top: 20),
+        margin: const EdgeInsets.only(top: 20),
         alignment: Alignment.center,
-        child: ClickyButton(
-            color: whitePurpleColor,
-            shadowColor: whiteAccentPurpleColor,
-            margin: EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
-            width: 245,
-            height: 60,
-            child: Wrap(
-              children: [
-                Text(
-                  'Buat Room Match',
-                  style:
-                      primaryTextStyle.copyWith(fontSize: 14, fontWeight: bold),
-                ),
-                SizedBox(
-                  width: 5,
-                ),
-                Image.asset(
-                  'assets/images/arrow_blue.png',
-                  height: 25,
-                  width: 25,
-                )
-              ],
+        child: ButtonBounce(
+            color: whiteColor,
+            borderColor: whiteColor2,
+            shadowColor: whiteColor3,
+            widthButton: 245,
+            heightButton: 50,
+            child: Center(
+              child: Wrap(
+                children: [
+                  Text(
+                    setLanguage.create_room_match,
+                    style: primaryTextStyle.copyWith(
+                        fontSize: 14, fontWeight: bold),
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  Image.asset(
+                    'assets/images/arrow_blue.png',
+                    height: 25,
+                    width: 25,
+                  )
+                ],
+              ),
             ),
-            onPressed: () {
+            onClick: () {
               final isValid = _form.currentState!.validate();
               if (!isValid) {
                 return;
@@ -206,19 +251,19 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
       );
     }
 
-    Widget DateTimePlay() {
+    Widget dateTimePlay() {
       final format = DateFormat("yyyy-MM-dd HH:mm");
       return Container(
-        height: 80,
-        padding: EdgeInsets.symmetric(horizontal: 16),
+        height: 40,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         decoration: BoxDecoration(
-            color: backgroundColor9, borderRadius: BorderRadius.circular(5)),
+            color: whiteColor, borderRadius: BorderRadius.circular(15)),
         child: Center(
           child: Row(
             children: [
               Expanded(
                   child: DateTimeField(
-                style: whiteTextStyle.copyWith(fontSize: 14),
+                style: primaryTextStyle.copyWith(fontSize: 14),
                 format: format,
                 initialValue: valueDateTime,
                 controller: dateTime,
@@ -243,9 +288,10 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
                   if (dateTime.text == '') {
                     return "Waktu belum diisi";
                   }
+                  return null;
                 },
                 decoration: InputDecoration.collapsed(
-                    hintText: 'Waktu Mulai Permainan',
+                    hintText: setLanguage.ending_time,
                     hintStyle: whiteTextStyle.copyWith(fontSize: 12)),
               )),
             ],
@@ -258,34 +304,34 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
       return SingleChildScrollView(
         child: Container(
           margin: const EdgeInsets.symmetric(vertical: 16, horizontal: 10),
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           child: Form(
             key: _form,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Jumlah Pemain',
+                  setLanguage.max_player,
                   textAlign: TextAlign.left,
                   style: whiteTextStyle.copyWith(
                       fontSize: 17, fontWeight: semiBold),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 5,
                 ),
                 Container(
-                  height: 50,
-                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  height: 40,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
                   decoration: BoxDecoration(
-                      color: backgroundColor9,
-                      borderRadius: BorderRadius.circular(5)),
+                      color: whiteColor,
+                      borderRadius: BorderRadius.circular(10)),
                   child: Center(
                     child: Row(
                       children: [
                         Expanded(
                             child: TextFormField(
-                          style: whiteTextStyle.copyWith(fontSize: 14),
-                          keyboardType: TextInputType.numberWithOptions(
+                          style: primaryTextStyle.copyWith(fontSize: 14),
+                          keyboardType: const TextInputType.numberWithOptions(
                               decimal: false, signed: false),
                           controller: countPlayer,
                           validator: (text) {
@@ -297,34 +343,38 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
                               return "Minimal 2 pemain";
                             }
 
-                            if (int.parse(text) > 5) {
-                              return "Maksimal 5 pemain";
+                            if (int.parse(text) > 40) {
+                              return "Maksimal 40 pemain";
                             }
 
                             return null;
                           },
                           decoration: InputDecoration.collapsed(
-                              hintText: 'Jumlah Pemain',
-                              hintStyle: whiteTextStyle.copyWith(fontSize: 12)),
+                              hintText: setLanguage.max_player,
+                              hintStyle:
+                                  subtitleTextStyle.copyWith(fontSize: 12)),
                         ))
                       ],
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 15,
                 ),
                 Text(
-                  'Waktu Mulai Permainan',
+                  setLanguage.ending_time,
                   textAlign: TextAlign.left,
                   style: whiteTextStyle.copyWith(
                       fontSize: 17, fontWeight: semiBold),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 5,
                 ),
-                DateTimePlay(),
-                ButtonCreateRoom()
+                dateTimePlay(),
+                const SizedBox(
+                  height: 5,
+                ),
+                buttonCreateRoom()
               ],
             ),
           ),
@@ -338,23 +388,14 @@ class _PrepareOnlineGamePlayState extends State<PrepareOnlineGamePlay> {
           body: SafeArea(
             child: Stack(
               children: [
-                Container(
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage("assets/images/background_512w.png"),
-                        fit: BoxFit.cover),
-                  ),
-                ),
-                Container(
-                  child: Align(
-                    alignment: Alignment.topCenter,
-                    child: body(),
-                  ),
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: body(),
                 ),
               ],
             ),
           ),
-          backgroundColor: backgroundColor2,
+          backgroundColor: primaryColor5,
         ),
         onWillPop: () async => false);
   }

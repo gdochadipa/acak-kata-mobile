@@ -1,5 +1,4 @@
 import 'package:acakkata/models/language_model.dart';
-import 'package:acakkata/theme.dart';
 import 'package:flutter/material.dart';
 
 class HeaderBar extends StatelessWidget {
@@ -7,7 +6,7 @@ class HeaderBar extends StatelessWidget {
   final Color backgroundColor;
   final TextStyle textStyle;
   final Color iconColor;
-  HeaderBar(
+  const HeaderBar(
       this.language, this.backgroundColor, this.textStyle, this.iconColor);
   // const HeaderBar({ Key? key }) : super(key: key);
 
@@ -30,7 +29,7 @@ class HeaderBar extends StatelessWidget {
         '${language.language_name}',
         style: textStyle,
       ),
-      actions: [],
+      actions: const [],
     );
   }
 }

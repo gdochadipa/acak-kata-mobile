@@ -4,15 +4,22 @@ import 'package:acakkata/generated/l10n.dart';
 import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/models/level_model.dart';
 import 'package:acakkata/pages/in_game/offline_game_play_page.dart';
+import 'package:acakkata/pages/in_game/prepare_online_game_play.dart';
+import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/theme.dart';
+import 'package:acakkata/widgets/button/button_bounce.dart';
 import 'package:acakkata/widgets/clicky_button.dart';
 import 'package:acakkata/widgets/custom_page_route.dart';
 import 'package:acakkata/widgets/popover/popover_listview.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CustomMatchForm extends StatefulWidget {
-  LanguageModel? languageModel;
-  CustomMatchForm({Key? key, this.languageModel}) : super(key: key);
+  LanguageModel languageModel;
+  final bool isLogin;
+  CustomMatchForm(
+      {Key? key, required this.languageModel, required this.isLogin})
+      : super(key: key);
 
   @override
   State<CustomMatchForm> createState() => _CustomMatchFormState();
@@ -31,15 +38,17 @@ class _CustomMatchFormState extends State<CustomMatchForm> {
 
   @override
   Widget build(BuildContext context) {
+    AuthProvider? _authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
     S? setLanguage = S.of(context);
-    void _saveForm() {
+    void _saveForm() async {
       final isValid = _form.currentState!.validate();
       if (!isValid) {
         return;
       } else {
         LevelModel levelModel = LevelModel(
             id: 77,
-            level_name: "${setLanguage.custom_level}",
+            level_name: setLanguage.custom_level,
             level_words: int.parse(lengthWord.text),
             level_time: int.parse(questionTime.text),
             level_lang_code: setLanguage.code,
@@ -52,274 +61,358 @@ class _CustomMatchFormState extends State<CustomMatchForm> {
               languageModel: widget.languageModel,
               selectedQuestion: int.parse(questionNumber.text),
               selectedTime: int.parse(questionTime.text),
-              isHost: 0,
+              isHost: 1,
               levelWords: int.parse(lengthWord.text),
               isOnline: false,
-              Stage: "${setLanguage.custom_level}",
+              Stage: setLanguage.custom_level,
               levelModel: levelModel,
               isCustom: true,
             )));
       }
     }
 
-    return Container(
-      child: Dialog(
-        insetAnimationCurve: Curves.easeInOut,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-        child: SingleChildScrollView(
-          child: PopoverListView(
-            child: Form(
-              key: _form,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(left: 8, right: 8, top: 15),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("${setLanguage.custom_level}",
-                            textAlign: TextAlign.left,
-                            style: blackTextStyle.copyWith(
-                              fontSize: 24,
-                              fontWeight: bold,
-                            )),
-                        const SizedBox(
-                          height: 1.85,
-                        ),
-                        Text("${widget.languageModel!.language_name_en}",
-                            textAlign: TextAlign.left,
-                            style: blackTextStyle.copyWith(
-                              fontSize: 14,
-                              fontWeight: medium,
-                            )),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(left: 8, right: 8, top: 25),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${setLanguage.question_count}',
+    _saveFormOnline() async {
+      final isValid = _form.currentState!.validate();
+      if (!isValid) {
+        return;
+      } else {
+        if (!await _authProvider.hasNetwork()) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: const Text(
+              "Maaf masih dalam pengembangan",
+              textAlign: TextAlign.center,
+            ),
+            backgroundColor: alertColor,
+          ));
+        } else {
+          if (!widget.isLogin) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(
+                setLanguage.login_first,
+                textAlign: TextAlign.center,
+              ),
+              backgroundColor: alertColor,
+            ));
+          } else {
+            LevelModel levelModel = LevelModel(
+                id: 77,
+                level_name: setLanguage.custom_level,
+                level_words: int.parse(lengthWord.text),
+                level_time: int.parse(questionTime.text),
+                level_lang_code: setLanguage.code,
+                level_lang_id: setLanguage.code,
+                current_score: 0,
+                target_score: 0);
+
+            Navigator.push(
+                context,
+                CustomPageRoute(PrepareOnlineGamePlay(
+                  languageModel: widget.languageModel,
+                  selectedQuestion: int.parse(questionNumber.text),
+                  selectedTime: int.parse(questionTime.text),
+                  isHost: 1,
+                  levelWords: int.parse(lengthWord.text),
+                  isOnline: true,
+                  Stage: levelModel.level_name,
+                  levelModel: levelModel,
+                  isCustom: false,
+                )));
+          }
+        }
+      }
+    }
+
+    return Dialog(
+      insetAnimationCurve: Curves.easeInOut,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
+      child: SingleChildScrollView(
+        child: PopoverListView(
+          child: Form(
+            key: _form,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(left: 8, right: 8, top: 15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(setLanguage.custom_level,
                           textAlign: TextAlign.left,
-                          style: blackTextStyle.copyWith(
-                              fontSize: 17, fontWeight: semiBold),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Container(
-                          height: 50,
-                          padding: EdgeInsets.symmetric(horizontal: 16),
-                          decoration: BoxDecoration(
-                              border: Border.all(color: blackColor),
-                              color: whiteColor,
-                              borderRadius: BorderRadius.circular(5)),
-                          child: Center(
-                            child: Row(
-                              children: [
-                                Expanded(
-                                    child: TextFormField(
-                                  keyboardType: TextInputType.numberWithOptions(
-                                      decimal: false, signed: false),
-                                  controller: questionNumber,
-                                  validator: (text) {
-                                    if (text!.isEmpty) {
-                                      return "${setLanguage.question_number}";
-                                    }
-                                    if (!(double.parse(text) >= 5)) {
-                                      return "${setLanguage.question_number_error_min}";
-                                    }
-                                    if (!(double.parse(text) <= 25)) {
-                                      return "${setLanguage.question_number_error_max}";
-                                    }
-                                    return null;
-                                  },
-                                  decoration: InputDecoration.collapsed(
-                                      hintText: '${setLanguage.question_count}',
-                                      hintStyle: subtitleTextStyle),
-                                ))
-                              ],
-                            ),
+                          style: whiteTextStyle.copyWith(
+                            fontSize: 24,
+                            fontWeight: bold,
+                          )),
+                      const SizedBox(
+                        height: 1.85,
+                      ),
+                      Row(
+                        children: [
+                          Image.asset(
+                            'assets/images/${widget.languageModel.language_icon}',
+                            width: 30,
+                            height: 30,
                           ),
-                        )
-                      ],
-                    ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            (setLanguage.code == 'en'
+                                ? '${widget.languageModel.language_name_en}'
+                                : '${widget.languageModel.language_name_id}'),
+                            style: whiteTextStyle.copyWith(
+                                fontSize: 14, fontWeight: bold),
+                          )
+                        ],
+                      ),
+                    ],
                   ),
-                  Container(
-                    margin: const EdgeInsets.only(left: 8, right: 8, top: 25),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${setLanguage.word_length}',
-                          style: blackTextStyle.copyWith(
-                              fontSize: 17, fontWeight: semiBold),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Container(
-                          height: 50,
-                          padding: EdgeInsets.symmetric(horizontal: 16),
-                          decoration: BoxDecoration(
-                              border: Border.all(color: blackColor),
-                              color: whiteColor,
-                              borderRadius: BorderRadius.circular(5)),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(left: 8, right: 8, top: 25),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        setLanguage.question_count,
+                        textAlign: TextAlign.left,
+                        style: whiteTextStyle.copyWith(
+                            fontSize: 14, fontWeight: semiBold),
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Container(
+                        height: 50,
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        decoration: BoxDecoration(
+                            color: whiteColor,
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Center(
                           child: Row(
                             children: [
                               Expanded(
                                   child: TextFormField(
-                                controller: lengthWord,
-                                keyboardType: TextInputType.numberWithOptions(
-                                    decimal: false, signed: false),
+                                style: primaryTextStyle,
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                        decimal: false, signed: false),
+                                controller: questionNumber,
                                 validator: (text) {
                                   if (text!.isEmpty) {
-                                    return setLanguage.word_length_form;
+                                    return setLanguage.question_number;
                                   }
-                                  if (!(double.parse(text) >= 3)) {
-                                    return "${setLanguage.word_length_form_error_min}";
+                                  if (!(double.parse(text) >= 5)) {
+                                    return setLanguage
+                                        .question_number_error_min;
                                   }
-                                  if (!(double.parse(text) <= 10)) {
-                                    return "${setLanguage.word_length_form_error_max}";
+                                  if (!(double.parse(text) <= 25)) {
+                                    return setLanguage
+                                        .question_number_error_max;
                                   }
                                   return null;
                                 },
                                 decoration: InputDecoration.collapsed(
-                                    hintText: '${setLanguage.word_length}',
+                                    hintText: setLanguage.question_count,
                                     hintStyle: subtitleTextStyle),
                               ))
                             ],
                           ),
-                        )
-                      ],
-                    ),
+                        ),
+                      )
+                    ],
                   ),
-                  Container(
-                    margin: const EdgeInsets.only(left: 8, right: 8, top: 25),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${setLanguage.time} (${setLanguage.second})',
-                          textAlign: TextAlign.left,
-                          style: blackTextStyle.copyWith(
-                              fontSize: 17, fontWeight: semiBold),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Container(
-                          height: 50,
-                          padding: EdgeInsets.symmetric(horizontal: 16),
-                          decoration: BoxDecoration(
-                              border: Border.all(color: blackColor),
-                              color: whiteColor,
-                              borderRadius: BorderRadius.circular(5)),
-                          child: Center(
-                            child: Row(
-                              children: [
-                                Expanded(
-                                    child: TextFormField(
-                                  controller: questionTime,
-                                  keyboardType: TextInputType.numberWithOptions(
+                ),
+                Container(
+                  margin: const EdgeInsets.only(left: 8, right: 8, top: 25),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        setLanguage.word_length,
+                        style: whiteTextStyle.copyWith(
+                            fontSize: 14, fontWeight: semiBold),
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Container(
+                        height: 50,
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        decoration: BoxDecoration(
+                            color: whiteColor,
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Row(
+                          children: [
+                            Expanded(
+                                child: TextFormField(
+                              controller: lengthWord,
+                              style: primaryTextStyle,
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
                                       decimal: false, signed: false),
-                                  validator: (text) {
-                                    if (text!.isEmpty) {
-                                      return "${setLanguage.question_time}";
-                                    }
-                                    if (!(double.parse(text) >= 7)) {
-                                      return "${setLanguage.question_time_error_min}";
-                                    }
-                                    if (!(double.parse(text) <= 30)) {
-                                      return "${setLanguage.question_time_error_max}";
-                                    }
-                                    return null;
-                                  },
-                                  decoration: InputDecoration.collapsed(
-                                      hintText:
-                                          '${setLanguage.time} (${setLanguage.second})',
-                                      hintStyle: subtitleTextStyle),
-                                ))
-                              ],
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
+                              validator: (text) {
+                                if (text!.isEmpty) {
+                                  return setLanguage.word_length_form;
+                                }
+                                if (!(double.parse(text) >= 3)) {
+                                  return setLanguage.word_length_form_error_min;
+                                }
+                                if (!(double.parse(text) <= 10)) {
+                                  return setLanguage.word_length_form_error_max;
+                                }
+                                return null;
+                              },
+                              decoration: InputDecoration.collapsed(
+                                  hintText: setLanguage.word_length,
+                                  hintStyle: subtitleTextStyle),
+                            ))
+                          ],
+                        ),
+                      )
+                    ],
                   ),
-                  Container(
-                    margin: const EdgeInsets.only(left: 8, right: 8, top: 30),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Flexible(
-                            child: Container(
-                          child: ClickyButton(
+                ),
+                Container(
+                  margin: const EdgeInsets.only(left: 8, right: 8, top: 25),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${setLanguage.time} (${setLanguage.second})',
+                        textAlign: TextAlign.left,
+                        style: whiteTextStyle.copyWith(
+                            fontSize: 14, fontWeight: semiBold),
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Container(
+                        height: 50,
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        decoration: BoxDecoration(
+                            color: whiteColor,
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Center(
+                          child: Row(
+                            children: [
+                              Expanded(
+                                  child: TextFormField(
+                                controller: questionTime,
+                                style: primaryTextStyle,
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                        decimal: false, signed: false),
+                                validator: (text) {
+                                  if (text!.isEmpty) {
+                                    return setLanguage.question_time;
+                                  }
+                                  if (!(double.parse(text) >= 7)) {
+                                    return setLanguage.question_time_error_min;
+                                  }
+                                  if (!(double.parse(text) <= 30)) {
+                                    return setLanguage.question_time_error_max;
+                                  }
+                                  return null;
+                                },
+                                decoration: InputDecoration.collapsed(
+                                    hintText:
+                                        '${setLanguage.time} (${setLanguage.second})',
+                                    hintStyle: subtitleTextStyle),
+                              ))
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(left: 8, right: 8, top: 30),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Flexible(
+                          child: ButtonBounce(
                               color: greenColor,
-                              shadowColor: greenAccentColor,
-                              width: 120,
-                              height: 60,
-                              child: Wrap(
-                                children: [
-                                  Text(
-                                    '${setLanguage.play}',
-                                    style: whiteTextStyle.copyWith(
-                                        fontSize: 14, fontWeight: bold),
-                                  ),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Image.asset(
-                                    'assets/images/icon_play_white.png',
-                                    height: 25,
-                                    width: 25,
-                                  )
-                                ],
+                              borderColor: greenColor2,
+                              shadowColor: greenColor3,
+                              heightButton: 70,
+                              widthButton: 150,
+                              child: Center(
+                                child: Wrap(
+                                  children: [
+                                    Text(
+                                      setLanguage.play,
+                                      style: whiteTextStyle.copyWith(
+                                          fontSize: 14, fontWeight: bold),
+                                    ),
+                                    const SizedBox(
+                                      width: 5,
+                                    ),
+                                    Image.asset(
+                                      'assets/images/icon_play_white.png',
+                                      height: 25,
+                                      width: 25,
+                                    )
+                                  ],
+                                ),
                               ),
-                              onPressed: () {
-                                Timer(Duration(milliseconds: 500), () {
+                              onClick: () {
+                                Timer(const Duration(milliseconds: 500), () {
                                   _saveForm();
                                 });
-                              }),
-                        )),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Flexible(
-                            child: Container(
-                          child: ClickyButton(
-                              color: purpleColor,
-                              shadowColor: purpleAccentColor,
-                              width: 120,
-                              height: 60,
-                              child: Wrap(
+                              })),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Flexible(
+                          child: ButtonBounce(
+                              color: primaryColor,
+                              borderColor: primaryColor2,
+                              shadowColor: primaryColor3,
+                              heightButton: 70,
+                              widthButton: 150,
+                              child: Stack(
                                 children: [
-                                  Text(
-                                    '${setLanguage.challenge}',
-                                    style: whiteTextStyle.copyWith(
-                                        fontSize: 14, fontWeight: bold),
+                                  Container(
+                                    alignment: Alignment.centerLeft,
+                                    margin: const EdgeInsets.only(left: 10),
+                                    child: Text(
+                                      setLanguage.challenge,
+                                      style: whiteTextStyle.copyWith(
+                                          fontSize: 14, fontWeight: bold),
+                                    ),
                                   ),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Image.asset(
-                                    'assets/images/icon_group_white.png',
-                                    height: 25,
-                                    width: 25,
+                                  Container(
+                                    alignment: Alignment.centerRight,
+                                    margin: const EdgeInsets.only(right: 10),
+                                    child: Image.asset(
+                                      'assets/images/icon_group_white.png',
+                                      height: 25,
+                                      width: 25,
+                                    ),
                                   )
                                 ],
                               ),
-                              onPressed: () {}),
-                        ))
-                      ],
-                    ),
+                              onClick: () {
+                                if (!widget.isLogin) {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(SnackBar(
+                                    content: Text(
+                                      setLanguage.login_first,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    backgroundColor: alertColor,
+                                  ));
+                                } else {
+                                  _saveFormOnline();
+                                }
+                              }))
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),

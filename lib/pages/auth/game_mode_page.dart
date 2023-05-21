@@ -22,7 +22,7 @@ class _GameModePageState extends State<GameModePage> {
         child: Container(
           width: 130,
           height: 150,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
               image: DecorationImage(
                   image: AssetImage('assets/images/icon_game.jpg'))),
         ),

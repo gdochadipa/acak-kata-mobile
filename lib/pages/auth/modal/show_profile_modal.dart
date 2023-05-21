@@ -1,10 +1,12 @@
 import 'package:acakkata/generated/l10n.dart';
 import 'package:acakkata/models/user_model.dart';
+import 'package:acakkata/providers/auth_provider.dart';
 import 'package:acakkata/theme.dart';
+import 'package:acakkata/widgets/button/button_bounce.dart';
 import 'package:acakkata/widgets/clicky_button.dart';
 import 'package:acakkata/widgets/popover/popover_listview.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
 
 class ShowProfileModal extends StatefulWidget {
   final UserModel? userModel;
@@ -15,98 +17,142 @@ class ShowProfileModal extends StatefulWidget {
 }
 
 class _ShowProfileModalState extends State<ShowProfileModal> {
-  init() async {}
-
   @override
   void initState() {
     // TODO: implement initState
-    init();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     S? setLanguage = S.of(context);
-    return Container(
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+
+    handleLogOut() async {
+      try {
+        if (await authProvider.logout()) {
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            '/home',
+            (route) => false,
+          );
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+            e.toString().replaceAll('Exception:', ''),
+            textAlign: TextAlign.center,
+          ),
+          backgroundColor: alertColor,
+        ));
+      }
+    }
+
+    return SizedBox(
       width: MediaQuery.of(context).size.width,
       child: Dialog(
         insetAnimationCurve: Curves.easeInOut,
+        backgroundColor: Colors.transparent,
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-        child: PopoverListView(
-          child: Container(
-            padding: EdgeInsets.all(10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  margin: EdgeInsets.only(bottom: 10),
-                  height: 100,
-                  width: 100,
-                  decoration:
-                      BoxDecoration(color: grayColor2, shape: BoxShape.circle),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 20, left: 5, right: 5),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Player ID",
-                          style: blackTextStyle.copyWith(
-                              fontSize: 13, fontWeight: semiBold)),
-                      Text("#${widget.userModel!.userCode}",
-                          style: blackTextStyle.copyWith(
-                              fontSize: 20, fontWeight: bold))
-                    ],
+        child: Container(
+          height: 500,
+          alignment: Alignment.center,
+          child: PopoverListView(
+            child: Container(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Container(
+                  //   margin: const EdgeInsets.only(bottom: 10),
+                  //   height: 100,
+                  //   width: 100,
+                  //   decoration: BoxDecoration(
+                  //       color: grayColor2, shape: BoxShape.circle),
+                  // ),
+                  Container(
+                    margin: const EdgeInsets.only(top: 20, left: 5, right: 5),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Player ID",
+                            style: whiteTextStyle.copyWith(
+                                fontSize: 13, fontWeight: semiBold)),
+                        Text("#${widget.userModel!.userCode}",
+                            style: whiteTextStyle.copyWith(
+                                fontSize: 20, fontWeight: bold))
+                      ],
+                    ),
                   ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 20, left: 5, right: 5),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Username",
-                          style: blackTextStyle.copyWith(
-                              fontSize: 13, fontWeight: semiBold)),
-                      Text("${widget.userModel!.username}",
-                          style: blackTextStyle.copyWith(
-                              fontSize: 20, fontWeight: bold))
-                    ],
+                  Container(
+                    margin: const EdgeInsets.only(top: 20, left: 5, right: 5),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Username",
+                            style: whiteTextStyle.copyWith(
+                                fontSize: 13, fontWeight: semiBold)),
+                        Text("${widget.userModel!.username}",
+                            style: whiteTextStyle.copyWith(
+                                fontSize: 20, fontWeight: bold))
+                      ],
+                    ),
                   ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 20, left: 5, right: 5),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Player E-mail",
-                          style: blackTextStyle.copyWith(
-                              fontSize: 13, fontWeight: semiBold)),
-                      Text("${widget.userModel!.email}",
-                          style: blackTextStyle.copyWith(
-                              fontSize: 20, fontWeight: bold))
-                    ],
+                  Container(
+                    margin: const EdgeInsets.only(top: 20, left: 5, right: 5),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Player E-mail",
+                            style: whiteTextStyle.copyWith(
+                                fontSize: 13, fontWeight: semiBold)),
+                        Text("${widget.userModel!.email}",
+                            style: whiteTextStyle.copyWith(
+                                fontSize: 20, fontWeight: bold))
+                      ],
+                    ),
                   ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 20, left: 5, right: 5),
-                  child: ClickyButton(
-                      color: purpleColor,
-                      shadowColor: purpleAccentColor,
-                      width: 210,
-                      height: 60,
-                      child: Wrap(
-                        children: [
-                          Text(
+                  Container(
+                    margin: const EdgeInsets.only(top: 20, left: 5, right: 5),
+                    child: ButtonBounce(
+                        color: primaryColor,
+                        borderColor: primaryColor2,
+                        shadowColor: primaryColor3,
+                        widthButton: 210,
+                        heightButton: 50,
+                        child: Center(
+                          child: Text(
                             'Edit Profile',
                             style: whiteTextStyle.copyWith(
                                 fontSize: 14, fontWeight: bold),
                           ),
-                        ],
-                      ),
-                      onPressed: () {}),
-                )
-              ],
+                        ),
+                        onClick: () {
+                          Navigator.pushNamed(context, '/update-profile');
+                        }),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(top: 20, left: 5, right: 5),
+                    child: ButtonBounce(
+                        color: redColor,
+                        borderColor: redColor2,
+                        shadowColor: redColor3,
+                        widthButton: 210,
+                        heightButton: 50,
+                        child: Center(
+                          child: Text(
+                            'Log Out',
+                            style: whiteTextStyle.copyWith(
+                                fontSize: 14, fontWeight: bold),
+                          ),
+                        ),
+                        onClick: () {
+                          handleLogOut();
+                        }),
+                  )
+                ],
+              ),
             ),
           ),
         ),

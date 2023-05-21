@@ -18,7 +18,7 @@ class ListItemPopOver extends StatelessWidget {
     return GestureDetector(
       onTap: onClick,
       child: Container(
-        padding: EdgeInsets.symmetric(
+        padding: const EdgeInsets.symmetric(
           horizontal: 24.0,
           vertical: 16.0,
         ),
@@ -44,7 +44,7 @@ class ListItemPopOver extends StatelessWidget {
                     blackTextStyle.copyWith(fontWeight: regular, fontSize: 16),
               ),
             ),
-            Spacer()
+            const Spacer()
           ],
         ),
       ),

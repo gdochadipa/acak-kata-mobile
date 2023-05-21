@@ -1,21 +1,38 @@
+import 'dart:async';
+import 'dart:math';
+
 import 'package:acakkata/callbacks/checking_word_callback.dart';
+import 'package:acakkata/controller/audio/sound.dart';
+import 'package:acakkata/controller/audio_controller.dart';
+import 'package:acakkata/models/coordinate.dart';
 import 'package:acakkata/theme.dart';
-import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class InputAnswerButton extends StatefulWidget {
   // const InputAnswerButton({
   //   Key? key,
   // }) : super(key: key);
 
-  late String letter;
-  late bool isBtnSelected;
-  late CheckingLetterCallback onSelectButtonLetter;
+  final String letter;
+  final bool isBtnSelected;
+  final CheckingLetterCallback onSelectButtonLetter;
+  final Color color;
+  final Color borderColor;
+  final Color shadowColor;
+  final Coordinate coordinate;
+
   // InputAnswerButton(this.letter, this.onSelectButtonLetter);
   InputAnswerButton(
-      {required String this.letter,
-      required bool this.isBtnSelected,
-      required CheckingLetterCallback this.onSelectButtonLetter});
+      {Key? key,
+      required this.color,
+      required this.borderColor,
+      required this.shadowColor,
+      required this.letter,
+      required this.isBtnSelected,
+      required this.onSelectButtonLetter,
+      required this.coordinate})
+      : super(key: key);
 
   @override
   State<InputAnswerButton> createState() => _InputAnswerButtonState();
@@ -27,14 +44,26 @@ class _InputAnswerButtonState extends State<InputAnswerButton>
   late AnimationController _animationController;
   late Animation _animation;
 
+  double _padding = 6;
+  double _reversePadding = 0;
+  double _moveTop = 0;
+
+  double random(double min, double max) {
+    return min + (Random().nextDouble() * (max - min));
+  }
+
   @override
   void initState() {
     // TODO: implement initState
-    _animationController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 500))
-          ..addListener(() {
-            setState(() {});
-          });
+
+    // Timer.periodic(const Duration(seconds: 2), (timer) {
+    //   _moveTop = random(0, 350);
+    // });
+
+    _animationController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 500))
+      ..addListener(() {});
+
     _animation = ColorTween(begin: backgroundColor1, end: Colors.black).animate(
         CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
     super.initState();
@@ -51,7 +80,16 @@ class _InputAnswerButtonState extends State<InputAnswerButton>
   void didUpdateWidget(covariant InputAnswerButton oldWidget) {
     // TODO: implement didUpdateWidget
     super.didUpdateWidget(oldWidget);
-    _animationController.duration = Duration(milliseconds: 50);
+    _animationController.duration = const Duration(milliseconds: 50);
+    Timer.periodic(const Duration(seconds: 2), (timer) {
+      _moveTop = random(0, 350);
+    });
+  }
+
+  void runMove() {
+    setState(() {
+      _moveTop = random(0, 350);
+    });
   }
 
   animateColor(bool isSelected) {
@@ -64,39 +102,83 @@ class _InputAnswerButtonState extends State<InputAnswerButton>
 
   @override
   Widget build(BuildContext context) {
-    return BouncingWidget(
-      onPressed: widget.isBtnSelected == false
-          ? () {
-              setState(() {
-                // widget.isBtnSelected = widget.isBtnSelected ? false : true;
-                widget.onSelectButtonLetter(
-                    widget.letter, widget.isBtnSelected);
-                animateColor(widget.isBtnSelected);
-              });
-            }
-          : () {},
-      child: Container(
-        margin: EdgeInsets.all(2),
-        child: Container(
-          width: 50,
-          height: 50,
-          margin: EdgeInsets.all(8),
-          decoration: BoxDecoration(
-              border: Border.all(
-                  width: 1,
-                  color: widget.isBtnSelected ? backgroundColor1 : blackColor),
-              color: widget.isBtnSelected ? backgroundColor7 : backgroundColor1,
-              borderRadius: BorderRadius.circular(12)),
-          child: Center(
-            child: Text(
-              "${widget.letter}",
-              style: widget.isBtnSelected
-                  ? whiteTextStyle.copyWith(fontSize: 20, fontWeight: bold)
-                  : blackTextStyle.copyWith(fontSize: 20, fontWeight: bold),
+    final audio = context.watch<AudioController>();
+    return AnimatedPositioned(
+        top: widget.coordinate.x,
+        right: widget.coordinate.y,
+        duration: const Duration(seconds: 0),
+        onEnd: () {
+          // setState(() {
+          //   _moveTop = random(0, 300);
+          // });
+        },
+        child: Visibility(
+          visible: !widget.isBtnSelected,
+          maintainSize: true,
+          maintainAnimation: true,
+          maintainState: true,
+          maintainSemantics: true,
+          child: SizedBox(
+            height: 65,
+            width: 65,
+            child: GestureDetector(
+              onTap: widget.isBtnSelected == false
+                  ? () {
+                      setState(() {
+                        // widget.isBtnSelected = widget.isBtnSelected ? false : true;
+                        widget.onSelectButtonLetter(
+                            widget.letter, widget.isBtnSelected);
+                        setState(() {
+                          _moveTop = random(0, 300);
+                        });
+                        animateColor(widget.isBtnSelected);
+                      });
+                    }
+                  : () {},
+              onTapDown: (_) => setState(() {
+                if (widget.isBtnSelected == false) {
+                  _padding = 0.0;
+                  _reversePadding = 6;
+                }
+              }),
+              onTapUp: (_) => setState(() {
+                if (widget.isBtnSelected == false) {
+                  _padding = 6;
+                  _reversePadding = 0.0;
+                }
+                audio.playSfx(SfxType.buttonTap, queue: 0);
+              }),
+              child: AnimatedContainer(
+                padding: EdgeInsets.only(bottom: _padding),
+                margin: EdgeInsets.only(top: _reversePadding),
+                decoration: BoxDecoration(
+                    color:
+                        widget.isBtnSelected ? whiteColor3 : widget.shadowColor,
+                    borderRadius: BorderRadius.circular(15)),
+                duration: const Duration(milliseconds: 100),
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: widget.isBtnSelected ? whiteColor : widget.color,
+                      borderRadius: BorderRadius.circular(15),
+                      border: Border.all(
+                          width: 2.5,
+                          color: widget.isBtnSelected
+                              ? whiteColor2
+                              : widget.borderColor)),
+                  child: Center(
+                    child: Text(
+                      widget.letter,
+                      style: widget.isBtnSelected
+                          ? blackTextStyle.copyWith(
+                              fontSize: 20, fontWeight: bold)
+                          : whiteTextStyle.copyWith(
+                              fontSize: 20, fontWeight: bold),
+                    ),
+                  ),
+                ),
+              ),
             ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 }

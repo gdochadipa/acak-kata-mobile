@@ -1,11 +1,9 @@
-import 'dart:ui';
-
 import 'package:acakkata/generated/l10n.dart';
 import 'package:acakkata/models/language_model.dart';
 import 'package:acakkata/models/level_model.dart';
 import 'package:acakkata/providers/language_db_provider.dart';
 import 'package:acakkata/theme.dart';
-import 'package:acakkata/widgets/custom_level_card.dart';
+import 'package:acakkata/widgets/button/button_bounce.dart';
 import 'package:acakkata/widgets/level_card.dart';
 import 'package:acakkata/widgets/popover/custom_match_form.dart';
 import 'package:acakkata/widgets/skeleton/level_card_skeleton.dart';
@@ -14,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LevelListPage extends StatefulWidget {
   // const LevelListPage({Key? key}) : super(key: key);
@@ -33,6 +32,8 @@ class _LevelListPageState extends State<LevelListPage> {
   late LanguageDBProvider? languageDBProvider =
       Provider.of<LanguageDBProvider>(context, listen: false);
   late List<LevelModel>? levelList;
+  SharedPreferences? prefs;
+  bool login = false;
   Logger logger = Logger(
     printer: PrettyPrinter(methodCount: 0),
   );
@@ -49,6 +50,10 @@ class _LevelListPageState extends State<LevelListPage> {
           isLoading = false;
         });
       }
+      prefs = await SharedPreferences.getInstance();
+      setState(() {
+        login = prefs!.getBool('login') ?? false;
+      });
     } catch (e) {
       logger.e(e);
     }
@@ -69,57 +74,61 @@ class _LevelListPageState extends State<LevelListPage> {
       return showModal(
           context: context,
           builder: (BuildContext context) {
-            return CustomMatchForm(languageModel: widget.languageModel);
+            return CustomMatchForm(
+              languageModel: widget.languageModel,
+              isLogin: login,
+            );
           });
     }
 
     Widget header() {
       return AppBar(
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: primaryColor,
+        leading: Container(
+          margin: const EdgeInsets.only(top: 5, left: 5),
+          child: ButtonBounce(
+            onClick: () {
+              Navigator.pushNamedAndRemoveUntil(
+                  context, '/home', (route) => false);
+            },
+            child: Center(
+              child: Icon(
+                Icons.arrow_back,
+                color: whiteColor,
+              ),
+            ),
           ),
-          onPressed: () {
-            // Navigator.pop(context);
-            Navigator.pushNamedAndRemoveUntil(
-                context, '/home', (route) => false);
-          },
         ),
-        backgroundColor: backgroundColor1,
+        backgroundColor: transparentColor,
         elevation: 0,
         centerTitle: true,
         title: Column(
           children: [
-            SizedBox(
+            const SizedBox(
               height: 8,
             ),
             Text(
               (setLanguage.code == 'en'
                   ? '${widget.languageModel.language_name_en}'
                   : '${widget.languageModel.language_name_id}'),
-              style: headerText2.copyWith(
-                  fontWeight: extraBold, fontSize: 20, color: primaryTextColor),
+              style: whiteTextStyle.copyWith(
+                  fontWeight: extraBold, fontSize: 24, color: whiteColor),
             ),
-            Text(
-              widget.isOnline == true
-                  ? '${setLanguage.multi_player}'
-                  : '${setLanguage.single_player}',
-              style:
-                  primaryTextStyle.copyWith(fontSize: 14, fontWeight: medium),
-            )
           ],
         ),
         actions: [
-          GestureDetector(
-            onTap: () {
-              showCustomFormLevelPop();
-            },
-            child: Container(
-                width: 30,
-                height: 30,
-                padding: EdgeInsets.only(right: 10),
-                child: Image.asset('assets/images/icon_setting.png')),
+          Container(
+            margin: const EdgeInsets.only(top: 5, right: 5),
+            child: ButtonBounce(
+                paddingHorizontalButton: 8,
+                paddingVerticalButton: 8,
+                onClick: () {
+                  showCustomFormLevelPop();
+                },
+                child: Image.asset(
+                  'assets/images/setting.png',
+                  width: 50,
+                  height: 50,
+                )),
           )
         ],
       );
@@ -127,42 +136,38 @@ class _LevelListPageState extends State<LevelListPage> {
 
     Widget body() {
       return Container(
-        margin: EdgeInsets.only(top: 20, left: 15, right: 15),
-        padding: EdgeInsets.only(left: 8, right: 8, top: 15, bottom: 15),
+        margin: const EdgeInsets.only(top: 20, left: 15, right: 15),
+        padding: const EdgeInsets.only(left: 8, right: 8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Text(
-            //   "List Level",
-            //   style: headerText2.copyWith(fontWeight: regular, fontSize: 28),
-            // ),
-            SizedBox(
-              height: 10,
+            const SizedBox(
+              height: 50,
             ),
-            Container(
-              child: Column(
-                children: isLoading
-                    ? [
-                        LevelCardSkeleton(),
-                        LevelCardSkeleton(),
-                        LevelCardSkeleton(),
-                        LevelCardSkeleton()
-                      ]
-                    : levelList!
-                        .map(
-                          (e) => AnimationConfiguration.staggeredList(
-                              position: levelList!.indexOf(e),
-                              duration: Duration(milliseconds: 1000),
-                              child: SlideAnimation(
-                                horizontalOffset: 50.0,
-                                child: FadeInAnimation(
-                                    child: ItemLevelCard(
-                                        levelModel: e,
-                                        languageModel: widget.languageModel)),
+            GridView.count(
+              primary: false,
+              shrinkWrap: true,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+              crossAxisCount: 3,
+              children: isLoading
+                  ? []
+                  : levelList!
+                      .map(
+                        (e) => AnimationConfiguration.staggeredGrid(
+                            position: levelList!.indexOf(e),
+                            duration: const Duration(milliseconds: 1000),
+                            columnCount: 3,
+                            child: SlideAnimation(
+                              child: FadeInAnimation(
+                                  child: ItemLevelCard(
+                                levelModel: e,
+                                languageModel: widget.languageModel,
+                                login: login,
                               )),
-                        )
-                        .toList(),
-              ),
+                            )),
+                      )
+                      .toList(),
             )
           ],
         ),
@@ -171,13 +176,24 @@ class _LevelListPageState extends State<LevelListPage> {
 
     return WillPopScope(
         child: Scaffold(
-          backgroundColor: backgroundColor1,
-          body: Container(
-            child: ListView(
-              shrinkWrap: true,
-              children: [header(), body()],
-            ),
-          ),
+          backgroundColor: primaryColor,
+          body: SafeArea(
+              child: Stack(
+            children: [
+              Container(
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    repeat: ImageRepeat.repeat,
+                    image: AssetImage("assets/images/background.png"),
+                  ),
+                ),
+              ),
+              ListView(
+                shrinkWrap: true,
+                children: [header(), body()],
+              ),
+            ],
+          )),
         ),
         onWillPop: () async => false);
   }

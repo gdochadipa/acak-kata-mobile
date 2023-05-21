@@ -1,10 +1,20 @@
 import 'dart:convert';
 
 import 'package:acakkata/models/user_model.dart';
+import 'package:acakkata/setting/persistence/setting_persistence.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
-  String baseUrl = 'http://10.0.2.2:3000/api/v1/auth';
+  // String baseUrl = 'http://139.59.117.124:3000/api/v1/auth';
+  // String baseUrlUser = 'http://139.59.117.124:3000/api/v1/user';
+  String baseUrl = '';
+  String baseUrlUser = '';
+
+  AuthService({required String serverUrl}) {
+    baseUrl = '$serverUrl/api/v1/auth';
+    baseUrlUser = '$serverUrl/api/v1/user';
+  }
 
   Future<UserModel> register(
       {required String name,
@@ -33,7 +43,15 @@ class AuthService {
         var data = jsonDecode(response.body);
         throw Exception(data['message']);
       } else {
-        throw Exception("Gagal Login");
+        var data = jsonDecode(response.body);
+        if (data['validation'] == true) {
+          throw Exception("Gagal Sign Up");
+        } else {
+          String res = data['message']
+              .toString()
+              .replaceAll('Users validation failed:', '');
+          throw Exception("Validasi Salah : $res");
+        }
       }
     }
   }
@@ -67,6 +85,31 @@ class AuthService {
         throw Exception(data['message']);
       } else {
         throw Exception("Gagal Login");
+      }
+    }
+  }
+
+  Future<UserModel> editProfile(
+      {required String id,
+      required String email,
+      required String username,
+      required String name,
+      required String token}) async {
+    var headers = {'Content-Type': 'application/json', 'Authorization': token};
+    var body = jsonEncode({'username': username, 'email': email, 'name': name});
+    var url = Uri.parse('$baseUrlUser/$id');
+    var response = await http.post(url, headers: headers, body: body);
+
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body)['data'];
+      UserModel user = UserModel.fromJson(data);
+      return user;
+    } else {
+      if (response.statusCode == 403) {
+        var data = jsonDecode(response.body);
+        throw Exception(data['message']);
+      } else {
+        throw Exception("Failed Update Profile");
       }
     }
   }
