@@ -1,5 +1,5 @@
 class ServerUrl {
-  String? id;
+  int? id;
   String? urlApiServer;
   String? urlApiPort;
   String? urlSocketServer;
@@ -19,7 +19,7 @@ class ServerUrl {
       this.statusServer});
 
   ServerUrl.fromJson(Map<String, dynamic> data) {
-    id = (data['_id'] ?? data['id'].toString());
+    id = (data['_id'] ?? data['id']);
     urlApiServer = data['url_api_server'];
     urlApiPort = data['url_api_port'];
     urlSocketServer = data['url_socket_server'];

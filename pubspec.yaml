@@ -66,6 +66,7 @@ dependencies:
   connectivity_plus: ^2.3.6+1
   audioplayers: ^0.20.1
   carousel_slider: ^4.2.1
+  restart_app: ^1.1.0+1
 
 dev_dependencies:
   flutter_test:

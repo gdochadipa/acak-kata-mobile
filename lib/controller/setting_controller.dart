@@ -16,6 +16,8 @@ class SettingsController {
 
   ValueNotifier<double> percentTime = ValueNotifier(40);
 
+  ValueNotifier<String> baseUrl = ValueNotifier("http://139.59.117.124:3000");
+
   SettingsController({required SettingsPersistence persistence})
       : _persistence = persistence;
 
@@ -26,6 +28,7 @@ class SettingsController {
           .then((value) => muted.value = value),
       _persistence.getSoundsOn().then((value) => soundsOn.value = value),
       _persistence.getMusicOn().then((value) => musicOn.value = value),
+      _persistence.getServerUrl().then((value) => baseUrl.value = value)
     ]);
   }
 
@@ -60,5 +63,9 @@ class SettingsController {
   void getCalculateOfflineScore() async {
     percentScore.value = await _persistence.getCalculatePercentByScore();
     percentTime.value = await _persistence.getCalculatePercentByTime();
+  }
+
+  Future<void> saveServerPersistence(String url) async {
+    _persistence.saveServerUrl(url);
   }
 }

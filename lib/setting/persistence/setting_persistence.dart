@@ -36,6 +36,8 @@ abstract class SettingsPersistence {
 
   Future<void> setServerUrl(ServerUrl serverUrl);
 
+  Future<void> saveServerUrl(String serverUrl);
+
   Future<String> getServerUrl();
 
   Future<String> getServerSocket();

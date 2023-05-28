@@ -134,4 +134,10 @@ class LocalStorageSettingPersistence extends SettingsPersistence {
     pref.setString('set_url', "http://139.59.117.124:3000");
     pref.setString('set_socket', "http://139.59.117.124:3000");
   }
+
+  @override
+  Future<void> saveServerUrl(String serverUrl) async {
+    final pref = await instanceFuture;
+    pref.setString('set_url', serverUrl);
+  }
 }

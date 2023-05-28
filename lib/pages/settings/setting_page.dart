@@ -3,13 +3,16 @@ import 'dart:ui';
 
 import 'package:acakkata/controller/setting_controller.dart';
 import 'package:acakkata/generated/l10n.dart';
+import 'package:acakkata/models/server_url.dart';
 import 'package:acakkata/providers/change_language_provider.dart';
 import 'package:acakkata/theme.dart';
 import 'package:acakkata/widgets/button/button_bounce.dart';
+import 'package:acakkata/widgets/popover/change_server_dialog.dart';
 import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:group_button/group_button.dart';
 import 'package:provider/provider.dart';
+import 'package:restart_app/restart_app.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingPage extends StatefulWidget {
@@ -27,6 +30,24 @@ class _SettingPageState extends State<SettingPage> {
   GroupButtonController? _groupButtonController;
   ChangeLanguageProvider? _changeLanguageProvider;
   String? languageSelected;
+  List<ServerUrl> list = [
+    ServerUrl(
+        id: 1,
+        mainServer: 1,
+        nameServer: 'Server Utama',
+        statusServer: 1,
+        urlApiPort: '3000',
+        urlApiServer: 'http://139.59.117.124:3000'),
+    ServerUrl(
+        id: 2,
+        mainServer: 0,
+        nameServer: 'Server Kedua',
+        statusServer: 1,
+        urlApiPort: '3000',
+        urlApiServer: 'http://acakkata.notif.web.id')
+  ];
+
+  int? dropdownValue, oldDropdownValue;
 
   init() async {
     prefs = await SharedPreferences.getInstance();
@@ -35,6 +56,7 @@ class _SettingPageState extends State<SettingPage> {
     setState(() {
       languageChoice = prefs!.getString("choiceLang");
       wasSelectedLanguage = prefs!.getBool("wasSelectedLanguage") ?? false;
+      dropdownValue = list.first.id;
     });
     _groupButtonController = GroupButtonController(
       selectedIndex: listLanguage.values.toList().indexOf(languageChoice!),
@@ -66,6 +88,26 @@ class _SettingPageState extends State<SettingPage> {
         });
       }
       Navigator.pop(context);
+    }
+
+    Future<void> showChangeServer() async {
+      return showDialog(
+          context: context,
+          builder: (BuildContext context) => ChangeMessageDialog(
+                message:
+                    "Apakah anda yakin mengganti server ? Ini akan mengakibatkan anda memuat ulang aplikasi",
+                onClickSuccess: () async {
+                  String? url = list
+                      .firstWhere((element) => element.id == dropdownValue)
+                      .urlApiServer;
+                  setting.saveServerPersistence(
+                      url ?? "http://139.59.117.124:3000");
+                  Restart.restartApp();
+                },
+                onClickCancel: () {
+                  print("cancel change server");
+                },
+              ));
     }
 
     Widget btnExits() {
@@ -205,6 +247,29 @@ class _SettingPageState extends State<SettingPage> {
                           color: whiteColor),
                       onSelected: () => setting.toggleSoundsOn(),
                     )),
+            const SizedBox(
+              height: 20,
+            ),
+            DropdownButton(
+                hint: const Text("Choose Server"),
+                style: const TextStyle(color: Colors.white, fontSize: 16.0),
+                value: dropdownValue,
+                items: list
+                    .map((item) => DropdownMenuItem(
+                          child: Text(item.nameServer ?? '',
+                              style: const TextStyle(
+                                  color: Colors.black, fontSize: 16.0)),
+                          value: item.id,
+                        ))
+                    .toList(),
+                onChanged: (int? value) {
+                  setState(() {
+                    oldDropdownValue = dropdownValue;
+                    dropdownValue =
+                        list.firstWhere((element) => element.id == value).id!;
+                  });
+                  showChangeServer();
+                }),
           ],
         )),
       );
